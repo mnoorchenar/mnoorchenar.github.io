@@ -520,14 +520,17 @@
                     // Fallback: Scan directory directly for HTML files
                     console.log('🔍 Direct scanning mode - checking for HTML files...');
                     
-                    // List of known files to check (you can add more here)
+                    // List of known files to check (add your actual blog filenames here)
                     const potentialFiles = [
+                        'bias_variance_visualization-archery.html',
+                        'first-example-blog.html', 
+                        'second-example-blog.html',
+                        'blog-template.html',
                         'bias-variance-dartboard.html',
                         'bias-variance-regression.html',
                         'your-first-blog.html',
-                        'your-second-blog.html',
-                        'blog-template.html'
-                        // Add your actual blog filenames here
+                        'your-second-blog.html'
+                        // Add more blog filenames here as you create them
                     ];
 
                     // Also try to detect files dynamically by testing common naming patterns
@@ -542,18 +545,59 @@
                     
                     const existingFiles = [];
                     
+                    console.log(`🔍 Testing ${allPotentialFiles.length} potential filenames...`);
+                    
                     // Check which files actually exist
                     for (const filename of allPotentialFiles) {
                         try {
-                            const response = await fetch(filename, { method: 'HEAD' });
+                            const response = await fetch(filename, { 
+                                method: 'HEAD',
+                                cache: 'no-cache'
+                            });
                             if (response.ok) {
                                 existingFiles.push(filename);
                                 console.log(`✅ Found: ${filename}`);
                             }
                         } catch (error) {
-                            // File doesn't exist, continue
+                            // File doesn't exist, continue silently
                         }
                     }
+                    
+                    // If we still don't have many files, try a different approach
+                    if (existingFiles.length < 3) {
+                        console.log('🔍 Trying additional file detection...');
+                        
+                        // Try some other common patterns based on your actual files
+                        const additionalPatterns = [
+                            // Based on your actual file: bias_variance_visualization-archery.html
+                            'bias_variance_visualization.html',
+                            'bias_variance_dartboard.html', 
+                            'bias_variance_tradeoff.html',
+                            'machine_learning_basics.html',
+                            'statistics_101.html',
+                            'data_visualization.html',
+                            'biostatistics_guide.html',
+                            // Try variations with underscores vs hyphens
+                            'bias-variance-visualization.html',
+                            'bias-variance-dartboard.html',
+                            'machine-learning-basics.html',
+                            'data-visualization-guide.html'
+                        ];
+                        
+                        for (const filename of additionalPatterns) {
+                            try {
+                                const response = await fetch(filename, { method: 'HEAD' });
+                                if (response.ok && !existingFiles.includes(filename)) {
+                                    existingFiles.push(filename);
+                                    console.log(`✅ Found additional: ${filename}`);
+                                }
+                            } catch (error) {
+                                // Continue
+                            }
+                        }
+                    }
+
+                    console.log(`📄 Total files found: ${existingFiles.length}`);
 
                     // Extract metadata from existing files
                     this.blogs = await Promise.all(
