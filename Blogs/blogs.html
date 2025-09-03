@@ -137,9 +137,21 @@
 
         .blogs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
             margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .blogs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blogs-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .blog-card {
@@ -149,6 +161,9 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             position: relative;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
         }
 
         .blog-card:hover {
@@ -162,6 +177,7 @@
             border-bottom: 1px solid #e9ecef;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .blog-preview iframe {
@@ -210,6 +226,9 @@
 
         .blog-content {
             padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .blog-title {
@@ -217,6 +236,7 @@
             color: #2c3e50;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            line-height: 1.3;
         }
 
         .blog-meta {
@@ -238,6 +258,11 @@
             color: #6c757d;
             line-height: 1.6;
             margin-bottom: 1rem;
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
 
         .blog-tags {
@@ -259,6 +284,7 @@
         .blog-actions {
             display: flex;
             gap: 1rem;
+            margin-top: auto;
         }
 
         .btn {
@@ -271,6 +297,7 @@
             text-decoration: none;
             text-align: center;
             display: inline-block;
+            flex: 1;
         }
 
         .btn-primary {
@@ -391,29 +418,6 @@
             height: calc(100% - 80px);
             border: none;
         }
-
-        @media (max-width: 768px) {
-            .blogs-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-filter {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filter-buttons {
-                justify-content: center;
-            }
-            
-            nav {
-                gap: 1rem;
-            }
-            
-            nav a {
-                padding: 0.6rem 1rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -449,7 +453,7 @@
         <div id="blogsContainer">
             <div class="loading">
                 <div class="spinner"></div>
-                <p>Loading blog posts...</p>
+                <p>Scanning for blog files...</p>
             </div>
         </div>
     </main>
@@ -488,17 +492,72 @@
 
             async loadBlogs() {
                 try {
-                    // Load the blog index from the JSON file
-                    const response = await fetch('./blog-index.json');
-                    if (!response.ok) {
-                        throw new Error('Blog index not found');
+                    // Try to load from blog-index.json first
+                    try {
+                        const response = await fetch('./blog-index.json');
+                        if (response.ok) {
+                            const blogIndex = await response.json();
+                            console.log('📋 Loading from blog-index.json');
+                            
+                            this.blogs = blogIndex.blogs.map((blog, index) => ({
+                                id: index,
+                                filename: blog.filename,
+                                title: blog.title,
+                                description: blog.description,
+                                date: blog.date,
+                                tags: blog.tags,
+                                url: blog.filename
+                            }));
+                            
+                            this.blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+                            this.filteredBlogs = [...this.blogs];
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('📋 blog-index.json not found, scanning directory...');
+                    }
+
+                    // Fallback: Scan directory directly for HTML files
+                    console.log('🔍 Direct scanning mode - checking for HTML files...');
+                    
+                    // List of known files to check (you can add more here)
+                    const potentialFiles = [
+                        'bias-variance-dartboard.html',
+                        'bias-variance-regression.html',
+                        'your-first-blog.html',
+                        'your-second-blog.html',
+                        'blog-template.html'
+                        // Add your actual blog filenames here
+                    ];
+
+                    // Also try to detect files dynamically by testing common naming patterns
+                    const commonPatterns = [];
+                    for (let i = 1; i <= 50; i++) {
+                        commonPatterns.push(`blog-${i}.html`);
+                        commonPatterns.push(`post-${i}.html`);
+                        commonPatterns.push(`article-${i}.html`);
                     }
                     
-                    const blogIndex = await response.json();
+                    const allPotentialFiles = [...potentialFiles, ...commonPatterns];
                     
-                    // Process each blog and extract metadata
+                    const existingFiles = [];
+                    
+                    // Check which files actually exist
+                    for (const filename of allPotentialFiles) {
+                        try {
+                            const response = await fetch(filename, { method: 'HEAD' });
+                            if (response.ok) {
+                                existingFiles.push(filename);
+                                console.log(`✅ Found: ${filename}`);
+                            }
+                        } catch (error) {
+                            // File doesn't exist, continue
+                        }
+                    }
+
+                    // Extract metadata from existing files
                     this.blogs = await Promise.all(
-                        blogIndex.files.map(async (filename, index) => {
+                        existingFiles.map(async (filename, index) => {
                             try {
                                 const blogData = await this.extractBlogMetadata(filename);
                                 return {
@@ -518,6 +577,8 @@
                     this.blogs = this.blogs.filter(blog => blog !== null);
                     this.blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
                     this.filteredBlogs = [...this.blogs];
+                    
+                    console.log(`📄 Found ${this.blogs.length} blog files`);
 
                 } catch (error) {
                     console.error('Error loading blogs:', error);
@@ -535,22 +596,22 @@
                     const doc = parser.parseFromString(html, 'text/html');
                     
                     // Extract metadata from meta tags and content
-                    const title = doc.querySelector('title')?.textContent || 
-                                 doc.querySelector('meta[name="title"]')?.content ||
-                                 doc.querySelector('h1')?.textContent ||
+                    const title = doc.querySelector('title')?.textContent?.trim() || 
+                                 doc.querySelector('meta[name="title"]')?.content?.trim() ||
+                                 doc.querySelector('h1')?.textContent?.trim() ||
                                  this.formatTitle(filename);
                     
-                    const description = doc.querySelector('meta[name="description"]')?.content ||
-                                      doc.querySelector('meta[property="og:description"]')?.content ||
+                    const description = doc.querySelector('meta[name="description"]')?.content?.trim() ||
+                                      doc.querySelector('meta[property="og:description"]')?.content?.trim() ||
                                       this.extractFirstParagraph(doc) ||
                                       'An interactive exploration of data science concepts.';
                     
-                    const keywords = doc.querySelector('meta[name="keywords"]')?.content ||
-                                    doc.querySelector('meta[name="tags"]')?.content ||
+                    const keywords = doc.querySelector('meta[name="keywords"]')?.content?.trim() ||
+                                    doc.querySelector('meta[name="tags"]')?.content?.trim() ||
                                     '';
                     
-                    const dateStr = doc.querySelector('meta[name="date"]')?.content ||
-                                   doc.querySelector('meta[property="article:published_time"]')?.content ||
+                    const dateStr = doc.querySelector('meta[name="date"]')?.content?.trim() ||
+                                   doc.querySelector('meta[property="article:published_time"]')?.content?.trim() ||
                                    new Date().toISOString().split('T')[0];
                     
                     // Extract tags from keywords or infer from filename and content
@@ -563,8 +624,8 @@
                     
                     return {
                         title: title,
-                        description: description,
-                        date: dateStr,
+                        description: description.length > 150 ? description.substring(0, 147) + '...' : description,
+                        date: dateStr.split('T')[0], // Ensure YYYY-MM-DD format
                         tags: tags
                     };
                     
@@ -585,7 +646,7 @@
                 for (let p of paragraphs) {
                     const text = p.textContent.trim();
                     if (text.length > 50) { // Ensure it's substantial
-                        return text.length > 150 ? text.substring(0, 147) + '...' : text;
+                        return text;
                     }
                 }
                 
@@ -601,12 +662,15 @@
             inferTags(filename, title, description) {
                 const text = (filename + ' ' + title + ' ' + description).toLowerCase();
                 const tagMap = {
-                    'machine-learning': ['machine', 'learning', 'ml', 'algorithm', 'model', 'prediction'],
-                    'statistics': ['statistics', 'statistical', 'probability', 'distribution', 'regression'],
-                    'visualization': ['visualization', 'chart', 'graph', 'plot', 'visual'],
-                    'interactive': ['interactive', 'simulation', 'demo', 'explorer'],
-                    'bias-variance': ['bias', 'variance', 'tradeoff', 'dartboard'],
-                    'data-science': ['data', 'science', 'analysis', 'analytics']
+                    'machine-learning': ['machine', 'learning', 'ml', 'algorithm', 'model', 'prediction', 'neural', 'deep'],
+                    'statistics': ['statistics', 'statistical', 'probability', 'distribution', 'regression', 'hypothesis'],
+                    'visualization': ['visualization', 'chart', 'graph', 'plot', 'visual', 'dashboard'],
+                    'interactive': ['interactive', 'simulation', 'demo', 'explorer', 'widget'],
+                    'bias-variance': ['bias', 'variance', 'tradeoff', 'dartboard', 'overfitting'],
+                    'data-science': ['data', 'science', 'analysis', 'analytics', 'insights'],
+                    'python': ['python', 'pandas', 'numpy', 'matplotlib', 'seaborn'],
+                    'r-programming': ['r programming', 'ggplot', 'dplyr', 'tidyverse'],
+                    'biostatistics': ['biostatistics', 'medical', 'clinical', 'epidemiology', 'health']
                 };
 
                 const inferredTags = [];
@@ -684,7 +748,11 @@
                     container.innerHTML = `
                         <div class="no-blogs">
                             <h3>No blogs found</h3>
-                            <p>Try adjusting your search terms or filters, or add some blog posts to your Blogs folder! 📝</p>
+                            <p>Add HTML files to your Blogs folder and they'll appear here automatically! 📝</p>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                                Make sure your HTML files are in the same directory as this blogs.html file.
+                                <br>Expected files: any .html file except blogs.html
+                            </p>
                         </div>
                     `;
                     return;
@@ -737,9 +805,9 @@
                                 ${blog.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                             </div>
                             <div class="blog-actions">
-                                <a href="${blog.url}" class="btn btn-primary" target="_blank">📖 Read Full Post</a>
+                                <a href="${blog.url}" class="btn btn-primary" target="_blank">📖 Read Post</a>
                                 <button class="btn btn-secondary preview-btn" data-url="${blog.url}" data-title="${blog.title}">
-                                    👁️ Quick Preview
+                                    👁️ Preview
                                 </button>
                             </div>
                         </div>
@@ -761,9 +829,12 @@
                 const container = document.getElementById('blogsContainer');
                 container.innerHTML = `
                     <div class="no-blogs">
-                        <h3>Unable to load blogs</h3>
-                        <p>Make sure you have a <code>blog-index.json</code> file in your Blogs folder.</p>
-                        <p>Run the blog indexer script to generate this file automatically.</p>
+                        <h3>Unable to scan for blog files</h3>
+                        <p>To fix this, you need to either:</p>
+                        <ol style="text-align: left; max-width: 400px; margin: 1rem auto;">
+                            <li>Generate <code>blog-index.json</code> by running: <code>node generate-blog-index.js</code></li>
+                            <li>Or manually add your HTML filenames to the <code>potentialFiles</code> array in the JavaScript code</li>
+                        </ol>
                     </div>
                 `;
             }
