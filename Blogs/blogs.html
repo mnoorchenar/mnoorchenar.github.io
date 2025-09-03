@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs - Mohammad Noorchenarboo</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .blog-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .blog-post {
+            background: #f9f9f9;
+            border-left: 4px solid #333;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            transition: transform 0.2s ease;
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .blog-title {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .blog-title:hover {
+            color: #0066cc;
+        }
+        
+        .blog-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .blog-excerpt {
+            color: #444;
+            line-height: 1.6;
+        }
+        
+        .read-more {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffe6e6;
+            border-left: 4px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mohammad Noorchenarboo</h1>
+        <p>Biostatistician & Senior Data Scientist</p>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="../resume.html">Resume</a>
+            <a href="../projects.html">Projects</a>
+            <a href="../contact.html">Contact</a>
+            <a href="blogs.html">Blogs</a>
+        </nav>
+    </header>
+    
+    <main class="blog-container">
+        <section>
+            <h2>My Blog Posts</h2>
+            <p>Exploring data science, biostatistics, and machine learning through interactive demonstrations and insights.</p>
+            
+            <div id="blog-list" class="loading">
+                Loading blog posts...
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Contact: <a href="mailto:mnoorchenarboo@gmail.com">mnoorchenarboo@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank">linkedin.com/in/mnoorchenar</a></p>
+        <p>GitHub: <a href="https://github.com/mnoorch" target="_blank">github.com/mnoorch</a></p>
+    </footer>
+
+    <script>
+        // Configuration - add your blog posts here
+        const blogPosts = [
+            {
+                title: "PCA Playground: Interactive Principal Component Analysis",
+                filename: "pca_playground_html.html",
+                date: "2024-12-01",
+                excerpt: "An interactive demonstration of Principal Component Analysis with real-time visualization. Explore how PCA reduces dimensionality while preserving important data patterns.",
+                tags: ["Machine Learning", "Data Science", "Interactive"]
+            }
+            // Add more blog posts here as you create them
+            // {
+            //     title: "Your Next Blog Post Title",
+            //     filename: "your_next_post.html",
+            //     date: "2024-12-15",
+            //     excerpt: "A brief description of what this blog post covers...",
+            //     tags: ["Tag1", "Tag2"]
+            // }
+        ];
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function generateBlogHTML() {
+            if (blogPosts.length === 0) {
+                return '<div class="error">No blog posts found. Add some posts to the blogPosts array!</div>';
+            }
+
+            // Sort posts by date (newest first)
+            const sortedPosts = blogPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            return sortedPosts.map(post => `
+                <article class="blog-post">
+                    <a href="${post.filename}" class="blog-title">${post.title}</a>
+                    <div class="blog-meta">
+                        Published on ${formatDate(post.date)}
+                        ${post.tags ? ` • Tags: ${post.tags.join(', ')}` : ''}
+                    </div>
+                    <div class="blog-excerpt">
+                        ${post.excerpt}
+                        <br><br>
+                        <a href="${post.filename}" class="read-more">Read full post →</a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Load blog posts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogList = document.getElementById('blog-list');
+            try {
+                blogList.innerHTML = generateBlogHTML();
+            } catch (error) {
+                blogList.innerHTML = '<div class="error">Error loading blog posts. Please check the console for details.</div>';
+                console.error('Error generating blog list:', error);
+            }
+        });
+    </script>
+</body>
+</html>
