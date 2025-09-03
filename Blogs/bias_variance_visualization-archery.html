@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bias-Variance Tradeoff Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .scenario {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .scenario:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .scenario.high-bias-high-variance {
+            border-color: #e74c3c;
+        }
+        
+        .scenario.high-bias-low-variance {
+            border-color: #f39c12;
+        }
+        
+        .scenario.low-bias-high-variance {
+            border-color: #3498db;
+        }
+        
+        .scenario.low-bias-low-variance {
+            border-color: #27ae60;
+        }
+        
+        .scenario h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+        
+        .dartboard {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 50%;
+            border: 3px solid #34495e;
+        }
+        
+        .target {
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .target::after {
+            content: '×';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .shot {
+            width: 8px;
+            height: 8px;
+            background: #2c3e50;
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rings {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .ring {
+            border: 1px solid rgba(52, 73, 94, 0.2);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .description {
+            text-align: center;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .legend {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .legend h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bias-Variance Tradeoff</h1>
+        <p class="subtitle">Understanding the four fundamental scenarios in machine learning</p>
+        
+        <div class="controls">
+            <button class="btn" onclick="generateAllShots()">🎯 Generate New Shots</button>
+            <button class="btn" onclick="animateShots()">🎬 Animate Shots</button>
+        </div>
+        
+        <div class="scenarios-grid">
+            <div class="scenario high-bias-high-variance">
+                <h3>High Bias, High Variance</h3>
+                <div class="dartboard" id="dartboard1">
+                    <div class="rings">
+                        <div class="ring" style="width: 60px; height: 60px;"></div>
+                        <div class="ring" style="width: 120px; height: 120px;"></div>
+                        <div class="ring" style="width: 180px; height: 180px;"></div>
+                    </div>
+                    <div class="target"></div>
+                </div>
+                <div class="description">
+                    <strong>Worst Case:</strong> Shots are both far from target (biased) and scattered everywhere (high variance). The model is both systematically wrong and inconsistent.
+                </div>
+            </div>
+            
+            <div class="scenario high-bias-low-variance">
+                <h3>High Bias, Low Variance</h3>
+                <div class="dartboard" id="dartboard2">
+                    <div class="rings">
+                        <div class="ring" style="width: 60px; height: 60px;"></div>
+                        <div class="ring" style="width: 120px; height: 120px;"></div>
+                        <div class="ring" style="width: 180px; height: 180px;"></div>
+                    </div>
+                    <div class="target"></div>
+                </div>
+                <div class="description">
+                    <strong>Underfitting:</strong> Shots are consistently off-target but grouped together. The model is predictable but systematically wrong.
+                </div>
+            </div>
+            
+            <div class="scenario low-bias-high-variance">
+                <h3>Low Bias, High Variance</h3>
+                <div class="dartboard" id="dartboard3">
+                    <div class="rings">
+                        <div class="ring" style="width: 60px; height: 60px;"></div>
+                        <div class="ring" style="width: 120px; height: 120px;"></div>
+                        <div class="ring" style="width: 180px; height: 180px;"></div>
+                    </div>
+                    <div class="target"></div>
+                </div>
+                <div class="description">
+                    <strong>Overfitting:</strong> Shots are centered around the target but widely scattered. The model can be accurate on average but inconsistent.
+                </div>
+            </div>
+            
+            <div class="scenario low-bias-low-variance">
+                <h3>Low Bias, Low Variance</h3>
+                <div class="dartboard" id="dartboard4">
+                    <div class="rings">
+                        <div class="ring" style="width: 60px; height: 60px;"></div>
+                        <div class="ring" style="width: 120px; height: 120px;"></div>
+                        <div class="ring" style="width: 180px; height: 180px;"></div>
+                    </div>
+                    <div class="target"></div>
+                </div>
+                <div class="description">
+                    <strong>Ideal Case:</strong> Shots are tightly grouped around the target. The model is both accurate and consistent - perfect generalization!
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Key Concepts:</h3>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e74c3c;"></div>
+                <span><strong>Target (×):</strong> True value we want to predict</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2c3e50;"></div>
+                <span><strong>Shots (●):</strong> Model predictions from different training sets</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <p><strong>Bias:</strong> How far the average prediction is from the target</p>
+                <p><strong>Variance:</strong> How much predictions vary between different training sets</p>
+                <p><strong>Goal:</strong> Minimize total error = Bias² + Variance + Noise</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateShots(dartboardId, biasOffset, varianceLevel) {
+            const dartboard = document.getElementById(dartboardId);
+            const centerX = 100;
+            const centerY = 100;
+            
+            // Clear existing shots
+            const existingShots = dartboard.querySelectorAll('.shot');
+            existingShots.forEach(shot => shot.remove());
+            
+            // Generate 8 shots
+            for (let i = 0; i < 8; i++) {
+                const shot = document.createElement('div');
+                shot.className = 'shot';
+                
+                let x, y;
+                
+                if (varianceLevel === 'high') {
+                    // High variance: shots spread widely
+                    const angle = Math.random() * 2 * Math.PI;
+                    const distance = Math.random() * 70 + 10;
+                    x = centerX + biasOffset.x + Math.cos(angle) * distance;
+                    y = centerY + biasOffset.y + Math.sin(angle) * distance;
+                } else {
+                    // Low variance: shots grouped tightly
+                    const angle = Math.random() * 2 * Math.PI;
+                    const distance = Math.random() * 15 + 5;
+                    x = centerX + biasOffset.x + Math.cos(angle) * distance;
+                    y = centerY + biasOffset.y + Math.sin(angle) * distance;
+                }
+                
+                // Keep shots within dartboard bounds
+                x = Math.max(10, Math.min(190, x));
+                y = Math.max(10, Math.min(190, y));
+                
+                shot.style.left = x + 'px';
+                shot.style.top = y + 'px';
+                
+                dartboard.appendChild(shot);
+            }
+        }
+        
+        function generateAllShots() {
+            // High bias, high variance - shots far from center and scattered
+            generateShots('dartboard1', {x: 40, y: -30}, 'high');
+            
+            // High bias, low variance - shots far from center but grouped
+            generateShots('dartboard2', {x: -45, y: 35}, 'low');
+            
+            // Low bias, high variance - shots around center but scattered
+            generateShots('dartboard3', {x: 0, y: 0}, 'high');
+            
+            // Low bias, low variance - shots around center and grouped (ideal)
+            generateShots('dartboard4', {x: 0, y: 0}, 'low');
+        }
+        
+        function animateShots() {
+            const shots = document.querySelectorAll('.shot');
+            shots.forEach((shot, index) => {
+                shot.style.opacity = '0';
+                shot.style.transform = 'translate(-50%, -50%) scale(0)';
+                
+                setTimeout(() => {
+                    shot.style.transition = 'all 0.5s ease';
+                    shot.style.opacity = '1';
+                    shot.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, index * 100);
+            });
+        }
+        
+        // Initialize with shots
+        generateAllShots();
+        
+        // Add some interactive hover effects
+        document.querySelectorAll('.scenario').forEach(scenario => {
+            scenario.addEventListener('mouseenter', function() {
+                const shots = this.querySelectorAll('.shot');
+                shots.forEach(shot => {
+                    shot.style.transform = 'translate(-50%, -50%) scale(1.2)';
+                    shot.style.transition = 'transform 0.2s ease';
+                });
+            });
+            
+            scenario.addEventListener('mouseleave', function() {
+                const shots = this.querySelectorAll('.shot');
+                shots.forEach(shot => {
+                    shot.style.transform = 'translate(-50%, -50%) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
