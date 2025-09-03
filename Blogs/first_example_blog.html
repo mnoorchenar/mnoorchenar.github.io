@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Blog Metadata -->
+    <title>Understanding Bias-Variance Tradeoff Through Interactive Visualization</title>
+    <meta name="description" content="Explore the fundamental machine learning concept of bias-variance tradeoff through an interactive dartboard visualization that makes complex statistical concepts intuitive and easy to understand.">
+    <meta name="keywords" content="machine-learning, bias-variance, visualization, interactive, statistics">
+    <meta name="date" content="2025-09-03">
+    <meta name="author" content="Mohammad Noorchenarboo">
+    
+    <!-- Open Graph metadata for social sharing -->
+    <meta property="og:title" content="Understanding Bias-Variance Tradeoff Through Interactive Visualization">
+    <meta property="og:description" content="Explore the fundamental machine learning concept through interactive dartboard visualization.">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-09-03">
+    <meta property="article:author" content="Mohammad Noorchenarboo">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .blog-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-meta {
+            opacity: 0.9;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .blog-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .blog-content h2 {
+            color: #2c3e50;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.8rem;
+        }
+
+        .blog-content h3 {
+            color: #34495e;
+            margin: 1.5rem 0 0.8rem 0;
+            font-size: 1.4rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .interactive-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .dartboard {
+            width: 300px;
+            height: 300px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            margin: 2rem auto;
+            position: relative;
+            background: radial-gradient(circle, #ff6b6b 0%, #ffa726 30%, #66bb6a 60%, #42a5f5 100%);
+        }
+
+        .dartboard::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a67d8;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        code {
+            background: #f1f3f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .formula {
+            text-align: center;
+            font-style: italic;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .blog-header h1 {
+                font-size: 2rem;
+            }
+            
+            .blog-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-header">
+        <h1>Understanding Bias-Variance Tradeoff</h1>
+        <div class="blog-meta">
+            <span>📅 September 3, 2025</span>
+            <span>👤 Mohammad Noorchenarboo</span>
+            <span>📖 ~7 min read</span>
+        </div>
+        <div class="tags">
+            <span class="tag">machine-learning</span>
+            <span class="tag">bias-variance</span>
+            <span class="tag">visualization</span>
+            <span class="tag">interactive</span>
+            <span class="tag">statistics</span>
+        </div>
+    </div>
+
+    <div class="blog-content">
+        <p>The bias-variance tradeoff is one of the most fundamental concepts in machine learning, yet it's often misunderstood or oversimplified. This interactive post uses a dartboard analogy to help you visualize and understand how bias and variance affect model performance, and why finding the right balance is crucial for building effective predictive models.</p>
+
+        <h2>What Are Bias and Variance?</h2>
+        <p>Imagine you're playing darts, aiming for the bullseye. In machine learning terms:</p>
+        <p><strong>Bias</strong> represents how far off your average shot is from the target. High bias means your shots consistently miss the bullseye in the same direction.</p>
+        <p><strong>Variance</strong> represents how scattered your shots are. High variance means your shots are spread out, even if they might average close to the target.</p>
+
+        <h2>Interactive Dartboard Demonstration</h2>
+        <div class="interactive-section">
+            <h3>🎯 Bias-Variance Dartboard</h3>
+            <p>Click the buttons below to see different combinations of bias and variance:</p>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="showPattern('low-bias-low-variance')">Low Bias, Low Variance</button>
+                <button class="control-btn" onclick="showPattern('low-bias-high-variance')">Low Bias, High Variance</button>
+                <button class="control-btn" onclick="showPattern('high-bias-low-variance')">High Bias, Low Variance</button>
+                <button class="control-btn" onclick="showPattern('high-bias-high-variance')">High Bias, High Variance</button>
+                <button class="control-btn" onclick="clearDots()">Clear</button>
+            </div>
+            
+            <div class="dartboard" id="dartboard"></div>
+            
+            <p id="explanation">Click a button above to see different bias-variance combinations!</p>
+        </div>
+
+        <h2>The Mathematical Foundation</h2>
+        <p>The relationship between bias, variance, and total error can be expressed mathematically:</p>
+
+        <div class="formula">
+            <strong>Total Error = Bias² + Variance + Irreducible Error</strong>
+        </div>
+
+        <p>This decomposition shows that reducing model error requires balancing both bias and variance, as you typically can't minimize both simultaneously.</p>
+
+        <h2>Practical Implications</h2>
+        <p>Understanding this tradeoff helps you make better decisions when:</p>
+        <p>• <strong>Choosing model complexity:</strong> Simple models tend to have high bias but low variance, while complex models have low bias but high variance.</p>
+        <p>• <strong>Selecting regularization parameters:</strong> Stronger regularization increases bias but reduces variance.</p>
+        <p>• <strong>Determining training data size:</strong> More data typically reduces variance but doesn't affect bias.</p>
+
+        <h2

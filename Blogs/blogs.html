@@ -343,7 +343,6 @@
             text-decoration: underline;
         }
 
-        /* Modal for full preview */
         .modal {
             display: none;
             position: fixed;
@@ -450,12 +449,11 @@
         <div id="blogsContainer">
             <div class="loading">
                 <div class="spinner"></div>
-                <p>Scanning blogs folder for HTML files...</p>
+                <p>Loading blog posts...</p>
             </div>
         </div>
     </main>
 
-    <!-- Modal for full preview -->
     <div id="previewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -490,91 +488,135 @@
 
             async loadBlogs() {
                 try {
-                    // In a real implementation, you would need a server-side script
-                    // to scan the blogs folder. For now, I'll provide a manual list
-                    // that you can update when you add new blogs.
+                    // Load the blog index from the JSON file
+                    const response = await fetch('./blog-index.json');
+                    if (!response.ok) {
+                        throw new Error('Blog index not found');
+                    }
                     
-                    // This would be replaced with a fetch to a PHP script or similar
-                    // that scans your blogs directory
-                    const blogFiles = [
-                        'bias-variance-dartboard.html',
-                        'bias-variance-regression.html'
-                        // Add more blog files here as you create them
-                    ];
-
+                    const blogIndex = await response.json();
+                    
+                    // Process each blog and extract metadata
                     this.blogs = await Promise.all(
-                        blogFiles.map(async (filename, index) => {
+                        blogIndex.files.map(async (filename, index) => {
                             try {
-                                const response = await fetch(filename, { method: 'HEAD' });
-                                if (response.ok) {
-                                    return await this.createBlogMetadata(filename, index);
-                                }
-                                return null;
+                                const blogData = await this.extractBlogMetadata(filename);
+                                return {
+                                    id: index,
+                                    filename: filename,
+                                    ...blogData,
+                                    url: filename
+                                };
                             } catch (error) {
-                                console.warn(`Could not access ${filename}:`, error);
+                                console.warn(`Could not process ${filename}:`, error);
                                 return null;
                             }
                         })
                     );
 
-                    // Filter out null entries (files that don't exist)
+                    // Filter out null entries and sort by date
                     this.blogs = this.blogs.filter(blog => blog !== null);
-                    
-                    // Sort by date (newest first)
                     this.blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    
                     this.filteredBlogs = [...this.blogs];
+
                 } catch (error) {
                     console.error('Error loading blogs:', error);
                     this.handleLoadError();
                 }
             }
 
-            async createBlogMetadata(filename, index) {
-                // Extract metadata from filename or fetch from file
-                // In a real implementation, you might parse the HTML file's head section
-                const metadata = this.extractMetadataFromFilename(filename);
-                
-                return {
-                    id: index,
-                    filename: filename,
-                    title: metadata.title,
-                    description: metadata.description,
-                    date: metadata.date,
-                    tags: metadata.tags,
-                    url: filename
-                };
-            }
-
-            extractMetadataFromFilename(filename) {
-                // This is a simplified approach - in reality you'd parse the HTML file
-                const baseMetadata = {
-                    date: new Date().toISOString().split('T')[0],
-                    tags: ['visualization', 'interactive']
-                };
-
-                if (filename.includes('bias-variance-dartboard')) {
+            async extractBlogMetadata(filename) {
+                try {
+                    const response = await fetch(filename);
+                    const html = await response.text();
+                    
+                    // Create a temporary DOM parser
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extract metadata from meta tags and content
+                    const title = doc.querySelector('title')?.textContent || 
+                                 doc.querySelector('meta[name="title"]')?.content ||
+                                 doc.querySelector('h1')?.textContent ||
+                                 this.formatTitle(filename);
+                    
+                    const description = doc.querySelector('meta[name="description"]')?.content ||
+                                      doc.querySelector('meta[property="og:description"]')?.content ||
+                                      this.extractFirstParagraph(doc) ||
+                                      'An interactive exploration of data science concepts.';
+                    
+                    const keywords = doc.querySelector('meta[name="keywords"]')?.content ||
+                                    doc.querySelector('meta[name="tags"]')?.content ||
+                                    '';
+                    
+                    const dateStr = doc.querySelector('meta[name="date"]')?.content ||
+                                   doc.querySelector('meta[property="article:published_time"]')?.content ||
+                                   new Date().toISOString().split('T')[0];
+                    
+                    // Extract tags from keywords or infer from filename and content
+                    let tags = [];
+                    if (keywords) {
+                        tags = keywords.split(',').map(tag => tag.trim().toLowerCase());
+                    } else {
+                        tags = this.inferTags(filename, title, description);
+                    }
+                    
                     return {
-                        ...baseMetadata,
-                        title: 'Bias-Variance Tradeoff: Dartboard Visualization',
-                        description: 'Interactive dartboard visualization explaining the fundamental concepts of bias and variance in machine learning through an intuitive analogy.',
-                        tags: ['machine-learning', 'visualization', 'interactive', 'statistics']
+                        title: title,
+                        description: description,
+                        date: dateStr,
+                        tags: tags
                     };
-                } else if (filename.includes('bias-variance-regression')) {
+                    
+                } catch (error) {
+                    console.warn(`Error extracting metadata from ${filename}:`, error);
                     return {
-                        ...baseMetadata,
-                        title: 'Bias-Variance in Regression Analysis',
-                        description: 'Deep dive into bias-variance tradeoff with regression line visualizations and complete mathematical foundation of estimation theory.',
-                        tags: ['machine-learning', 'statistics', 'regression', 'visualization']
+                        title: this.formatTitle(filename),
+                        description: 'An interactive exploration of data science concepts.',
+                        date: new Date().toISOString().split('T')[0],
+                        tags: ['visualization', 'interactive']
                     };
                 }
+            }
 
-                // Default metadata
-                return {
-                    ...baseMetadata,
-                    title: this.formatTitle(filename),
-                    description: 'An interactive exploration of data science concepts.'
+            extractFirstParagraph(doc) {
+                // Try to find the first meaningful paragraph
+                const paragraphs = doc.querySelectorAll('p');
+                for (let p of paragraphs) {
+                    const text = p.textContent.trim();
+                    if (text.length > 50) { // Ensure it's substantial
+                        return text.length > 150 ? text.substring(0, 147) + '...' : text;
+                    }
+                }
+                
+                // If no good paragraph, try other elements
+                const header = doc.querySelector('h2, h3');
+                if (header) {
+                    return header.textContent.trim();
+                }
+                
+                return null;
+            }
+
+            inferTags(filename, title, description) {
+                const text = (filename + ' ' + title + ' ' + description).toLowerCase();
+                const tagMap = {
+                    'machine-learning': ['machine', 'learning', 'ml', 'algorithm', 'model', 'prediction'],
+                    'statistics': ['statistics', 'statistical', 'probability', 'distribution', 'regression'],
+                    'visualization': ['visualization', 'chart', 'graph', 'plot', 'visual'],
+                    'interactive': ['interactive', 'simulation', 'demo', 'explorer'],
+                    'bias-variance': ['bias', 'variance', 'tradeoff', 'dartboard'],
+                    'data-science': ['data', 'science', 'analysis', 'analytics']
                 };
+
+                const inferredTags = [];
+                for (const [tag, keywords] of Object.entries(tagMap)) {
+                    if (keywords.some(keyword => text.includes(keyword))) {
+                        inferredTags.push(tag);
+                    }
+                }
+
+                return inferredTags.length > 0 ? inferredTags : ['visualization', 'interactive'];
             }
 
             formatTitle(filename) {
@@ -642,7 +684,7 @@
                     container.innerHTML = `
                         <div class="no-blogs">
                             <h3>No blogs found</h3>
-                            <p>Try adjusting your search terms or filters. Or maybe it's time to write a new blog post! 📝</p>
+                            <p>Try adjusting your search terms or filters, or add some blog posts to your Blogs folder! 📝</p>
                         </div>
                     `;
                     return;
@@ -720,8 +762,8 @@
                 container.innerHTML = `
                     <div class="no-blogs">
                         <h3>Unable to load blogs</h3>
-                        <p>Please make sure your blog files are in the correct directory and accessible.</p>
-                        <p>Expected structure: <code>Blogs/your-blog-file.html</code></p>
+                        <p>Make sure you have a <code>blog-index.json</code> file in your Blogs folder.</p>
+                        <p>Run the blog indexer script to generate this file automatically.</p>
                     </div>
                 `;
             }

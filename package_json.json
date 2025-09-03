@@ -1,0 +1,27 @@
+{
+  "name": "personal-website-blog-system",
+  "version": "1.0.0",
+  "description": "Automated blog indexing system for personal website",
+  "main": "generate-blog-index.js",
+  "scripts": {
+    "generate-index": "node generate-blog-index.js",
+    "watch-blogs": "nodemon --watch Blogs --ext html --exec 'npm run generate-index'",
+    "serve": "python -m http.server 8000",
+    "dev": "concurrently \"npm run serve\" \"npm run watch-blogs\""
+  },
+  "keywords": [
+    "blog",
+    "static-site",
+    "github-pages",
+    "automation"
+  ],
+  "author": "Mohammad Noorchenarboo",
+  "license": "MIT",
+  "dependencies": {
+    "jsdom": "^22.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.0"
+  }
+}

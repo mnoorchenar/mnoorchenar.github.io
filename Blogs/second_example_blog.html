@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Blog Metadata -->
+    <title>Interactive Data Visualization Best Practices for Biostatistics</title>
+    <meta name="description" content="Learn essential principles for creating effective data visualizations in biostatistics and medical research, with interactive examples and practical guidelines for communicating complex statistical results clearly.">
+    <meta name="keywords" content="biostatistics, data-science, visualization, interactive, statistics, medical-research">
+    <meta name="date" content="2025-09-02">
+    <meta name="author" content="Mohammad Noorchenarboo">
+    
+    <!-- Open Graph metadata for social sharing -->
+    <meta property="og:title" content="Interactive Data Visualization Best Practices for Biostatistics">
+    <meta property="og:description" content="Essential principles for creating effective data visualizations in medical research.">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-09-02">
+    <meta property="article:author" content="Mohammad Noorchenarboo">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .blog-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-header h1 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-meta {
+            opacity: 0.9;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .blog-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .blog-content h2 {
+            color: #2c3e50;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.8rem;
+        }
+
+        .blog-content h3 {
+            color: #34495e;
+            margin: 1.5rem 0 0.8rem 0;
+            font-size: 1.4rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .interactive-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(to right, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a67d8;
+        }
+
+        .principle-box {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        code {
+            background: #f1f3f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .blog-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-header">
+        <h1>Data Visualization Best Practices for Biostatistics</h1>
+        <div class="blog-meta">
+            <span>📅 September 2, 2025</span>
+            <span>👤 Mohammad Noorchenarboo</span>
+            <span>📖 ~6 min read</span>
+        </div>
+        <div class="tags">
+            <span class="tag">biostatistics</span>
+            <span class="tag">data-science</span>
+            <span class="tag">visualization</span>
+            <span class="tag">interactive</span>
+            <span class="tag">statistics</span>
+        </div>
+    </div>
+
+    <div class="blog-content">
+        <p>Effective data visualization is crucial in biostatistics and medical research, where clear communication can directly impact patient care and public health decisions. This post explores key principles for creating visualizations that not only look good but also accurately represent complex biostatistical data and facilitate proper interpretation by both technical and non-technical audiences.</p>
+
+        <h2>The Stakes in Medical Data Visualization</h2>
+        <p>Unlike other fields, biostatistical visualizations carry unique responsibilities. Misrepresenting medical data can lead to incorrect treatment decisions, misguided policy, or public health misinformation. Therefore, accuracy, clarity, and ethical representation are paramount.</p>
+
+        <div class="principle-box">
+            <strong>Golden Rule:</strong> Every visualization choice should enhance understanding, not obscure it. If a design element doesn't serve the data story, remove it.
+        </div>
+
+        <h2>Interactive Demonstration: Chart Type Selection</h2>
+        <div class="interactive-section">
+            <h3>📊 Choose the Right Chart Type</h3>
+            <p>Select different chart types to see how they affect data interpretation:</p>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="showChart('survival')">Survival Curves</button>
+                <button class="control-btn" onclick="showChart('distribution')">Distribution Plots</button>
+                <button class="control-btn" onclick="showChart('correlation')">Correlation Matrix</button>
+                <button class="control-btn" onclick="showChart('timeline')">Clinical Timeline</button>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart" id="demonstrationChart">
+                    <div style="text-align: center; line-height: 250px; color: #666;">
+                        Select a chart type above to see visualization examples
+                    </div>
+                </div>
+            </div>
+            
+            <p id="chartExplanation">Click a button above to explore different visualization approaches!</p>
+        </div>
+
+        <h2>Essential Principles for Biostatistical Visualizations</h2>
+
+        <h3>1. Respect the Data Distribution</h3>
+        <p>Always show the underlying data distribution, especially in small samples common in clinical trials. Box plots, violin plots, or strip charts are often more informative than bar charts with error bars.</p>
+
+        <h3>2. Handle Missing Data Transparently</h3>
+        <p>Missing data is common in medical research. Make it visible rather than hiding it, and explain your imputation methods if used.</p>
+
+        <div class="warning-box">
+            <strong>Common Mistake:</strong> Dropping missing data without acknowledgment can bias results and mislead viewers about sample sizes and data quality.
+        </div>
+
+        <h3>3. Use Appropriate Confidence Intervals</h3>
+        <p>Always include confidence intervals, but choose the right level (95%, 99%) based on your field's conventions and the consequences of Type I errors.</p>
+
+        <h3>4. Consider Your Audience</h3>
+        <p>Clinicians, patients, policymakers, and researchers have different needs. Design your visualization for its intended audience while maintaining statistical rigor.</p>
+
+        <h2>Interactive Color and Accessibility Guidelines</h2>
+        <div class="interactive-section">
+            <h3>🎨 Color Choices Matter</h3>
+            <p>Test different color schemes and see their impact on accessibility:</p>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="changeColorScheme('colorblind')">Colorblind-Friendly</button>
+                <button class="control-btn" onclick="changeColorScheme('medical')">Medical Standard</button>
+                <button class="control-btn" onclick="changeColorScheme('high-contrast')">High Contrast</button>
+                <button class="control-btn" onclick="changeColorScheme('problematic')">Problematic</button>
+            </div>
+            
+            <div class="chart-container">
+                <div id="colorDemo" style="display: flex; gap: 1rem; justify-content: center; align-items: center; height: 200px;">
+                    <div class="color-sample" style="width: 50px; height: 50px; border-radius: 50%; background: #ff4444;"></div>
+                    <div class="color-sample" style="width: 50px; height: 50px; border-radius: 50%; background: #44ff44;"></div>
+                    <div class="color-sample" style="width: 50px; height: 50px; border-radius: 50%; background: #4444ff;"></div>
+                </div>
+            </div>
+            
+            <p id="colorExplanation">Default colors shown above</p>
+        </div>
+
+        <h2>Common Pitfalls to Avoid</h2>
+        <p><strong>Misleading scales:</strong> Always start bar charts at zero for absolute comparisons. Use breaks carefully and label them clearly.</p>
+        <p><strong>Overcomplicating:</strong> Resist the urge to show everything in one chart. Sometimes multiple simple charts are better than one complex visualization.</p>
+        <p><strong>Ignoring statistical significance:</strong> Don't imply differences that aren't statistically supported. Use appropriate visual cues for significance levels.</p>
+
+        <h2>Tools and Technologies</h2>
+        <p>For biostatistical work, consider these tools based on your needs:</p>
+        <p>• <strong>R + ggplot2:</strong> Excellent for statistical graphics and publication-ready plots</p>
+        <p>• <strong>Python + matplotlib/seaborn:</strong> Great for data science workflows and custom visualizations</p>
+        <p>• <strong>Tableau/Power BI:</strong> Good for interactive dashboards and stakeholder presentations</p>
+        <p>• <strong>D3.js:</strong> Ultimate flexibility for web-based interactive visualizations</p>
+
+        <h2>Conclusion</h2>
+        <p>Effective biostatistical visualization requires balancing statistical rigor with clear communication. By following these principles and considering your audience's needs, you can create visualizations that not only inform but also inspire confidence in your analytical work.</p>
+        <p>Remember: the goal isn't to impress with complex graphics, but to communicate insights that can improve health outcomes and advance medical knowledge.</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="blogs.html" class="back-link">← Back to All Blogs</a>
+    </div>
+
+    <script>
+        console.log('Data Visualization blog loaded successfully!');
+        
+        function showChart(type) {
+            const chart = document.getElementById('demonstrationChart');
+            const explanation = document.getElementById('chartExplanation');
+            
+            chart.innerHTML = '';
+            
+            switch(type) {
+                case 'survival':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <defs>
+                                <linearGradient id="survivalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Survival Curves by Treatment Group</text>
+                            <path d="M 50 50 L 50 200 L 450 200" stroke="#333" fill="none" stroke-width="2"/>
+                            <path d="M 50 50 Q 200 60 300 80 T 450 120" stroke="#667eea" fill="none" stroke-width="3"/>
+                            <path d="M 50 70 Q 200 90 300 120 T 450 160" stroke="#764ba2" fill="none" stroke-width="3"/>
+                            <text x="70" y="45" font-size="12" fill="#667eea">Treatment A</text>
+                            <text x="70" y="65" font-size="12" fill="#764ba2">Treatment B</text>
+                            <text x="25" y="130" font-size="12" fill="#666" transform="rotate(-90, 25, 130)">Survival Probability</text>
+                            <text x="250" y="220" font-size="12" fill="#666" text-anchor="middle">Time (months)</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '🔬 Survival curves show probability of survival over time. Include confidence intervals and risk tables below the plot.';
+                    break;
+                    
+                case 'distribution':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Distribution Comparison</text>
+                            <g transform="translate(100, 50)">
+                                ${Array.from({length: 30}, (_, i) => {
+                                    const x = i * 8;
+                                    const height = Math.exp(-((i-15)**2)/25) * 80;
+                                    return `<rect x="${x}" y="${150-height}" width="6" height="${height}" fill="#667eea" opacity="0.7"/>`;
+                                }).join('')}
+                            </g>
+                            <g transform="translate(100, 50)">
+                                ${Array.from({length: 30}, (_, i) => {
+                                    const x = i * 8;
+                                    const height = Math.exp(-((i-10)**2)/20) * 60;
+                                    return `<rect x="${x}" y="${150-height}" width="6" height="${height}" fill="#764ba2" opacity="0.7"/>`;
+                                }).join('')}
+                            </g>
+                            <text x="200" y="220" font-size="12" fill="#666" text-anchor="middle">Biomarker Value</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '📈 Distribution plots reveal data shape, outliers, and group differences better than summary statistics alone.';
+                    break;
+                    
+                case 'correlation':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Correlation Heatmap</text>
+                            ${Array.from({length: 5}, (_, i) => 
+                                Array.from({length: 5}, (_, j) => {
+                                    const intensity = Math.abs(Math.sin((i+j)/2));
+                                    const color = intensity > 0.5 ? '#667eea' : '#f8f9fa';
+                                    return `<rect x="${60 + j*40}" y="${50 + i*30}" width="35" height="25" fill="${color}" stroke="#ddd"/>`;
+                                }).join('')
+                            ).join('')}
+                            <text x="30" y="100" font-size="10" fill="#666">Variables</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '🔗 Correlation matrices help identify multicollinearity and variable relationships in complex datasets.';
+                    break;
+                    
+                case 'timeline':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Clinical Trial Timeline</text>
+                            <line x1="50" y1="100" x2="450" y2="100" stroke="#333" stroke-width="2"/>
+                            <circle cx="100" cy="100" r="6" fill="#667eea"/>
+                            <circle cx="200" cy="100" r="6" fill="#764ba2"/>
+                            <circle cx="350" cy="100" r="6" fill="#ff6b6b"/>
+                            <text x="100" y="130" font-size="10" fill="#666" text-anchor="middle">Baseline</text>
+                            <text x="200" y="130" font-size="10" fill="#666" text-anchor="middle">6 months</text>
+                            <text x="350" y="130" font-size="10" fill="#666" text-anchor="middle">12 months</text>
+                            <rect x="80" y="60" width="40" height="20" fill="#e3f2fd" stroke="#667eea"/>
+                            <text x="100" y="75" font-size="8" fill="#333" text-anchor="middle">Enrollment</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '⏱️ Timeline visualizations help track patient journeys and identify patterns in treatment responses over time.';
+                    break;
+            }
+        }
+        
+        function changeColorScheme(scheme) {
+            const colorDemo = document.getElementById('colorDemo');
+            const explanation = document.getElementById('colorExplanation');
+            const samples = colorDemo.querySelectorAll('.color-sample');
+            
+            switch(scheme) {
+                case 'colorblind':
+                    samples[0].style.background = '#0173B2'; // Blue
+                    samples[1].style.background = '#DE8F05'; // Orange  
+                    samples[2].style.background = '#029E73'; // Green
+                    explanation.textContent = '✅ Colorblind-friendly palette using blues, oranges, and greens that are distinguishable.';
+                    break;
+                    
+                case 'medical':
+                    samples[0].style.background = '#2E8B57'; // Medical green
+                    samples[1].style.background = '#DC143C'; // Medical red
+                    samples[2].style.background = '#4682B4'; // Steel blue
+                    explanation.textContent = '🏥 Medical standard colors: green for positive/healthy, red for negative/critical, blue for neutral.';
+                    break;
+                    
+                case 'high-contrast':
+                    samples[0].style.background = '#000000'; // Black
+                    samples[1].style.background = '#FFFFFF'; // White
+                    samples[2].style.background = '#808080'; // Gray
+                    samples[1].style.border = '2px solid #000';
+                    explanation.textContent = '🔳 High contrast scheme for accessibility and clarity in presentations.';
+                    break;
+                    
+                case 'problematic':
+                    samples[0].style.background = '#FF0000'; // Red
+                    samples[1].style.background = '#00FF00'; // Green
+                    samples[2].style.background = '#FFFF00'; // Yellow
+                    explanation.textContent = '⚠️ Problematic: These colors are hard to distinguish for colorblind individuals (~8% of men).';
+                    break;
+            }
+        }
+
+        <h2>Statistical Accuracy Guidelines</h2>
+
+        <h3>Confidence Intervals and Error Bars</h3>
+        <p>Always specify what your error bars represent. Standard error, standard deviation, and confidence intervals tell different stories.</p>
+
+        <div class="principle-box">
+            <strong>Best Practice:</strong> Use 95% confidence intervals for effect estimates and clearly label them as such.
+        </div>
+
+        <h3>P-value Visualization</h3>
+        <p>Avoid emphasizing arbitrary p-value thresholds. Instead, focus on effect sizes and their practical significance.</p>
+
+        <div class="warning-box">
+            <strong>Caution:</strong> Don't use different colors or symbols to highlight "significant" vs "non-significant" results without considering effect sizes and confidence intervals.
+        </div>
+
+        <h2>Regulatory and Publication Considerations</h2>
+        <p>When creating visualizations for regulatory submission or publication:</p>
+        <p>• Follow journal-specific guidelines for figure formatting</p>
+        <p>• Ensure reproducibility with clear captions and methods</p>
+        <p>• Include sample sizes prominently</p>
+        <p>• Provide both absolute and relative measures when appropriate</p>
+
+        <h2>Tools and Workflow</h2>
+        <p>For biostatistical visualizations, I recommend:</p>
+        <p>• <strong>R + ggplot2:</strong> Industry standard for statistical graphics</p>
+        <p>• <strong>SAS/PROC SGPLOT:</strong> Common in pharmaceutical industry</p>
+        <p>• <strong>Python + matplotlib/seaborn:</strong> Great for reproducible research</p>
+        <p>• <strong>Stata graphics:</strong> Excellent for epidemiological studies</p>
+
+        <h2>Conclusion</h2>
+        <p>Creating effective biostatistical visualizations requires balancing statistical rigor, visual clarity, and audience needs. By following these principles and considering the unique requirements of medical data, we can create visualizations that not only inform but also support better decision-making in healthcare and research.</p>
+        <p>Remember: in biostatistics, clarity isn't just good design—it's an ethical imperative that can impact patient outcomes and public health decisions.</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="blogs.html" class="back-link">← Back to All Blogs</a>
+    </div>
+
+    <script>
+        console.log('Data Visualization blog loaded successfully!');
+        
+        function showChart(type) {
+            const chart = document.getElementById('demonstrationChart');
+            const explanation = document.getElementById('chartExplanation');
+            
+            chart.innerHTML = '';
+            
+            switch(type) {
+                case 'survival':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <defs>
+                                <linearGradient id="survivalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Survival Curves by Treatment Group</text>
+                            <path d="M 50 50 L 50 200 L 450 200" stroke="#333" fill="none" stroke-width="2"/>
+                            <path d="M 50 50 Q 200 60 300 80 T 450 120" stroke="#667eea" fill="none" stroke-width="3"/>
+                            <path d="M 50 70 Q 200 90 300 120 T 450 160" stroke="#764ba2" fill="none" stroke-width="3"/>
+                            <text x="70" y="45" font-size="12" fill="#667eea">Treatment A</text>
+                            <text x="70" y="65" font-size="12" fill="#764ba2">Treatment B</text>
+                            <text x="25" y="130" font-size="12" fill="#666" transform="rotate(-90, 25, 130)">Survival Probability</text>
+                            <text x="250" y="220" font-size="12" fill="#666" text-anchor="middle">Time (months)</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '🔬 Survival curves show probability of survival over time. Include confidence intervals and risk tables below the plot.';
+                    break;
+                    
+                case 'distribution':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Distribution Comparison</text>
+                            <g transform="translate(100, 50)">
+                                ${Array.from({length: 30}, (_, i) => {
+                                    const x = i * 8;
+                                    const height = Math.exp(-((i-15)**2)/25) * 80;
+                                    return `<rect x="${x}" y="${150-height}" width="6" height="${height}" fill="#667eea" opacity="0.7"/>`;
+                                }).join('')}
+                            </g>
+                            <g transform="translate(100, 50)">
+                                ${Array.from({length: 30}, (_, i) => {
+                                    const x = i * 8;
+                                    const height = Math.exp(-((i-10)**2)/20) * 60;
+                                    return `<rect x="${x}" y="${150-height}" width="6" height="${height}" fill="#764ba2" opacity="0.7"/>`;
+                                }).join('')}
+                            </g>
+                            <text x="200" y="220" font-size="12" fill="#666" text-anchor="middle">Biomarker Value</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '📈 Distribution plots reveal data shape, outliers, and group differences better than summary statistics alone.';
+                    break;
+                    
+                case 'correlation':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Correlation Heatmap</text>
+                            ${Array.from({length: 5}, (_, i) => 
+                                Array.from({length: 5}, (_, j) => {
+                                    const intensity = Math.abs(Math.sin((i+j)/2));
+                                    const color = intensity > 0.5 ? '#667eea' : '#f8f9fa';
+                                    return `<rect x="${60 + j*40}" y="${50 + i*30}" width="35" height="25" fill="${color}" stroke="#ddd"/>`;
+                                }).join('')
+                            ).join('')}
+                            <text x="30" y="100" font-size="10" fill="#666">Variables</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '🔗 Correlation matrices help identify multicollinearity and variable relationships in complex datasets.';
+                    break;
+                    
+                case 'timeline':
+                    chart.innerHTML = `
+                        <svg width="100%" height="250" style="background: white;">
+                            <text x="50%" y="30" text-anchor="middle" font-size="16" font-weight="bold">Clinical Trial Timeline</text>
+                            <line x1="50" y1="100" x2="450" y2="100" stroke="#333" stroke-width="2"/>
+                            <circle cx="100" cy="100" r="6" fill="#667eea"/>
+                            <circle cx="200" cy="100" r="6" fill="#764ba2"/>
+                            <circle cx="350" cy="100" r="6" fill="#ff6b6b"/>
+                            <text x="100" y="130" font-size="10" fill="#666" text-anchor="middle">Baseline</text>
+                            <text x="200" y="130" font-size="10" fill="#666" text-anchor="middle">6 months</text>
+                            <text x="350" y="130" font-size="10" fill="#666" text-anchor="middle">12 months</text>
+                            <rect x="80" y="60" width="40" height="20" fill="#e3f2fd" stroke="#667eea"/>
+                            <text x="100" y="75" font-size="8" fill="#333" text-anchor="middle">Enrollment</text>
+                        </svg>
+                    `;
+                    explanation.textContent = '⏱️ Timeline visualizations help track patient journeys and identify patterns in treatment responses over time.';
+                    break;
+            }
+        }
+        
+        function changeColorScheme(scheme) {
+            const colorDemo = document.getElementById('colorDemo');
+            const explanation = document.getElementById('colorExplanation');
+            const samples = colorDemo.querySelectorAll('.color-sample');
+            
+            // Reset borders
+            samples.forEach(sample => sample.style.border = 'none');
+            
+            switch(scheme) {
+                case 'colorblind':
+                    samples[0].style.background = '#0173B2'; // Blue
+                    samples[1].style.background = '#DE8F05'; // Orange  
+                    samples[2].style.background = '#029E73'; // Green
+                    explanation.textContent = '✅ Colorblind-friendly palette using blues, oranges, and greens that are distinguishable.';
+                    break;
+                    
+                case 'medical':
+                    samples[0].style.background = '#2E8B57'; // Medical green
+                    samples[1].style.background = '#DC143C'; // Medical red
+                    samples[2].style.background = '#4682B4'; // Steel blue
+                    explanation.textContent = '🏥 Medical standard colors: green for positive/healthy, red for negative/critical, blue for neutral.';
+                    break;
+                    
+                case 'high-contrast':
+                    samples[0].style.background = '#000000'; // Black
+                    samples[1].style.background = '#FFFFFF'; // White
+                    samples[2].style.background = '#808080'; // Gray
+                    samples[1].style.border = '2px solid #000';
+                    explanation.textContent = '🔳 High contrast scheme for accessibility and clarity in presentations.';
+                    break;
+                    
+                case 'problematic':
+                    samples[0].style.background = '#FF0000'; // Red
+                    samples[1].style.background = '#00FF00'; // Green
+                    samples[2].style.background = '#FFFF00'; // Yellow
+                    explanation.textContent = '⚠️ Problematic: These colors are hard to distinguish for colorblind individuals (~8% of men).';
+                    break;
+            }
+        }
+        
+        // Add smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
