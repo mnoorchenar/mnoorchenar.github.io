@@ -1,0 +1,12 @@
+{
+  "name": "personal-website-blog-system",
+  "version": "1.0.0",
+  "description": "Automated blog system for GitHub Pages",
+  "main": "generate-blog-index.js",
+  "scripts": {
+    "build": "node generate-blog-index.js"
+  },
+  "dependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

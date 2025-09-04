@@ -3,45 +3,32 @@ name: Update Blog Index
 on:
   push:
     paths:
-      - 'Blogs/*.html'
-      - '!Blogs/blogs.html'
-  workflow_dispatch: # Allows manual triggering
+      - "Blogs/*.html"
+      - "generate-blog-index.js"
 
 jobs:
-  update-blog-index:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Install dependencies
-      run: |
-        npm init -y
-        npm install jsdom
-        
-    - name: Generate blog index
-      run: node generate-blog-index.js
-      
-    - name: Check for changes
-      id: verify-changed-files
-      run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "changed=true" >> $GITHUB_OUTPUT
-        else
-          echo "changed=false" >> $GITHUB_OUTPUT
-        fi
-        
-    - name: Commit and push changes
-      if: steps.verify-changed-files.outputs.changed == 'true'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add Blogs/blog-index.json
-        git commit -m "Auto-update blog index [skip ci]"
-        git push
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate blog index
+        run: npm run build
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add Blogs/blog-index.json
+          git commit -m "Update blog index"
+          git push
+        continue-on-error: true
