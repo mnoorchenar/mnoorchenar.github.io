@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Diff Tool</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    textarea {
+      width: 45%;
+      height: 200px;
+      margin: 10px;
+      font-family: monospace;
+    }
+    #inputs {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    #result {
+      margin-top: 20px;
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    ins {
+      background: #cfc;
+      text-decoration: none;
+    }
+    del {
+      background: #fdd;
+      text-decoration: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Diff Tool (like diffdiff.net)</h2>
+  <div id="inputs">
+    <textarea id="left" placeholder="Paste original text here"></textarea>
+    <textarea id="right" placeholder="Paste modified text here"></textarea>
+  </div>
+  <button onclick="runDiff()">Compare</button>
+  <div id="result"></div>
+
+  <!-- Inline diff library (jsdiff) -->
+  <script>
+  /*! jsdiff (simplified inline build) */
+  // This is a minimal embed of JsDiff's diffWords
+  function diffWords(oldStr, newStr) {
+    function tokenize(str){ return str.split(/(\s+)/); }
+    const oldWords = tokenize(oldStr), newWords = tokenize(newStr);
+    const diff = [];
+    let i = 0, j = 0;
+    while (i < oldWords.length || j < newWords.length) {
+      if (oldWords[i] === newWords[j]) {
+        diff.push({ value: oldWords[i] });
+        i++; j++;
+      } else if (newWords[j] && !oldWords.includes(newWords[j])) {
+        diff.push({ added: true, value: newWords[j++] });
+      } else if (oldWords[i] && !newWords.includes(oldWords[i])) {
+        diff.push({ removed: true, value: oldWords[i++] });
+      } else {
+        i++; j++;
+      }
+    }
+    return diff;
+  }
+
+  function runDiff() {
+    const left = document.getElementById('left').value;
+    const right = document.getElementById('right').value;
+    const diff = diffWords(left, right);
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = diff.map(part => {
+      if (part.added) return '<ins>' + part.value + '</ins>';
+      if (part.removed) return '<del>' + part.value + '</del>';
+      return part.value;
+    }).join('');
+  }
+  </script>
+</body>
+</html>
