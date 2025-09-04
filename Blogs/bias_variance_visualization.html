@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bias-Variance in Regression Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .scenario {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .scenario:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .scenario.high-bias-high-variance {
+            border-color: #e74c3c;
+        }
+        
+        .scenario.high-bias-low-variance {
+            border-color: #f39c12;
+        }
+        
+        .scenario.low-bias-high-variance {
+            border-color: #3498db;
+        }
+        
+        .scenario.low-bias-low-variance {
+            border-color: #27ae60;
+        }
+        
+        .scenario h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .plot-container {
+            width: 100%;
+            height: 250px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            position: relative;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .plot-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .description {
+            text-align: center;
+            color: #2c3e50;
+            line-height: 1.5;
+            font-size: 0.9em;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .mathematical-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .mathematical-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .math-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .math-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .formula {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .explanation {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        
+        .key-insight {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .math-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bias-Variance Tradeoff in Regression</h1>
+        <p class="subtitle">Visualizing how different models fit the same data with varying bias and variance</p>
+        
+        <div class="controls">
+            <button class="btn" onclick="generateNewData()">📊 Generate New Dataset</button>
+            <button class="btn" onclick="animateModels()">🎬 Animate Model Training</button>
+            <button class="btn" onclick="showAverageModels()">📈 Show Average Models</button>
+        </div>
+        
+        <div class="scenarios-grid">
+            <div class="scenario high-bias-high-variance">
+                <h3>High Bias, High Variance</h3>
+                <div class="plot-container">
+                    <svg class="plot-svg" id="plot1"></svg>
+                </div>
+                <div class="description">
+                    <strong>Complex model, insufficient data:</strong> Models vary wildly between datasets (high variance) but average prediction is far from truth (high bias). Often seen in deep networks with very little training data.
+                </div>
+            </div>
+            
+            <div class="scenario high-bias-low-variance">
+                <h3>High Bias, Low Variance</h3>
+                <div class="plot-container">
+                    <svg class="plot-svg" id="plot2"></svg>
+                </div>
+                <div class="description">
+                    <strong>Underfitting (Linear model for nonlinear data):</strong> All models are similar (low variance) but consistently miss the true relationship (high bias). Too simple to capture complexity.
+                </div>
+            </div>
+            
+            <div class="scenario low-bias-high-variance">
+                <h3>Low Bias, High Variance</h3>
+                <div class="plot-container">
+                    <svg class="plot-svg" id="plot3"></svg>
+                </div>
+                <div class="description">
+                    <strong>Overfitting (High-degree polynomial):</strong> Models vary significantly (high variance) but average prediction is close to truth (low bias). Too flexible, memorizes noise.
+                </div>
+            </div>
+            
+            <div class="scenario low-bias-low-variance">
+                <h3>Low Bias, Low Variance</h3>
+                <div class="plot-container">
+                    <svg class="plot-svg" id="plot4"></svg>
+                </div>
+                <div class="description">
+                    <strong>Well-regularized model:</strong> Models are consistent across datasets (low variance) and average prediction matches truth well (low bias). The sweet spot!
+                </div>
+            </div>
+        </div>
+        
+        <div class="mathematical-section">
+            <h2>🔬 Mathematical Foundation of Bias and Variance</h2>
+            
+            <div class="math-content">
+                <div class="math-box">
+                    <h3>📐 Bias Definition</h3>
+                    <div class="formula">
+                        Bias²[f̂(x)] = (E[f̂(x)] - f(x))²
+                    </div>
+                    <div class="explanation">
+                        <strong>Bias</strong> measures the difference between the <em>expected prediction</em> of our model and the <em>true value</em>.
+                        <br><br>
+                        • <strong>E[f̂(x)]</strong>: Average prediction across all possible training sets<br>
+                        • <strong>f(x)</strong>: True function we're trying to learn<br>
+                        • <strong>High bias</strong>: Model systematically under/over-estimates
+                    </div>
+                </div>
+                
+                <div class="math-box">
+                    <h3>📊 Variance Definition</h3>
+                    <div class="formula">
+                        Var[f̂(x)] = E[(f̂(x) - E[f̂(x)])²]
+                    </div>
+                    <div class="explanation">
+                        <strong>Variance</strong> measures how much predictions <em>vary</em> when we train on different datasets.
+                        <br><br>
+                        • <strong>f̂(x)</strong>: Prediction from a specific training set<br>
+                        • <strong>E[f̂(x)]</strong>: Average prediction across training sets<br>
+                        • <strong>High variance</strong>: Predictions change dramatically with new data
+                    </div>
+                </div>
+            </div>
+            
+            <div class="key-insight">
+                🎯 The Fundamental Decomposition of Expected Error
+            </div>
+            
+            <div class="formula" style="font-size: 1.3em;">
+                E[(y - f̂(x))²] = Bias²[f̂(x)] + Var[f̂(x)] + σ²
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>🔍 Breaking Down the Error Components:</h3>
+                <ul style="line-height: 2;">
+                    <li><strong>Bias²:</strong> Error due to oversimplifying assumptions in the learning algorithm</li>
+                    <li><strong>Variance:</strong> Error due to sensitivity to small fluctuations in the training set</li>
+                    <li><strong>σ² (Irreducible Error):</strong> Noise inherent in the problem that no model can eliminate</li>
+                </ul>
+                
+                <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>💡 Key Insight:</strong> As model complexity increases, bias typically decreases but variance increases. The art of machine learning is finding the optimal balance to minimize total error.
+                </div>
+            </div>
+            
+            <div class="math-content">
+                <div class="math-box">
+                    <h3>🎯 In Practice: Estimation</h3>
+                    <div class="explanation">
+                        For a regression model trained on dataset D:<br><br>
+                        <strong>Bias estimation:</strong><br>
+                        Train many models on different samples, compute average prediction, compare to true function<br><br>
+                        <strong>Variance estimation:</strong><br>
+                        Measure how much individual model predictions deviate from the average prediction
+                    </div>
+                </div>
+                
+                <div class="math-box">
+                    <h3>⚖️ The Tradeoff</h3>
+                    <div class="explanation">
+                        <strong>Simple models:</strong><br>
+                        • Low variance (consistent)<br>
+                        • High bias (may miss complexity)<br><br>
+                        <strong>Complex models:</strong><br>
+                        • High variance (sensitive to data)<br>
+                        • Low bias (can capture complexity)<br><br>
+                        <strong>Goal:</strong> Find the sweet spot that minimizes total error
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentData = [];
+        let trueFunction = x => 0.3 * Math.sin(4 * x) + 0.1 * x + 0.5;
+        
+        function generateDataset(n = 20) {
+            const data = [];
+            for (let i = 0; i < n; i++) {
+                const x = Math.random();
+                const y = trueFunction(x) + (Math.random() - 0.5) * 0.2; // Add noise
+                data.push({x, y});
+            }
+            return data.sort((a, b) => a.x - b.x);
+        }
+        
+        function generateNewData() {
+            currentData = generateDataset();
+            updateAllPlots();
+        }
+        
+        function createSVGElement(tag, attributes = {}) {
+            const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            Object.entries(attributes).forEach(([key, value]) => {
+                element.setAttribute(key, value);
+            });
+            return element;
+        }
+        
+        function clearPlot(plotId) {
+            const plot = document.getElementById(plotId);
+            plot.innerHTML = '';
+            return plot;
+        }
+        
+        function drawAxes(plot, width = 300, height = 240) {
+            const axes = createSVGElement('g', {class: 'axes'});
+            
+            // X-axis
+            axes.appendChild(createSVGElement('line', {
+                x1: 40, y1: height - 30,
+                x2: width - 20, y2: height - 30,
+                stroke: '#34495e', 'stroke-width': 2
+            }));
+            
+            // Y-axis
+            axes.appendChild(createSVGElement('line', {
+                x1: 40, y1: 20,
+                x2: 40, y2: height - 30,
+                stroke: '#34495e', 'stroke-width': 2
+            }));
+            
+            plot.appendChild(axes);
+        }
+        
+        function drawDataPoints(plot, data, width = 300, height = 240) {
+            const scaleX = (width - 60) / 1;
+            const scaleY = (height - 50) / 1.2;
+            
+            data.forEach(point => {
+                const cx = 40 + point.x * scaleX;
+                const cy = height - 30 - (point.y + 0.1) * scaleY;
+                
+                const circle = createSVGElement('circle', {
+                    cx, cy, r: 3,
+                    fill: '#2c3e50',
+                    opacity: 0.7
+                });
+                plot.appendChild(circle);
+            });
+        }
+        
+        function drawTrueFunction(plot, width = 300, height = 240) {
+            const scaleX = (width - 60) / 1;
+            const scaleY = (height - 50) / 1.2;
+            const points = [];
+            
+            for (let x = 0; x <= 1; x += 0.01) {
+                const plotX = 40 + x * scaleX;
+                const plotY = height - 30 - (trueFunction(x) + 0.1) * scaleY;
+                points.push(`${plotX},${plotY}`);
+            }
+            
+            const trueLine = createSVGElement('polyline', {
+                points: points.join(' '),
+                fill: 'none',
+                stroke: '#e74c3c',
+                'stroke-width': 3,
+                opacity: 0.8
+            });
+            plot.appendChild(trueLine);
+        }
+        
+        function drawModels(plot, scenario, width = 300, height = 240) {
+            const scaleX = (width - 60) / 1;
+            const scaleY = (height - 50) / 1.2;
+            const numModels = 5;
+            
+            for (let m = 0; m < numModels; m++) {
+                const points = [];
+                
+                for (let x = 0; x <= 1; x += 0.05) {
+                    let y;
+                    const noise = () => (Math.random() - 0.5) * 0.1;
+                    
+                    switch(scenario) {
+                        case 1: // High bias, high variance
+                            // Complex polynomial but biased + noisy
+                            y = 0.2 + 0.3 * x + Math.sin(x * 8 + m) * 0.3 + noise() * 0.4;
+                            break;
+                        case 2: // High bias, low variance
+                            // Simple linear model (underfitting)
+                            y = 0.3 + 0.2 * x + noise() * 0.05;
+                            break;
+                        case 3: // Low bias, high variance
+                            // High-degree polynomial (overfitting)
+                            y = trueFunction(x) + Math.sin(x * 20 + m * 2) * 0.2 + noise() * 0.15;
+                            break;
+                        case 4: // Low bias, low variance
+                            // Well-regularized model
+                            y = trueFunction(x) + noise() * 0.05;
+                            break;
+                    }
+                    
+                    const plotX = 40 + x * scaleX;
+                    const plotY = height - 30 - (y + 0.1) * scaleY;
+                    points.push(`${plotX},${plotY}`);
+                }
+                
+                const modelLine = createSVGElement('polyline', {
+                    points: points.join(' '),
+                    fill: 'none',
+                    stroke: '#3498db',
+                    'stroke-width': 2,
+                    opacity: 0.6,
+                    class: 'model-line'
+                });
+                plot.appendChild(modelLine);
+            }
+        }
+        
+        function updatePlot(plotId, scenario) {
+            const plot = clearPlot(plotId);
+            const rect = plot.parentElement.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            
+            plot.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            
+            drawAxes(plot, width, height);
+            drawTrueFunction(plot, width, height);
+            drawDataPoints(plot, currentData, width, height);
+            drawModels(plot, scenario, width, height);
+            
+            // Add legend
+            const legend = createSVGElement('g', {class: 'legend'});
+            
+            // True function legend
+            legend.appendChild(createSVGElement('line', {
+                x1: width - 120, y1: 25,
+                x2: width - 95, y2: 25,
+                stroke: '#e74c3c', 'stroke-width': 3
+            }));
+            const trueText = createSVGElement('text', {
+                x: width - 90, y: 30,
+                fill: '#2c3e50', 'font-size': '12px'
+            });
+            trueText.textContent = 'True function';
+            legend.appendChild(trueText);
+            
+            // Model predictions legend
+            legend.appendChild(createSVGElement('line', {
+                x1: width - 120, y1: 45,
+                x2: width - 95, y2: 45,
+                stroke: '#3498db', 'stroke-width': 2
+            }));
+            const modelText = createSVGElement('text', {
+                x: width - 90, y: 50,
+                fill: '#2c3e50', 'font-size': '12px'
+            });
+            modelText.textContent = 'Model predictions';
+            legend.appendChild(modelText);
+            
+            plot.appendChild(legend);
+        }
+        
+        function updateAllPlots() {
+            updatePlot('plot1', 1);
+            updatePlot('plot2', 2);
+            updatePlot('plot3', 3);
+            updatePlot('plot4', 4);
+        }
+        
+        function animateModels() {
+            const modelLines = document.querySelectorAll('.model-line');
+            modelLines.forEach((line, index) => {
+                line.style.opacity = '0';
+                setTimeout(() => {
+                    line.style.transition = 'opacity 0.5s ease';
+                    line.style.opacity = '0.6';
+                }, index * 200);
+            });
+        }
+        
+        function showAverageModels() {
+            // This would show the expected prediction E[f̂(x)]
+            document.querySelectorAll('.model-line').forEach(line => {
+                line.style.strokeWidth = '1';
+                line.style.opacity = '0.3';
+            });
+            
+            // Add average lines (simplified implementation)
+            updateAllPlots();
+            
+            setTimeout(() => {
+                document.querySelectorAll('.plot-svg').forEach((plot, index) => {
+                    const avgLine = createSVGElement('polyline', {
+                        points: plot.querySelector('.model-line').getAttribute('points'),
+                        fill: 'none',
+                        stroke: '#f39c12',
+                        'stroke-width': 4,
+                        opacity: 0.9,
+                        'stroke-dasharray': '5,5'
+                    });
+                    plot.appendChild(avgLine);
+                });
+            }, 500);
+        }
+        
+        // Initialize
+        generateNewData();
+        
+        // Make plots responsive
+        window.addEventListener('resize', () => {
+            setTimeout(updateAllPlots, 100);
+        });
+    </script>
+</body>
+</html>
