@@ -3,130 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammad's Blog Collection</title>
+    <title>Mohammad's Blogs - Interactive Visualizations</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            color: #333;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
+            margin-bottom: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         
         h1 {
-            text-align: center;
+            font-size: 2.5em;
             color: #2c3e50;
             margin-bottom: 10px;
-            font-size: 2.5em;
         }
         
         .subtitle {
-            text-align: center;
             color: #7f8c8d;
-            margin-bottom: 40px;
             font-size: 1.1em;
+            margin-bottom: 20px;
         }
         
-        .blog-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .blog-link {
-            display: block;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
             text-decoration: none;
-            color: #2c3e50;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
             transition: all 0.3s ease;
-            border-left: 5px solid #3498db;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
         }
         
-        .blog-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .blog-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .blog-card.statistics {
+            border-left-color: #3498db;
+        }
+        
+        .blog-card.ml {
             border-left-color: #e74c3c;
         }
         
-        .blog-link h3 {
-            margin: 0 0 8px 0;
-            font-size: 1.3em;
+        .blog-card.visualization {
+            border-left-color: #27ae60;
+        }
+        
+        .blog-card.template {
+            border-left-color: #f39c12;
+        }
+        
+        .blog-title {
             color: #2c3e50;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
         
-        .blog-link p {
-            margin: 0;
+        .blog-description {
             color: #7f8c8d;
-            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95em;
         }
         
-        .external-icon {
-            float: right;
-            font-size: 1.2em;
-            color: #3498db;
-            transition: color 0.3s ease;
+        .blog-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
         
-        .blog-link:hover .external-icon {
-            color: #e74c3c;
+        .blog-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
         
-        .count {
+        .tags {
+            margin-bottom: 15px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 2px;
+            font-weight: 500;
+        }
+        
+        .count-info {
             text-align: center;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            font-style: italic;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Mohammad's Blog Collection</h1>
-        <p class="subtitle">Interactive visualizations and educational content</p>
-        <div class="count">Click any link to open in a new tab</div>
-        
-        <div class="blog-links">
-            <a href="Blogs/bias_variance_visualization-archery.html" target="_blank" class="blog-link">
-                <span class="external-icon">↗</span>
-                <h3>Bias-Variance Visualization with Archery</h3>
-                <p>An intuitive dartboard visualization explaining the bias-variance tradeoff using archery targets</p>
-            </a>
-            
-            <a href="Blogs/bias_variance_visualization.html" target="_blank" class="blog-link">
-                <span class="external-icon">↗</span>
-                <h3>Bias-Variance in Regression Analysis</h3>
-                <p>Mathematical visualization of bias-variance tradeoff in regression with interactive plots</p>
-            </a>
-            
-            <a href="Blogs/pca_playground.html" target="_blank" class="blog-link">
-                <span class="external-icon">↗</span>
-                <h3>PCA Interactive Playground</h3>
-                <p>Step-by-step interactive guide to Principal Component Analysis with real-time calculations</p>
-            </a>
-            
-            <a href="Blogs/blogs.html" target="_blank" class="blog-link">
-                <span class="external-icon">↗</span>
-                <h3>Blog Index Page</h3>
-                <p>Automated blog listing page with search and filtering capabilities</p>
-            </a>
-            
-            <a href="Blogs/blog-template.html" target="_blank" class="blog-link">
-                <span class="external-icon">↗</span>
-                <h3>Blog Template</h3>
-                <p>Template file for creating new blog posts with proper metadata structure</p>
-            </a>
+        <header>
+            <h1>Interactive Blog Collection</h1>
+            <p class="subtitle">Data Science & Statistics Visualizations</p>
+            <a href="../index.html" class="back-btn">← Back to Main Site</a>
+        </header>
+
+        <div class="count-info">
+            🎯 Featured Interactive Visualizations & Educational Content
+        </div>
+
+        <div class="blog-grid">
+            <div class="blog-card statistics">
+                <div class="blog-title">Bias-Variance Visualization with Archery</div>
+                <div class="tags">
+                    <span class="tag">Statistics</span>
+                    <span class="tag">Visualization</span>
+                    <span class="tag">Machine Learning</span>
+                </div>
+                <div class="blog-description">
+                    An intuitive dartboard visualization explaining the bias-variance tradeoff using archery targets. Perfect for understanding this fundamental ML concept through interactive examples.
+                </div>
+                <a href="bias_variance_visualization-archery.html" target="_blank" class="blog-link">
+                    View Interactive Demo ↗
+                </a>
+            </div>
+
+            <div class="blog-card ml">
+                <div class="blog-title">Bias-Variance in Regression Analysis</div>
+                <div class="tags">
+                    <span class="tag">Regression</span>
+                    <span class="tag">Statistics</span>
+                    <span class="tag">Interactive</span>
+                </div>
+                <div class="blog-description">
+                    Mathematical visualization of bias-variance tradeoff in regression with interactive plots. Includes the complete mathematical foundation and decomposition formulas.
+                </div>
+                <a href="bias_variance_visualization.html" target="_blank" class="blog-link">
+                    Explore Mathematics ↗
+                </a>
+            </div>
+
+            <div class="blog-card statistics">
+                <div class="blog-title">PCA Interactive Playground</div>
+                <div class="tags">
+                    <span class="tag">PCA</span>
+                    <span class="tag">Linear Algebra</span>
+                    <span class="tag">Educational</span>
+                </div>
+                <div class="blog-description">
+                    Step-by-step interactive guide to Principal Component Analysis with real-time calculations. Learn about eigenvectors, eigenvalues, and data transformation with hands-on examples.
+                </div>
+                <a href="pca_playground.html" target="_blank" class="blog-link">
+                    Start Learning PCA ↗
+                </a>
+            </div>
+
+            <div class="blog-card visualization">
+                <div class="blog-title">Advanced Blog System</div>
+                <div class="tags">
+                    <span class="tag">Web Development</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Automation</span>
+                </div>
+                <div class="blog-description">
+                    Automated blog listing page with search and filtering capabilities. Demonstrates advanced web development techniques with dynamic content loading.
+                </div>
+                <a href="blogs.html" target="_blank" class="blog-link">
+                    View Advanced System ↗
+                </a>
+            </div>
+
+            <div class="blog-card template">
+                <div class="blog-title">Blog Template</div>
+                <div class="tags">
+                    <span class="tag">Template</span>
+                    <span class="tag">Development</span>
+                </div>
+                <div class="blog-description">
+                    Template file for creating new blog posts with proper metadata structure. Shows the foundation for the automated blog indexing system.
+                </div>
+                <a href="blog-template.html" target="_blank" class="blog-link">
+                    View Template ↗
+                </a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 15px;">
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">About These Visualizations</h3>
+            <p style="color: #7f8c8d; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+                These interactive educational tools combine advanced statistical concepts with engaging visualizations. 
+                Each demo is built with modern web technologies and designed to make complex mathematical concepts accessible and intuitive.
+            </p>
+            <div style="margin-top: 20px;">
+                <a href="mailto:mnoorchenarboo@gmail.com" style="color: #3498db; text-decoration: none; font-weight: 600;">
+                    📧 Contact for collaboration or questions
+                </a>
+            </div>
         </div>
     </div>
 </body>
