@@ -1,16 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Blog Posts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohammad's Blog Collection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .blog-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .blog-link {
+            display: block;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        
+        .blog-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left-color: #e74c3c;
+        }
+        
+        .blog-link h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.3em;
+            color: #2c3e50;
+        }
+        
+        .blog-link p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .external-icon {
+            float: right;
+            font-size: 1.2em;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+        
+        .blog-link:hover .external-icon {
+            color: #e74c3c;
+        }
+        
+        .count {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <h1>All Blog Posts</h1>
-  <ul>
-    <li><a href="bias_variance_visualization-archery.html" target="_blank">Bias-Variance Visualization with Archery</a></li>
-    <li><a href="second-example-blog.html" target="_blank">Second Example Blog</a></li>
-    <li><a href="third-example-blog.html" target="_blank">Third Example Blog</a></li>
-    <!-- Add more posts here -->
-  </ul>
+    <div class="container">
+        <h1>Mohammad's Blog Collection</h1>
+        <p class="subtitle">Interactive visualizations and educational content</p>
+        <div class="count">Click any link to open in a new tab</div>
+        
+        <div class="blog-links">
+            <a href="Blogs/bias_variance_visualization-archery.html" target="_blank" class="blog-link">
+                <span class="external-icon">↗</span>
+                <h3>Bias-Variance Visualization with Archery</h3>
+                <p>An intuitive dartboard visualization explaining the bias-variance tradeoff using archery targets</p>
+            </a>
+            
+            <a href="Blogs/bias_variance_visualization.html" target="_blank" class="blog-link">
+                <span class="external-icon">↗</span>
+                <h3>Bias-Variance in Regression Analysis</h3>
+                <p>Mathematical visualization of bias-variance tradeoff in regression with interactive plots</p>
+            </a>
+            
+            <a href="Blogs/pca_playground.html" target="_blank" class="blog-link">
+                <span class="external-icon">↗</span>
+                <h3>PCA Interactive Playground</h3>
+                <p>Step-by-step interactive guide to Principal Component Analysis with real-time calculations</p>
+            </a>
+            
+            <a href="Blogs/blogs.html" target="_blank" class="blog-link">
+                <span class="external-icon">↗</span>
+                <h3>Blog Index Page</h3>
+                <p>Automated blog listing page with search and filtering capabilities</p>
+            </a>
+            
+            <a href="Blogs/blog-template.html" target="_blank" class="blog-link">
+                <span class="external-icon">↗</span>
+                <h3>Blog Template</h3>
+                <p>Template file for creating new blog posts with proper metadata structure</p>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
