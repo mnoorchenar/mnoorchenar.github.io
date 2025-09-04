@@ -1,511 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammad Noorchenarboo - Blogs</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 1.5rem;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        nav a:hover, nav a.active {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .blogs-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .blogs-header h2 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .blogs-header p {
-            font-size: 1.1rem;
-            color: #7f8c8d;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .search-filter {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .blogs-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (max-width: 1024px) {
-            .blogs-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .blogs-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .blog-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            height: 450px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .blog-preview {
-            height: 180px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .blog-preview iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transform: scale(0.4);
-            transform-origin: 0 0;
-            width: 250%;
-            height: 250%;
-        }
-
-        .blog-content {
-            padding: 1.5rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .blog-title {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            cursor: pointer;
-        }
-
-        .blog-title:hover {
-            color: #667eea;
-        }
-
-        .blog-description {
-            color: #6c757d;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            flex: 1;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            font-size: 0.9rem;
-        }
-
-        .blog-date {
-            color: #7f8c8d;
-            font-size: 0.8rem;
-            margin-top: auto;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #7f8c8d;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .no-blogs {
-            text-align: center;
-            padding: 3rem;
-            color: #7f8c8d;
-        }
-
-        .no-blogs h3 {
-            color: #495057;
-            margin-bottom: 1rem;
-        }
-
-        footer {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        footer a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Blogs | Mohammad Noorchenarboo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0;
+      color: #fff;
+    }
+    header {
+      background: rgba(0,0,0,0.4);
+      padding: 1rem;
+      text-align: center;
+    }
+    header nav a {
+      color: #fff;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    header nav a.active {
+      border-bottom: 2px solid #fff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    #search-bar {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .filters {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .filters button {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem;
+      border-radius: 25px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .filters button.active,
+    .filters button:hover {
+      background: rgba(255,255,255,0.4);
+      transform: translateY(-2px);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: #fff;
+      color: #333;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .card iframe {
+      width: 100%;
+      height: 180px;
+      border: none;
+    }
+    .card-body {
+      padding: 1rem;
+    }
+    .card-body h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+      color: #764ba2;
+    }
+    .card-body h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .card-body p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .tags {
+      margin-top: 0.5rem;
+    }
+    .tags span {
+      display: inline-block;
+      background: #eee;
+      color: #333;
+      border-radius: 12px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      margin: 0.2rem;
+    }
+    .spinner {
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Mohammad Noorchenarboo</h1>
-        <p>Biostatistician & Senior Data Scientist</p>
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="../resume.html">Resume</a>
-            <a href="../projects.html">Projects</a>
-            <a href="../contact.html">Contact</a>
-            <a href="blogs.html" class="active">Blogs</a>
-        </nav>
-    </header>
+  <header>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../contact.html">Contact</a>
+      <a href="blogs.html" class="active">Blogs</a>
+    </nav>
+  </header>
 
-    <main>
-        <div class="blogs-header">
-            <h2>📚 My Blog Posts</h2>
-            <p>Exploring data science, machine learning, and biostatistics through interactive visualizations and deep dives into complex topics.</p>
-        </div>
+  <div class="container">
+    <input type="text" id="search-bar" placeholder="Search blogs...">
+    <div class="filters">
+      <button class="active" data-filter="all">All</button>
+      <button data-filter="Visualization">Visualization</button>
+      <button data-filter="Machine Learning">Machine Learning</button>
+      <button data-filter="Statistics">Statistics</button>
+      <button data-filter="Interactive">Interactive</button>
+    </div>
 
-        <div class="search-filter">
-            <input type="text" class="search-input" placeholder="🔍 Search blogs..." id="searchInput">
-        </div>
+    <div id="blog-grid" class="grid"></div>
+    <div id="loading" class="spinner">Loading blogs...</div>
+  </div>
 
-        <div id="blogsContainer">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Scanning for blog files...</p>
+  <script>
+    async function loadBlogs() {
+      try {
+        const res = await fetch('blog-index.json');
+        if (!res.ok) throw new Error('Index not found');
+        const blogs = await res.json();
+        document.getElementById('loading').style.display = 'none';
+        renderBlogs(blogs);
+        setupSearchAndFilters();
+      } catch (e) {
+        console.error(e);
+        document.getElementById('loading').textContent =
+          '⚠️ Could not load blog index. Add blog-index.json to Blogs folder.';
+      }
+    }
+
+    function renderBlogs(blogs) {
+      const grid = document.getElementById('blog-grid');
+      grid.innerHTML = '';
+      blogs.forEach(blog => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('data-tags', (blog.tags || []).join(','));
+        card.innerHTML = `
+          <iframe src="${blog.url}"></iframe>
+          <div class="card-body">
+            <h3><a href="../${blog.url}">${blog.title}</a></h3>
+            <p>${blog.description}</p>
+            <small>${blog.date || ''}</small>
+            <div class="tags">
+              ${(blog.tags || []).map(tag => `<span>${tag}</span>`).join('')}
             </div>
-        </div>
-    </main>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-    <footer>
-        <p>Contact: <a href="mailto:mnoorchenarboo@gmail.com">mnoorchenarboo@gmail.com</a></p>
-        <p>LinkedIn: <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank">linkedin.com/in/mnoorchenar</a></p>
-        <p>GitHub: <a href="https://github.com/mnoorch" target="_blank">github.com/mnoorch</a></p>
-    </footer>
+    function setupSearchAndFilters() {
+      const searchBar = document.getElementById('search-bar');
+      const buttons = document.querySelectorAll('.filters button');
 
-    <script>
-        class SimpleBlogScanner {
-            constructor() {
-                this.blogs = [];
-                this.init();
-            }
-
-            async init() {
-                await this.scanForBlogs();
-                this.setupSearch();
-                this.displayBlogs();
-            }
-
-            async scanForBlogs() {
-                console.log('🔍 Scanning for blog files...');
-                
-                // Comprehensive list of potential blog filenames
-                // This will catch most naming patterns
-                const filenamesToCheck = [
-                    // Your actual files that I can see
-                    'bias_variance_visualization-archery.html',
-                    'first-example-blog.html',
-                    'second-example-blog.html',
-                    'blog-template.html',
-                    
-                    // Common patterns with underscores
-                    'bias_variance_dartboard.html',
-                    'bias_variance_tradeoff.html',
-                    'bias_variance_regression.html',
-                    'machine_learning_basics.html',
-                    'deep_learning_intro.html',
-                    'statistics_fundamentals.html',
-                    'data_visualization_guide.html',
-                    'biostatistics_tutorial.html',
-                    
-                    // Common patterns with hyphens  
-                    'bias-variance-dartboard.html',
-                    'bias-variance-tradeoff.html',
-                    'bias-variance-regression.html',
-                    'machine-learning-basics.html',
-                    'deep-learning-intro.html',
-                    'statistics-fundamentals.html',
-                    'data-visualization-guide.html',
-                    'biostatistics-tutorial.html',
-                    
-                    // Numbered patterns
-                    ...Array.from({length: 20}, (_, i) => `blog-${i+1}.html`),
-                    ...Array.from({length: 20}, (_, i) => `post-${i+1}.html`),
-                    ...Array.from({length: 20}, (_, i) => `tutorial-${i+1}.html`),
-                    ...Array.from({length: 20}, (_, i) => `guide-${i+1}.html`),
-                    
-                    // Topic-based patterns
-                    'python-tutorial.html',
-                    'r-programming.html',
-                    'sql-basics.html',
-                    'tableau-guide.html',
-                    'regression-analysis.html',
-                    'classification-models.html',
-                    'clustering-analysis.html',
-                    'time-series.html',
-                    'survival-analysis.html',
-                    'clinical-trials.html'
-                ];
-
-                const foundFiles = [];
-
-                // Check each potential filename
-                for (const filename of filenamesToCheck) {
-                    try {
-                        const response = await fetch(filename, { 
-                            method: 'HEAD',
-                            cache: 'no-cache'
-                        });
-                        if (response.ok) {
-                            foundFiles.push(filename);
-                            console.log(`✅ Found: ${filename}`);
-                        }
-                    } catch (error) {
-                        // File doesn't exist, continue
-                    }
-                }
-
-                console.log(`📄 Total files found: ${foundFiles.length}`);
-
-                // Extract info from each found file
-                for (const filename of foundFiles) {
-                    try {
-                        const blogInfo = await this.extractBlogInfo(filename);
-                        this.blogs.push(blogInfo);
-                    } catch (error) {
-                        console.warn(`Could not process ${filename}:`, error);
-                        // Add basic info even if extraction fails
-                        this.blogs.push({
-                            filename,
-                            title: this.formatTitle(filename),
-                            description: 'Interactive data science content',
-                            date: new Date().toISOString().split('T')[0],
-                            url: filename
-                        });
-                    }
-                }
-
-                // Sort by date (newest first)
-                this.blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-            }
-
-            async extractBlogInfo(filename) {
-                const response = await fetch(filename);
-                const html = await response.text();
-                
-                // Parse HTML to extract title and first paragraph
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Get title from <title> tag or <h1>
-                let title = doc.querySelector('title')?.textContent?.trim();
-                if (!title || title === 'Mohammad Noorchenarboo - Blogs') {
-                    title = doc.querySelector('h1')?.textContent?.trim();
-                }
-                if (!title) {
-                    title = this.formatTitle(filename);
-                }
-                
-                // Get first meaningful paragraph
-                let description = 'Interactive data science exploration';
-                const paragraphs = doc.querySelectorAll('p');
-                for (let p of paragraphs) {
-                    const text = p.textContent.trim();
-                    if (text.length > 30) {
-                        description = text.length > 120 ? text.substring(0, 117) + '...' : text;
-                        break;
-                    }
-                }
-                
-                return {
-                    filename,
-                    title,
-                    description,
-                    date: new Date().toISOString().split('T')[0],
-                    url: filename
-                };
-            }
-
-            formatTitle(filename) {
-                return filename
-                    .replace('.html', '')
-                    .replace(/_/g, ' ')
-                    .replace(/-/g, ' ')
-                    .split(' ')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
-            }
-
-            setupSearch() {
-                const searchInput = document.getElementById('searchInput');
-                searchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    this.filterAndDisplay(searchTerm);
-                });
-            }
-
-            filterAndDisplay(searchTerm = '') {
-                const filteredBlogs = this.blogs.filter(blog => 
-                    blog.title.toLowerCase().includes(searchTerm) ||
-                    blog.description.toLowerCase().includes(searchTerm)
-                );
-                this.displayBlogs(filteredBlogs);
-            }
-
-            displayBlogs(blogsToShow = this.blogs) {
-                const container = document.getElementById('blogsContainer');
-                
-                if (blogsToShow.length === 0) {
-                    container.innerHTML = `
-                        <div class="no-blogs">
-                            <h3>No blog posts found</h3>
-                            <p>Add HTML files to your Blogs folder and refresh the page!</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const blogsHTML = `
-                    <div class="blogs-grid">
-                        ${blogsToShow.map(blog => this.createBlogCard(blog)).join('')}
-                    </div>
-                `;
-
-                container.innerHTML = blogsHTML;
-            }
-
-            createBlogCard(blog) {
-                const formattedDate = new Date(blog.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-
-                return `
-                    <div class="blog-card">
-                        <div class="blog-preview">
-                            <iframe src="${blog.url}" loading="lazy"></iframe>
-                        </div>
-                        <div class="blog-content">
-                            <h3 class="blog-title" onclick="window.open('${blog.url}', '_blank')">
-                                ${blog.title}
-                            </h3>
-                            <p class="blog-description">${blog.description}</p>
-                            <div class="blog-date">📅 ${formattedDate}</div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // Start the blog scanner when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new SimpleBlogScanner();
+      function filterBlogs() {
+        const term = searchBar.value.toLowerCase();
+        const activeFilter = document.querySelector('.filters button.active').dataset.filter;
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          const tags = card.getAttribute('data-tags');
+          const matchesSearch = text.includes(term);
+          const matchesFilter = activeFilter === 'all' || (tags && tags.includes(activeFilter));
+          card.style.display = matchesSearch && matchesFilter ? '' : 'none';
         });
-    </script>
+      }
+
+      searchBar.addEventListener('input', filterBlogs);
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filterBlogs();
+        });
+      });
+    }
+
+    loadBlogs();
+  </script>
 </body>
 </html>
