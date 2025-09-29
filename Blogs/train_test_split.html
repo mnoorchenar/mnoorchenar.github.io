@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Test Split Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1e293b;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .controls h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .control-item {
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .control-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+
+        .control-item input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e2e8f0;
+            outline: none;
+        }
+
+        .control-item input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .toggle-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .toggle-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .toggle-btn.active {
+            background: #22c55e;
+            color: white;
+        }
+
+        .toggle-btn.inactive {
+            background: #cbd5e1;
+            color: #475569;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .result-box {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .result-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .train-set h3 {
+            color: #22c55e;
+        }
+
+        .test-set h3 {
+            color: #a855f7;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .data-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .data-point {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .data-point:hover {
+            transform: scale(1.1);
+        }
+
+        .data-point.class-0 {
+            background: #3b82f6;
+        }
+
+        .data-point.class-1 {
+            background: #f97316;
+        }
+
+        .explanations {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .explanations h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .explanation-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .explanation-box {
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .explanation-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .explanation-box p {
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .exp-shuffle {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .exp-stratify {
+            background: #fed7aa;
+            border-color: #f97316;
+        }
+
+        .exp-random {
+            background: #d1fae5;
+            border-color: #22c55e;
+        }
+
+        .exp-testsize {
+            background: #e9d5ff;
+            border-color: #a855f7;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+
+        .code-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Train Test Split Playground</h1>
+            <p>Explore sklearn's train_test_split() function interactively</p>
+        </div>
+
+        <div class="controls">
+            <h2>⚙️ Parameters</h2>
+            <div class="control-grid">
+                <div class="control-item">
+                    <label>test_size: <span id="testSizeValue">0.30</span> (<span id="testSizeCount">12</span> samples)</label>
+                    <input type="range" id="testSize" min="0.1" max="0.5" step="0.05" value="0.3">
+                    <p class="help-text">Proportion of dataset in test set</p>
+                </div>
+
+                <div class="control-item">
+                    <label>Dataset Size: <span id="dataSizeValue">40</span> samples</label>
+                    <input type="range" id="dataSize" min="20" max="100" step="5" value="40">
+                    <p class="help-text">Total number of samples</p>
+                </div>
+
+                <div class="control-item">
+                    <label>Class 0 Proportion: <span id="classRatioValue">40</span>%</label>
+                    <input type="range" id="classRatio" min="10" max="90" step="5" value="40">
+                    <p class="help-text">Percentage of samples in Class 0 (blue)</p>
+                </div>
+
+                <div class="toggle-control">
+                    <div>
+                        <strong>shuffle</strong>
+                        <p class="help-text">Randomize data order</p>
+                    </div>
+                    <button id="shuffleBtn" class="toggle-btn active">True</button>
+                </div>
+
+                <div class="toggle-control">
+                    <div>
+                        <strong>stratify</strong>
+                        <p class="help-text">Preserve class ratios</p>
+                    </div>
+                    <button id="stratifyBtn" class="toggle-btn inactive">False</button>
+                </div>
+
+                <div class="control-item">
+                    <label>random_state: <span id="randomStateValue">42</span></label>
+                    <input type="number" id="randomState" value="42">
+                    <p class="help-text">Seed for reproducibility</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="result-box train-set">
+                <h3>Training Set (<span id="trainCount">28</span> samples)</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="color-box" style="background: #3b82f6;"></div>
+                        <span>Class 0: <span id="trainClass0">11</span> (<span id="trainClass0Pct">39.3</span>%)</span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="color-box" style="background: #f97316;"></div>
+                        <span>Class 1: <span id="trainClass1">17</span> (<span id="trainClass1Pct">60.7</span>%)</span>
+                    </div>
+                </div>
+                <div id="trainGrid" class="data-grid"></div>
+            </div>
+
+            <div class="result-box test-set">
+                <h3>Test Set (<span id="testCount">12</span> samples)</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="color-box" style="background: #3b82f6;"></div>
+                        <span>Class 0: <span id="testClass0">5</span> (<span id="testClass0Pct">41.7</span>%)</span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="color-box" style="background: #f97316;"></div>
+                        <span>Class 1: <span id="testClass1">7</span> (<span id="testClass1Pct">58.3</span>%)</span>
+                    </div>
+                </div>
+                <div id="testGrid" class="data-grid"></div>
+            </div>
+        </div>
+
+        <div class="explanations">
+            <h2>📚 Key Concepts</h2>
+            <div class="explanation-grid">
+                <div class="explanation-box exp-shuffle">
+                    <h3>🔀 Shuffling (shuffle=True)</h3>
+                    <p>When enabled, data is randomly reordered before splitting. This prevents order-dependent bias, especially if your data is sorted by time, category, or target value. The numbers show original indices - watch how they get mixed when shuffle is on!</p>
+                </div>
+
+                <div class="explanation-box exp-stratify">
+                    <h3>📊 Stratification (stratify=y)</h3>
+                    <p>Preserves the class distribution in both train and test sets. Critical for imbalanced datasets! Notice how the class percentages stay similar between train and test when stratify is enabled. Without it, you might get unlucky splits with very different distributions.</p>
+                </div>
+
+                <div class="explanation-box exp-random">
+                    <h3>🎲 Random State</h3>
+                    <p>Seeds the random number generator for reproducibility. Same random_state = same split every time. Change it to see different random splits. Essential for comparing model experiments fairly!</p>
+                </div>
+
+                <div class="explanation-box exp-testsize">
+                    <h3>📏 Test Size</h3>
+                    <p>Fraction of data reserved for testing. Common values: 0.2-0.3. Larger test sets give better performance estimates but leave less data for training. It's a trade-off!</p>
+                </div>
+            </div>
+
+            <div class="code-box">
+                <pre id="codeDisplay"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let state = {
+            testSize: 0.3,
+            dataSize: 40,
+            shuffle: true,
+            stratify: false,
+            randomState: 42,
+            classRatio: 0.4
+        };
+
+        // Seeded random number generator
+        function seededRandom(seed) {
+            let state = seed;
+            return function() {
+                state = (state * 1103515245 + 12345) & 0x7fffffff;
+                return state / 0x7fffffff;
+            };
+        }
+
+        // Generate data
+        function generateData() {
+            const data = [];
+            const nClass0 = Math.floor(state.dataSize * state.classRatio);
+            
+            for (let i = 0; i < state.dataSize; i++) {
+                data.push({
+                    id: i,
+                    class: i < nClass0 ? 0 : 1,
+                    originalIndex: i
+                });
+            }
+            return data;
+        }
+
+        // Train test split
+        function trainTestSplit(data) {
+            let workingData = [...data];
+            const testCount = Math.round(state.dataSize * state.testSize);
+            const trainCount = state.dataSize - testCount;
+
+            if (state.stratify) {
+                const class0 = workingData.filter(d => d.class === 0);
+                const class1 = workingData.filter(d => d.class === 1);
+                
+                const class0TestCount = Math.round(class0.length * state.testSize);
+                const class1TestCount = Math.round(class1.length * state.testSize);
+
+                if (state.shuffle) {
+                    const rng = seededRandom(state.randomState);
+                    class0.sort(() => rng() - 0.5);
+                    class1.sort(() => rng() - 0.5);
+                }
+
+                return {
+                    train: [...class0.slice(class0TestCount), ...class1.slice(class1TestCount)],
+                    test: [...class0.slice(0, class0TestCount), ...class1.slice(0, class1TestCount)]
+                };
+            } else {
+                if (state.shuffle) {
+                    const rng = seededRandom(state.randomState);
+                    workingData.sort(() => rng() - 0.5);
+                }
+
+                return {
+                    train: workingData.slice(0, trainCount),
+                    test: workingData.slice(trainCount)
+                };
+            }
+        }
+
+        // Render data points
+        function renderDataPoints(data, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            data.forEach(item => {
+                const point = document.createElement('div');
+                point.className = `data-point class-${item.class}`;
+                point.textContent = item.originalIndex;
+                point.title = `Original Index: ${item.originalIndex}, Class: ${item.class}`;
+                container.appendChild(point);
+            });
+        }
+
+        // Update display
+        function update() {
+            const data = generateData();
+            const split = trainTestSplit(data);
+
+            // Update counts
+            document.getElementById('trainCount').textContent = split.train.length;
+            document.getElementById('testCount').textContent = split.test.length;
+
+            // Calculate class distributions
+            const trainClass0 = split.train.filter(d => d.class === 0).length;
+            const trainClass1 = split.train.filter(d => d.class === 1).length;
+            const testClass0 = split.test.filter(d => d.class === 0).length;
+            const testClass1 = split.test.filter(d => d.class === 1).length;
+
+            // Update training stats
+            document.getElementById('trainClass0').textContent = trainClass0;
+            document.getElementById('trainClass1').textContent = trainClass1;
+            document.getElementById('trainClass0Pct').textContent = ((trainClass0/split.train.length)*100).toFixed(1);
+            document.getElementById('trainClass1Pct').textContent = ((trainClass1/split.train.length)*100).toFixed(1);
+
+            // Update test stats
+            document.getElementById('testClass0').textContent = testClass0;
+            document.getElementById('testClass1').textContent = testClass1;
+            document.getElementById('testClass0Pct').textContent = ((testClass0/split.test.length)*100).toFixed(1);
+            document.getElementById('testClass1Pct').textContent = ((testClass1/split.test.length)*100).toFixed(1);
+
+            // Render data points
+            renderDataPoints(split.train, 'trainGrid');
+            renderDataPoints(split.test, 'testGrid');
+
+            // Update code display
+            const code = `from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=${state.testSize.toFixed(2)},
+    shuffle=${state.shuffle},
+    ${state.stratify ? 'stratify=y,' : '# stratify=None,'}
+    random_state=${state.randomState}
+)`;
+            document.getElementById('codeDisplay').textContent = code;
+        }
+
+        // Event listeners
+        document.getElementById('testSize').addEventListener('input', (e) => {
+            state.testSize = parseFloat(e.target.value);
+            document.getElementById('testSizeValue').textContent = state.testSize.toFixed(2);
+            document.getElementById('testSizeCount').textContent = Math.round(state.dataSize * state.testSize);
+            update();
+        });
+
+        document.getElementById('dataSize').addEventListener('input', (e) => {
+            state.dataSize = parseInt(e.target.value);
+            document.getElementById('dataSizeValue').textContent = state.dataSize;
+            document.getElementById('testSizeCount').textContent = Math.round(state.dataSize * state.testSize);
+            update();
+        });
+
+        document.getElementById('shuffleBtn').addEventListener('click', (e) => {
+            state.shuffle = !state.shuffle;
+            e.target.textContent = state.shuffle ? 'True' : 'False';
+            e.target.className = state.shuffle ? 'toggle-btn active' : 'toggle-btn inactive';
+            update();
+        });
+
+        document.getElementById('stratifyBtn').addEventListener('click', (e) => {
+            state.stratify = !state.stratify;
+            e.target.textContent = state.stratify ? 'True' : 'False';
+            e.target.className = state.stratify ? 'toggle-btn active' : 'toggle-btn inactive';
+            update();
+        });
+
+        document.getElementById('randomState').addEventListener('input', (e) => {
+            state.randomState = parseInt(e.target.value) || 0;
+            document.getElementById('randomStateValue').textContent = state.randomState;
+            update();
+        });
+
+        document.getElementById('classRatio').addEventListener('input', (e) => {
+            state.classRatio = parseInt(e.target.value) / 100;
+            document.getElementById('classRatioValue').textContent = parseInt(e.target.value);
+            update();
+        });
+
+        // Initial render
+        update();
+    </script>
+</body>
+</html>
