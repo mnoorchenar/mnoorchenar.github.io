@@ -411,6 +411,25 @@
             samples.forEach((sample, index) => {
                 const row = tbody.insertRow();
                 
+                let result = '';
+                let rowClass = '';
+                
+                if (sample.actualClass === 1 && sample.predictedClass === 1) {
+                    result = 'TP';
+                    rowClass = 'correct';
+                } else if (sample.actualClass === 0 && sample.predictedClass === 0) {
+                    result = 'TN';
+                    rowClass = 'correct';
+                } else if (sample.actualClass === 0 && sample.predictedClass === 1) {
+                    result = 'FP';
+                    rowClass = 'incorrect';
+                } else if (sample.actualClass === 1 && sample.predictedClass === 0) {
+                    result = 'FN';
+                    rowClass = 'incorrect';
+                }
+                
+                row.className = rowClass;
+                
                 row.insertCell(0).textContent = index + 1;
                 
                 const actualCell = row.insertCell(1);
@@ -420,12 +439,6 @@
                 const predCell = row.insertCell(2);
                 predCell.textContent = sample.predictedClass;
                 predCell.className = sample.predictedClass === 0 ? 'class-0' : 'class-1';
-                
-                let result = '';
-                if (sample.actualClass === 1 && sample.predictedClass === 1) result = 'TP';
-                else if (sample.actualClass === 0 && sample.predictedClass === 0) result = 'TN';
-                else if (sample.actualClass === 0 && sample.predictedClass === 1) result = 'FP';
-                else if (sample.actualClass === 1 && sample.predictedClass === 0) result = 'FN';
                 
                 row.insertCell(3).textContent = result;
             });
