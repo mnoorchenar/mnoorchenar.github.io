@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Encoding Methods Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .method-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        .method-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .method-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .method-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        .visualization-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 400px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .input-area {
+            margin-bottom: 20px;
+        }
+        input, textarea, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        button {
+            padding: 10px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .output-area {
+            margin-top: 20px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .vector-display {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        .vector {
+            font-family: 'Courier New', monospace;
+            color: #333;
+            margin: 5px 0;
+        }
+        .embedding-viz {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .embedding-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            min-width: 200px;
+        }
+        .embedding-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .embedding-vector {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #666;
+        }
+        .text-processing {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .word-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .weight-display {
+            display: inline-block;
+            background: #764ba2;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Feature Encoding Methods Playground</h1>
+        
+        <div class="method-selector">
+            <button class="method-btn active" onclick="showMethod('label')">Label Encoding</button>
+            <button class="method-btn" onclick="showMethod('onehot')">One-Hot Encoding</button>
+            <button class="method-btn" onclick="showMethod('embedding')">Embeddings</button>
+            <button class="method-btn" onclick="showMethod('highcard')">High Cardinality</button>
+            <button class="method-btn" onclick="showMethod('bow')">Bag-of-Words</button>
+            <button class="method-btn" onclick="showMethod('tfidf')">TF-IDF</button>
+            <button class="method-btn" onclick="showMethod('word2vec')">Word Embeddings</button>
+            <button class="method-btn" onclick="showMethod('pretrained')">Pre-trained</button>
+            <button class="method-btn" onclick="showMethod('transformer')">Transformers</button>
+        </div>
+
+        <div class="visualization-area" id="viz-area"></div>
+    </div>
+
+    <script>
+        const methods = {
+            label: {
+                title: "Label Encoding",
+                description: "Assigns integer IDs to categories. Best for ordinal features (e.g., Low < Medium < High).",
+                html: `
+                    <div class="input-area">
+                        <label>Enter categories (comma-separated):</label>
+                        <input type="text" id="label-input" value="Low, Medium, High, Very High" placeholder="e.g., Small, Medium, Large">
+                        <button onclick="applyLabelEncoding()">Encode</button>
+                    </div>
+                    <div class="output-area" id="label-output"></div>
+                `
+            },
+            onehot: {
+                title: "One-Hot Encoding (OHE)",
+                description: "Represents categories as binary vectors. Each category gets its own column with 1 or 0.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter categories (comma-separated):</label>
+                        <input type="text" id="onehot-input" value="Red, Blue, Green, Red, Blue" placeholder="e.g., Cat, Dog, Bird">
+                        <button onclick="applyOneHot()">Encode</button>
+                    </div>
+                    <div class="output-area" id="onehot-output"></div>
+                `
+            },
+            embedding: {
+                title: "Embeddings",
+                description: "Dense vector representations learned during training. Captures relationships between categories in continuous space.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter categories (comma-separated):</label>
+                        <input type="text" id="embed-input" value="Dog, Cat, Tiger, Lion" placeholder="e.g., Apple, Banana, Orange">
+                        <label>Embedding Dimension:</label>
+                        <input type="number" id="embed-dim" value="3" min="2" max="10">
+                        <button onclick="applyEmbedding()">Generate Embeddings</button>
+                    </div>
+                    <div class="output-area" id="embed-output"></div>
+                `
+            },
+            highcard: {
+                title: "High Cardinality Feature Handling",
+                description: "Maps thousands of categories (e.g., zip codes, product IDs) into compact vectors. Avoids sparse matrices from OHE.",
+                html: `
+                    <div class="input-area">
+                        <label>Simulate High Cardinality Feature (e.g., Product IDs):</label>
+                        <input type="number" id="highcard-count" value="1000" min="100" max="10000" placeholder="Number of unique values">
+                        <label>Target Embedding Dimension:</label>
+                        <input type="number" id="highcard-dim" value="16" min="4" max="64">
+                        <button onclick="applyHighCardinality()">Compare Approaches</button>
+                    </div>
+                    <div class="output-area" id="highcard-output"></div>
+                `
+            },
+            bow: {
+                title: "Bag-of-Words (BoW)",
+                description: "Represents text as raw word counts. Order is ignored, only frequency matters.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter text documents (one per line):</label>
+                        <textarea id="bow-input" rows="4">I love machine learning
+Machine learning is amazing
+Deep learning and machine learning</textarea>
+                        <button onclick="applyBagOfWords()">Create BoW</button>
+                    </div>
+                    <div class="output-area" id="bow-output"></div>
+                `
+            },
+            tfidf: {
+                title: "TF-IDF",
+                description: "Weights words by importance: Term Frequency × Inverse Document Frequency. Rare words get higher weights.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter text documents (one per line):</label>
+                        <textarea id="tfidf-input" rows="4">The cat sat on the mat
+The dog sat on the log
+Cats and dogs are pets</textarea>
+                        <button onclick="applyTFIDF()">Calculate TF-IDF</button>
+                    </div>
+                    <div class="output-area" id="tfidf-output"></div>
+                `
+            },
+            word2vec: {
+                title: "Word Embeddings (Word2Vec, GloVe, FastText)",
+                description: "Dense vector representations capturing semantic similarity. Similar words have similar vectors.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter words to embed (comma-separated):</label>
+                        <input type="text" id="word2vec-input" value="king, queen, man, woman, dog, cat" placeholder="e.g., happy, sad, joyful">
+                        <label>Embedding Dimension:</label>
+                        <input type="number" id="word2vec-dim" value="4" min="2" max="10">
+                        <button onclick="applyWord2Vec()">Generate Word Embeddings</button>
+                    </div>
+                    <div class="output-area" id="word2vec-output"></div>
+                `
+            },
+            pretrained: {
+                title: "Pre-trained Embeddings",
+                description: "Load embeddings trained on large corpora (e.g., GloVe on Wikipedia). Can be frozen or fine-tuned.",
+                html: `
+                    <div class="input-area">
+                        <label>Select Pre-trained Model:</label>
+                        <select id="pretrained-model">
+                            <option value="glove">GloVe (Wikipedia)</option>
+                            <option value="fasttext">FastText (Common Crawl)</option>
+                            <option value="word2vec">Word2Vec (Google News)</option>
+                        </select>
+                        <label>Enter words to lookup:</label>
+                        <input type="text" id="pretrained-input" value="artificial, intelligence, neural, network" placeholder="e.g., computer, science">
+                        <button onclick="applyPretrained()">Lookup Embeddings</button>
+                    </div>
+                    <div class="output-area" id="pretrained-output"></div>
+                `
+            },
+            transformer: {
+                title: "Transformers (BERT, GPT)",
+                description: "Contextual embeddings using self-attention. Same word gets different embeddings based on context.",
+                html: `
+                    <div class="input-area">
+                        <label>Enter sentences to compare:</label>
+                        <textarea id="transformer-input" rows="3">The bank by the river is steep
+I need to go to the bank to deposit money</textarea>
+                        <label>Select Model:</label>
+                        <select id="transformer-model">
+                            <option value="bert">BERT</option>
+                            <option value="gpt">GPT</option>
+                        </select>
+                        <button onclick="applyTransformer()">Generate Contextual Embeddings</button>
+                    </div>
+                    <div class="output-area" id="transformer-output"></div>
+                `
+            }
+        };
+
+        function showMethod(method) {
+            document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const methodData = methods[method];
+            const vizArea = document.getElementById('viz-area');
+            vizArea.innerHTML = `
+                <h2>${methodData.title}</h2>
+                <p class="description">${methodData.description}</p>
+                ${methodData.html}
+            `;
+        }
+
+        function applyLabelEncoding() {
+            const input = document.getElementById('label-input').value;
+            const categories = input.split(',').map(s => s.trim());
+            const uniqueCategories = [...new Set(categories)];
+            
+            let html = '<div class="table-container"><table><tr><th>Category</th><th>Label</th></tr>';
+            uniqueCategories.forEach((cat, idx) => {
+                html += `<tr><td>${cat}</td><td>${idx}</td></tr>`;
+            });
+            html += '</table></div>';
+            
+            html += '<div class="vector-display"><strong>Example Encoding:</strong><div class="vector">';
+            html += `Input: [${categories.join(', ')}]<br>`;
+            html += `Encoded: [${categories.map(c => uniqueCategories.indexOf(c)).join(', ')}]`;
+            html += '</div></div>';
+            
+            document.getElementById('label-output').innerHTML = html;
+        }
+
+        function applyOneHot() {
+            const input = document.getElementById('onehot-input').value;
+            const categories = input.split(',').map(s => s.trim());
+            const uniqueCategories = [...new Set(categories)];
+            
+            let html = '<div class="table-container"><table><tr><th>Original</th>';
+            uniqueCategories.forEach(cat => html += `<th>${cat}</th>`);
+            html += '</tr>';
+            
+            categories.forEach(cat => {
+                html += `<tr><td><strong>${cat}</strong></td>`;
+                uniqueCategories.forEach(ucat => {
+                    html += `<td>${cat === ucat ? '1' : '0'}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table></div>';
+            
+            document.getElementById('onehot-output').innerHTML = html;
+        }
+
+        function applyEmbedding() {
+            const input = document.getElementById('embed-input').value;
+            const dim = parseInt(document.getElementById('embed-dim').value);
+            const categories = input.split(',').map(s => s.trim());
+            
+            let html = '<div class="embedding-viz">';
+            categories.forEach((cat, idx) => {
+                const vector = Array(dim).fill(0).map(() => (Math.random() * 2 - 1).toFixed(3));
+                html += `
+                    <div class="embedding-item">
+                        <div class="embedding-label">${cat}</div>
+                        <div class="embedding-vector">[${vector.join(', ')}]</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            html += '<p style="margin-top:15px;color:#666;"><em>Note: Vectors are randomly initialized. In real training, similar categories would have similar vectors.</em></p>';
+            
+            document.getElementById('embed-output').innerHTML = html;
+        }
+
+        function applyHighCardinality() {
+            const count = parseInt(document.getElementById('highcard-count').value);
+            const dim = parseInt(document.getElementById('highcard-dim').value);
+            
+            const oheSize = count;
+            const embSize = count * dim;
+            const compressionRatio = (oheSize / embSize).toFixed(2);
+            
+            let html = `
+                <div class="vector-display">
+                    <strong>Comparison for ${count} unique categories:</strong><br><br>
+                    <strong>One-Hot Encoding:</strong><br>
+                    • Matrix size: ${count} × ${count} = ${oheSize.toLocaleString()} values<br>
+                    • Memory: Very sparse (mostly zeros)<br>
+                    • Scalability: ❌ Poor for high cardinality<br><br>
+                    
+                    <strong>Embedding Approach:</strong><br>
+                    • Matrix size: ${count} × ${dim} = ${embSize.toLocaleString()} values<br>
+                    • Memory: Dense, compact representation<br>
+                    • Compression: ${compressionRatio}× smaller<br>
+                    • Scalability: ✅ Excellent for high cardinality<br><br>
+                    
+                    <strong>Example: Product ID "PROD_52847" → </strong>[${Array(dim).fill(0).map(() => (Math.random() * 2 - 1).toFixed(3)).join(', ')}]
+                </div>
+            `;
+            
+            document.getElementById('highcard-output').innerHTML = html;
+        }
+
+        function applyBagOfWords() {
+            const input = document.getElementById('bow-input').value;
+            const docs = input.split('\n').filter(s => s.trim());
+            
+            const allWords = new Set();
+            docs.forEach(doc => {
+                doc.toLowerCase().split(/\s+/).forEach(word => allWords.add(word));
+            });
+            const vocabulary = [...allWords].sort();
+            
+            let html = '<div class="table-container"><table><tr><th>Document</th>';
+            vocabulary.forEach(word => html += `<th>${word}</th>`);
+            html += '</tr>';
+            
+            docs.forEach((doc, idx) => {
+                const words = doc.toLowerCase().split(/\s+/);
+                const counts = {};
+                words.forEach(w => counts[w] = (counts[w] || 0) + 1);
+                
+                html += `<tr><td><strong>Doc ${idx + 1}</strong></td>`;
+                vocabulary.forEach(word => {
+                    html += `<td>${counts[word] || 0}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table></div>';
+            
+            document.getElementById('bow-output').innerHTML = html;
+        }
+
+        function applyTFIDF() {
+            const input = document.getElementById('tfidf-input').value;
+            const docs = input.split('\n').filter(s => s.trim());
+            
+            const allWords = new Set();
+            docs.forEach(doc => {
+                doc.toLowerCase().split(/\s+/).forEach(word => allWords.add(word));
+            });
+            const vocabulary = [...allWords].sort();
+            
+            // Calculate IDF
+            const idf = {};
+            vocabulary.forEach(word => {
+                const docsWithWord = docs.filter(doc => 
+                    doc.toLowerCase().includes(word)
+                ).length;
+                idf[word] = Math.log(docs.length / docsWithWord);
+            });
+            
+            let html = '<div class="text-processing"><strong>IDF Scores (Inverse Document Frequency):</strong><br>';
+            vocabulary.forEach(word => {
+                html += `<span class="word-item">${word}<span class="weight-display">${idf[word].toFixed(2)}</span></span>`;
+            });
+            html += '</div>';
+            
+            html += '<div class="table-container"><table><tr><th>Document</th>';
+            vocabulary.forEach(word => html += `<th>${word}</th>`);
+            html += '</tr>';
+            
+            docs.forEach((doc, idx) => {
+                const words = doc.toLowerCase().split(/\s+/);
+                const tf = {};
+                words.forEach(w => tf[w] = (tf[w] || 0) + 1);
+                Object.keys(tf).forEach(w => tf[w] /= words.length);
+                
+                html += `<tr><td><strong>Doc ${idx + 1}</strong></td>`;
+                vocabulary.forEach(word => {
+                    const tfidf = ((tf[word] || 0) * idf[word]).toFixed(3);
+                    html += `<td>${tfidf}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table></div>';
+            
+            document.getElementById('tfidf-output').innerHTML = html;
+        }
+
+        function applyWord2Vec() {
+            const input = document.getElementById('word2vec-input').value;
+            const dim = parseInt(document.getElementById('word2vec-dim').value);
+            const words = input.split(',').map(s => s.trim());
+            
+            let html = '<div class="embedding-viz">';
+            words.forEach(word => {
+                const vector = Array(dim).fill(0).map(() => (Math.random() * 2 - 1).toFixed(3));
+                html += `
+                    <div class="embedding-item">
+                        <div class="embedding-label">${word}</div>
+                        <div class="embedding-vector">[${vector.join(', ')}]</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            html += `
+                <div class="vector-display" style="margin-top:20px;">
+                    <strong>Semantic Relationships (simulated):</strong><br>
+                    • Similar words have similar vectors<br>
+                    • Vector arithmetic: king - man + woman ≈ queen<br>
+                    • Captures semantic meaning from context
+                </div>
+            `;
+            
+            document.getElementById('word2vec-output').innerHTML = html;
+        }
+
+        function applyPretrained() {
+            const model = document.getElementById('pretrained-model').value;
+            const input = document.getElementById('pretrained-input').value;
+            const words = input.split(',').map(s => s.trim());
+            
+            const modelInfo = {
+                glove: { name: 'GloVe', corpus: 'Wikipedia 2014 + Gigaword 5', dim: 300 },
+                fasttext: { name: 'FastText', corpus: 'Common Crawl (600B tokens)', dim: 300 },
+                word2vec: { name: 'Word2Vec', corpus: 'Google News (100B words)', dim: 300 }
+            };
+            
+            const info = modelInfo[model];
+            
+            let html = `
+                <div class="vector-display">
+                    <strong>Model:</strong> ${info.name}<br>
+                    <strong>Training Corpus:</strong> ${info.corpus}<br>
+                    <strong>Dimension:</strong> ${info.dim}<br>
+                </div>
+            `;
+            
+            html += '<div class="embedding-viz">';
+            words.forEach(word => {
+                const vector = Array(6).fill(0).map(() => (Math.random() * 2 - 1).toFixed(3));
+                html += `
+                    <div class="embedding-item">
+                        <div class="embedding-label">${word}</div>
+                        <div class="embedding-vector">[${vector.join(', ')}, ...]</div>
+                        <div style="font-size:11px;color:#999;margin-top:5px;">Showing 6/${info.dim} dims</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            html += `
+                <div class="vector-display" style="margin-top:20px;">
+                    <strong>Usage:</strong><br>
+                    • <strong>Frozen:</strong> Use pre-trained vectors as-is (transfer learning)<br>
+                    • <strong>Fine-tuned:</strong> Update vectors during training on your task<br>
+                    • Advantage: Leverage knowledge from massive corpora
+                </div>
+            `;
+            
+            document.getElementById('pretrained-output').innerHTML = html;
+        }
+
+        function applyTransformer() {
+            const input = document.getElementById('transformer-input').value;
+            const model = document.getElementById('transformer-model').value;
+            const sentences = input.split('\n').filter(s => s.trim());
+            
+            let html = `<div class="vector-display"><strong>Model: ${model.toUpperCase()}</strong> - Contextual embeddings using self-attention</div>`;
+            
+            sentences.forEach((sent, idx) => {
+                const words = sent.split(/\s+/);
+                html += `<div class="text-processing"><strong>Sentence ${idx + 1}:</strong> "${sent}"<br><br>`;
+                
+                words.forEach(word => {
+                    const context_vector = Array(4).fill(0).map(() => (Math.random() * 2 - 1).toFixed(2));
+                    html += `<span class="word-item">${word}<span class="weight-display">[${context_vector.join(', ')}]</span></span>`;
+                });
+                html += '</div>';
+            });
+            
+            html += `
+                <div class="vector-display" style="margin-top:20px;">
+                    <strong>Key Insight:</strong> The word "bank" gets DIFFERENT embeddings in each sentence:<br>
+                    • Sentence 1 (river context): bank → [0.8, -0.3, 0.1, ...]<br>
+                    • Sentence 2 (money context): bank → [-0.2, 0.9, 0.7, ...]<br><br>
+                    <strong>Self-Attention:</strong> Each word attends to all other words to understand context
+                </div>
+            `;
+            
+            document.getElementById('transformer-output').innerHTML = html;
+        }
+
+        // Initialize with Label Encoding
+        showMethod('label');
+    </script>
+</body>
+</html>
