@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convergence Plot - Model Fitting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-underfit {
+            background: #3498db;
+            color: white;
+        }
+        .btn-bestfit {
+            background: #2ecc71;
+            color: white;
+        }
+        .btn-overfit {
+            background: #e74c3c;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .train { background: #3498db; }
+        .val { background: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Model Convergence Playground</h1>
+        
+        <div class="controls">
+            <button class="btn-underfit" onclick="showUnderfitting()">Underfitting</button>
+            <button class="btn-bestfit" onclick="showBestFit()">Best Fit</button>
+            <button class="btn-overfit" onclick="showOverfitting()">Overfitting</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="convergenceChart"></canvas>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color train"></div>
+                <span>Training Loss</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color val"></div>
+                <span>Validation Loss</span>
+            </div>
+        </div>
+
+        <div class="info-box" id="infoBox">
+            <h3>Select a scenario to begin</h3>
+            <p>Click one of the buttons above to see how different model fitting scenarios affect convergence.</p>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+        const ctx = document.getElementById('convergenceChart').getContext('2d');
+
+        const scenarios = {
+            underfit: {
+                title: '🔵 Underfitting (High Bias)',
+                description: 'The model is too simple to capture the underlying patterns in the data.',
+                characteristics: [
+                    '• Both training and validation losses remain high',
+                    '• The model has not learned enough from the data',
+                    '• Poor performance on both training and validation sets',
+                    '• Solution: Increase model complexity, add more features, or train longer'
+                ],
+                trainLoss: [0.8, 0.72, 0.68, 0.65, 0.63, 0.62, 0.61, 0.605, 0.602, 0.60],
+                valLoss: [0.82, 0.75, 0.70, 0.68, 0.66, 0.65, 0.64, 0.635, 0.632, 0.63]
+            },
+            bestfit: {
+                title: '🟢 Best Fit (Good Generalization)',
+                description: 'The model has learned the underlying patterns without memorizing noise.',
+                characteristics: [
+                    '• Both losses decrease together and converge to low values',
+                    '• Small gap between training and validation loss',
+                    '• Model generalizes well to unseen data',
+                    '• This is the ideal scenario for deployment'
+                ],
+                trainLoss: [0.9, 0.65, 0.45, 0.32, 0.23, 0.17, 0.13, 0.10, 0.08, 0.07],
+                valLoss: [0.92, 0.68, 0.48, 0.35, 0.26, 0.20, 0.16, 0.13, 0.11, 0.10]
+            },
+            overfit: {
+                title: '🔴 Overfitting (High Variance)',
+                description: 'The model has memorized the training data including its noise and outliers.',
+                characteristics: [
+                    '• Training loss continues to decrease',
+                    '• Validation loss starts increasing after initial decrease',
+                    '• Large gap between training and validation performance',
+                    '• Solution: Add regularization, use dropout, get more data, or early stopping'
+                ],
+                trainLoss: [0.9, 0.6, 0.4, 0.25, 0.15, 0.08, 0.04, 0.02, 0.01, 0.005],
+                valLoss: [0.92, 0.65, 0.45, 0.35, 0.32, 0.35, 0.42, 0.50, 0.58, 0.65]
+            }
+        };
+
+        function createChart(trainData, valData) {
+            if (chart) {
+                chart.destroy();
+            }
+
+            const epochs = Array.from({length: trainData.length}, (_, i) => i + 1);
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: epochs,
+                    datasets: [{
+                        label: 'Training Loss',
+                        data: trainData,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }, {
+                        label: 'Validation Loss',
+                        data: valData,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Epoch',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            grid: { color: '#e0e0e0' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Loss',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            beginAtZero: true,
+                            grid: { color: '#e0e0e0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateInfo(scenario) {
+            const info = scenarios[scenario];
+            const infoBox = document.getElementById('infoBox');
+            infoBox.innerHTML = `
+                <h3>${info.title}</h3>
+                <p><strong>${info.description}</strong></p>
+                <p><strong>Characteristics:</strong></p>
+                ${info.characteristics.map(c => `<p>${c}</p>`).join('')}
+            `;
+        }
+
+        function showUnderfitting() {
+            createChart(scenarios.underfit.trainLoss, scenarios.underfit.valLoss);
+            updateInfo('underfit');
+        }
+
+        function showBestFit() {
+            createChart(scenarios.bestfit.trainLoss, scenarios.bestfit.valLoss);
+            updateInfo('bestfit');
+        }
+
+        function showOverfitting() {
+            createChart(scenarios.overfit.trainLoss, scenarios.overfit.valLoss);
+            updateInfo('overfit');
+        }
+
+        // Initialize with best fit
+        showBestFit();
+    </script>
+</body>
+</html>
