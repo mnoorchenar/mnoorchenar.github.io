@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R-CNN Architecture Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 12px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .architecture {
+            margin-bottom: 30px;
+        }
+        
+        .architecture-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.3);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .step-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .step-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-left: 50px;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin: 10px 0;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+        
+        .visual-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .comparison {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .comparison h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .comparison-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .comparison-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box strong {
+            color: #1976d2;
+        }
+        
+        .visual-box {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .input-box { background: #ffebee; border: 2px solid #ef5350; }
+        .process-box { background: #e8f5e9; border: 2px solid #66bb6a; }
+        .output-box { background: #fff3e0; border: 2px solid #ffa726; }
+        
+        /* SVG Animations */
+        .layer-rect {
+            animation: layerPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes layerPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .data-flow {
+            animation: dataFlow 2s linear infinite;
+        }
+        
+        @keyframes dataFlow {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        
+        .region-box {
+            animation: regionFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes regionFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .anchor-point {
+            animation: anchorGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes anchorGlow {
+            0%, 100% { fill-opacity: 0.6; }
+            50% { fill-opacity: 1; }
+        }
+        
+        .processing-indicator {
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 R-CNN Architecture Playground</h1>
+        <p class="subtitle">Interactive visualization of Region-based CNN evolution</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('rcnn')">R-CNN</button>
+            <button class="tab" onclick="showTab('fast-rcnn')">Fast R-CNN</button>
+            <button class="tab" onclick="showTab('faster-rcnn')">Faster R-CNN</button>
+            <button class="tab" onclick="showTab('comparison')">Comparison</button>
+        </div>
+        
+        <!-- R-CNN -->
+        <div id="rcnn" class="content active">
+            <div class="architecture">
+                <h2 class="architecture-title">R-CNN (Region-based CNN)</h2>
+                
+                <div class="info-box">
+                    <strong>Key Innovation:</strong> First successful application of CNNs to object detection by using selective search for region proposals.
+                </div>
+                
+                <div class="flow-diagram">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">Input Image</div>
+                            <div class="step-desc">
+                                Original image fed into the system
+                            </div>
+                            <div class="visual-container">
+                                <svg width="250" height="180" viewBox="0 0 250 180">
+                                    <defs>
+                                        <linearGradient id="imgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#4fc3f7;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#29b6f6;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect x="25" y="20" width="200" height="140" fill="url(#imgGrad)" stroke="#0288d1" stroke-width="3" rx="10" class="layer-rect"/>
+                                    <text x="125" y="95" text-anchor="middle" fill="white" font-size="18" font-weight="bold">Input Image</text>
+                                    <text x="125" y="115" text-anchor="middle" fill="white" font-size="14">H × W × 3</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">Selective Search</div>
+                            <div class="step-desc">
+                                Generate ~2000 region proposals<br>
+                                <span class="highlight">Problem: Slow and CPU-based</span>
+                            </div>
+                            <div class="visual-container">
+                                <svg width="500" height="200" viewBox="0 0 500 200">
+                                    <rect x="50" y="30" width="150" height="140" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="5"/>
+                                    <text x="125" y="55" text-anchor="middle" font-size="14" font-weight="bold">Selective Search</text>
+                                    
+                                    <rect x="70" y="70" width="40" height="30" fill="#ff5252" fill-opacity="0.6" stroke="#d32f2f" stroke-width="1.5" class="region-box"/>
+                                    <rect x="90" y="90" width="50" height="40" fill="#ffab40" fill-opacity="0.6" stroke="#f57c00" stroke-width="1.5" class="region-box" style="animation-delay: 0.3s"/>
+                                    <rect x="120" y="75" width="35" height="35" fill="#69f0ae" fill-opacity="0.6" stroke="#00c853" stroke-width="1.5" class="region-box" style="animation-delay: 0.6s"/>
+                                    <rect x="75" y="120" width="45" height="35" fill="#448aff" fill-opacity="0.6" stroke="#2962ff" stroke-width="1.5" class="region-box" style="animation-delay: 0.9s"/>
+                                    
+                                    <path d="M 200 100 Q 250 100 290 70" stroke="#667eea" stroke-width="2" fill="none" stroke-dasharray="5,5" class="data-flow"/>
+                                    <path d="M 200 100 Q 250 100 290 100" stroke="#667eea" stroke-width="2" fill="none" stroke-dasharray="5,5" class="data-flow" style="animation-delay: 0.5s"/>
+                                    <path d="M 200 100 Q 250 100 290 130" stroke="#667eea" stroke-width="2" fill="none" stroke-dasharray="5,5" class="data-flow" style="animation-delay: 1s"/>
+                                    
+                                    <g transform="translate(300, 50)">
+                                        <rect width="60" height="30" fill="#ffebee" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="30" y="20" text-anchor="middle" font-size="12">Box 1</text>
+                                    </g>
+                                    <g transform="translate(300, 90)">
+                                        <rect width="60" height="30" fill="#ffebee" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="30" y="20" text-anchor="middle" font-size="12">Box 2</text>
+                                    </g>
+                                    <g transform="translate(300, 130)">
+                                        <rect width="60" height="30" fill="#ffebee" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="30" y="20" text-anchor="middle" font-size="12">Box 3</text>
+                                    </g>
+                                    <text x="410" y="105" font-size="20" fill="#666">... ~2000 regions</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">CNN Feature Extraction (2000×)</div>
+                            <div class="step-desc">
+                                <span class="highlight">Each region processed independently</span>
+                            </div>
+                            <div class="visual-container">
+                                <svg width="600" height="220" viewBox="0 0 600 220">
+                                    <g transform="translate(30, 30)">
+                                        <rect width="60" height="50" fill="#42a5f5" fill-opacity="0.8" stroke="#1976d2" stroke-width="2" rx="3" class="layer-rect"/>
+                                        <text x="30" y="30" text-anchor="middle" fill="white" font-size="10">Conv1</text>
+                                    </g>
+                                    <g transform="translate(110, 25)">
+                                        <rect width="55" height="60" fill="#66bb6a" fill-opacity="0.8" stroke="#388e3c" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.2s"/>
+                                        <text x="27" y="35" text-anchor="middle" fill="white" font-size="10">Conv2</text>
+                                    </g>
+                                    <g transform="translate(185, 20)">
+                                        <rect width="50" height="70" fill="#ffa726" fill-opacity="0.8" stroke="#f57c00" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.4s"/>
+                                        <text x="25" y="40" text-anchor="middle" fill="white" font-size="10">Conv3</text>
+                                    </g>
+                                    <g transform="translate(255, 15)">
+                                        <rect width="45" height="80" fill="#ef5350" fill-opacity="0.8" stroke="#c62828" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.6s"/>
+                                        <text x="22" y="45" text-anchor="middle" fill="white" font-size="10">Conv4</text>
+                                    </g>
+                                    <g transform="translate(320, 10)">
+                                        <rect width="40" height="90" fill="#ab47bc" fill-opacity="0.8" stroke="#7b1fa2" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.8s"/>
+                                        <text x="20" y="50" text-anchor="middle" fill="white" font-size="10">Conv5</text>
+                                    </g>
+                                    
+                                    <path d="M 90 55 L 110 55" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                    <path d="M 165 55 L 185 55" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                    <path d="M 235 55 L 255 55" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                    <path d="M 300 55 L 320 55" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                    
+                                    <g transform="translate(390, 20)">
+                                        <rect width="80" height="70" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="40" y="25" text-anchor="middle" font-size="11" font-weight="bold">Feature</text>
+                                        <text x="40" y="40" text-anchor="middle" font-size="11" font-weight="bold">Vector</text>
+                                        <text x="40" y="55" text-anchor="middle" font-size="10">4096-dim</text>
+                                    </g>
+                                    
+                                    <text x="60" y="130" font-size="14" fill="#d32f2f" font-weight="bold">× 2000 regions</text>
+                                    <circle cx="240" cy="140" r="20" fill="none" stroke="#ff5252" stroke-width="2" class="processing-indicator"/>
+                                    <path d="M 240 125 L 240 135 M 240 135 L 248 135" stroke="#ff5252" stroke-width="2" fill="none" class="processing-indicator"/>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">SVM Classification & Bbox Regression</div>
+                            <div class="step-desc">
+                                Separate SVM for each class + linear regression for bbox refinement
+                            </div>
+                            <div class="visual-container">
+                                <svg width="500" height="180" viewBox="0 0 500 180">
+                                    <rect x="30" y="30" width="120" height="120" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2" rx="8"/>
+                                    <text x="90" y="55" text-anchor="middle" font-size="14" font-weight="bold">SVM</text>
+                                    <circle cx="60" cy="80" r="8" fill="#4caf50" class="anchor-point"/>
+                                    <circle cx="90" cy="100" r="8" fill="#8bc34a" class="anchor-point" style="animation-delay: 0.3s"/>
+                                    <circle cx="120" cy="85" r="8" fill="#cddc39" class="anchor-point" style="animation-delay: 0.6s"/>
+                                    <circle cx="75" cy="120" r="8" fill="#66bb6a" class="anchor-point" style="animation-delay: 0.9s"/>
+                                    <circle cx="105" cy="130" r="8" fill="#9ccc65" class="anchor-point" style="animation-delay: 1.2s"/>
+                                    
+                                    <g transform="translate(200, 30)">
+                                        <rect width="100" height="35" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="50" y="22" text-anchor="middle" font-size="12" font-weight="bold">🐕 Dog: 0.89</text>
+                                    </g>
+                                    <g transform="translate(200, 75)">
+                                        <rect width="100" height="35" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="50" y="22" text-anchor="middle" font-size="12" font-weight="bold">🚗 Car: 0.12</text>
+                                    </g>
+                                    <g transform="translate(200, 120)">
+                                        <rect width="100" height="35" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="50" y="22" text-anchor="middle" font-size="12" font-weight="bold">👤 Person: 0.05</text>
+                                    </g>
+                                    
+                                    <g transform="translate(350, 60)">
+                                        <rect width="120" height="60" fill="#ffebee" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="60" y="25" text-anchor="middle" font-size="13" font-weight="bold">Bbox Refine</text>
+                                        <text x="60" y="45" text-anchor="middle" font-size="11">(x, y, w, h)</text>
+                                    </g>
+                                    
+                                    <path d="M 150 90 L 200 47" stroke="#667eea" stroke-width="2" stroke-dasharray="3,3" class="data-flow"/>
+                                    <path d="M 150 90 L 200 92" stroke="#667eea" stroke-width="2" stroke-dasharray="3,3" class="data-flow"/>
+                                    <path d="M 150 90 L 200 137" stroke="#667eea" stroke-width="2" stroke-dasharray="3,3" class="data-flow"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <strong>⚠️ Main Limitations:</strong><br>
+                    • Training is multi-stage (CNN → SVM → Bbox regressor)<br>
+                    • Very slow: ~47 seconds per image<br>
+                    • 2000 CNN forward passes per image
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fast R-CNN -->
+        <div id="fast-rcnn" class="content">
+            <div class="architecture">
+                <h2 class="architecture-title">Fast R-CNN</h2>
+                
+                <div class="info-box">
+                    <strong>Key Innovation:</strong> Single CNN forward pass with RoI pooling for feature extraction.
+                </div>
+                
+                <div class="flow-diagram">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">🚀 Single CNN Forward Pass</div>
+                            <div class="step-desc">
+                                <span class="highlight">Process entire image once</span>
+                            </div>
+                            <div class="visual-container">
+                                <svg width="600" height="200" viewBox="0 0 600 200">
+                                    <rect x="30" y="40" width="120" height="120" fill="#e3f2fd" stroke="#2196f3" stroke-width="3" rx="5"/>
+                                    <text x="90" y="65" text-anchor="middle" font-size="14" font-weight="bold">Input Image</text>
+                                    
+                                    <path d="M 150 100 L 180 100" stroke="#667eea" stroke-width="4" marker-end="url(#arrowhead2)" class="data-flow"/>
+                                    
+                                    <g transform="translate(190, 50)">
+                                        <rect width="40" height="100" fill="#42a5f5" fill-opacity="0.7" stroke="#1976d2" stroke-width="2" rx="3" class="layer-rect"/>
+                                    </g>
+                                    <g transform="translate(240, 45)">
+                                        <rect width="40" height="110" fill="#66bb6a" fill-opacity="0.7" stroke="#388e3c" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.2s"/>
+                                    </g>
+                                    <g transform="translate(290, 40)">
+                                        <rect width="40" height="120" fill="#ffa726" fill-opacity="0.7" stroke="#f57c00" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.4s"/>
+                                    </g>
+                                    <g transform="translate(340, 35)">
+                                        <rect width="40" height="130" fill="#ef5350" fill-opacity="0.7" stroke="#c62828" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.6s"/>
+                                    </g>
+                                    
+                                    <path d="M 380 100 L 410 100" stroke="#667eea" stroke-width="4" marker-end="url(#arrowhead2)" class="data-flow"/>
+                                    
+                                    <g transform="translate(420, 40)">
+                                        <rect width="140" height="120" fill="#fff3e0" stroke="#ffa726" stroke-width="3" rx="8"/>
+                                        <text x="70" y="30" text-anchor="middle" font-size="14" font-weight="bold">Shared</text>
+                                        <text x="70" y="50" text-anchor="middle" font-size="14" font-weight="bold">Feature Map</text>
+                                        <text x="70" y="80" text-anchor="middle" font-size="12">H/16 × W/16 × 512</text>
+                                        
+                                        <rect x="20" y="90" width="30" height="20" fill="#4caf50" fill-opacity="0.5" stroke="#388e3c" class="region-box"/>
+                                        <rect x="60" y="95" width="25" height="15" fill="#ff5252" fill-opacity="0.5" stroke="#d32f2f" class="region-box" style="animation-delay: 0.3s"/>
+                                        <rect x="95" y="92" width="28" height="18" fill="#2196f3" fill-opacity="0.5" stroke="#1565c0" class="region-box" style="animation-delay: 0.6s"/>
+                                    </g>
+                                    
+                                    <text x="285" y="185" text-anchor="middle" font-size="16" fill="#2e7d32" font-weight="bold">✓ Only 1 CNN pass!</text>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">RoI Pooling Layer</div>
+                            <div class="step-desc">
+                                <span class="highlight">Extract fixed-size features from each proposal</span>
+                            </div>
+                            <div class="visual-container">
+                                <svg width="550" height="220" viewBox="0 0 550 220">
+                                    <g transform="translate(30, 30)">
+                                        <rect width="160" height="160" fill="#e8f5e9" stroke="#66bb6a" stroke-width="3" rx="5"/>
+                                        <text x="80" y="20" text-anchor="middle" font-size="12" font-weight="bold">Feature Map</text>
+                                        
+                                        <rect x="20" y="40" width="50" height="40" fill="#4caf50" fill-opacity="0.4" stroke="#2e7d32" stroke-width="2" class="region-box"/>
+                                        <text x="45" y="63" text-anchor="middle" fill="white" font-size="11" font-weight="bold">RoI 1</text>
+                                        
+                                        <rect x="90" y="60" width="40" height="30" fill="#ff5252" fill-opacity="0.4" stroke="#c62828" stroke-width="2" class="region-box" style="animation-delay: 0.3s"/>
+                                        <text x="110" y="78" text-anchor="middle" fill="white" font-size="11" font-weight="bold">RoI 2</text>
+                                        
+                                        <rect x="50" y="100" width="45" height="35" fill="#2196f3" fill-opacity="0.4" stroke="#1565c0" stroke-width="2" class="region-box" style="animation-delay: 0.6s"/>
+                                        <text x="72" y="120" text-anchor="middle" fill="white" font-size="11" font-weight="bold">RoI 3</text>
+                                    </g>
+                                    
+                                    <path d="M 200 110 Q 270 110 330 70" stroke="#667eea" stroke-width="2" stroke-dasharray="5,5" class="data-flow"/>
+                                    <path d="M 200 110 Q 270 110 330 110" stroke="#667eea" stroke-width="2" stroke-dasharray="5,5" class="data-flow" style="animation-delay: 0.3s"/>
+                                    <path d="M 200 110 Q 270 110 330 150" stroke="#667eea" stroke-width="2" stroke-dasharray="5,5" class="data-flow" style="animation-delay: 0.6s"/>
+                                    
+                                    <g transform="translate(340, 40)">
+                                        <rect width="70" height="50" fill="#4caf50" fill-opacity="0.8" stroke="#2e7d32" stroke-width="2" rx="5"/>
+                                        <text x="35" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RoI Pool</text>
+                                        <text x="35" y="35" text-anchor="middle" fill="white" font-size="9">7×7×512</text>
+                                    </g>
+                                    <g transform="translate(340, 80)">
+                                        <rect width="70" height="50" fill="#ff5252" fill-opacity="0.8" stroke="#c62828" stroke-width="2" rx="5"/>
+                                        <text x="35" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RoI Pool</text>
+                                        <text x="35" y="35" text-anchor="middle" fill="white" font-size="9">7×7×512</text>
+                                    </g>
+                                    <g transform="translate(340, 120)">
+                                        <rect width="70" height="50" fill="#2196f3" fill-opacity="0.8" stroke="#1565c0" stroke-width="2" rx="5"/>
+                                        <text x="35" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RoI Pool</text>
+                                        <text x="35" y="35" text-anchor="middle" fill="white" font-size="9">7×7×512</text>
+                                    </g>
+                                    
+                                    <path d="M 410 65 L 450 65" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead3)"/>
+                                    <path d="M 410 105 L 450 105" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead3)"/>
+                                    <path d="M 410 145 L 450 145" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead3)"/>
+                                    
+                                    <g transform="translate(460, 60)">
+                                        <rect width="70" height="90" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="35" y="20" text-anchor="middle" font-size="11" font-weight="bold">FC</text>
+                                        <text x="35" y="35" text-anchor="middle" font-size="11" font-weight="bold">Layers</text>
+                                        <text x="35" y="55" text-anchor="middle" font-size="9">↓</text>
+                                        <text x="35" y="70" text-anchor="middle" font-size="10">4096-d</text>
+                                    </g>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">🎯 Multi-task Output</div>
+                            <div class="step-desc">
+                                <span class="highlight">Simultaneous classification and bbox regression</span>
+                            </div>
+                            <div class="visual-container">
+                                <svg width="500" height="180" viewBox="0 0 500 180">
+                                    <rect x="30" y="60" width="100" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="3" rx="8"/>
+                                    <text x="80" y="85" text-anchor="middle" font-size="13" font-weight="bold">Feature</text>
+                                    <text x="80" y="105" text-anchor="middle" font-size="13" font-weight="bold">Vector</text>
+                                    
+                                    <path d="M 130 90 L 180 60" stroke="#667eea" stroke-width="3" class="data-flow"/>
+                                    <path d="M 130 90 L 180 110" stroke="#667eea" stroke-width="3" class="data-flow"/>
+                                    
+                                    <g transform="translate(190, 30)">
+                                        <rect width="130" height="50" fill="#e8f5e9" stroke="#66bb6a" stroke-width="3" rx="8"/>
+                                        <text x="65" y="20" text-anchor="middle" font-size="12" font-weight="bold">Softmax</text>
+                                        <text x="65" y="38" text-anchor="middle" font-size="11">(Classification)</text>
+                                    </g>
+                                    
+                                    <g transform="translate(190, 100)">
+                                        <rect width="130" height="50" fill="#ffebee" stroke="#ef5350" stroke-width="3" rx="8"/>
+                                        <text x="65" y="20" text-anchor="middle" font-size="12" font-weight="bold">Bbox Regressor</text>
+                                        <text x="65" y="38" text-anchor="middle" font-size="11">(Localization)</text>
+                                    </g>
+                                    
+                                    <path d="M 320 55 L 360 55" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead4)"/>
+                                    <path d="M 320 125 L 360 125" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead4)"/>
+                                    
+                                    <g transform="translate(370, 30)">
+                                        <rect width="110" height="30" fill="#c8e6c9" stroke="#66bb6a" stroke-width="2" rx="5"/>
+                                        <text x="55" y="20" text-anchor="middle" font-size="11">🐕 Dog: 0.92</text>
+                                    </g>
+                                    <g transform="translate(370, 110)">
+                                        <rect width="110" height="30" fill="#ffcdd2" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="55" y="20" text-anchor="middle" font-size="11">(x, y, w, h)</text>
+                                    </g>
+                                    
+                                    <text x="250" y="165" text-anchor="middle" font-size="14" fill="#1976d2" font-weight="bold">✓ Single-stage training!</text>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <strong>✅ Improvements:</strong> 9× faster training, 213× faster testing<br>
+                    <strong>⚠️ Bottleneck:</strong> Still uses Selective Search
+                </div>
+            </div>
+        </div>
+        
+        <!-- Faster R-CNN -->
+        <div id="faster-rcnn" class="content">
+            <div class="architecture">
+                <h2 class="architecture-title">Faster R-CNN</h2>
+                
+                <div class="info-box">
+                    <strong>Key Innovation:</strong> Region Proposal Network (RPN) - neural network for proposals.
+                </div>
+                
+                <div class="flow-diagram">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">Shared Convolutional Layers</div>
+                            <div class="step-desc">
+                                Backbone network processes entire image
+                            </div>
+                            <div class="visual-container">
+                                <svg width="500" height="180" viewBox="0 0 500 180">
+                                    <rect x="30" y="40" width="100" height="100" fill="#e3f2fd" stroke="#2196f3" stroke-width="3" rx="5"/>
+                                    <text x="80" y="95" text-anchor="middle" font-size="13" font-weight="bold">Image</text>
+                                    
+                                    <path d="M 130 90 L 160 90" stroke="#667eea" stroke-width="4" marker-end="url(#arrowhead5)" class="data-flow"/>
+                                    
+                                    <g transform="translate(170, 45)">
+                                        <rect width="35" height="90" fill="#42a5f5" fill-opacity="0.7" stroke="#1976d2" stroke-width="2" rx="3" class="layer-rect"/>
+                                    </g>
+                                    <g transform="translate(215, 40)">
+                                        <rect width="35" height="100" fill="#66bb6a" fill-opacity="0.7" stroke="#388e3c" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.2s"/>
+                                    </g>
+                                    <g transform="translate(260, 35)">
+                                        <rect width="35" height="110" fill="#ffa726" fill-opacity="0.7" stroke="#f57c00" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.4s"/>
+                                    </g>
+                                    <g transform="translate(305, 30)">
+                                        <rect width="35" height="120" fill="#ef5350" fill-opacity="0.7" stroke="#c62828" stroke-width="2" rx="3" class="layer-rect" style="animation-delay: 0.6s"/>
+                                    </g>
+                                    
+                                    <path d="M 340 90 L 370 90" stroke="#667eea" stroke-width="4" marker-end="url(#arrowhead5)" class="data-flow"/>
+                                    
+                                    <g transform="translate(380, 30)">
+                                        <rect width="100" height="120" fill="#fff3e0" stroke="#ffa726" stroke-width="3" rx="8"/>
+                                        <text x="50" y="30" text-anchor="middle" font-size="12" font-weight="bold">Feature</text>
+                                        <text x="50" y="48" text-anchor="middle" font-size="12" font-weight="bold">Map</text>
+                                        <text x="50" y="75" text-anchor="middle" font-size="10">Shared for</text>
+                                        <text x="50" y="90" text-anchor="middle" font-size="10">RPN &amp;</text>
+                                        <text x="50" y="105" text-anchor="middle" font-size="10">Detector</text>
+                                    </g>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0; border: 3px solid #66bb6a;">
+                        <h3 style="color: #2e7d32; margin-bottom: 15px;">🔥 Region Proposal Network (RPN)</h3>
+                        
+                        <div class="step" style="margin-bottom: 15px;">
+                            <span class="step-number">2a</span>
+                            <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                                <div class="step-title">Anchor Boxes</div>
+                                <div class="step-desc">
+                                    <span class="highlight">9 anchors per position (3 scales × 3 ratios)</span>
+                                </div>
+                                <div class="visual-container">
+                                    <svg width="500" height="200" viewBox="0 0 500 200">
+                                        <g transform="translate(50, 20)">
+                                            <rect width="140" height="160" fill="#e1f5fe" stroke="#0288d1" stroke-width="2" rx="5"/>
+                                            <text x="70" y="15" text-anchor="middle" font-size="11" font-weight="bold">Feature Map Grid</text>
+                                            
+                                            <circle cx="70" cy="80" r="4" fill="#d32f2f" class="anchor-point"/>
+                                            
+                                            <rect x="45" y="60" width="20" height="20" fill="none" stroke="#ff5252" stroke-width="1.5" class="region-box"/>
+                                            <rect x="40" y="50" width="30" height="30" fill="none" stroke="#ff7043" stroke-width="1.5" class="region-box" style="animation-delay: 0.2s"/>
+                                            <rect x="35" y="40" width="40" height="40" fill="none" stroke="#ffab40" stroke-width="1.5" class="region-box" style="animation-delay: 0.4s"/>
+                                            
+                                            <rect x="50" y="55" width="30" height="20" fill="none" stroke="#66bb6a" stroke-width="1.5" class="region-box" style="animation-delay: 0.6s"/>
+                                            <rect x="45" y="50" width="40" height="25" fill="none" stroke="#4caf50" stroke-width="1.5" class="region-box" style="animation-delay: 0.8s"/>
+                                            <rect x="40" y="45" width="50" height="30" fill="none" stroke="#2e7d32" stroke-width="1.5" class="region-box" style="animation-delay: 1s"/>
+                                            
+                                            <rect x="55" y="60" width="20" height="30" fill="none" stroke="#2196f3" stroke-width="1.5" class="region-box" style="animation-delay: 1.2s"/>
+                                            <rect x="52" y="55" width="25" height="40" fill="none" stroke="#1976d2" stroke-width="1.5" class="region-box" style="animation-delay: 1.4s"/>
+                                            <rect x="48" y="50" width="30" height="50" fill="none" stroke="#0d47a1" stroke-width="1.5" class="region-box" style="animation-delay: 1.6s"/>
+                                        </g>
+                                        
+                                        <g transform="translate(250, 30)">
+                                            <text x="0" y="0" font-size="12" font-weight="bold" fill="#d32f2f">3 Scales:</text>
+                                            <rect x="0" y="10" width="20" height="20" fill="#ff5252" fill-opacity="0.6" stroke="#d32f2f" stroke-width="2"/>
+                                            <text x="30" y="25" font-size="10">128²</text>
+                                            <rect x="0" y="40" width="30" height="30" fill="#ff7043" fill-opacity="0.6" stroke="#d32f2f" stroke-width="2"/>
+                                            <text x="40" y="60" font-size="10">256²</text>
+                                            <rect x="0" y="80" width="40" height="40" fill="#ffab40" fill-opacity="0.6" stroke="#d32f2f" stroke-width="2"/>
+                                            <text x="50" y="105" font-size="10">512²</text>
+                                        </g>
+                                        
+                                        <g transform="translate(360, 30)">
+                                            <text x="0" y="0" font-size="12" font-weight="bold" fill="#2e7d32">3 Ratios:</text>
+                                            <rect x="0" y="10" width="30" height="20" fill="#66bb6a" fill-opacity="0.6" stroke="#2e7d32" stroke-width="2"/>
+                                            <text x="40" y="25" font-size="10">2:1</text>
+                                            <rect x="0" y="40" width="25" height="25" fill="#4caf50" fill-opacity="0.6" stroke="#2e7d32" stroke-width="2"/>
+                                            <text x="35" y="57" font-size="10">1:1</text>
+                                            <rect x="0" y="75" width="20" height="30" fill="#2e7d32" fill-opacity="0.6" stroke="#1b5e20" stroke-width="2"/>
+                                            <text x="30" y="95" font-size="10">1:2</text>
+                                        </g>
+                                        
+                                        <text x="250" y="170" font-size="13" fill="#1976d2" font-weight="bold">9 anchors × all positions = ~20K anchors</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <span class="step-number">2b</span>
+                            <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                                <div class="step-title">RPN Outputs</div>
+                                <div class="step-desc">
+                                    Objectness scores + bbox refinements
+                                </div>
+                                <div class="visual-container">
+                                    <svg width="500" height="150" viewBox="0 0 500 150">
+                                        <rect x="30" y="40" width="100" height="70" fill="#fff3e0" stroke="#ffa726" stroke-width="3" rx="8"/>
+                                        <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="bold">Feature</text>
+                                        <text x="80" y="85" text-anchor="middle" font-size="12" font-weight="bold">Map</text>
+                                        
+                                        <path d="M 130 75 L 180 50" stroke="#667eea" stroke-width="3" class="data-flow"/>
+                                        <path d="M 130 75 L 180 100" stroke="#667eea" stroke-width="3" class="data-flow"/>
+                                        
+                                        <g transform="translate(190, 25)">
+                                            <rect width="130" height="40" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2" rx="5"/>
+                                            <text x="65" y="15" text-anchor="middle" font-size="11" font-weight="bold">Classification</text>
+                                            <text x="65" y="30" text-anchor="middle" font-size="10">(object / not object)</text>
+                                        </g>
+                                        
+                                        <g transform="translate(190, 85)">
+                                            <rect width="130" height="40" fill="#ffebee" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                            <text x="65" y="15" text-anchor="middle" font-size="11" font-weight="bold">Regression</text>
+                                            <text x="65" y="30" text-anchor="middle" font-size="10">(bbox offsets)</text>
+                                        </g>
+                                        
+                                        <path d="M 320 45 L 360 45" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead6)"/>
+                                        <path d="M 320 105 L 360 105" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead6)"/>
+                                        
+                                        <g transform="translate(370, 55)">
+                                            <rect width="110" height="60" fill="#c8e6c9" stroke="#66bb6a" stroke-width="2" rx="5"/>
+                                            <text x="55" y="20" text-anchor="middle" font-size="11" font-weight="bold">Top ~300</text>
+                                            <text x="55" y="38" text-anchor="middle" font-size="11" font-weight="bold">Proposals</text>
+                                            <text x="55" y="52" text-anchor="middle" font-size="9">(after NMS)</text>
+                                        </g>
+                                        
+                                        <defs>
+                                            <marker id="arrowhead6" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                                <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                            </marker>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 50px);">
+                            <div class="step-title">Detection Network</div>
+                            <div class="step-desc">
+                                RoI pooling + final classification & bbox refinement
+                            </div>
+                            <div class="visual-container">
+                                <svg width="600" height="160" viewBox="0 0 600 160">
+                                    <g transform="translate(30, 30)">
+                                        <rect width="100" height="100" fill="#fff3e0" stroke="#ffa726" stroke-width="2" rx="5"/>
+                                        <text x="50" y="25" text-anchor="middle" font-size="11" font-weight="bold">RoI Pooling</text>
+                                        <rect x="25" y="40" width="20" height="15" fill="#4caf50" fill-opacity="0.5" stroke="#388e3c" class="region-box"/>
+                                        <rect x="55" y="50" width="18" height="12" fill="#ff5252" fill-opacity="0.5" stroke="#d32f2f" class="region-box" style="animation-delay: 0.3s"/>
+                                        <rect x="35" y="70" width="22" height="16" fill="#2196f3" fill-opacity="0.5" stroke="#1565c0" class="region-box" style="animation-delay: 0.6s"/>
+                                    </g>
+                                    
+                                    <path d="M 130 80 L 180 80" stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead7)"/>
+                                    
+                                    <g transform="translate(190, 50)">
+                                        <rect width="80" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="5"/>
+                                        <text x="40" y="25" text-anchor="middle" font-size="11" font-weight="bold">FC</text>
+                                        <text x="40" y="40" text-anchor="middle" font-size="11" font-weight="bold">Layers</text>
+                                    </g>
+                                    
+                                    <path d="M 270 80 L 310 55" stroke="#667eea" stroke-width="2" class="data-flow"/>
+                                    <path d="M 270 80 L 310 105" stroke="#667eea" stroke-width="2" class="data-flow"/>
+                                    
+                                    <g transform="translate(320, 30)">
+                                        <rect width="110" height="40" fill="#c8e6c9" stroke="#66bb6a" stroke-width="2" rx="5"/>
+                                        <text x="55" y="15" text-anchor="middle" font-size="10" font-weight="bold">Class Scores</text>
+                                        <text x="55" y="30" text-anchor="middle" font-size="9">🐕 🚗 👤 ...</text>
+                                    </g>
+                                    
+                                    <g transform="translate(320, 90)">
+                                        <rect width="110" height="40" fill="#ffcdd2" stroke="#ef5350" stroke-width="2" rx="5"/>
+                                        <text x="55" y="15" text-anchor="middle" font-size="10" font-weight="bold">Bbox Refine</text>
+                                        <text x="55" y="30" text-anchor="middle" font-size="9">(Δx, Δy, Δw, Δh)</text>
+                                    </g>
+                                    
+                                    <path d="M 430 50 L 470 80" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead7)"/>
+                                    <path d="M 430 110 L 470 80" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead7)"/>
+                                    
+                                    <g transform="translate(480, 55)">
+                                        <rect width="100" height="50" fill="#fff9c4" stroke="#fbc02d" stroke-width="3" rx="8"/>
+                                        <text x="50" y="20" text-anchor="middle" font-size="12" font-weight="bold">Final</text>
+                                        <text x="50" y="38" text-anchor="middle" font-size="12" font-weight="bold">Detection</text>
+                                    </g>
+                                    
+                                    <defs>
+                                        <marker id="arrowhead7" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#667eea"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <strong>✅ Achievements:</strong><br>
+                    • End-to-end training<br>
+                    • ~5 FPS - near real-time!<br>
+                    • 10× faster than Fast R-CNN<br>
+                    • RPN proposals are FREE (share CNN features)
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comparison -->
+        <div id="comparison" class="content">
+            <div class="comparison">
+                <h3>Performance Comparison</h3>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h4>R-CNN</h4>
+                        <p><strong>Speed:</strong> 47 seconds/image</p>
+                        <p><strong>Proposals:</strong> Selective Search (CPU)</p>
+                        <p><strong>Training:</strong> Multi-stage</p>
+                        <p><strong>Feature Extraction:</strong> 2000× per image</p>
+                        <p><strong>mAP:</strong> ~66% (VOC 2007)</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>Fast R-CNN</h4>
+                        <p><strong>Speed:</strong> 2 seconds/image</p>
+                        <p><strong>Proposals:</strong> Selective Search (CPU)</p>
+                        <p><strong>Training:</strong> Single-stage</p>
+                        <p><strong>Feature Extraction:</strong> 1× per image</p>
+                        <p><strong>mAP:</strong> ~70% (VOC 2007)</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>Faster R-CNN</h4>
+                        <p><strong>Speed:</strong> 0.2 seconds/image (5 FPS)</p>
+                        <p><strong>Proposals:</strong> RPN (GPU)</p>
+                        <p><strong>Training:</strong> End-to-end</p>
+                        <p><strong>Feature Extraction:</strong> Shared</p>
+                        <p><strong>mAP:</strong> ~73% (VOC 2007)</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">Speed Comparison Visualization</h3>
+                <div class="visual-container" style="min-height: 250px;">
+                    <svg width="700" height="250" viewBox="0 0 700 250">
+                        <text x="350" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Processing Time per Image</text>
+                        
+                        <g transform="translate(50, 50)">
+                            <text x="0" y="20" font-size="14" font-weight="bold" fill="#667eea">R-CNN</text>
+                            <rect x="0" y="30" width="470" height="40" fill="#ef5350" fill-opacity="0.7" rx="5">
+                                <animate attributeName="width" from="0" to="470" dur="2s" fill="freeze"/>
+                            </rect>
+                            <text x="475" y="55" font-size="13" font-weight="bold" fill="#d32f2f">47s</text>
+                        </g>
+                        
+                        <g transform="translate(50, 110)">
+                            <text x="0" y="20" font-size="14" font-weight="bold" fill="#667eea">Fast R-CNN</text>
+                            <rect x="0" y="30" width="20" height="40" fill="#ffa726" fill-opacity="0.7" rx="5">
+                                <animate attributeName="width" from="0" to="20" dur="2s" fill="freeze"/>
+                            </rect>
+                            <text x="25" y="55" font-size="13" font-weight="bold" fill="#f57c00">2s</text>
+                        </g>
+                        
+                        <g transform="translate(50, 170)">
+                            <text x="0" y="20" font-size="14" font-weight="bold" fill="#667eea">Faster R-CNN</text>
+                            <rect x="0" y="30" width="2" height="40" fill="#66bb6a" fill-opacity="0.9" rx="5">
+                                <animate attributeName="width" from="0" to="2" dur="2s" fill="freeze"/>
+                            </rect>
+                            <text x="7" y="55" font-size="13" font-weight="bold" fill="#2e7d32">0.2s</text>
+                        </g>
+                        
+                        <line x1="50" y1="220" x2="550" y2="220" stroke="#ccc" stroke-width="2"/>
+                        <text x="50" y="240" font-size="11" fill="#666">0s</text>
+                        <text x="300" y="240" text-anchor="middle" font-size="11" fill="#666">25s</text>
+                        <text x="540" y="240" text-anchor="end" font-size="11" fill="#666">50s</text>
+                    </svg>
+                </div>
+                
+                <h3 style="margin-top: 30px;">Key Architectural Differences</h3>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background: white;">
+                    <thead>
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 15px; text-align: left; border: 1px solid #ddd;">Component</th>
+                            <th style="padding: 15px; text-align: left; border: 1px solid #ddd;">R-CNN</th>
+                            <th style="padding: 15px; text-align: left; border: 1px solid #ddd;">Fast R-CNN</th>
+                            <th style="padding: 15px; text-align: left; border: 1px solid #ddd;">Faster R-CNN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Region Proposals</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Selective Search</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Selective Search</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">RPN (learned)</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>CNN Passes</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">~2000 per image</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">1 per image</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">1 per image</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Feature Sharing</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">None</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">Detection only</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">RPN + Detection</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Classification</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">SVM</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">Softmax</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">Softmax</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Training</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Multi-stage</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">Single-stage</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">End-to-end</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Speed (FPS)</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0.02</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0.5</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; background: #e8f5e9;">5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="margin-top: 30px;">Evolution Timeline</h3>
+                <div class="visual-container" style="min-height: 300px;">
+                    <svg width="700" height="280" viewBox="0 0 700 280">
+                        <defs>
+                            <marker id="timeline-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                                <polygon points="0 0, 8 4, 0 8" fill="#667eea"/>
+                            </marker>
+                        </defs>
+                        
+                        <line x1="50" y1="140" x2="650" y2="140" stroke="#667eea" stroke-width="4" marker-end="url(#timeline-arrow)"/>
+                        
+                        <g transform="translate(100, 60)">
+                            <circle cx="0" cy="80" r="40" fill="#ef5350" stroke="#c62828" stroke-width="3" class="anchor-point"/>
+                            <text x="0" y="85" text-anchor="middle" fill="white" font-size="16" font-weight="bold">R-CNN</text>
+                            <text x="0" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">2014</text>
+                            <text x="0" y="170" text-anchor="middle" font-size="11" fill="#666">Selective Search</text>
+                            <text x="0" y="185" text-anchor="middle" font-size="11" fill="#666">+ CNN Features</text>
+                        </g>
+                        
+                        <g transform="translate(320, 60)">
+                            <circle cx="0" cy="80" r="40" fill="#ffa726" stroke="#f57c00" stroke-width="3" class="anchor-point" style="animation-delay: 0.5s"/>
+                            <text x="0" y="80" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Fast</text>
+                            <text x="0" y="95" text-anchor="middle" fill="white" font-size="14" font-weight="bold">R-CNN</text>
+                            <text x="0" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">2015</text>
+                            <text x="0" y="170" text-anchor="middle" font-size="11" fill="#666">RoI Pooling</text>
+                            <text x="0" y="185" text-anchor="middle" font-size="11" fill="#666">Single CNN pass</text>
+                        </g>
+                        
+                        <g transform="translate(540, 60)">
+                            <circle cx="0" cy="80" r="40" fill="#66bb6a" stroke="#388e3c" stroke-width="3" class="anchor-point" style="animation-delay: 1s"/>
+                            <text x="0" y="80" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Faster</text>
+                            <text x="0" y="95" text-anchor="middle" fill="white" font-size="13" font-weight="bold">R-CNN</text>
+                            <text x="0" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">2015</text>
+                            <text x="0" y="170" text-anchor="middle" font-size="11" fill="#666">Region Proposal</text>
+                            <text x="0" y="185" text-anchor="middle" font-size="11" fill="#666">Network (RPN)</text>
+                        </g>
+                        
+                        <path d="M 140 140 L 280 140" stroke="#667eea" stroke-width="3" stroke-dasharray="5,5" class="data-flow"/>
+                        <path d="M 360 140 L 500 140" stroke="#667eea" stroke-width="3" stroke-dasharray="5,5" class="data-flow" style="animation-delay: 0.5s"/>
+                    </svg>
+                </div>
+                
+                <div class="info-box" style="margin-top: 30px;">
+                    <strong>📚 Key Takeaways:</strong><br>
+                    • <strong>R-CNN:</strong> Pioneered CNN-based object detection but was slow<br>
+                    • <strong>Fast R-CNN:</strong> Shared CNN computation via RoI pooling, 25× speedup<br>
+                    • <strong>Faster R-CNN:</strong> Replaced Selective Search with RPN, achieving near real-time performance<br>
+                    • Each iteration maintained or improved accuracy while dramatically reducing inference time
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+    </script>
+</body>
+</html>
