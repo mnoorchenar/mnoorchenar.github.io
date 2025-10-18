@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Encoding Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #667eea;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .output-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .output-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .output-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #333;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .explanation {
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .example {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔤 Text Encoding Playground</h1>
+            <p class="subtitle">Convert Text to Numerical Representations for ML/DL Models</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">Label Encoding</button>
+            <button class="tab-btn" onclick="switchTab(1)">One-Hot Encoding</button>
+            <button class="tab-btn" onclick="switchTab(2)">Bag-of-Words</button>
+            <button class="tab-btn" onclick="switchTab(3)">TF-IDF</button>
+            <button class="tab-btn" onclick="switchTab(4)">Embeddings</button>
+        </div>
+        
+        <!-- Label Encoding -->
+        <div class="tab-content active">
+            <h2>Label Encoding</h2>
+            <div class="explanation">
+                <strong>What is it?</strong> Converts categorical text labels to integer values (0, 1, 2, ...). Useful for ordinal data or as input to tree-based models.
+            </div>
+            
+            <div class="input-group">
+                <label>Enter categories (one per line):</label>
+                <textarea id="le-input" rows="6" placeholder="red&#10;blue&#10;green&#10;red&#10;yellow">red
+blue
+green
+red
+yellow</textarea>
+            </div>
+            
+            <button onclick="encodeLabelEncoding()">Encode</button>
+            
+            <div class="output-box" id="le-output" style="display:none;">
+                <div class="output-title">Output:</div>
+                <div class="output-content" id="le-result"></div>
+            </div>
+        </div>
+        
+        <!-- One-Hot Encoding -->
+        <div class="tab-content">
+            <h2>One-Hot Encoding</h2>
+            <div class="explanation">
+                <strong>What is it?</strong> Creates binary vectors where each category gets its own column with 1 or 0. Prevents ordinal assumptions in ML algorithms.
+            </div>
+            
+            <div class="input-group">
+                <label>Enter categories (one per line):</label>
+                <textarea id="ohe-input" rows="6" placeholder="cat&#10;dog&#10;bird&#10;cat&#10;dog">cat
+dog
+bird
+cat
+dog</textarea>
+            </div>
+            
+            <button onclick="encodeOneHotEncoding()">Encode</button>
+            
+            <div class="output-box" id="ohe-output" style="display:none;">
+                <div class="output-title">Output:</div>
+                <div class="output-content" id="ohe-result"></div>
+            </div>
+        </div>
+        
+        <!-- Bag-of-Words -->
+        <div class="tab-content">
+            <h2>Bag-of-Words (BoW)</h2>
+            <div class="explanation">
+                <strong>What is it?</strong> Counts word occurrences in documents, creating a vector representation. Ignores word order and grammar.
+            </div>
+            
+            <div class="input-group">
+                <label>Enter documents (one per line):</label>
+                <textarea id="bow-input" rows="6" placeholder="I love machine learning&#10;machine learning is powerful&#10;I love AI">I love machine learning
+machine learning is powerful
+I love AI</textarea>
+            </div>
+            
+            <button onclick="encodeBagOfWords()">Encode</button>
+            
+            <div class="output-box" id="bow-output" style="display:none;">
+                <div class="output-title">Output:</div>
+                <div class="output-content" id="bow-result"></div>
+            </div>
+        </div>
+        
+        <!-- TF-IDF -->
+        <div class="tab-content">
+            <h2>TF-IDF (Term Frequency–Inverse Document Frequency)</h2>
+            <div class="explanation">
+                <strong>What is it?</strong> Weights words by their importance. Frequent words in one document but rare across all documents get higher scores. Better than BoW for NLP tasks.
+            </div>
+            
+            <div class="input-group">
+                <label>Enter documents (one per line):</label>
+                <textarea id="tfidf-input" rows="6" placeholder="the cat sat on the mat&#10;the dog played in the park&#10;cats and dogs are pets">the cat sat on the mat
+the dog played in the park
+cats and dogs are pets</textarea>
+            </div>
+            
+            <button onclick="encodeTFIDF()">Encode</button>
+            
+            <div class="output-box" id="tfidf-output" style="display:none;">
+                <div class="output-title">Output:</div>
+                <div class="output-content" id="tfidf-result"></div>
+            </div>
+        </div>
+        
+        <!-- Embeddings -->
+        <div class="tab-content">
+            <h2>Embeddings (Word2Vec-like)</h2>
+            <div class="explanation">
+                <strong>What is it?</strong> Dense vector representations where similar words have similar vectors. Captures semantic meaning. Simulated with hash-based approach for demonstration.
+            </div>
+            
+            <div class="input-group">
+                <label>Enter words or short phrases (one per line):</label>
+                <textarea id="emb-input" rows="6" placeholder="king&#10;queen&#10;man&#10;woman&#10;prince">king
+queen
+man
+woman
+prince</textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>Embedding Dimension:</label>
+                <input type="text" id="emb-dim" value="8" placeholder="8">
+            </div>
+            
+            <button onclick="encodeEmbeddings()">Generate Embeddings</button>
+            
+            <div class="output-box" id="emb-output" style="display:none;">
+                <div class="output-title">Output:</div>
+                <div class="output-content" id="emb-result"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const btns = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            btns.forEach(btn => btn.classList.remove('active'));
+            
+            tabs[index].classList.add('active');
+            btns[index].classList.add('active');
+        }
+        
+        // Label Encoding
+        function encodeLabelEncoding() {
+            const input = document.getElementById('le-input').value.trim().split('\n');
+            const unique = [...new Set(input.map(x => x.trim()))];
+            const mapping = {};
+            unique.forEach((item, idx) => mapping[item] = idx);
+            
+            const encoded = input.map(item => mapping[item.trim()]);
+            
+            let result = `Unique Categories: ${JSON.stringify(unique)}\n\n`;
+            result += `Mapping:\n${JSON.stringify(mapping, null, 2)}\n\n`;
+            result += `Encoded Output:\n${encoded.join(', ')}`;
+            
+            document.getElementById('le-result').textContent = result;
+            document.getElementById('le-output').style.display = 'block';
+        }
+        
+        // One-Hot Encoding
+        function encodeOneHotEncoding() {
+            const input = document.getElementById('ohe-input').value.trim().split('\n').map(x => x.trim());
+            const unique = [...new Set(input)];
+            
+            const encoded = input.map(item => {
+                const vector = new Array(unique.length).fill(0);
+                vector[unique.indexOf(item)] = 1;
+                return vector;
+            });
+            
+            let result = `Categories: ${JSON.stringify(unique)}\n\n`;
+            result += `One-Hot Encoded Vectors:\n`;
+            encoded.forEach((vec, idx) => {
+                result += `${input[idx].padEnd(15)} → [${vec.join(', ')}]\n`;
+            });
+            
+            result += `\nMatrix Format:\n[${encoded.map(v => '[' + v.join(', ') + ']').join(',\n ')}]`;
+            
+            document.getElementById('ohe-result').textContent = result;
+            document.getElementById('ohe-output').style.display = 'block';
+        }
+        
+        // Bag-of-Words
+        function encodeBagOfWords() {
+            const docs = document.getElementById('bow-input').value.trim().split('\n');
+            const words = new Set();
+            
+            docs.forEach(doc => {
+                doc.toLowerCase().match(/\b\w+\b/g)?.forEach(word => words.add(word));
+            });
+            
+            const wordList = Array.from(words).sort();
+            const vectors = docs.map(doc => {
+                const counts = new Array(wordList.length).fill(0);
+                const docWords = doc.toLowerCase().match(/\b\w+\b/g) || [];
+                docWords.forEach(word => {
+                    counts[wordList.indexOf(word)]++;
+                });
+                return counts;
+            });
+            
+            let result = `Vocabulary: ${JSON.stringify(wordList)}\n\n`;
+            result += `BoW Vectors:\n`;
+            docs.forEach((doc, idx) => {
+                result += `Doc ${idx + 1}: "${doc}"\n`;
+                result += `        [${vectors[idx].join(', ')}]\n\n`;
+            });
+            
+            document.getElementById('bow-result').textContent = result;
+            document.getElementById('bow-output').style.display = 'block';
+        }
+        
+        // TF-IDF
+        function encodeTFIDF() {
+            const docs = document.getElementById('tfidf-input').value.trim().split('\n');
+            const words = new Set();
+            
+            docs.forEach(doc => {
+                doc.toLowerCase().match(/\b\w+\b/g)?.forEach(word => words.add(word));
+            });
+            
+            const wordList = Array.from(words).sort();
+            const docWords = docs.map(doc => doc.toLowerCase().match(/\b\w+\b/g) || []);
+            
+            // Calculate TF-IDF
+            const tfidfVectors = docWords.map(words => {
+                return wordList.map(word => {
+                    const tf = words.filter(w => w === word).length / words.length;
+                    const idf = Math.log(docs.length / (1 + docWords.filter(dw => dw.includes(word)).length));
+                    return (tf * idf).toFixed(4);
+                });
+            });
+            
+            let result = `Vocabulary: ${JSON.stringify(wordList)}\n\n`;
+            result += `TF-IDF Vectors:\n`;
+            docs.forEach((doc, idx) => {
+                result += `Doc ${idx + 1}: "${doc}"\n`;
+                result += `        [${tfidfVectors[idx].join(', ')}]\n\n`;
+            });
+            
+            document.getElementById('tfidf-result').textContent = result;
+            document.getElementById('tfidf-output').style.display = 'block';
+        }
+        
+        // Embeddings (Hash-based simulation)
+        function encodeEmbeddings() {
+            const words = document.getElementById('emb-input').value.trim().split('\n').map(x => x.trim());
+            const dim = parseInt(document.getElementById('emb-dim').value) || 8;
+            
+            const embeddings = words.map(word => {
+                const vector = [];
+                for (let i = 0; i < dim; i++) {
+                    let hash = 0;
+                    for (let j = 0; j < word.length; j++) {
+                        hash = ((hash << 5) - hash) + word.charCodeAt(j) + i * 17;
+                        hash = hash & hash;
+                    }
+                    vector.push((Math.sin(hash) * 0.5 + 0.5).toFixed(4));
+                }
+                return vector;
+            });
+            
+            let result = `Word Embeddings (Dimension: ${dim})\n\n`;
+            embeddings.forEach((emb, idx) => {
+                result += `${words[idx].padEnd(15)} → [${emb.join(', ')}]\n`;
+            });
+            
+            // Calculate similarity
+            result += `\n\nSimilarity Matrix (Cosine):\n`;
+            result += calculateSimilarity(embeddings, words);
+            
+            document.getElementById('emb-result').textContent = result;
+            document.getElementById('emb-output').style.display = 'block';
+        }
+        
+        function calculateSimilarity(embeddings, words) {
+            const cosineSimilarity = (a, b) => {
+                const dotProduct = a.reduce((sum, x, i) => sum + x * b[i], 0);
+                const magnitudeA = Math.sqrt(a.reduce((sum, x) => sum + x * x, 0));
+                const magnitudeB = Math.sqrt(b.reduce((sum, x) => sum + x * x, 0));
+                return (dotProduct / (magnitudeA * magnitudeB)).toFixed(4);
+            };
+            
+            let matrix = '       ';
+            words.forEach(w => matrix += w.padEnd(12));
+            matrix += '\n';
+            
+            embeddings.forEach((emb1, i) => {
+                matrix += words[i].padEnd(7);
+                embeddings.forEach((emb2, j) => {
+                    matrix += cosineSimilarity(
+                        emb1.map(Number),
+                        emb2.map(Number)
+                    ).padEnd(12);
+                });
+                matrix += '\n';
+            });
+            
+            return matrix;
+        }
+    </script>
+</body>
+</html>
