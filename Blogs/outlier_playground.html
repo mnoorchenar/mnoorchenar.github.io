@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outlier Detection Playground</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        .section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: monospace;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+        .gen-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        .results {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+        }
+        .stat {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        .stat-item {
+            background: white;
+            padding: 12px;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+        .stat-item strong {
+            color: #667eea;
+        }
+        .outliers {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .outliers-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .outlier-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .no-outliers {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 15px;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .sample-count {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        @media (max-width: 768px) {
+            .content { grid-template-columns: 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Outlier Detection Playground</h1>
+            <p>Detect outliers using Z-Score and IQR methods</p>
+        </header>
+        
+        <div class="content">
+            <!-- Z-Score Section -->
+            <div class="section">
+                <h2>Z-Score Method</h2>
+                <div class="input-group">
+                    <label>Enter data (comma-separated):</label>
+                    <textarea id="zscoreData" placeholder="e.g., 10, 12, 14, 15, 100, 16, 18, 19, 20">10, 12, 14, 15, 100, 16, 18, 19, 20</textarea>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Threshold:</label>
+                        <input type="text" id="zscoreThreshold" value="3" placeholder="3">
+                    </div>
+                    <div class="input-group">
+                        <label>Generate Samples:</label>
+                        <input type="number" id="zscoreSamples" value="100" min="10" placeholder="100">
+                    </div>
+                </div>
+                <button onclick="generateZScoreSamples()" class="gen-btn">Generate Samples</button>
+                <button onclick="calculateZScore()">Calculate Z-Score</button>
+                
+                <div id="zscoreResults"></div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <canvas id="zscoreHistogram"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="zscoreScatter"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IQR Section -->
+            <div class="section">
+                <h2>IQR Method</h2>
+                <div class="input-group">
+                    <label>Enter data (comma-separated):</label>
+                    <textarea id="iqrData" placeholder="e.g., 10, 12, 14, 15, 100, 16, 18, 19, 20">10, 12, 14, 15, 100, 16, 18, 19, 20</textarea>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>IQR Multiplier:</label>
+                        <input type="text" id="iqrMultiplier" value="1.5" placeholder="1.5">
+                    </div>
+                    <div class="input-group">
+                        <label>Generate Samples:</label>
+                        <input type="number" id="iqrSamples" value="100" min="10" placeholder="100">
+                    </div>
+                </div>
+                <button onclick="generateIQRSamples()" class="gen-btn">Generate Samples</button>
+                <button onclick="calculateIQR()">Calculate IQR</button>
+                
+                <div id="iqrResults"></div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <canvas id="iqrHistogram"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="iqrBoxplot"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let zscoreChartHist, zscoreChartScatter, iqrChartHist, iqrChartBox;
+
+        function parseData(input) {
+            return input.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x)).sort((a, b) => a - b);
+        }
+
+        function calculateMean(data) {
+            return data.reduce((a, b) => a + b, 0) / data.length;
+        }
+
+        function calculateStdDev(data) {
+            const mean = calculateMean(data);
+            const variance = data.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / data.length;
+            return Math.sqrt(variance);
+        }
+
+        function generateNormalDistribution(mean, stdDev, count) {
+            let data = [];
+            for (let i = 0; i < count; i++) {
+                let u = 0, v = 0;
+                while (u === 0) u = Math.random();
+                while (v === 0) v = Math.random();
+                let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+                data.push(mean + z * stdDev);
+            }
+            return data;
+        }
+
+        function generateZScoreSamples() {
+            const samples = parseInt(document.getElementById('zscoreSamples').value) || 100;
+            const data = generateNormalDistribution(50, 10, samples - 5);
+            data.push(...[100, 105, 2, 1, 3]); // Add outliers
+            document.getElementById('zscoreData').value = data.map(x => x.toFixed(1)).join(', ');
+            calculateZScore();
+        }
+
+        function generateIQRSamples() {
+            const samples = parseInt(document.getElementById('iqrSamples').value) || 100;
+            const data = generateNormalDistribution(50, 10, samples - 5);
+            data.push(...[100, 105, 2, 1, 3]); // Add outliers
+            document.getElementById('iqrData').value = data.map(x => x.toFixed(1)).join(', ');
+            calculateIQR();
+        }
+
+        function calculateZScore() {
+            const input = document.getElementById('zscoreData').value;
+            const threshold = parseFloat(document.getElementById('zscoreThreshold').value) || 3;
+            const data = parseData(input);
+
+            if (data.length < 2) {
+                document.getElementById('zscoreResults').innerHTML = '<div class="results"><p style="color: #d32f2f;">Please enter at least 2 numbers</p></div>';
+                return;
+            }
+
+            const mean = calculateMean(data);
+            const stdDev = calculateStdDev(data);
+            const zscores = data.map(x => (x - mean) / stdDev);
+            const outliers = data.filter((x, i) => Math.abs(zscores[i]) > threshold);
+
+            let html = '<div class="results">';
+            html += '<div class="sample-count">Total Samples: ' + data.length + '</div>';
+            html += '<div class="stat"><div class="stat-item"><strong>Mean:</strong> ' + mean.toFixed(2) + '</div>';
+            html += '<div class="stat-item"><strong>Std Dev:</strong> ' + stdDev.toFixed(2) + '</div></div>';
+            html += '<div class="stat"><div class="stat-item"><strong>Threshold:</strong> ±' + threshold + '</div>';
+            html += '<div class="stat-item"><strong>Normal Range:</strong> [' + (mean - threshold * stdDev).toFixed(2) + ', ' + (mean + threshold * stdDev).toFixed(2) + ']</div></div>';
+
+            if (outliers.length > 0) {
+                html += '<div class="outliers"><strong>Outliers Found: ' + outliers.length + '</strong>';
+                html += '<div class="outliers-list">';
+                outliers.slice(0, 20).forEach(o => {
+                    const z = (o - mean) / stdDev;
+                    html += '<div class="outlier-badge">' + o.toFixed(2) + ' (z=' + z.toFixed(2) + ')</div>';
+                });
+                if (outliers.length > 20) html += '<div class="outlier-badge">... and ' + (outliers.length - 20) + ' more</div>';
+                html += '</div></div>';
+            } else {
+                html += '<div class="outliers"><p class="no-outliers">✓ No outliers detected</p></div>';
+            }
+            html += '</div>';
+            document.getElementById('zscoreResults').innerHTML = html;
+
+            drawZScoreCharts(data, outliers, mean, stdDev, threshold);
+        }
+
+        function calculateIQR() {
+            const input = document.getElementById('iqrData').value;
+            const multiplier = parseFloat(document.getElementById('iqrMultiplier').value) || 1.5;
+            const data = parseData(input);
+
+            if (data.length < 4) {
+                document.getElementById('iqrResults').innerHTML = '<div class="results"><p style="color: #d32f2f;">Please enter at least 4 numbers</p></div>';
+                return;
+            }
+
+            const q1 = data[Math.floor(data.length * 0.25)];
+            const q3 = data[Math.floor(data.length * 0.75)];
+            const iqr = q3 - q1;
+            const lowerBound = q1 - multiplier * iqr;
+            const upperBound = q3 + multiplier * iqr;
+            const outliers = data.filter(x => x < lowerBound || x > upperBound);
+
+            let html = '<div class="results">';
+            html += '<div class="sample-count">Total Samples: ' + data.length + '</div>';
+            html += '<div class="stat"><div class="stat-item"><strong>Q1 (25%):</strong> ' + q1.toFixed(2) + '</div>';
+            html += '<div class="stat-item"><strong>Q3 (75%):</strong> ' + q3.toFixed(2) + '</div></div>';
+            html += '<div class="stat"><div class="stat-item"><strong>IQR:</strong> ' + iqr.toFixed(2) + '</div>';
+            html += '<div class="stat-item"><strong>Multiplier:</strong> ' + multiplier + '</div></div>';
+            html += '<div class="stat"><div class="stat-item"><strong>Lower Bound:</strong> ' + lowerBound.toFixed(2) + '</div>';
+            html += '<div class="stat-item"><strong>Upper Bound:</strong> ' + upperBound.toFixed(2) + '</div></div>';
+
+            if (outliers.length > 0) {
+                html += '<div class="outliers"><strong>Outliers Found: ' + outliers.length + '</strong>';
+                html += '<div class="outliers-list">';
+                outliers.slice(0, 20).forEach(o => {
+                    html += '<div class="outlier-badge">' + o.toFixed(2) + '</div>';
+                });
+                if (outliers.length > 20) html += '<div class="outlier-badge">... and ' + (outliers.length - 20) + ' more</div>';
+                html += '</div></div>';
+            } else {
+                html += '<div class="outliers"><p class="no-outliers">✓ No outliers detected</p></div>';
+            }
+            html += '</div>';
+            document.getElementById('iqrResults').innerHTML = html;
+
+            drawIQRCharts(data, outliers, q1, q3, lowerBound, upperBound);
+        }
+
+        function drawZScoreCharts(data, outliers, mean, stdDev, threshold) {
+            // Histogram with normal curve
+            const ctx1 = document.getElementById('zscoreHistogram').getContext('2d');
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const bins = 30;
+            const binSize = (max - min) / bins;
+            const hist = Array(bins).fill(0);
+            
+            data.forEach(x => {
+                const binIndex = Math.min(Math.floor((x - min) / binSize), bins - 1);
+                hist[binIndex]++;
+            });
+
+            const binCenters = Array.from({length: bins}, (_, i) => min + (i + 0.5) * binSize);
+            const normalCurve = binCenters.map(x => {
+                const z = (x - mean) / stdDev;
+                return (data.length * binSize) * (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-z * z / 2);
+            });
+
+            if (zscoreChartHist) zscoreChartHist.destroy();
+            zscoreChartHist = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: binCenters.map(x => x.toFixed(1)),
+                    datasets: [{
+                        label: 'Frequency',
+                        data: hist,
+                        backgroundColor: '#667eea',
+                        borderColor: '#667eea',
+                        borderWidth: 1
+                    }, {
+                        label: 'Normal Curve',
+                        data: normalCurve,
+                        type: 'line',
+                        borderColor: '#ff6b6b',
+                        borderWidth: 3,
+                        fill: false,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true }, title: { display: true, text: 'Histogram with Normal Curve' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Scatter plot
+            const ctx2 = document.getElementById('zscoreScatter').getContext('2d');
+            const colors = data.map(x => outliers.includes(x) ? '#ff6b6b' : '#667eea');
+            
+            if (zscoreChartScatter) zscoreChartScatter.destroy();
+            zscoreChartScatter = new Chart(ctx2, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Data Points',
+                        data: data.map((x, i) => ({ x: i, y: x })),
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true }, title: { display: true, text: 'Z-Score: Data with Outliers' } }
+                }
+            });
+        }
+
+        function drawIQRCharts(data, outliers, q1, q3, lowerBound, upperBound) {
+            // Histogram
+            const ctx1 = document.getElementById('iqrHistogram').getContext('2d');
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const bins = 30;
+            const binSize = (max - min) / bins;
+            const hist = Array(bins).fill(0);
+            
+            data.forEach(x => {
+                const binIndex = Math.min(Math.floor((x - min) / binSize), bins - 1);
+                hist[binIndex]++;
+            });
+
+            const binCenters = Array.from({length: bins}, (_, i) => min + (i + 0.5) * binSize);
+
+            if (iqrChartHist) iqrChartHist.destroy();
+            iqrChartHist = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: binCenters.map(x => x.toFixed(1)),
+                    datasets: [{
+                        label: 'Frequency',
+                        data: hist,
+                        backgroundColor: '#667eea',
+                        borderColor: '#667eea',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true }, title: { display: true, text: 'Histogram' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Boxplot
+            const ctx2 = document.getElementById('iqrBoxplot').getContext('2d');
+            if (iqrChartBox) iqrChartBox.destroy();
+            
+            const median = data[Math.floor(data.length / 2)];
+            const dataMin = Math.min(...data);
+            const dataMax = Math.max(...data);
+            
+            iqrChartBox = new Chart(ctx2, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        { label: 'Outliers', data: outliers.map(x => ({x: 0.5, y: x, r: 4})), backgroundColor: '#ff6b6b' },
+                        { label: 'Normal', data: data.filter(x => !outliers.includes(x)).map(x => ({x: 0.5, y: x, r: 3})), backgroundColor: '#667eea' },
+                        { label: 'Q1', data: [{x: 0.5, y: q1, r: 8}], backgroundColor: '#ffc107' },
+                        { label: 'Median', data: [{x: 0.5, y: median, r: 8}], backgroundColor: '#28a745' },
+                        { label: 'Q3', data: [{x: 0.5, y: q3, r: 8}], backgroundColor: '#ffc107' }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true }, title: { display: true, text: 'Boxplot (IQR Method)' } },
+                    scales: { 
+                        x: { min: 0, max: 1, display: false },
+                        y: { min: dataMin - 5, max: dataMax + 5 }
+                    }
+                }
+            });
+        }
+
+        // Auto-calculate on load
+        calculateZScore();
+        calculateIQR();
+    </script>
+</body>
+</html>
