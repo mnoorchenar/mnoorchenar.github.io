@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO NMS Playground</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .canvas-container {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+        }
+
+        canvas {
+            display: block;
+            background: white;
+            border-radius: 8px;
+            cursor: crosshair;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid;
+            border-radius: 3px;
+        }
+
+        .before { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
+        .after { border-color: #51cf66; background: rgba(81, 207, 102, 0.1); }
+        .removed { border-color: #ffd700; background: rgba(255, 215, 0, 0.2); }
+
+        .formulas-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .formulas-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .formula-block {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .formula-label {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .formula-content {
+            font-size: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .formula-explanation {
+            font-size: 13px;
+            color: #555;
+            margin-top: 12px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 YOLO Non-Maximum Suppression (NMS) Playground</h1>
+        <p class="subtitle">Visualize how NMS filters overlapping detections</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="iouSlider">IoU Threshold: <span class="value-display" id="iouValue">0.45</span></label>
+                <input type="range" id="iouSlider" min="0" max="1" step="0.05" value="0.45">
+            </div>
+            <div class="control-group">
+                <label for="confSlider">Confidence Threshold: <span class="value-display" id="confValue">0.5</span></label>
+                <input type="range" id="confSlider" min="0" max="1" step="0.05" value="0.5">
+            </div>
+            <div class="control-group">
+                <button onclick="generateDetections()">Generate Random Detections</button>
+            </div>
+            <div class="control-group">
+                <button onclick="applyNMS()" style="background: #51cf66;">Apply NMS</button>
+            </div>
+            <div class="control-group">
+                <button onclick="reset()">Reset</button>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="canvas" width="800" height="500"></canvas>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box before"></div>
+                <span>Before NMS (with confidence)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box after"></div>
+                <span>After NMS (kept)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box removed"></div>
+                <span>Removed by NMS (Suppressed - Yellow)</span>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-item">
+                <div class="info-label">Detections Before</div>
+                <div class="info-value" id="beforeCount">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Detections After</div>
+                <div class="info-value" id="afterCount">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Removed</div>
+                <div class="info-value" id="removedCount">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Avg IoU (kept)</div>
+                <div class="info-value" id="avgIoU">-</div>
+            </div>
+        </div>
+
+        <div class="formulas-section">
+            <div class="formulas-title">📐 Mathematical Formulas</div>
+
+            <div class="formula-block">
+                <div class="formula-label">1. Intersection over Union (IoU)</div>
+                <div class="formula-content">
+                    \[ \text{IoU} = \frac{\text{Intersection Area}}{\text{Union Area}} = \frac{A_{\text{intersection}}}{A_{\text{union}}} \]
+                </div>
+                <div class="formula-explanation">
+                    <strong>Explanation:</strong> IoU measures the overlap between two bounding boxes. It ranges from 0 (no overlap) to 1 (perfect overlap).
+                </div>
+            </div>
+
+            <div class="formula-block">
+                <div class="formula-label">2. Area Calculation</div>
+                <div class="formula-content">
+                    \[ A_{\text{intersection}} = \max(0, \min(x_1^{\max}, x_2^{\max}) - \max(x_1^{\min}, x_2^{\min})) \times \max(0, \min(y_1^{\max}, y_2^{\max}) - \max(y_1^{\min}, y_2^{\min})) \]
+                    \[ A_{\text{union}} = (w_1 \times h_1) + (w_2 \times h_2) - A_{\text{intersection}} \]
+                </div>
+                <div class="formula-explanation">
+                    <strong>Explanation:</strong> The intersection area is calculated by finding the overlapping width and height. The union area is the total area covered by both boxes.
+                </div>
+            </div>
+
+            <div class="formula-block">
+                <div class="formula-label">3. NMS Decision Rule</div>
+                <div class="formula-content">
+                    \[ \text{Keep box}_i \text{ if: } \text{IoU}(\text{box}_i, \text{box}_j) \leq \text{IoU}_{\text{threshold}} \quad \forall j \in \text{Higher Confidence} \]
+                </div>
+                <div class="formula-explanation">
+                    <strong>Algorithm Steps:</strong><br>
+                    1. Filter detections: Keep only boxes where confidence ≥ confidence_threshold<br>
+                    2. Sort by confidence: Arrange boxes in descending order of confidence scores<br>
+                    3. Iterative suppression: For each box (highest to lowest confidence), remove all overlapping boxes with IoU > threshold<br>
+                    4. Return: Final set of non-overlapping detections
+                </div>
+            </div>
+
+            <div class="formula-block">
+                <div class="formula-label">4. Confidence Filtering</div>
+                <div class="formula-content">
+                    \[ \text{Valid Detection} = \{ \text{box} : \text{confidence}(\text{box}) \geq \text{conf}_{\text{threshold}} \} \]
+                </div>
+                <div class="formula-explanation">
+                    <strong>Explanation:</strong> Only detections with confidence above the threshold are processed by NMS. Low-confidence predictions are filtered out first.
+                </div>
+            </div>
+
+            <div class="formula-block">
+                <div class="formula-label">5. Example Calculation</div>
+                <div class="formula-content">
+                    \[ \text{Box}_1: x=10, y=10, w=100, h=100 \]
+                    \[ \text{Box}_2: x=50, y=50, w=80, h=80 \]
+                    \[ A_{\text{intersection}} = 50 \times 50 = 2500 \]
+                    \[ A_{\text{union}} = 10000 + 6400 - 2500 = 13900 \]
+                    \[ \text{IoU} = \frac{2500}{13900} \approx 0.1799 \]
+                </div>
+                <div class="formula-explanation">
+                    <strong>Interpretation:</strong> If IoU threshold is 0.45, since 0.1799 ≤ 0.45, both boxes would be kept. If threshold is 0.15, the lower confidence box would be removed.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const iouSlider = document.getElementById('iouSlider');
+        const confSlider = document.getElementById('confSlider');
+        const iouValue = document.getElementById('iouValue');
+        const confValue = document.getElementById('confValue');
+
+        let detections = [];
+        let filteredDetections = [];
+        let nmsApplied = false;
+
+        iouSlider.addEventListener('input', (e) => {
+            iouValue.textContent = parseFloat(e.target.value).toFixed(2);
+            if (nmsApplied) applyNMS();
+        });
+
+        confSlider.addEventListener('input', (e) => {
+            confValue.textContent = parseFloat(e.target.value).toFixed(2);
+            if (nmsApplied) applyNMS();
+        });
+
+        function generateDetections() {
+            detections = [];
+            const count = Math.floor(Math.random() * 8) + 5;
+            for (let i = 0; i < count; i++) {
+                detections.push({
+                    x: Math.random() * (canvas.width - 100),
+                    y: Math.random() * (canvas.height - 100),
+                    w: 60 + Math.random() * 80,
+                    h: 60 + Math.random() * 80,
+                    conf: 0.4 + Math.random() * 0.6,
+                    removed: false
+                });
+            }
+            nmsApplied = false;
+            filteredDetections = [];
+            draw();
+            updateStats();
+        }
+
+        function calculateIoU(box1, box2) {
+            const x1_min = box1.x, y1_min = box1.y;
+            const x1_max = box1.x + box1.w, y1_max = box1.y + box1.h;
+            const x2_min = box2.x, y2_min = box2.y;
+            const x2_max = box2.x + box2.w, y2_max = box2.y + box2.h;
+
+            const inter_w = Math.min(x1_max, x2_max) - Math.max(x1_min, x2_min);
+            const inter_h = Math.min(y1_max, y2_max) - Math.max(y1_min, y2_min);
+            const intersection = Math.max(0, inter_w) * Math.max(0, inter_h);
+
+            const union = box1.w * box1.h + box2.w * box2.h - intersection;
+            return union === 0 ? 0 : intersection / union;
+        }
+
+        function applyNMS() {
+            const iouThresh = parseFloat(iouSlider.value);
+            const confThresh = parseFloat(confSlider.value);
+
+            detections.forEach(d => d.removed = false);
+
+            let candidates = detections.filter(d => d.conf >= confThresh);
+            candidates.sort((a, b) => b.conf - a.conf);
+
+            filteredDetections = [];
+            for (let i = 0; i < candidates.length; i++) {
+                if (candidates[i].removed) continue;
+                filteredDetections.push(candidates[i]);
+
+                for (let j = i + 1; j < candidates.length; j++) {
+                    if (candidates[j].removed) continue;
+                    const iou = calculateIoU(candidates[i], candidates[j]);
+                    if (iou > iouThresh) {
+                        candidates[j].removed = true;
+                    }
+                }
+            }
+
+            nmsApplied = true;
+            draw();
+            updateStats();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (!nmsApplied) {
+                // Draw all detections before NMS
+                detections.forEach(box => {
+                    ctx.strokeStyle = '#ff6b6b';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(box.x, box.y, box.w, box.h);
+
+                    ctx.fillStyle = 'rgba(255, 107, 107, 0.15)';
+                    ctx.fillRect(box.x, box.y, box.w, box.h);
+
+                    ctx.fillStyle = '#ff6b6b';
+                    ctx.font = 'bold 12px Arial';
+                    ctx.fillText(`${box.conf.toFixed(2)}`, box.x + 5, box.y + 18);
+                });
+            } else {
+                // Draw removed boxes first (in yellow with dashed border)
+                detections.forEach(box => {
+                    if (box.removed) {
+                        ctx.strokeStyle = '#ffd700';
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([5, 5]);
+                        ctx.strokeRect(box.x, box.y, box.w, box.h);
+                        ctx.setLineDash([]);
+
+                        ctx.fillStyle = 'rgba(255, 215, 0, 0.25)';
+                        ctx.fillRect(box.x, box.y, box.w, box.h);
+
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = 'bold 11px Arial';
+                        ctx.fillText(`${box.conf.toFixed(2)}`, box.x + 5, box.y + 18);
+                        ctx.fillText(`⊘ SUPPRESSED`, box.x + 5, box.y + 32);
+                    }
+                });
+
+                // Draw kept boxes on top (in green with solid border)
+                filteredDetections.forEach(box => {
+                    ctx.strokeStyle = '#51cf66';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(box.x, box.y, box.w, box.h);
+
+                    ctx.fillStyle = 'rgba(81, 207, 102, 0.2)';
+                    ctx.fillRect(box.x, box.y, box.w, box.h);
+
+                    ctx.fillStyle = '#51cf66';
+                    ctx.font = 'bold 13px Arial';
+                    ctx.fillText(`${box.conf.toFixed(2)} ✓`, box.x + 5, box.y + 18);
+                });
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('beforeCount').textContent = detections.filter(d => d.conf >= parseFloat(confSlider.value)).length;
+            document.getElementById('afterCount').textContent = filteredDetections.length;
+            document.getElementById('removedCount').textContent = detections.filter(d => d.removed).length;
+
+            if (filteredDetections.length > 1) {
+                let totalIoU = 0;
+                for (let i = 0; i < filteredDetections.length - 1; i++) {
+                    for (let j = i + 1; j < filteredDetections.length; j++) {
+                        totalIoU += calculateIoU(filteredDetections[i], filteredDetections[j]);
+                    }
+                }
+                const pairs = (filteredDetections.length * (filteredDetections.length - 1)) / 2;
+                const avgIoU = (totalIoU / pairs).toFixed(3);
+                document.getElementById('avgIoU').textContent = avgIoU;
+            } else {
+                document.getElementById('avgIoU').textContent = '-';
+            }
+        }
+
+        function reset() {
+            detections = [];
+            filteredDetections = [];
+            nmsApplied = false;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            updateStats();
+        }
+
+        reset();
+    </script>
+</body>
+</html>
