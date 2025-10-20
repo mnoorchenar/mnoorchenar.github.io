@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Loss Function Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .version-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .version-btn {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: 2px solid #cbd5e0;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+        
+        .version-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .formula-section {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 2px solid #667eea;
+        }
+        
+        .main-formula {
+            font-size: 1.2em;
+            text-align: center;
+            color: #2d3748;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+        
+        .lambda-explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .lambda-title {
+            font-size: 1.4em;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .lambda-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .lambda-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .lambda-item.coord { border-left-color: #4299e1; }
+        .lambda-item.noobj { border-left-color: #48bb78; }
+        .lambda-item.class { border-left-color: #ed8936; }
+        
+        .lambda-item strong {
+            font-size: 1.2em;
+            color: #2d3748;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .lambda-item p {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .component-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+        
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .component-card.localization { border-left-color: #4299e1; }
+        .component-card.confidence { border-left-color: #48bb78; }
+        .component-card.classification { border-left-color: #ed8936; }
+        
+        .component-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .component-formula {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .component-description {
+            color: #4a5568;
+            line-height: 1.7;
+            margin-top: 10px;
+        }
+        
+        .version-note {
+            background: #fff5e6;
+            border: 2px solid #ffa726;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #c77700;
+        }
+        
+        .interactive-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .visualization-area {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .canvas-container {
+            position: relative;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 3px solid #cbd5e0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f7fafc;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .control-group {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            background: #5a67d8;
+            transform: scale(1.1);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .value-display {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+            float: right;
+        }
+        
+        .loss-output {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .loss-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .loss-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .loss-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .loss-item-label {
+            font-size: 0.9em;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+        
+        .loss-item-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background: #edf2f7;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        
+        .info-box h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+            color: #4a5568;
+        }
+        
+        .legend-box {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 YOLO Loss Function</h1>
+        <p class="subtitle">Interactive Visualization of Object Detection Loss</p>
+        
+        <div class="version-selector">
+            <button class="version-btn active" onclick="setVersion('v1')">YOLO v1 (MSE)</button>
+            <button class="version-btn" onclick="setVersion('v3')">YOLO v3+ (Cross-Entropy)</button>
+        </div>
+        
+        <div class="formula-section">
+            <div class="main-formula" id="mainFormula">
+                Loss = λ<sub>coord</sub> × L<sub>localization</sub> + L<sub>confidence</sub> + λ<sub>noobj</sub> × L<sub>no-object</sub> + λ<sub>class</sub> × L<sub>classification</sub>
+            </div>
+            
+            <div class="lambda-explanation">
+                <div class="lambda-title">⚖️ Understanding Lambda Penalties (Weights)</div>
+                <p style="color: #4a5568; margin-bottom: 15px;">
+                    Lambda values are <strong>hyperparameters</strong> that balance different loss components. Without them, the loss function would treat all errors equally, which is problematic because:
+                </p>
+                <div class="lambda-grid">
+                    <div class="lambda-item coord">
+                        <strong>λ<sub>coord</sub> = 5</strong>
+                        <p><strong>Why 5× weight?</strong> Localization errors (wrong box position/size) are critical for object detection. This 5× multiplier makes the model prioritize getting bounding boxes in the right place over other aspects.</p>
+                        <p style="margin-top: 8px;"><strong>Without it:</strong> The model might detect objects but place boxes poorly.</p>
+                    </div>
+                    
+                    <div class="lambda-item noobj">
+                        <strong>λ<sub>noobj</sub> = 0.5</strong>
+                        <p><strong>Why 0.5× weight?</strong> Most grid cells contain NO objects (class imbalance). If we penalize empty cells equally, they dominate the loss and the model learns to predict "no object" everywhere.</p>
+                        <p style="margin-top: 8px;"><strong>Without it:</strong> The model becomes overly conservative and misses real objects.</p>
+                    </div>
+                    
+                    <div class="lambda-item class">
+                        <strong>λ<sub>class</sub> = 1</strong>
+                        <p><strong>Why 1× weight?</strong> This is the baseline weight. Classification is important but not more critical than localization. Modern YOLO versions may tune this differently.</p>
+                        <p style="margin-top: 8px;"><strong>Balance:</strong> Ensures the model learns what objects are, not just where they are.</p>
+                    </div>
+                </div>
+                
+                <div style="background: #e6f3ff; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #4299e1;">
+                    <strong style="color: #2d3748;">Key Insight:</strong>
+                    <p style="color: #4a5568; margin-top: 8px;">
+                        These weights prevent the model from "cheating" by focusing only on easy tasks (like predicting empty cells) while ignoring hard ones (like precise localization). They're tuned experimentally based on validation performance.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="components-grid">
+                <div class="component-card localization">
+                    <div class="component-title">📍 Localization Loss</div>
+                    <div class="component-formula" id="locFormula">
+                        Σ (x - x̂)² + (y - ŷ)² + (√w - √ŵ)² + (√h - √ĥ)²
+                    </div>
+                    <div class="component-description">
+                        Measures how accurately the predicted bounding box matches the ground truth. Uses squared errors for center coordinates (x, y) and square root for width/height to make errors in small boxes and large boxes equally important.
+                    </div>
+                </div>
+                
+                <div class="component-card confidence">
+                    <div class="component-title">💪 Confidence Loss</div>
+                    <div class="component-formula" id="confFormula">
+                        MSE: Σ (C - Ĉ)²<br>
+                        BCE: -Σ [C·log(Ĉ) + (1-C)·log(1-Ĉ)]
+                    </div>
+                    <div class="component-description">
+                        Penalizes incorrect confidence scores. For cells with objects, confidence should be high (≈1). For empty cells, confidence should be low (≈0). Binary Cross-Entropy (BCE) is preferred in modern versions.
+                    </div>
+                </div>
+                
+                <div class="component-card classification">
+                    <div class="component-title">🏷️ Classification Loss</div>
+                    <div class="component-formula" id="classFormula">
+                        MSE: Σ (p<sub>i</sub> - p̂<sub>i</sub>)²
+                    </div>
+                    <div class="component-description" id="classDescription">
+                        <strong>YOLO v1:</strong> Uses Mean Squared Error (MSE) for class probabilities.
+                    </div>
+                    <div class="version-note" id="versionNote">
+                        📌 YOLO v1 uses MSE for all losses (simpler but less optimal)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interactive-section">
+            <h2 style="color: #2d3748; margin-bottom: 15px;">🎮 Interactive Demonstration</h2>
+            <p style="color: #4a5568; margin-bottom: 20px;">
+                Adjust the prediction errors below to see how they affect the loss. The <span style="color: #48bb78; font-weight: bold;">green box</span> is the ground truth, and the <span style="color: #ed8936; font-weight: bold;">orange box</span> is the prediction.
+            </p>
+            
+            <div class="visualization-area">
+                <div class="canvas-container">
+                    <canvas id="yoloCanvas" width="500" height="500"></canvas>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: rgba(72, 187, 120, 0.3); border-color: #48bb78;"></div>
+                        <span>Ground Truth</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: rgba(237, 137, 54, 0.3); border-color: #ed8936;"></div>
+                        <span>Prediction</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #4299e1; border-color: #2b6cb0;"></div>
+                        <span>Responsible Cell</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>
+                            Center X Error
+                            <span class="value-display" id="xErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="xError" min="-0.5" max="0.5" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>
+                            Center Y Error
+                            <span class="value-display" id="yErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="yError" min="-0.5" max="0.5" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>
+                            Width Error
+                            <span class="value-display" id="wErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="wError" min="-0.3" max="0.3" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>
+                            Height Error
+                            <span class="value-display" id="hErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="hError" min="-0.3" max="0.3" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>
+                            Confidence Error (GT=1, Pred=1-error)
+                            <span class="value-display" id="confErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="confError" min="0" max="0.99" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>
+                            Classification Error (GT=1, Pred=1-error)
+                            <span class="value-display" id="classErrorValue">0.00</span>
+                        </label>
+                        <input type="range" class="slider" id="classError" min="0" max="0.99" step="0.01" value="0">
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="resetValues()">🔄 Reset All Values</button>
+                </div>
+                
+                <div class="loss-output">
+                    <div style="font-size: 1.2em; opacity: 0.95;">Total YOLO Loss (<span id="lossVersion">v1</span>)</div>
+                    <div class="loss-value" id="totalLoss">0.000</div>
+                    
+                    <div class="loss-breakdown">
+                        <div class="loss-item">
+                            <div class="loss-item-label">📍 Localization<br>(×5 weight)</div>
+                            <div class="loss-item-value" id="locLoss">0.00</div>
+                        </div>
+                        <div class="loss-item">
+                            <div class="loss-item-label">💪 Confidence</div>
+                            <div class="loss-item-value" id="confLoss">0.00</div>
+                        </div>
+                        <div class="loss-item">
+                            <div class="loss-item-label">🏷️ Classification<br>(×1 weight)</div>
+                            <div class="loss-item-value" id="classLoss">0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>📚 YOLO Version Differences</h3>
+            <p>
+                <strong>YOLO v1 (2016):</strong> Uses MSE (Mean Squared Error) for all loss components. Simple but treats all classes independently.<br><br>
+                <strong>YOLO v3+ (2018+):</strong> Uses Binary Cross-Entropy for confidence and classification. Better handles multi-label scenarios and provides more stable gradients.<br><br>
+                <strong>Why Cross-Entropy?</strong> It's specifically designed for probability distributions and provides stronger gradients when predictions are very wrong, leading to faster and more stable training.
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        const LAMBDA_COORD = 5;
+        const LAMBDA_NOOBJ = 0.5;
+        const LAMBDA_CLASS = 1;
+        const GRID_SIZE = 7;
+        
+        let currentVersion = 'v1';
+        
+        const canvas = document.getElementById('yoloCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const groundTruth = {
+            x: 0.5,
+            y: 0.5,
+            w: 0.4,
+            h: 0.3
+        };
+        
+        let prediction = { ...groundTruth };
+        
+        function setVersion(version) {
+            currentVersion = version;
+            
+            document.querySelectorAll('.version-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.getElementById('lossVersion').textContent = version;
+            
+            if (version === 'v1') {
+                document.getElementById('classFormula').innerHTML = 'MSE: Σ (p<sub>i</sub> - p̂<sub>i</sub>)²';
+                document.getElementById('classDescription').innerHTML = '<strong>YOLO v1:</strong> Uses Mean Squared Error (MSE) for class probabilities. Treats class prediction as a regression problem.';
+                document.getElementById('versionNote').style.display = 'block';
+                document.getElementById('versionNote').innerHTML = '📌 YOLO v1 uses MSE for all losses (simpler but less optimal)';
+                document.getElementById('versionNote').style.background = '#fff5e6';
+                document.getElementById('versionNote').style.borderColor = '#ffa726';
+                document.getElementById('versionNote').style.color = '#c77700';
+            } else {
+                document.getElementById('classFormula').innerHTML = 'Cross-Entropy: -Σ [p<sub>i</sub>·log(p̂<sub>i</sub>)]';
+                document.getElementById('classDescription').innerHTML = '<strong>YOLO v3+:</strong> Uses Cross-Entropy loss for class probabilities. Better for multi-class classification with stronger gradients and more stable training.';
+                document.getElementById('versionNote').style.display = 'block';
+                document.getElementById('versionNote').innerHTML = '✅ YOLO v3+ uses Cross-Entropy for confidence and classification (more effective)';
+                document.getElementById('versionNote').style.background = '#e6f7ed';
+                document.getElementById('versionNote').style.borderColor = '#48bb78';
+                document.getElementById('versionNote').style.color = '#2f855a';
+            }
+            
+            calculateLoss();
+        }
+        
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const cellSize = canvas.width / GRID_SIZE;
+            
+            ctx.strokeStyle = '#cbd5e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= GRID_SIZE; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * cellSize, 0);
+                ctx.lineTo(i * cellSize, canvas.height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(0, i * cellSize);
+                ctx.lineTo(canvas.width, i * cellSize);
+                ctx.stroke();
+            }
+            
+            const responsibleCell = Math.floor(GRID_SIZE / 2);
+            ctx.fillStyle = 'rgba(66, 153, 225, 0.3)';
+            ctx.fillRect(responsibleCell * cellSize, responsibleCell * cellSize, cellSize, cellSize);
+            
+            ctx.strokeStyle = '#2b6cb0';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(responsibleCell * cellSize, responsibleCell * cellSize, cellSize, cellSize);
+        }
+        
+        function drawBox(box, color, label) {
+            const x = box.x * canvas.width - (box.w * canvas.width) / 2;
+            const y = box.y * canvas.height - (box.h * canvas.height) / 2;
+            const w = box.w * canvas.width;
+            const h = box.h * canvas.height;
+            
+            ctx.fillStyle = color.replace('1)', '0.2)');
+            ctx.fillRect(x, y, w, h);
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x, y, w, h);
+            
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(box.x * canvas.width, box.y * canvas.height, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = color;
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText(label, x + 5, y + 20);
+        }
+        
+        function render() {
+            drawGrid();
+            drawBox(groundTruth, 'rgba(72, 187, 120, 1)', 'GT');
+            drawBox(prediction, 'rgba(237, 137, 54, 1)', 'Pred');
+        }
+        
+        function calculateLoss() {
+            const xErr = parseFloat(document.getElementById('xError').value);
+            const yErr = parseFloat(document.getElementById('yError').value);
+            const wErr = parseFloat(document.getElementById('wError').value);
+            const hErr = parseFloat(document.getElementById('hError').value);
+            const confErr = parseFloat(document.getElementById('confError').value);
+            const classErr = parseFloat(document.getElementById('classError').value);
+            
+            prediction.x = groundTruth.x + xErr;
+            prediction.y = groundTruth.y + yErr;
+            prediction.w = Math.max(0.05, groundTruth.w + wErr);
+            prediction.h = Math.max(0.05, groundTruth.h + hErr);
+            
+            const xLoss = xErr * xErr;
+            const yLoss = yErr * yErr;
+            const wLoss = (Math.sqrt(Math.abs(groundTruth.w)) - Math.sqrt(Math.abs(prediction.w))) ** 2;
+            const hLoss = (Math.sqrt(Math.abs(groundTruth.h)) - Math.sqrt(Math.abs(prediction.h))) ** 2;
+            const locLoss = LAMBDA_COORD * (xLoss + yLoss + wLoss + hLoss);
+            
+            let confidenceLoss, classificationLoss;
+            
+            const gtConf = 1.0;
+            const predConf = Math.max(0.001, Math.min(0.999, 1.0 - confErr));
+            
+            const gtClass = 1.0;
+            const predClass = Math.max(0.001, Math.min(0.999, 1.0 - classErr));
+            
+            if (currentVersion === 'v1') {
+                confidenceLoss = Math.pow(gtConf - predConf, 2);
+                classificationLoss = LAMBDA_CLASS * Math.pow(gtClass - predClass, 2);
+            } else {
+                confidenceLoss = -(gtConf * Math.log(predConf) + (1 - gtConf) * Math.log(1 - predConf));
+                classificationLoss = LAMBDA_CLASS * -(gtClass * Math.log(predClass));
+            }
+            
+            const totalLoss = locLoss + confidenceLoss + classificationLoss;
+            
+            document.getElementById('locLoss').textContent = locLoss.toFixed(3);
+            document.getElementById('confLoss').textContent = confidenceLoss.toFixed(3);
+            document.getElementById('classLoss').textContent = classificationLoss.toFixed(3);
+            document.getElementById('totalLoss').textContent = totalLoss.toFixed(3);
+            
+            render();
+        }
+        
+        function updateValueDisplay(id, value) {
+            document.getElementById(id + 'Value').textContent = parseFloat(value).toFixed(2);
+        }
+        
+        ['xError', 'yError', 'wError', 'hError', 'confError', 'classError'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                updateValueDisplay(id, e.target.value);
+                calculateLoss();
+            });
+        });
+        
+        function resetValues() {
+            ['xError', 'yError', 'wError', 'hError', 'confError', 'classError'].forEach(id => {
+                document.getElementById(id).value = 0;
+                updateValueDisplay(id, 0);
+            });
+            calculateLoss();
+        }
+        
+        render();
+        calculateLoss();
+    </script>
+</body>
+</html>
