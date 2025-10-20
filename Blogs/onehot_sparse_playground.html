@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-Hot Encoding Playground</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        input, select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            grid-column: 1 / -1;
+            margin-top: 10px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .encoding-box {
+            background: #f8f9fa;
+            border-left: 4px solid;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .encoding-box.dense {
+            border-color: #667eea;
+        }
+        .encoding-box.sparse {
+            border-color: #764ba2;
+        }
+        .encoding-box h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .stats {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .stat-row:last-child {
+            margin-bottom: 0;
+        }
+        .label-stat {
+            color: #666;
+            font-weight: 500;
+        }
+        .value-stat {
+            color: #333;
+            font-weight: 600;
+        }
+        .output {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            word-break: break-all;
+            color: #333;
+            line-height: 1.5;
+        }
+        .info-banner {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1565c0;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .controls { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; }
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 One-Hot Encoding Playground</h1>
+        <p class="subtitle">Compare Dense vs Sparse Representations</p>
+        
+        <div class="info-banner">
+            <strong>Dense:</strong> Full array with all values. <strong>Sparse:</strong> Only stores indices of 1s.
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="categories">Categories (comma-separated):</label>
+                <input type="text" id="categories" value="cat, dog, bird, fish, rabbit" placeholder="e.g., red, green, blue">
+            </div>
+            <div class="control-group">
+                <label for="selected">Select Value to Encode:</label>
+                <select id="selected">
+                    <option value="cat">cat</option>
+                    <option value="dog">dog</option>
+                    <option value="bird">bird</option>
+                    <option value="fish">fish</option>
+                    <option value="rabbit">rabbit</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="samples">Number of Samples to Generate:</label>
+                <input type="number" id="samples" min="1" max="100" value="5">
+            </div>
+            <div class="control-group">
+                <label for="dataType">Display Format:</label>
+                <select id="dataType">
+                    <option value="single">Single Value</option>
+                    <option value="multiple">Multiple Samples</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button onclick="generateEncoding()">Generate Encoding</button>
+                <button onclick="clearAll()">Clear</button>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <div class="encoding-box dense">
+                <h2>📊 Dense Representation</h2>
+                <div class="stats">
+                    <div class="stat-row">
+                        <span class="label-stat">Dimensions:</span>
+                        <span class="value-stat" id="denseDim">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Memory (bits):</span>
+                        <span class="value-stat" id="denseMemory">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Sparsity:</span>
+                        <span class="value-stat" id="denseSparsity">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Non-zero Values:</span>
+                        <span class="value-stat" id="denseNonZero">-</span>
+                    </div>
+                </div>
+                <div class="output" id="denseOutput"></div>
+            </div>
+
+            <div class="encoding-box sparse">
+                <h2>⚡ Sparse Representation</h2>
+                <div class="stats">
+                    <div class="stat-row">
+                        <span class="label-stat">Dimensions:</span>
+                        <span class="value-stat" id="sparseDim">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Memory (bits):</span>
+                        <span class="value-stat" id="sparseMemory">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Storage Efficiency:</span>
+                        <span class="value-stat" id="sparseEfficiency">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label-stat">Non-zero Values:</span>
+                        <span class="value-stat" id="sparseNonZero">-</span>
+                    </div>
+                </div>
+                <div class="output" id="sparseOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateEncoding() {
+            const categoriesInput = document.getElementById('categories').value;
+            const selected = document.getElementById('selected').value;
+            const samples = parseInt(document.getElementById('samples').value);
+            const dataType = document.getElementById('dataType').value;
+
+            const categories = categoriesInput.split(',').map(c => c.trim()).filter(c => c);
+            
+            if (categories.length === 0) {
+                alert('Please enter at least one category');
+                return;
+            }
+
+            // Update select options
+            const selectElement = document.getElementById('selected');
+            selectElement.innerHTML = categories.map(cat => 
+                `<option value="${cat}">${cat}</option>`
+            ).join('');
+            selectElement.value = categories.includes(selected) ? selected : categories[0];
+
+            if (dataType === 'single') {
+                generateSingle(categories, selectElement.value);
+            } else {
+                generateMultiple(categories, samples);
+            }
+        }
+
+        function generateSingle(categories, value) {
+            const index = categories.indexOf(value);
+            const denseEncoding = new Array(categories.length).fill(0);
+            denseEncoding[index] = 1;
+
+            // Dense representation
+            const denseOutput = `[${denseEncoding.join(', ')}]`;
+            const denseMemory = categories.length * 32; // 32 bits per float
+            const denseSparsity = ((categories.length - 1) / categories.length * 100).toFixed(2);
+
+            // Sparse representation
+            const sparseOutput = `{${index}: 1}`;
+            const sparseMemory = 32 + 32; // 32 bits for index + 32 bits for value
+            const sparseEfficiency = ((denseMemory - sparseMemory) / denseMemory * 100).toFixed(2);
+
+            updateUI('Dense', categories.length, denseMemory, denseSparsity, 1, denseOutput);
+            updateUI('Sparse', categories.length, sparseMemory, sparseEfficiency, 1, sparseOutput);
+        }
+
+        function generateMultiple(categories, samples) {
+            const denseEncodings = [];
+            const sparseEncodings = [];
+            
+            for (let i = 0; i < samples; i++) {
+                const randomIndex = Math.floor(Math.random() * categories.length);
+                const denseEncoding = new Array(categories.length).fill(0);
+                denseEncoding[randomIndex] = 1;
+                denseEncodings.push(denseEncoding);
+                sparseEncodings.push(`{${randomIndex}: 1}`);
+            }
+
+            const denseOutput = denseEncodings.map(e => `[${e.join(', ')}]`).join('\n');
+            const denseMemory = samples * categories.length * 8;
+            const denseSparsity = ((categories.length - 1) / categories.length * 100).toFixed(2);
+
+            const sparseOutput = sparseEncodings.join('\n');
+            const sparseMemory = samples * (64 + 8);
+            const sparseEfficiency = ((denseMemory - sparseMemory) / denseMemory * 100).toFixed(2);
+
+            updateUI('Dense', categories.length, denseMemory, denseSparsity, samples, denseOutput);
+            updateUI('Sparse', categories.length, sparseMemory, sparseEfficiency, samples, sparseOutput);
+        }
+
+        function updateUI(type, dims, memory, metric, samples, output) {
+            if (type === 'Dense') {
+                document.getElementById('denseDim').textContent = dims;
+                document.getElementById('denseMemory').textContent = memory + ' bits';
+                document.getElementById('denseSparsity').textContent = metric + '%';
+                document.getElementById('denseNonZero').textContent = samples;
+                document.getElementById('denseOutput').textContent = output;
+            } else {
+                document.getElementById('sparseDim').textContent = dims;
+                document.getElementById('sparseMemory').textContent = memory + ' bits';
+                document.getElementById('sparseEfficiency').textContent = metric + '%';
+                document.getElementById('sparseNonZero').textContent = samples;
+                document.getElementById('sparseOutput').textContent = output;
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('denseOutput').textContent = '';
+            document.getElementById('sparseOutput').textContent = '';
+            ['denseDim', 'denseMemory', 'denseSparsity', 'denseNonZero',
+             'sparseDim', 'sparseMemory', 'sparseEfficiency', 'sparseNonZero'].forEach(id => {
+                document.getElementById(id).textContent = '-';
+            });
+        }
+    </script>
+</body>
+</html>
