@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="theme-color" content="#667eea">
+
+    <title>Mohammad Noorchenarboo - Biostatistician & Data Scientist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 1.3em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-item:hover {
+            color: #2980b9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section h2 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .about-text {
+            line-height: 1.7;
+            color: #2c3e50;
+            text-align: justify;
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .skill-category {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .skill-category h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .skill-category ul {
+            list-style: none;
+            color: #555;
+        }
+        
+        .skill-category li {
+            padding: 3px 0;
+            font-size: 0.9em;
+        }
+        
+        .experience-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .job-title {
+            color: #2c3e50;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .company {
+            color: #7f8c8d;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        
+        .job-description {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+        
+        .education-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .degree {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .university {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .nav-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .nav-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+        
+        .publications {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .publication {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            padding: 10px;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .nav-btn {
+                display: block;
+                margin: 10px auto;
+                width: fit-content;
+            }
+        }
+    </style>
+    <script>
+        function clearAllCache() {
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "")
+                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            
+            // Clear storage
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+            } catch(e) {
+                console.log("Storage clear not available");
+            }
+        }
+        
+        // Clear on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', clearAllCache);
+        } else {
+            clearAllCache();
+        }
+        
+        // Clear on page visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                clearAllCache();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mohammad Noorchenarboo</h1>
+            <p class="title">Biostatistician & Senior Data Scientist</p>
+            <div class="contact-info">
+                <a href="mailto:mnoorchenarboo@gmail.com" class="contact-item">📧 mnoorchenarboo@gmail.com</a>
+                <span class="contact-item">📍 Ontario, Canada</span>
+                <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" class="contact-item">💼 LinkedIn</a>
+                <a href="https://github.com/mnoorchenar" target="_blank" class="contact-item">💻 GitHub</a>
+            </div>
+        </header>
+
+        <div class="nav-section">
+            <a href="Blogs/blogs.html?v=2.0" class="nav-btn">📊 View My Interactive Blogs</a>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h2>About Me</h2>
+                <div class="about-text">
+                    <p>Experienced Medical Statistician with expertise in predictive models and statistical genetics. Skilled in leveraging computer engineering techniques to enhance data analysis and research in biostatistics.</p>
+                    
+                    <p>Responsible and reliable with the ability to deliver quality statistical analysis and research. Adept at providing statistical training, advice, and support. Enthusiastic biostatistician eager to contribute to team success through hard work, attention to detail, and excellent organizational skills.</p>
+                    
+                    <p>Motivated to learn, grow, and excel in research projects, combining advanced statistical methods with innovative computational approaches.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h4>Programming</h4>
+                        <ul>
+                            <li>R, R Shiny (10+ years)</li>
+                            <li>Python (5+ years)</li>
+                            <li>SQL (1+ year)</li>
+                            <li>MATLAB (3+ years)</li>
+                            <li>GitHub (5+ years)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>Statistical Tools</h4>
+                        <ul>
+                            <li>SPSS (10+ years)</li>
+                            <li>MINITAB (10+ years)</li>
+                            <li>STATA (2+ years)</li>
+                            <li>Tableau</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>AI & Machine Learning</h4>
+                        <ul>
+                            <li>Deep Learning</li>
+                            <li>TensorFlow & PyTorch</li>
+                            <li>NLP</li>
+                            <li>Explainable AI</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>Web Development</h4>
+                        <ul>
+                            <li>HTML/CSS (3+ years)</li>
+                            <li>Bootstrap</li>
+                            <li>WordPress (5+ years)</li>
+                            <li>SEO (5+ years)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Work Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="job-title">Researcher – Statistical Genomics</div>
+                    <div class="company">Breast Cancer Gene Network Project, Sweden (Remote) | Jan 2024 – Present</div>
+                    <div class="job-description">
+                        Designed a modular RNA-Seq analysis pipeline using gene co-expression networks and SPNFSR for unsupervised gene selection. Implemented automated workflows in R with SQLite integration for data management, feature extraction, and clustering evaluation.
+                    </div>
+                </div>
+                
+                <div class="experience-item">
+                    <div class="job-title">Biostatistical Research Scientist</div>
+                    <div class="company">Western University, London, Ontario, Canada | Oct 2023 – Dec 2024</div>
+                    <div class="job-description">
+                        Pre-processed real-world data (RWD) to ensure accuracy and quality. Developed deep learning models for predicting surgery times. Integrated explainability features to enhance model interpretability, aiding surgical planning and decision-making.
+                    </div>
+                </div>
+                
+                <div class="experience-item">
+                    <div class="job-title">Statistical Geneticist and Biostatistician</div>
+                    <div class="company">Endocrinology and Metabolism Research Institute (EMRI), Tehran, Iran | Jan 2020 – Aug 2022</div>
+                    <div class="job-description">
+                        Developed a quality control pipeline for genome-wide association studies (GWAS) in a clinical trial cohort. Created a web application using the Shiny platform that applies machine learning models to a genomics database.
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-title">Professor</div>
+                    <div class="company">Fanshawe College, London, Ontario, Canada | 2024 – Ongoing</div>
+                    <div class="job-description">
+                        Instructing students in statistical and mathematical principles relevant to artificial intelligence (AI) algorithms. Teaching advanced deep learning concepts and optimization algorithms, with a focus on applications using Python, particularly TensorFlow and PyTorch.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Education</h2>
+                <div class="education-item">
+                    <div class="degree">Ph.D. Computer Engineering</div>
+                    <div class="university">Western University, Canada | 2022 – 2026 (expected)</div>
+                </div>
+                <div class="education-item">
+                    <div class="degree">M.Sc. Biostatistics</div>
+                    <div class="university">Tehran University of Medical Sciences, Iran | 2019 – 2022</div>
+                </div>
+                <div class="education-item">
+                    <div class="degree">B.Sc. Statistics</div>
+                    <div class="university">Ferdowsi University, Mashhad, Iran | 2009 – 2013</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Areas of Expertise</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h4>Statistical Methods</h4>
+                        <ul>
+                            <li>Clinical Trials Design</li>
+                            <li>Survival Analysis</li>
+                            <li>Longitudinal Data Analysis</li>
+                            <li>Epidemiological Methods</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>AI & Genomics</h4>
+                        <ul>
+                            <li>Statistical Genetics</li>
+                            <li>Bioinformatics</li>
+                            <li>Machine Learning</li>
+                            <li>Deep Learning</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>Advanced AI</h4>
+                        <ul>
+                            <li>Generative AI</li>
+                            <li>Large Language Models</li>
+                            <li>Natural Language Processing</li>
+                            <li>Explainable AI</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Selected Publications</h2>
+                <div class="publications">
+                    <div class="publication">
+                        <strong>Kwong, M., Noorchenarboo, M., et al.</strong> (2025). Optimizing Surgical Efficiency: Predicting Case Duration in Common General Procedures Using Machine Learning. <em>Surgical Endoscopy</em>, 5227–5234.
+                    </div>
+                    <div class="publication">
+                        <strong>Noorchenarboo, M., Mousavi, S. A., Moheimani, H.</strong> (2020). Country Level Socioeconomic and Health System Indicators Explain COVID-19 Mortality Worldwide. <em>Journal of Biostatistics and Epidemiology</em>, 6(2), 93-100.
+                    </div>
+                    <div class="publication">
+                        <strong>Noorchenarboo, M., et al.</strong> (2022). Multivariate and gene-based association testing of sarcopenia: Bushehr Elderly Health Program (BEH). <em>Journal of Biostatistics and Epidemiology</em>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Recent Achievements</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h4>🎤 Speaking & Awards</h4>
+                        <ul>
+                            <li>Invited speaker at Google Events 2025</li>
+                            <li>Danny Ho Software Engineering Scholarship ($10,000)</li>
+                            <li>Reviewer for Journal of Biostatistics and Epidemiology</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h4>🏆 Academic Rankings</h4>
+                        <ul>
+                            <li>4th in Ph.D. Biostatistics (2018)</li>
+                            <li>5th in M.Sc. Biostatistics (2013)</li>
+                            <li>National university entrance exams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

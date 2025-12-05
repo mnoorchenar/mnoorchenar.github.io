@@ -3,475 +3,784 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta name="theme-color" content="#667eea">
-
-    <title>Mohammad Noorchenarboo - Biostatistician & Data Scientist</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 3em;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .title {
-            font-size: 1.3em;
-            color: #7f8c8d;
-            margin-bottom: 20px;
-        }
-        
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        
-        .contact-item {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .contact-item:hover {
-            color: #2980b9;
-        }
-        
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .section h2 {
-            color: #764ba2;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .about-text {
-            line-height: 1.7;
-            color: #2c3e50;
-            text-align: justify;
-        }
-        
-        .about-text p {
-            margin-bottom: 15px;
-        }
-        
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .skill-category {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .skill-category h4 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        
-        .skill-category ul {
-            list-style: none;
-            color: #555;
-        }
-        
-        .skill-category li {
-            padding: 3px 0;
-            font-size: 0.9em;
-        }
-        
-        .experience-item {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #e74c3c;
-        }
-        
-        .job-title {
-            color: #2c3e50;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .company {
-            color: #7f8c8d;
-            font-size: 1em;
-            margin-bottom: 10px;
-        }
-        
-        .job-description {
-            color: #555;
-            line-height: 1.6;
-            font-size: 0.9em;
-        }
-        
-        .education-item {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .degree {
-            color: #2c3e50;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .university {
-            color: #7f8c8d;
-            font-size: 0.9em;
-        }
-        
-        .full-width {
-            grid-column: 1 / -1;
-        }
-        
-        .nav-section {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .nav-btn {
-            display: inline-block;
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            font-weight: 600;
-            margin: 0 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-        
-        .nav-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
-        }
-        
-        .publications {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .publication {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            line-height: 1.5;
-            padding: 10px;
-            border-radius: 5px;
-            background: white;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            h1 {
-                font-size: 2.2em;
-            }
-            
-            .nav-btn {
-                display: block;
-                margin: 10px auto;
-                width: fit-content;
-            }
-        }
-    </style>
-    <script>
-        function clearAllCache() {
-            // Clear cookies
-            document.cookie.split(";").forEach(function(c) {
-                document.cookie = c.replace(/^ +/, "")
-                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-            });
-            
-            // Clear storage
-            try {
-                localStorage.clear();
-                sessionStorage.clear();
-            } catch(e) {
-                console.log("Storage clear not available");
-            }
-        }
-        
-        // Clear on page load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', clearAllCache);
-        } else {
-            clearAllCache();
-        }
-        
-        // Clear on page visibility change
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'visible') {
-                clearAllCache();
-            }
-        });
-    </script>
+    <title>Mohammad Noorchenarboo - Portfolio</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Mohammad Noorchenarboo</h1>
-            <p class="title">Biostatistician & Senior Data Scientist</p>
-            <div class="contact-info">
-                <a href="mailto:mnoorchenarboo@gmail.com" class="contact-item">📧 mnoorchenarboo@gmail.com</a>
-                <span class="contact-item">📍 Ontario, Canada</span>
-                <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" class="contact-item">💼 LinkedIn</a>
-                <a href="https://github.com/mnoorchenar" target="_blank" class="contact-item">💻 GitHub</a>
+        <!-- Compact Header Section with Your Info -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Mohammad Noorchenarboo</h1>
+                <p>Data Scientist | Artificial Intelligence Researcher</p>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Ontario, Canada</span>
+                </div>
             </div>
-        </header>
+            <div class="social-links">
+                <a href="mailto:mnoorchenarboo@gmail.com" target="_blank" title="Email">
+                    <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" class="icon-img" alt="Email">
+                    <span>Email</span>
+                </a>
 
-        <div class="nav-section">
-            <a href="Blogs/blogs.html?v=2.0" class="nav-btn">📊 View My Interactive Blogs</a>
+                <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="icon-img" alt="LinkedIn">
+                    <span>LinkedIn</span>
+                </a>
+
+                <a href="https://scholar.google.com/citations?user=nn_Toq0AAAAJ&hl=en&oi=sra" target="_blank" title="Google Scholar">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg" class="icon-img" alt="Google Scholar">
+                    <span>Google Scholar</span>
+                </a>
+
+                <a href="https://github.com/mnoorchenarboo" target="_blank" title="GitHub">
+                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" class="icon-img" alt="GitHub">
+                    <span>GitHub</span>
+                </a>
+
+                <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="Hugging Face">
+                    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" class="icon-img" alt="HuggingFace">
+                    <span>Hugging Face</span>
+                </a>
+            </div>
         </div>
 
-        <div class="main-content">
-            <div class="section">
-                <h2>About Me</h2>
-                <div class="about-text">
-                    <p>Experienced Medical Statistician with expertise in predictive models and statistical genetics. Skilled in leveraging computer engineering techniques to enhance data analysis and research in biostatistics.</p>
-                    
-                    <p>Responsible and reliable with the ability to deliver quality statistical analysis and research. Adept at providing statistical training, advice, and support. Enthusiastic biostatistician eager to contribute to team success through hard work, attention to detail, and excellent organizational skills.</p>
-                    
-                    <p>Motivated to learn, grow, and excel in research projects, combining advanced statistical methods with innovative computational approaches.</p>
-                </div>
-            </div>
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="openTab('experience')">Work Experience</button>
+            <button class="tab-button" onclick="openTab('education')">Education</button>
+            <button class="tab-button" onclick="openTab('skills')">Skills</button>
+            <button class="tab-button" onclick="openTab('projects')">Honors & Awards</button>
+        </div>
 
-            <div class="section">
-                <h2>Technical Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h4>Programming</h4>
-                        <ul>
-                            <li>R, R Shiny (10+ years)</li>
-                            <li>Python (5+ years)</li>
-                            <li>SQL (1+ year)</li>
-                            <li>MATLAB (3+ years)</li>
-                            <li>GitHub (5+ years)</li>
-                        </ul>
+<!-- Work Experience Tab -->
+<div id="experience" class="tab-content active">
+    <div class="carousel-container">
+        <button class="nav-arrow prev" onclick="changeSlide('experience', -1)">&#8249;</button>
+        
+        <div class="carousel-wrapper">
+            <!-- Slide 1: Professor -->
+            <div class="carousel-slide active">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w001.png" alt="Fanshawe College">
                     </div>
-                    
-                    <div class="skill-category">
-                        <h4>Statistical Tools</h4>
-                        <ul>
-                            <li>SPSS (10+ years)</li>
-                            <li>MINITAB (10+ years)</li>
-                            <li>STATA (2+ years)</li>
-                            <li>Tableau</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h4>AI & Machine Learning</h4>
-                        <ul>
-                            <li>Deep Learning</li>
-                            <li>TensorFlow & PyTorch</li>
-                            <li>NLP</li>
-                            <li>Explainable AI</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h4>Web Development</h4>
-                        <ul>
-                            <li>HTML/CSS (3+ years)</li>
-                            <li>Bootstrap</li>
-                            <li>WordPress (5+ years)</li>
-                            <li>SEO (5+ years)</li>
+                    <div class="card-content">
+                        <h2 class="position-title">Professor</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                Fanshawe College
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                London, ON, Canada
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                May 2024 - Ongoing
+                            </span>
+                        </div>
+                        <p class="job-description">Teaching graduate-level courses in Data Science, Machine Learning, and Deep Learning within the Artificial Intelligence and Machine Learning program.</p>
+                        <ul class="job-responsibilities">
+                            <li>Teach graduate-level courses in Data Science, Machine Learning, and Deep Learning within the Artificial Intelligence and Machine Learning program.</li>
+                            <li>Deliver instruction on modern AI workflows, feature engineering, TensorFlow, PyTorch, and optimization algorithms.</li>
+                            <li>Cover deep learning architectures (RNNs, CNNs, YOLO, VAEs, GANs, Vision Transformer, Diffusion models) and large language models (BERT, GPT).</li>
+                            <li>Integrate explainable AI methods such as SHAP, LIME, and attention-based interpretation to enhance model transparency.</li>
+                            <li>Mentor students on applied AI research projects and advanced implementation practices.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="section full-width">
-                <h2>Work Experience</h2>
+            <!-- Slide 2: Data Scientist, Part-Time -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w002.png" alt="London Health Sciences Centre">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Data Scientist, Part-Time</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                London Health Sciences Centre Research Institute (LHSC)
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                London, ON, Canada
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                May 2023 - Present
+                            </span>
+                        </div>
+                        <p class="job-description">Developing predictive models using advanced deep learning and transformer architectures to improve healthcare analytics and operational efficiency.</p>
+                        <ul class="job-responsibilities">
+                            <li>Developed predictive models using deep learning and transformer-based architectures (BERT, multimodal fusion) to forecast process duration and outcomes, improving resource planning and efficiency.</li>
+                            <li>Partnered with cross-functional teams to design pipelines, prepare diverse data, and ensure model validity and interpretability.</li>
+                            <li>Automated data workflows and integrated model outputs into dashboards, supporting real-time analytics and resulting in peer-reviewed publications.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Machine Learning Researcher -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w003.png" alt="London Hydro">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Machine Learning Researcher</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                London Hydro
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                London, ON, Canada
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Nov 2022 - Apr 2023
+                            </span>
+                        </div>
+                        <p class="job-description">Built machine learning models for intelligent grid analytics with focus on anomaly detection and explainability.</p>
+                        <ul class="job-responsibilities">
+                            <li>Built machine learning and deep learning models for anomaly detection and forecasting in large-scale time-series data.</li>
+                            <li>Developed explainability and fairness methods to interpret deep models, enhancing transparency and accountability in AI systems.</li>
+                            <li>Designed and automated pipelines for data processing and analysis, contributing to peer-reviewed research on intelligent grid analytics.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Teaching Assistant -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w004.png" alt="Western University">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Teaching Assistant (TA)</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                Western University
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                London, ON, Canada
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                2022 - Ongoing
+                            </span>
+                        </div>
+                        <p class="job-description">Supporting diverse undergraduate and graduate courses in software engineering, data science, and machine learning.</p>
+                        <ul class="job-responsibilities">
+                            <li><strong>DATASCI 3000A: Introduction to Machine Learning</strong> <em>[Sep 2025 – Dec 2025]</em></li>
+                            <li><strong>Software Project & Process Management</strong> <em>[Sep 2024 – Dec 2024]</em></li>
+                            <li><strong>SE2250B: Software Construction</strong> <em>[Jan 2024 – Apr 2024]</em></li>
+                            <li><strong>Scripting Programming Language Fundamentals</strong> <em>[Sep 2023 – Dec 2023]</em></li>
+                            <li><strong>Software Design for Systems Engineering</strong> <em>[Jan 2023 – Apr 2023]</em></li>
+                            <li><strong>Programming Fundamentals for Engineers</strong> <em>[Sep 2022 – Jan 2023]</em></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Computational Data Scientist -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w005.png" alt="EMRI">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Computational Data Scientist</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                Endocrinology and Metabolism Research Institute (EMRI)
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Tehran, Iran
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Jan 2020 - Aug 2022
+                            </span>
+                        </div>
+                        <p class="job-description">Built data pipelines and applied machine learning for large-scale genomic and clinical trial data analysis.</p>
+                        <ul class="job-responsibilities">
+                            <li>Built data pipelines and quality control workflows for large-scale genomic and clinical trial data, improving data reliability and analytical accuracy.</li>
+                            <li>Applied machine learning models to integrate and analyze multi-omics data through custom Shiny applications for interactive research insights.</li>
+                            <li>Performed statistical and computational analyses using R, Python, and PLINK, contributing to peer-reviewed studies on genotype–phenotype associations.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Statistical Data Analyst -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w006.png" alt="Moshaveran Iran">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Statistical Data Analyst</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                Moshaveran Iran Research Institute
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Tehran, Iran
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Jan 2014 - Feb 2018
+                            </span>
+                        </div>
+                        <p class="job-description">Led statistical data analysis using advanced and Bayesian methods, ensuring data integrity and actionable insights.</p>
+                        <ul class="job-responsibilities">
+                            <li>Led statistical data analysis using advanced and Bayesian methods in R and Python, ensuring data integrity, reproducibility, and actionable insights.</li>
+                            <li>Designed statistical analysis plans, determined sample sizes, and executed experimental designs for research studies.</li>
+                            <li>Coordinated research reporting and manuscript preparation with multidisciplinary teams to ensure scientific clarity and data accuracy.</li>
+                            <li>Conducted A/B testing and hypothesis-driven analysis to evaluate intervention outcomes and support decision making.</li>
+                            <li>Automated repetitive analytical workflows, reducing reporting time and improving efficiency.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Statistical Programmer -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/work_experience/w007.png" alt="Royan Institute">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Statistical Programmer</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-building"></i>
+                                Royan Stem Cell Technology Institute, Cord Blood Bank
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Tehran, Iran
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Mar 2013 - Aug 2014
+                            </span>
+                        </div>
+                        <p class="job-description">Built statistical programs for biomedical data analysis in rare disease research.</p>
+                        <ul class="job-responsibilities">
+                            <li>Developed statistical programs for biomedical data analysis in rare disease research, ensuring data integrity and compliance with research standards.</li>
+                            <li>Created data visualizations and translated complex statistical results into accessible insights for interdisciplinary research teams.</li>
+                            <li>Built statistical programs for biomedical data, ensured data integrity, and produced clear visual summaries for interdisciplinary teams.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-arrow next" onclick="changeSlide('experience', 1)">&#8250;</button>
+        <div class="dot-navigation" id="experience-dots"></div>
+    </div>
+</div>
+
+        <!-- Education Tab -->
+        <div id="education" class="tab-content">
+            <div class="carousel-container">
+                <button class="nav-arrow prev" onclick="changeSlide('education', -1)">&#8249;</button>
                 
-                <div class="experience-item">
-                    <div class="job-title">Researcher – Statistical Genomics</div>
-                    <div class="company">Breast Cancer Gene Network Project, Sweden (Remote) | Jan 2024 – Present</div>
-                    <div class="job-description">
-                        Designed a modular RNA-Seq analysis pipeline using gene co-expression networks and SPNFSR for unsupervised gene selection. Implemented automated workflows in R with SQLite integration for data management, feature extraction, and clustering evaluation.
+                <div class="carousel-wrapper">
+                    <!-- PhD -->
+                    <div class="carousel-slide active">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="images/education/western.png" alt="Western University">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="position-title">Ph.D. Computer Engineering</h2>
+                                <div class="job-meta-single-line">
+                                    <span class="company-name">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        Western University
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        London, Ontario, Canada
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        2022 to 2026 (Expected)
+                                    </span>
+                                </div>
+                                <p class="job-description">Focused on artificial intelligence and healthcare analytics with advanced research in deep learning and explainable AI.</p>
+                                <ul class="job-responsibilities">
+                                    <li>Focused on artificial intelligence and healthcare analytics.</li>
+                                    <li>Developed deep learning models using transformers and multimodal data.</li>
+                                    <li>Implemented explainable AI techniques to enhance model interpretability.</li>
+                                    <li>Published peer reviewed research with clinical partners.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="experience-item">
-                    <div class="job-title">Biostatistical Research Scientist</div>
-                    <div class="company">Western University, London, Ontario, Canada | Oct 2023 – Dec 2024</div>
-                    <div class="job-description">
-                        Pre-processed real-world data (RWD) to ensure accuracy and quality. Developed deep learning models for predicting surgery times. Integrated explainability features to enhance model interpretability, aiding surgical planning and decision-making.
+
+                    <!-- MSc Biostatistics -->
+                    <div class="carousel-slide">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="images/education/tums.png" alt="Tehran University of Medical Sciences">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="position-title">M.Sc. Biostatistics</h2>
+                                <div class="job-meta-single-line">
+                                    <span class="company-name">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        Tehran University of Medical Sciences
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Tehran, Iran
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        2019 to 2022
+                                    </span>
+                                </div>
+                                <p class="job-description">Advanced statistical modeling for clinical trials, longitudinal studies, and high-dimensional data analysis.</p>
+                                <ul class="job-responsibilities">
+                                    <li>Performed statistical modeling for clinical trials and longitudinal studies.</li>
+                                    <li>Applied survival analysis, mixed models, and causal inference methods.</li>
+                                    <li>Conducted genomic and high dimensional data analysis using R and Python.</li>
+                                    <li>Collaborated with clinical teams to ensure statistical quality and reporting.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="experience-item">
-                    <div class="job-title">Statistical Geneticist and Biostatistician</div>
-                    <div class="company">Endocrinology and Metabolism Research Institute (EMRI), Tehran, Iran | Jan 2020 – Aug 2022</div>
-                    <div class="job-description">
-                        Developed a quality control pipeline for genome-wide association studies (GWAS) in a clinical trial cohort. Created a web application using the Shiny platform that applies machine learning models to a genomics database.
+
+                    <!-- MSc Industrial Engineering -->
+                    <div class="carousel-slide">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="images/education/iust.png" alt="Iran University of Science and Technology">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="position-title">M.Sc. Industrial Engineering</h2>
+                                <div class="job-meta-single-line">
+                                    <span class="company-name">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        Iran University of Science and Technology
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Tehran, Iran
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        2013 to 2015
+                                    </span>
+                                </div>
+                                <p class="job-description">Optimization techniques for supply chain, resource allocation, and data-driven operational efficiency.</p>
+                                <ul class="job-responsibilities">
+                                    <li>Learned optimization techniques for supply chain and resource allocation.</li>
+                                    <li>Built simulation models for industrial systems and decision making.</li>
+                                    <li>Applied data driven methods to improve operational efficiency.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BSc Statistics -->
+                    <div class="carousel-slide">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="images/education/ferdowsi.png" alt="Ferdowsi University">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="position-title">B.Sc. Statistics</h2>
+                                <div class="job-meta-single-line">
+                                    <span class="company-name">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        Ferdowsi University
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Mashhad, Iran
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="job-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        2009 to 2013
+                                    </span>
+                                </div>
+                                <p class="job-description">Foundational knowledge in probability theory, statistical modeling, and statistical software programming.</p>
+                                <ul class="job-responsibilities">
+                                    <li>Learned probability theory, hypothesis testing, and statistical modeling.</li>
+                                    <li>Gained experience with R programming and statistical software.</li>
+                                    <li>Completed survey data analysis and experimental study design.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="experience-item">
-                    <div class="job-title">Professor</div>
-                    <div class="company">Fanshawe College, London, Ontario, Canada | 2024 – Ongoing</div>
-                    <div class="job-description">
-                        Instructing students in statistical and mathematical principles relevant to artificial intelligence (AI) algorithms. Teaching advanced deep learning concepts and optimization algorithms, with a focus on applications using Python, particularly TensorFlow and PyTorch.
-                    </div>
-                </div>
+                <button class="nav-arrow next" onclick="changeSlide('education', 1)">&#8250;</button>
+                <div class="dot-navigation" id="education-dots"></div>
             </div>
+        </div>
 
-            <div class="section">
-                <h2>Education</h2>
-                <div class="education-item">
-                    <div class="degree">Ph.D. Computer Engineering</div>
-                    <div class="university">Western University, Canada | 2022 – 2026 (expected)</div>
-                </div>
-                <div class="education-item">
-                    <div class="degree">M.Sc. Biostatistics</div>
-                    <div class="university">Tehran University of Medical Sciences, Iran | 2019 – 2022</div>
-                </div>
-                <div class="education-item">
-                    <div class="degree">B.Sc. Statistics</div>
-                    <div class="university">Ferdowsi University, Mashhad, Iran | 2009 – 2013</div>
-                </div>
-            </div>
 
-            <div class="section">
-                <h2>Areas of Expertise</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h4>Statistical Methods</h4>
-                        <ul>
-                            <li>Clinical Trials Design</li>
-                            <li>Survival Analysis</li>
-                            <li>Longitudinal Data Analysis</li>
-                            <li>Epidemiological Methods</li>
-                        </ul>
-                    </div>
+        <!-- Skills Tab -->
+        <div id="skills" class="tab-content">
+            <div class="static-content">
+                <!-- Areas of Expertise Section -->
+                <div class="expertise-section">
+                    <h2 class="expertise-title">Areas of Expertise</h2>
                     
-                    <div class="skill-category">
-                        <h4>AI & Genomics</h4>
-                        <ul>
-                            <li>Statistical Genetics</li>
-                            <li>Bioinformatics</li>
-                            <li>Machine Learning</li>
-                            <li>Deep Learning</li>
-                        </ul>
+                    <div class="expertise-category">
+                        <h3 class="expertise-subtitle">Biostatistics & Clinical Research</h3>
+                        <div class="tags-container">
+                            <span class="expertise-tag">Biostatistical Methods</span>
+                            <span class="expertise-tag">Medical Image Analysis</span>
+                            <span class="expertise-tag">Epidemiological Methods</span>
+                            <span class="expertise-tag">Clinical Trials Design and Analysis</span>
+                            <span class="expertise-tag">Survival Analysis</span>
+                            <span class="expertise-tag">Longitudinal Data Analysis</span>
+                        </div>
                     </div>
-                    
-                    <div class="skill-category">
-                        <h4>Advanced AI</h4>
-                        <ul>
-                            <li>Generative AI</li>
-                            <li>Large Language Models</li>
-                            <li>Natural Language Processing</li>
-                            <li>Explainable AI</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
-            <div class="section full-width">
-                <h2>Selected Publications</h2>
-                <div class="publications">
-                    <div class="publication">
-                        <strong>Kwong, M., Noorchenarboo, M., et al.</strong> (2025). Optimizing Surgical Efficiency: Predicting Case Duration in Common General Procedures Using Machine Learning. <em>Surgical Endoscopy</em>, 5227–5234.
+                    <div class="expertise-category">
+                        <h3 class="expertise-subtitle">Artificial Intelligence</h3>
+                        <div class="tags-container">
+                            <span class="expertise-tag">Machine Learning</span>
+                            <span class="expertise-tag">Deep Learning</span>
+                            <span class="expertise-tag">Generative AI</span>
+                            <span class="expertise-tag">Large Language Models (LLMs)</span>
+                            <span class="expertise-tag">Natural Language Processing</span>
+                            <span class="expertise-tag">Explainable AI</span>
+                        </div>
                     </div>
-                    <div class="publication">
-                        <strong>Noorchenarboo, M., Mousavi, S. A., Moheimani, H.</strong> (2020). Country Level Socioeconomic and Health System Indicators Explain COVID-19 Mortality Worldwide. <em>Journal of Biostatistics and Epidemiology</em>, 6(2), 93-100.
-                    </div>
-                    <div class="publication">
-                        <strong>Noorchenarboo, M., et al.</strong> (2022). Multivariate and gene-based association testing of sarcopenia: Bushehr Elderly Health Program (BEH). <em>Journal of Biostatistics and Epidemiology</em>.
-                    </div>
-                </div>
-            </div>
 
-            <div class="section full-width">
-                <h2>Recent Achievements</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h4>🎤 Speaking & Awards</h4>
-                        <ul>
-                            <li>Invited speaker at Google Events 2025</li>
-                            <li>Danny Ho Software Engineering Scholarship ($10,000)</li>
-                            <li>Reviewer for Journal of Biostatistics and Epidemiology</li>
+                    <div class="expertise-category">
+                        <h3 class="expertise-subtitle">Computational & Genomic Research</h3>
+                        <div class="tags-container">
+                            <span class="expertise-tag">Statistical Genetics and Genomics</span>
+                            <span class="expertise-tag">Bioinformatics</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider-line"></div>
+
+                <!-- Technical Skills Section -->
+                <div class="skills-container">
+                    <div class="skill-section">
+                        <div class="skill-section-header">
+                            <i class="fas fa-code"></i>
+                            Programming Skills
+                        </div>
+                        <ul class="skill-list">
+                            <li><strong>Python</strong> <span class="skill-years">(TensorFlow, PyTorch, etc) (5+ years)</span></li>
+                            <li><strong>R, R Markdown, R Shiny</strong> <span class="skill-years">(10+ years)</span></li>
+                            <li><strong>SQL</strong> <span class="skill-years">(1+ year)</span></li>
+                            <li><strong>MATLAB</strong> <span class="skill-years">(3+ years)</span></li>
+                            <li><strong>GitHub</strong> <span class="skill-years">(5+ years)</span></li>
                         </ul>
                     </div>
-                    
-                    <div class="skill-category">
-                        <h4>🏆 Academic Rankings</h4>
-                        <ul>
-                            <li>4th in Ph.D. Biostatistics (2018)</li>
-                            <li>5th in M.Sc. Biostatistics (2013)</li>
-                            <li>National university entrance exams</li>
+
+                    <div class="skill-section">
+                        <div class="skill-section-header">
+                            <i class="fas fa-chart-bar"></i>
+                            Statistical Tools
+                        </div>
+                        <ul class="skill-list">
+                            <li><strong>SPSS, MINITAB</strong> <span class="skill-years">(10+ years)</span></li>
+                            <li><strong>STATA</strong> <span class="skill-years">(2+ years)</span></li>
+                            <li><strong>SAS</strong> <span class="skill-years">(1+ year)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-section">
+                        <div class="skill-section-header">
+                            <i class="fas fa-chart-pie"></i>
+                            Data Visualization & BI
+                        </div>
+                        <ul class="skill-list">
+                            <li><strong>Tableau, Power BI</strong> <span class="skill-years">(1+ year)</span></li>
+                            <li><strong>Flask and Streamlit dashboards</strong> <span class="skill-years">(1+ year)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-section">
+                        <div class="skill-section-header">
+                            <i class="fas fa-mobile-alt"></i>
+                            Mobile and Edge AI Skills
+                        </div>
+                        <ul class="skill-list">
+                            <li><strong>TensorFlow Lite Converter</strong> <span class="skill-years">(&lt;1 year)</span></li>
+                            <li><strong>PyTorch Quantization Toolkit</strong> <span class="skill-years">(&lt;1 year)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="skill-section">
+                        <div class="skill-section-header">
+                            <i class="fas fa-tools"></i>
+                            Other Skills
+                        </div>
+                        <ul class="skill-list">
+                            <li><strong>Linux (Ubuntu)</strong> <span class="skill-years">(3+ years)</span></li>
+                            <li><strong>LaTeX</strong> <span class="skill-years">(3+ years)</span></li>
+                            <li><strong>Web Scraping</strong> <span class="skill-years">(1+ year)</span></li>
                         </ul>
                     </div>
                 </div>
             </div>
+        </div>
+
+
+<!-- Honors & Awards Tab (replacing Projects) -->
+<div id="projects" class="tab-content">
+    <div class="carousel-container">
+        <button class="nav-arrow prev" onclick="changeSlide('projects', -1)">&#8249;</button>
+        
+        <div class="carousel-wrapper">
+<!-- Slide 1: About Me -->
+<div class="carousel-slide active">
+    <div class="card">
+        <div class="card-image">
+            <img src="images/honors_awards/h000.png" alt="Mohammad Noorchenarboo">
+        </div>
+        <div class="card-content">
+            <h2 class="position-title">About Me</h2>
+            <div class="job-meta-single-line">
+                <span class="company-name">
+                    <i class="fas fa-user-circle"></i>
+                    AI Researcher & Data Scientist
+                </span>
+            </div>
+            <p class="job-description">AI Researcher and Data Scientist with expertise in machine learning, deep learning, and applied statistics.</p>
+            <ul class="job-responsibilities">
+                <li>Experienced in <strong>designing, training, and validating predictive models</strong> for structured, unstructured, and time-series data.</li>
+                <li>Proficient in <strong>Python, R, and SQL</strong> for data preparation, analysis, and deployment using frameworks such as <strong>TensorFlow, PyTorch, and Scikit-learn</strong>.</li>
+                <li>Teach <strong>data science and AI courses</strong>, mentoring students and communicating complex concepts across disciplines to support collaborative research and innovation.</li>
+                <li>Analytical, reliable, and focused on building <strong>interpretable, scalable, and data-driven solutions</strong>.</li>
+                <li>Skilled at bridging technical expertise with practical applications to deliver impactful results in research and industry settings.</li>
+            </ul>
         </div>
     </div>
+</div>
+
+            <!-- Slide 2: Danny Ho Scholarship -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/honors_awards/h001.png" alt="Danny Ho Scholarship">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">🏆 Danny Ho Software Engineering Graduate Scholarship</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-trophy"></i>
+                                Faculty of Engineering, Western University
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                May 2025
+                            </span>
+                        </div>
+                        <p class="job-description">Awarded annually to two graduate students in the Faculty of Engineering for exceptional academic performance and research excellence in Software Engineering. Valued at $10,000.</p>
+                        <ul class="job-responsibilities">
+                            <li>Recognized for outstanding research contributions and academic achievement within the graduate engineering community.</li>
+                            <li>One of only two recipients selected annually from the entire Faculty of Engineering.</li>
+                            <li>Competitive scholarship awarded based on exceptional academic performance and research excellence in Software Engineering.</li>
+                            <li>#westernueng | Faculty of Engineering at Western University</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Google DevFest 2024 -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/honors_awards/h002.png" alt="Google DevFest 2024">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Invited Speaker & Panel Specialist – Google DevFest 2024</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-microphone"></i>
+                                Google Developer Groups (GDG) London & Western University
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                D.B. Weldon Library, Western University
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Feb 2025
+                            </span>
+                        </div>
+                        <p class="job-description">Invited as guest lecturer and panel specialist at Google DevFest 2024, the largest global developer conference series, with 130+ attendees.</p>
+                        <ul class="job-responsibilities">
+                            <li>Delivered a lecture on <strong>Generative Models in Healthcare</strong> at the largest global developer conference series.</li>
+                            <li>Joined the expert panel on AI and innovation, discussing cutting-edge developments in artificial intelligence.</li>
+                            <li>Recognized for contributions to artificial intelligence, deep learning, and explainable models.</li>
+                            <li>Event attracted 130+ attendees from academia and industry at D.B. Weldon Library, Western University.</li>
+                            <li>Google Devfest 2024 - London, ON, CA | Google Developer Groups</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: KIDS Rock IT! 2025 -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/honors_awards/h003.png" alt="KIDS Rock IT 2025">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Invited Speaker – KIDS Rock IT! 2025</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-microphone"></i>
+                                School of Information Technology, Fanshawe College
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Fanshawe College
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Feb 2025
+                            </span>
+                        </div>
+                        <p class="job-description">Invited to deliver a lecture on Artificial Intelligence at KIDS Rock IT! event, inspiring 220+ students from regional schools.</p>
+                        <ul class="job-responsibilities">
+                            <li>Delivered an engaging lecture on <strong>Artificial Intelligence</strong> to inspire the next generation of technology learners.</li>
+                            <li>Event brought together over 220 students from regional schools for hands-on workshops.</li>
+                            <li>Covered topics including AI fundamentals, machine learning applications, and career pathways in technology.</li>
+                            <li>Part of a comprehensive program featuring workshops on AI, cybersecurity, and data science.</li>
+                            <li>KIDS Rock IT is a tech event designed to inspire young minds and promote STEM education.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: IEEE Reviewer -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/honors_awards/h004.png" alt="IEEE Reviewer">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Reviewer – IEEE Transactions on Industrial Informatics</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-file-alt"></i>
+                                IEEE Transactions on Industrial Informatics
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Ontario, Canada
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Dec 2025 - Present
+                            </span>
+                        </div>
+                        <p class="job-description">Serving as a peer reviewer for IEEE Transactions on Industrial Informatics, a leading journal in industrial AI and informatics research.</p>
+                        <ul class="job-responsibilities">
+                            <li>Evaluate manuscripts on industrial AI, machine learning applications, and intelligent systems.</li>
+                            <li>Provide critical feedback on research methodology, experimental design, and technical contributions.</li>
+                            <li>Assess novelty, significance, and reproducibility of research in industrial informatics.</li>
+                            <li>Contribute to maintaining high academic standards in peer-reviewed publications.</li>
+                            <li>Review papers covering topics including IoT, smart manufacturing, and data-driven industrial systems.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Journal of Biostatistics Reviewer -->
+            <div class="carousel-slide">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/honors_awards/h005.png" alt="Biostatistics Reviewer">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="position-title">Reviewer – Journal of Biostatistics and Epidemiology</h2>
+                        <div class="job-meta-single-line">
+                            <span class="company-name">
+                                <i class="fas fa-file-alt"></i>
+                                Journal of Biostatistics and Epidemiology
+                            </span>
+                            <span class="separator">•</span>
+                            <span class="job-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                2019 - 2022
+                            </span>
+                        </div>
+                        <p class="job-description">Served as a peer reviewer for the Journal of Biostatistics and Epidemiology, evaluating research in statistical methods and epidemiological studies.</p>
+                        <ul class="job-responsibilities">
+                            <li>Reviewed manuscripts on biostatistical methods, clinical trial design, and epidemiological research.</li>
+                            <li>Evaluated statistical rigor, methodological soundness, and clinical relevance of submitted research.</li>
+                            <li>Provided constructive feedback on study design, data analysis approaches, and interpretation of results.</li>
+                            <li>Assessed papers on survival analysis, longitudinal studies, and high-dimensional data methods.</li>
+                            <li>Contributed to advancing the quality of biostatistics and epidemiology research literature.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-arrow next" onclick="changeSlide('projects', 1)">&#8250;</button>
+        <div class="dot-navigation" id="projects-dots"></div>
+    </div>
+</div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
