@@ -9,8 +9,7 @@
 :root{
   --navy:#070d1f;--navy2:#0d1530;--navy3:#111d3c;
   --accent:#4f8ef7;--accent2:#7c3aed;--teal:#06b6d4;
-  --green:#22c55e;--green2:#16a34a;
-  --gold:#f59e0b;--text:#e2e8f0;--muted:#8892a4;
+  --green:#22c55e;--gold:#f59e0b;--text:#e2e8f0;--muted:#8892a4;
   --glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.08);
   --radius:14px;
 }
@@ -36,7 +35,8 @@ nav.scrolled{background:rgba(7,13,31,.95);backdrop-filter:blur(24px);border-bott
 #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:80px 20px 60px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,142,247,.18) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(124,58,237,.14) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 10% 70%,rgba(6,182,212,.1) 0%,transparent 50%);pointer-events:none}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
-#particles-canvas{position:absolute;inset:0;pointer-events:none}
+/* Canvas fills entire hero — key fix */
+#particles-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block}
 
 .hero-avatar-wrap{position:relative;z-index:2;margin-bottom:28px}
 .hero-avatar{width:130px;height:130px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;display:block;animation:avatarFloat 4s ease-in-out infinite}
@@ -45,8 +45,7 @@ nav.scrolled{background:rgba(7,13,31,.95);backdrop-filter:blur(24px);border-bott
 @keyframes avatarFloat{0%,100%{transform:translateY(0);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(79,142,247,.2)}50%{transform:translateY(-10px);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 50px rgba(79,142,247,.35)}}
 @keyframes ringPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
 
-/* GREEN badge */
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:var(--green);padding:6px 18px;border-radius:20px;font-size:.78em;font-weight:700;letter-spacing:.8px;margin-bottom:20px;text-transform:uppercase;position:relative;z-index:2;overflow:hidden}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.38);color:var(--green);padding:6px 18px;border-radius:20px;font-size:.78em;font-weight:700;letter-spacing:.8px;margin-bottom:20px;text-transform:uppercase;position:relative;z-index:2;overflow:hidden}
 .hero-badge::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:shimmer 3.5s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
 .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
@@ -62,12 +61,14 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 
 .hero-location{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-size:.9em;margin-bottom:36px;position:relative;z-index:2}
 .hero-location i{color:var(--teal)}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2;margin-bottom:52px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.9em;font-weight:600;text-decoration:none;transition:.25s;border:1px solid transparent}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2;margin-bottom:52px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:10px;font-size:.875em;font-weight:600;text-decoration:none;transition:.25s;border:1px solid transparent}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 20px rgba(79,142,247,.3)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(79,142,247,.45)}
 .btn-ghost{background:var(--glass);border-color:var(--glass-border);color:var(--text)}
 .btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
+.btn-linkedin{background:rgba(10,102,194,.15);border-color:rgba(10,102,194,.4);color:#70a9e2}
+.btn-linkedin:hover{background:rgba(10,102,194,.28);transform:translateY(-3px);border-color:rgba(10,102,194,.7)}
 
 .hero-stats{display:flex;gap:44px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
 .stat{text-align:center}
@@ -88,33 +89,28 @@ section{padding:90px 0}
 .section-title span{background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .section-desc{color:var(--muted);font-size:.95em;max-width:540px;margin:0 auto}
 
-/* ── HORIZONTAL CARDS (Experience & Education) ── */
-/* Full-width card: large image left, full content right — no wasted space */
-.hcard-list{display:flex;flex-direction:column;gap:24px}
+/* ── HORIZONTAL CARDS ── */
+.hcard-list{display:flex;flex-direction:column;gap:22px}
 .hcard{display:grid;grid-template-columns:260px 1fr;background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:.35s;position:relative}
 .hcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),var(--teal));opacity:0;transition:.35s}
 .hcard:hover{background:rgba(255,255,255,.06);border-color:rgba(79,142,247,.3);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,.3)}
 .hcard:hover::before{opacity:1}
-
-.hcard-img{width:260px;height:100%;min-height:200px;overflow:hidden;flex-shrink:0;background:var(--navy3);position:relative}
+.hcard-img{width:260px;overflow:hidden;flex-shrink:0;background:var(--navy3);position:relative;min-height:210px}
 .hcard-img img{width:100%;height:100%;object-fit:cover;object-position:center;transition:.4s;display:block}
 .hcard:hover .hcard-img img{transform:scale(1.04)}
-/* Fallback gradient when image fails */
-.hcard-img::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.15));opacity:0;transition:.3s;pointer-events:none}
-
-.hcard-body{padding:28px 32px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.hcard-body{padding:26px 30px;display:flex;flex-direction:column;gap:9px;min-width:0}
 .hcard-role{font-size:1.2em;font-weight:800;color:#fff;line-height:1.2}
-.hcard-org{font-size:.9em;color:var(--accent);font-weight:600}
-.hcard-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:.82em;color:var(--muted)}
+.hcard-org{font-size:.88em;color:var(--accent);font-weight:600}
+.hcard-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:.81em;color:var(--muted)}
 .hcard-meta span{display:flex;align-items:center;gap:5px}
 .hcard-meta i{color:var(--teal);font-size:.85em}
-.hcard-desc{font-size:.9em;color:var(--muted);line-height:1.65;margin:2px 0}
-.hcard-bullets{list-style:none;display:flex;flex-direction:column;gap:4px}
-.hcard-bullets li{font-size:.855em;color:var(--muted);padding-left:16px;position:relative;line-height:1.55;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:4px}
+.hcard-desc{font-size:.88em;color:var(--muted);line-height:1.65;margin:2px 0}
+.hcard-bullets{list-style:none;display:flex;flex-direction:column;gap:3px}
+.hcard-bullets li{font-size:.85em;color:var(--muted);padding-left:16px;position:relative;line-height:1.55;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:4px}
 .hcard-bullets li:last-child{border-bottom:none}
 .hcard-bullets li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.8em;top:3px}
-.hcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.hcard-tag{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.2);color:var(--accent);padding:3px 10px;border-radius:12px;font-size:.75em;font-weight:600;transition:.2s}
+.hcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.hcard-tag{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.2);color:var(--accent);padding:3px 10px;border-radius:12px;font-size:.74em;font-weight:600;transition:.2s}
 .hcard:hover .hcard-tag{background:rgba(79,142,247,.2)}
 
 /* ── SKILLS ── */
@@ -152,14 +148,9 @@ section{padding:90px 0}
 
 /* ── ABOUT ── */
 #about{background:var(--navy)}
-.about-inner{display:grid;grid-template-columns:1fr 420px;gap:52px;align-items:start}
-.about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.75}
+.about-inner{display:grid;grid-template-columns:1fr 400px;gap:52px;align-items:start}
+.about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.78}
 .about-text p strong{color:var(--text)}
-.about-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.about-list li{display:flex;gap:12px;align-items:flex-start;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:13px 16px;font-size:.9em;transition:.2s}
-.about-list li:hover{background:rgba(255,255,255,.07);border-color:rgba(79,142,247,.25)}
-.about-list li i{color:var(--accent);margin-top:2px;flex-shrink:0}
-.about-right{display:flex;flex-direction:column;gap:20px}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .about-stat{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px 16px;text-align:center;transition:.35s;position:relative;overflow:hidden}
 .about-stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));transform:scaleX(0);transition:.35s;transform-origin:left}
@@ -167,24 +158,28 @@ section{padding:90px 0}
 .about-stat:hover::after{transform:scaleX(1)}
 .about-stat-num{font-size:2em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
 .about-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
-.pub-section h3{font-size:.85em;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.pub-section h3::after{content:'';flex:1;height:1px;background:var(--glass-border)}
-.pub-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:14px 18px;margin-bottom:10px;transition:.25s;border-left:3px solid var(--accent)}
-.pub-card:hover{background:rgba(255,255,255,.06);transform:translateX(4px)}
-.pub-title{font-size:.86em;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.45}
-.pub-journal{font-size:.76em;color:var(--teal)}
 
-/* ── AWARDS ── */
+/* ── AWARDS with images ── */
 #awards{background:var(--navy2)}
-.awards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.award-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:26px;display:flex;flex-direction:column;gap:11px;transition:.35s;position:relative;overflow:hidden}
-.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal))}
+.awards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.award-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);display:flex;flex-direction:column;transition:.35s;position:relative;overflow:hidden}
+.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal));z-index:1}
 .award-card:hover{background:rgba(255,255,255,.06);transform:translateY(-5px);box-shadow:0 20px 56px rgba(0,0,0,.35)}
-.award-icon{font-size:1.9em;line-height:1}
-.award-title{font-size:.95em;font-weight:700;color:#fff;line-height:1.35}
-.award-org{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:.82em;font-weight:600}
-.award-date{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.78em}
-.award-desc{color:var(--muted);font-size:.855em;line-height:1.65;flex:1}
+.award-img{width:100%;height:175px;overflow:hidden;flex-shrink:0;background:var(--navy3)}
+.award-img img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:.4s;display:block}
+.award-card:hover .award-img img{transform:scale(1.05)}
+/* Coloured gradient fallback per card */
+.award-img.c1{background:linear-gradient(135deg,#0d1530,rgba(245,158,11,.25))}
+.award-img.c2{background:linear-gradient(135deg,#0d1530,rgba(79,142,247,.25))}
+.award-img.c3{background:linear-gradient(135deg,#0d1530,rgba(34,197,94,.25))}
+.award-img.c4{background:linear-gradient(135deg,#0d1530,rgba(6,182,212,.25))}
+.award-img.c5{background:linear-gradient(135deg,#0d1530,rgba(124,58,237,.25))}
+.award-body{padding:20px 22px;display:flex;flex-direction:column;gap:9px;flex:1}
+.award-icon{font-size:1.6em;line-height:1}
+.award-title{font-size:.93em;font-weight:700;color:#fff;line-height:1.35}
+.award-org{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:.81em;font-weight:600}
+.award-date{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.77em}
+.award-desc{color:var(--muted);font-size:.845em;line-height:1.65;flex:1}
 
 /* ── FOOTER ── */
 footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:52px 32px 36px;text-align:center}
@@ -203,7 +198,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
   .hcard{grid-template-columns:200px 1fr}
-  .hcard-img{min-height:180px}
+  .hcard-img{min-height:185px}
   .about-inner{grid-template-columns:1fr}
   .awards-grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -245,7 +240,6 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
   <div class="hero-grid"></div>
   <canvas id="particles-canvas"></canvas>
 
-  <!-- GREEN badge -->
   <div class="hero-badge"><span class="badge-dot"></span>Open to Collaboration</div>
 
   <div class="hero-avatar-wrap">
@@ -261,8 +255,10 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
   </div>
   <div class="hero-location"><i class="fas fa-map-marker-alt"></i> Ontario, Canada</div>
 
+  <!-- CTA: Email · LinkedIn · Scholar · HuggingFace -->
   <div class="hero-cta">
     <a href="mailto:mohammadnoorchenarboo@gmail.com" class="btn btn-primary"><i class="fas fa-envelope"></i> Get in Touch</a>
+    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" class="btn btn-linkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
     <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" class="btn btn-ghost"><i class="fas fa-book-open"></i> Publications</a>
     <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" class="btn btn-ghost"><i class="fas fa-robot"></i> HuggingFace</a>
   </div>
@@ -290,27 +286,14 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
     <div class="about-inner fade-up">
       <div class="about-text">
         <p>I'm an AI Researcher and Data Scientist with deep expertise spanning <strong>machine learning, deep learning, biostatistics, and applied AI</strong>. My work sits at the intersection of rigorous statistical methodology and cutting-edge artificial intelligence.</p>
-        <p>I currently pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University while teaching AI/ML courses at Fanshawe College and conducting research at the London Health Sciences Centre.</p>
-        <ul class="about-list">
-          <li><i class="fas fa-brain"></i><span>Expert in <strong>transformer-based architectures</strong>, multimodal fusion, and explainable AI (SHAP, LIME)</span></li>
-          <li><i class="fas fa-flask"></i><span>Experienced in <strong>clinical trial design</strong>, survival analysis, and genomic data analysis</span></li>
-          <li><i class="fas fa-chalkboard-teacher"></i><span>Teaching <strong>graduate-level AI courses</strong> — deep learning, NLP, generative models</span></li>
-          <li><i class="fas fa-award"></i><span>Recipient of the <strong>Danny Ho Graduate Scholarship</strong> ($10,000) at Western University</span></li>
-        </ul>
+        <p>I currently pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University while teaching AI/ML courses at Fanshawe College and conducting research at the London Health Sciences Centre. I am an expert in <strong>transformer-based architectures</strong>, multimodal fusion, and explainable AI (SHAP, LIME), with extensive experience in <strong>clinical trial design</strong>, survival analysis, and genomic data analysis.</p>
+        <p>I teach <strong>graduate-level AI courses</strong> covering deep learning, NLP, and generative models, and am the recipient of the <strong>Danny Ho Graduate Scholarship ($10,000)</strong> at Western University — awarded to only two students annually across the entire Faculty of Engineering.</p>
       </div>
-      <div class="about-right">
-        <div class="about-stats">
-          <div class="about-stat"><div class="about-stat-num">PhD</div><div class="about-stat-label">Computer Engineering<br>Western University</div></div>
-          <div class="about-stat"><div class="about-stat-num">MSc</div><div class="about-stat-label">Biostatistics<br>TUMS</div></div>
-          <div class="about-stat"><div class="about-stat-num">MSc</div><div class="about-stat-label">Industrial Eng.<br>IUST</div></div>
-          <div class="about-stat"><div class="about-stat-num">BSc</div><div class="about-stat-label">Statistics<br>Ferdowsi University</div></div>
-        </div>
-        <div class="pub-section">
-          <h3>Selected Publications</h3>
-          <div class="pub-card"><div class="pub-title">Optimizing Surgical Efficiency: Predicting Case Duration Using Machine Learning</div><div class="pub-journal">Surgical Endoscopy, 2025</div></div>
-          <div class="pub-card"><div class="pub-title">Gene-Based Association Testing of Sarcopenia</div><div class="pub-journal">Journal of Biostatistics and Epidemiology, 2022</div></div>
-          <div class="pub-card"><div class="pub-title">COVID-19 Mortality and Health System Indicators</div><div class="pub-journal">Journal of Biostatistics and Epidemiology, 2020</div></div>
-        </div>
+      <div class="about-stats">
+        <div class="about-stat"><div class="about-stat-num">PhD</div><div class="about-stat-label">Computer Engineering<br>Western University</div></div>
+        <div class="about-stat"><div class="about-stat-num">MSc</div><div class="about-stat-label">Biostatistics<br>TUMS</div></div>
+        <div class="about-stat"><div class="about-stat-num">MSc</div><div class="about-stat-label">Industrial Eng.<br>IUST</div></div>
+        <div class="about-stat"><div class="about-stat-num">BSc</div><div class="about-stat-label">Statistics<br>Ferdowsi University</div></div>
       </div>
     </div>
   </div>
@@ -349,7 +332,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <div class="hcard-role">Data Scientist (Part-Time)</div>
           <div class="hcard-org">London Health Sciences Centre Research Institute (LHSC)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>May 2023 – Present</span></div>
-          <p class="hcard-desc">Developing predictive models using deep learning and transformer architectures for healthcare analytics and operational efficiency.</p>
+          <p class="hcard-desc">Developing predictive models using deep learning and transformer architectures for healthcare analytics.</p>
           <ul class="hcard-bullets">
             <li>BERT &amp; multimodal fusion models to forecast surgical process duration and patient outcomes</li>
             <li>Automated data workflows and integrated model outputs into real-time analytics dashboards</li>
@@ -365,11 +348,11 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <div class="hcard-role">Machine Learning Researcher</div>
           <div class="hcard-org">London Hydro</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>Nov 2022 – Apr 2023</span></div>
-          <p class="hcard-desc">Built ML models for intelligent grid analytics with focus on anomaly detection and explainability on large-scale time-series data.</p>
+          <p class="hcard-desc">ML models for intelligent grid analytics with focus on anomaly detection and explainability on large-scale time-series data.</p>
           <ul class="hcard-bullets">
             <li>Anomaly detection and forecasting models for large-scale energy grid time-series</li>
-            <li>Explainability and fairness methods to interpret deep models — AI transparency and accountability</li>
-            <li>Designed and automated data processing pipelines; contributed to peer-reviewed grid research</li>
+            <li>Explainability and fairness methods for deep model transparency and accountability</li>
+            <li>Automated data processing pipelines; contributed to peer-reviewed grid research</li>
           </ul>
           <div class="hcard-tags"><span class="hcard-tag">Anomaly Detection</span><span class="hcard-tag">Time Series</span><span class="hcard-tag">Fairness AI</span><span class="hcard-tag">Energy</span></div>
         </div>
@@ -381,7 +364,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <div class="hcard-role">Teaching Assistant (TA)</div>
           <div class="hcard-org">Western University</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>2022 – Ongoing</span></div>
-          <p class="hcard-desc">Supporting diverse undergraduate and graduate courses in software engineering, data science, and machine learning.</p>
+          <p class="hcard-desc">Supporting undergraduate and graduate courses in software engineering, data science, and machine learning.</p>
           <ul class="hcard-bullets">
             <li>DATASCI 3000A: Introduction to Machine Learning <em>(Sep–Dec 2025)</em></li>
             <li>Software Project &amp; Process Management <em>(Sep–Dec 2024)</em></li>
@@ -398,7 +381,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <div class="hcard-role">Computational Data Scientist</div>
           <div class="hcard-org">Endocrinology and Metabolism Research Institute (EMRI)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>Jan 2020 – Aug 2022</span></div>
-          <p class="hcard-desc">Built data pipelines and applied machine learning for large-scale genomic and clinical trial data analysis.</p>
+          <p class="hcard-desc">Built data pipelines and applied ML for large-scale genomic and clinical trial data analysis.</p>
           <ul class="hcard-bullets">
             <li>Data pipelines and QC workflows for large-scale genomic and clinical trial datasets</li>
             <li>Multi-omics ML models integrated into interactive R Shiny applications</li>
@@ -462,7 +445,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <p class="hcard-desc">Focused on AI and healthcare analytics — deep learning, transformers, multimodal fusion, and explainable AI.</p>
           <ul class="hcard-bullets">
             <li>Transformer and multimodal deep learning models for clinical prediction and surgical efficiency</li>
-            <li>Explainable AI techniques (SHAP, LIME, attention) for healthcare model transparency</li>
+            <li>Explainable AI (SHAP, LIME, attention) for healthcare model transparency</li>
             <li>Peer-reviewed publications in collaboration with LHSC clinical partners</li>
             <li>Danny Ho Software Engineering Graduate Scholarship recipient ($10,000) — May 2025</li>
           </ul>
@@ -476,7 +459,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
           <div class="hcard-role">M.Sc. Biostatistics</div>
           <div class="hcard-org">Tehran University of Medical Sciences (TUMS)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>2019 – 2022</span></div>
-          <p class="hcard-desc">Advanced statistical modeling for clinical trials, longitudinal studies, and high-dimensional genomic data analysis.</p>
+          <p class="hcard-desc">Advanced statistical modeling for clinical trials, longitudinal studies, and high-dimensional genomic data.</p>
           <ul class="hcard-bullets">
             <li>Survival analysis, mixed-effects models, and causal inference methods</li>
             <li>Genomic and high-dimensional data analysis using R and Python</li>
@@ -596,7 +579,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
   </div>
 </section>
 
-<!-- AWARDS -->
+<!-- AWARDS — now with images h001–h005 -->
 <section id="awards">
   <div class="container">
     <div class="section-header fade-up">
@@ -605,41 +588,62 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
       <p class="section-desc">Scholarships, invited talks, and peer-review service</p>
     </div>
     <div class="awards-grid">
+
       <div class="award-card fade-up">
-        <div class="award-icon">🏆</div>
-        <div class="award-title">Danny Ho Software Engineering Graduate Scholarship</div>
-        <div class="award-org"><i class="fas fa-university"></i> Faculty of Engineering, Western University</div>
-        <div class="award-date"><i class="fas fa-calendar"></i> May 2025 · $10,000</div>
-        <p class="award-desc">Awarded annually to two graduate students for exceptional academic performance and research excellence. One of only two recipients from the entire Faculty of Engineering.</p>
+        <div class="award-img c1"><img src="images/honors_awards/h001.png" alt="Danny Ho Scholarship" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">🏆</div>
+          <div class="award-title">Danny Ho Software Engineering Graduate Scholarship</div>
+          <div class="award-org"><i class="fas fa-university"></i> Faculty of Engineering, Western University</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> May 2025 · $10,000</div>
+          <p class="award-desc">Awarded annually to two graduate students for exceptional academic performance and research excellence. One of only two recipients from the entire Faculty of Engineering.</p>
+        </div>
       </div>
+
       <div class="award-card fade-up">
-        <div class="award-icon">🎤</div>
-        <div class="award-title">Invited Speaker &amp; Panel Specialist – Google DevFest 2024</div>
-        <div class="award-org"><i class="fab fa-google"></i> GDG London &amp; Western University</div>
-        <div class="award-date"><i class="fas fa-calendar"></i> Feb 2025 · 130+ Attendees</div>
-        <p class="award-desc">Delivered a lecture on Generative Models in Healthcare and joined the AI innovation expert panel at the world's largest developer conference series (Google DevFest).</p>
+        <div class="award-img c2"><img src="images/honors_awards/h002.png" alt="Google DevFest" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">🎤</div>
+          <div class="award-title">Invited Speaker &amp; Panel Specialist – Google DevFest 2024</div>
+          <div class="award-org"><i class="fab fa-google"></i> GDG London &amp; Western University</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> Feb 2025 · 130+ Attendees</div>
+          <p class="award-desc">Delivered a lecture on Generative Models in Healthcare and joined the AI innovation expert panel at the world's largest developer conference series.</p>
+        </div>
       </div>
+
       <div class="award-card fade-up">
-        <div class="award-icon">🎓</div>
-        <div class="award-title">Invited Speaker – KIDS Rock IT! 2025</div>
-        <div class="award-org"><i class="fas fa-school"></i> School of IT, Fanshawe College</div>
-        <div class="award-date"><i class="fas fa-calendar"></i> Feb 2025 · 220+ Students</div>
-        <p class="award-desc">Delivered an engaging AI lecture inspiring the next generation at this STEM-focused regional conference for 220+ students from regional schools.</p>
+        <div class="award-img c3"><img src="images/honors_awards/h003.png" alt="KIDS Rock IT" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">🎓</div>
+          <div class="award-title">Invited Speaker – KIDS Rock IT! 2025</div>
+          <div class="award-org"><i class="fas fa-school"></i> School of IT, Fanshawe College</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> Feb 2025 · 220+ Students</div>
+          <p class="award-desc">Delivered an engaging AI lecture inspiring the next generation at this STEM-focused regional conference for 220+ students from regional schools.</p>
+        </div>
       </div>
+
       <div class="award-card fade-up">
-        <div class="award-icon">📋</div>
-        <div class="award-title">Peer Reviewer – IEEE Transactions on Industrial Informatics</div>
-        <div class="award-org"><i class="fas fa-microchip"></i> IEEE</div>
-        <div class="award-date"><i class="fas fa-calendar"></i> Dec 2025 – Present</div>
-        <p class="award-desc">Evaluating manuscripts on industrial AI, machine learning, IoT, and intelligent systems for one of the leading journals in industrial informatics.</p>
+        <div class="award-img c4"><img src="images/honors_awards/h004.png" alt="IEEE Reviewer" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">📋</div>
+          <div class="award-title">Peer Reviewer – IEEE Transactions on Industrial Informatics</div>
+          <div class="award-org"><i class="fas fa-microchip"></i> IEEE</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> Dec 2025 – Present</div>
+          <p class="award-desc">Evaluating manuscripts on industrial AI, machine learning, IoT, and intelligent systems for one of the leading journals in industrial informatics.</p>
+        </div>
       </div>
+
       <div class="award-card fade-up">
-        <div class="award-icon">📋</div>
-        <div class="award-title">Peer Reviewer – Journal of Biostatistics and Epidemiology</div>
-        <div class="award-org"><i class="fas fa-heartbeat"></i> Journal of Biostatistics and Epidemiology</div>
-        <div class="award-date"><i class="fas fa-calendar"></i> 2019 – 2022</div>
-        <p class="award-desc">Reviewed manuscripts on biostatistical methods, clinical trial design, survival analysis, and longitudinal studies to ensure scientific rigor and methodological soundness.</p>
+        <div class="award-img c5"><img src="images/honors_awards/h005.png" alt="Biostatistics Reviewer" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">📋</div>
+          <div class="award-title">Peer Reviewer – Journal of Biostatistics and Epidemiology</div>
+          <div class="award-org"><i class="fas fa-heartbeat"></i> Journal of Biostatistics and Epidemiology</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> 2019 – 2022</div>
+          <p class="award-desc">Reviewed manuscripts on biostatistical methods, clinical trial design, survival analysis, and longitudinal studies to ensure scientific rigor.</p>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -661,25 +665,32 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 </footer>
 
 <script>
-/* ── TYPING ANIMATION ── */
+/* ── TYPING ── */
 const phrases=["Data Scientist","AI Researcher","Biostatistician","ML Engineer","University Professor","Deep Learning Expert"];
 let pi=0,ci=0,del=false;
-const el=document.getElementById('typed-text');
+const te=document.getElementById('typed-text');
 function type(){
   const w=phrases[pi];
-  if(!del){el.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(type,1900);return;}}
-  else{el.textContent=w.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(type,420);return;}}
+  if(!del){te.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(type,1900);return;}}
+  else{te.textContent=w.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(type,420);return;}}
   setTimeout(type,del?45:85);
 }
 type();
 
-/* ── PARTICLES ── */
+/* ── PARTICLES — fixed to fill full hero on desktop ── */
 const cvs=document.getElementById('particles-canvas');
 const ctx=cvs.getContext('2d');
+const hero=document.getElementById('hero');
 let W,H,pts=[];
-function resize(){W=cvs.width=cvs.offsetWidth;H=cvs.height=cvs.offsetHeight;}
-function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.6+.4,a:Math.random()};}
-function init(){resize();pts=[];for(let i=0;i<85;i++)pts.push(mkPt());}
+
+function resize(){
+  /* Use hero section's actual rendered dimensions */
+  W=cvs.width=hero.offsetWidth;
+  H=cvs.height=hero.offsetHeight;
+}
+function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,r:Math.random()*1.7+.5,a:Math.random()};}
+function init(){resize();pts=[];for(let i=0;i<100;i++)pts.push(mkPt());}
+
 function draw(){
   ctx.clearRect(0,0,W,H);
   pts.forEach(p=>{
@@ -691,12 +702,14 @@ function draw(){
   });
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<115){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(79,142,247,${.14*(1-d/115)})`;ctx.lineWidth=.55;ctx.stroke();}
+    if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+      ctx.strokeStyle=`rgba(79,142,247,${.14*(1-d/120)})`;ctx.lineWidth=.55;ctx.stroke();}
   }
   requestAnimationFrame(draw);
 }
+/* Init after full layout paint */
+window.addEventListener('load',()=>{init();draw();});
 window.addEventListener('resize',init);
-init();draw();
 
 /* ── NAVBAR ── */
 const nb=document.getElementById('navbar');
@@ -707,18 +720,13 @@ window.addEventListener('scroll',()=>{
   lks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
 });
 
-/* ── SCROLL FADE (with stagger) ── */
+/* ── FADE IN ── */
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('visible'),parseInt(e.target.dataset.delay||0));
-    }
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'),+(e.target.dataset.delay||0));
   });
 },{threshold:.07,rootMargin:'0px 0px -20px 0px'});
-
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
-
-/* Stagger grids */
 document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
   Array.from(grid.children).forEach((c,i)=>{
     c.dataset.delay=i*80;
@@ -726,16 +734,14 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
   });
 });
 
-/* ── COUNTER ANIMATION ── */
+/* ── COUNTERS ── */
 function animCount(el){
-  const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
-  let start=null;
+  const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',start=performance.now();
   (function step(ts){
-    if(!start)start=ts;
     const p=Math.min((ts-start)/1500,1),e=1-Math.pow(1-p,3);
     el.textContent=pre+Math.round(e*t)+suf;
     if(p<1)requestAnimationFrame(step);
-  })(performance.now());
+  })(start);
 }
 const co=new IntersectionObserver(e=>{
   e.forEach(x=>{if(x.isIntersecting&&x.target.dataset.target){animCount(x.target);co.unobserve(x.target);}});
