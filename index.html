@@ -914,12 +914,12 @@ const heroSec=document.getElementById('hero');
 let W,H,pts=[];
 function resize(){W=cvs.width=heroSec.offsetWidth;H=cvs.height=heroSec.offsetHeight;}
 function mkPt(){
-  const big=Math.random()<0.18; /* ~18% chance of a larger "hub" node */
+  const big=Math.random()<0.18;
   return{
     x:Math.random()*W, y:Math.random()*H,
     vx:(Math.random()-.5)*.32, vy:(Math.random()-.5)*.32,
     r:big ? Math.random()*3.5+2.5 : Math.random()*1.6+.6,
-    a:big ? Math.random()*.5+.55 : Math.random()*.4+.25,  /* hubs brighter */
+    a:big ? Math.random()*.3+.65 : Math.random()*.25+.45,  /* lifted floor: regular 0.45–0.70, hubs 0.65–0.95 */
     big
   };
 }
@@ -932,7 +932,7 @@ function draw(){
     if(d<130){
       const alpha=.32*(1-d/130); /* was .14 — now 2.3× stronger */
       ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(79,142,247,${alpha})`;
+      ctx.strokeStyle=`rgba(100,160,255,${alpha})`; /* slightly lighter blue for better visibility */
       ctx.lineWidth= pts[i].big||pts[j].big ? 0.9 : 0.55;
       ctx.stroke();
     }
@@ -981,9 +981,9 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
 /* ── COUNTERS ── */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
-  const dur=t>=50?3800:t>=10?3000:2400; /* longer for bigger numbers */
+  const dur=5000; /* all counters take exactly 5 seconds */
   (function step(ts){
-    const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,4); /* steeper ease = slow start, fast middle, gentle land */
+    const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,4);
     el.textContent=pre+Math.round(e*t)+suf;
     if(p<1)requestAnimationFrame(step);
   })(s);
