@@ -896,7 +896,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 
 <script>
 /* ── TYPING ── */
-const phrases=["Data Scientist","AI Researcher","Biostatistician","College Professor","Deep Learning Expert"];
+const phrases=["Data Scientist","AI Researcher","Biostatistician","ML Engineer","University Professor","Deep Learning Expert"];
 let pi=0,ci=0,del=false;
 const te=document.getElementById('typed-text');
 function type(){
@@ -913,21 +913,43 @@ const ctx=cvs.getContext('2d');
 const heroSec=document.getElementById('hero');
 let W,H,pts=[];
 function resize(){W=cvs.width=heroSec.offsetWidth;H=cvs.height=heroSec.offsetHeight;}
-function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,r:Math.random()*1.7+.5,a:Math.random()};}
-function initPts(){resize();pts=[];for(let i=0;i<100;i++)pts.push(mkPt());}
+function mkPt(){
+  const big=Math.random()<0.18; /* ~18% chance of a larger "hub" node */
+  return{
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.32, vy:(Math.random()-.5)*.32,
+    r:big ? Math.random()*3.5+2.5 : Math.random()*1.6+.6,
+    a:big ? Math.random()*.5+.55 : Math.random()*.4+.25,  /* hubs brighter */
+    big
+  };
+}
+function initPts(){resize();pts=[];for(let i=0;i<110;i++)pts.push(mkPt());}
 function draw(){
   ctx.clearRect(0,0,W,H);
+  /* Draw connections first (behind dots) */
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){
+      const alpha=.32*(1-d/130); /* was .14 — now 2.3× stronger */
+      ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+      ctx.strokeStyle=`rgba(79,142,247,${alpha})`;
+      ctx.lineWidth= pts[i].big||pts[j].big ? 0.9 : 0.55;
+      ctx.stroke();
+    }
+  }
+  /* Draw dots on top */
   pts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(79,142,247,${p.a*.45})`;ctx.fill();
+    ctx.fillStyle=`rgba(79,142,247,${p.a})`;
+    ctx.fill();
+    /* soft glow ring on hub nodes */
+    if(p.big){
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(79,142,247,${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();
+    }
   });
-  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(79,142,247,${.14*(1-d/120)})`;ctx.lineWidth=.55;ctx.stroke();}
-  }
   requestAnimationFrame(draw);
 }
 window.addEventListener('load',()=>{initPts();draw();});
@@ -959,8 +981,9 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
 /* ── COUNTERS ── */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
+  const dur=t>=50?3800:t>=10?3000:2400; /* longer for bigger numbers */
   (function step(ts){
-    const p=Math.min((ts-s)/1500,1),e=1-Math.pow(1-p,3);
+    const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,4); /* steeper ease = slow start, fast middle, gentle land */
     el.textContent=pre+Math.round(e*t)+suf;
     if(p<1)requestAnimationFrame(step);
   })(s);
