@@ -951,7 +951,7 @@ function draw(){
     if(d<130){
       const alpha=.32*(1-d/130); /* was .14 — now 2.3× stronger */
       ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(100,160,255,${alpha})`; /* slightly lighter blue for better visibility */
+      ctx.strokeStyle = `rgba(140,170,220,${alpha * 0.45})`; /* slightly lighter blue for better visibility */
       ctx.lineWidth= pts[i].big||pts[j].big ? 0.9 : 0.55;
       ctx.stroke();
     }
