@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "name": "projects",
+    "folder": "projects",
+    "files": [
+      {
+        "name": "surgical-duration",
+        "html": "projects/surgical-duration.html"
+      }
+    ],
+    "subfolders": []
+  }
+]
