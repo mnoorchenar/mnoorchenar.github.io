@@ -63,16 +63,18 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:.865em;font-weight:600;text-decoration:none;transition:.25s;border:1px solid transparent}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 20px rgba(79,142,247,.3)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(79,142,247,.45)}
-/* LinkedIn – light steel blue */
 .btn-linkedin{background:rgba(10,102,194,.14);border-color:rgba(10,102,194,.38);color:#7eb8f5}
 .btn-linkedin:hover{background:rgba(10,102,194,.26);transform:translateY(-3px);border-color:rgba(10,102,194,.65)}
-/* HuggingFace – muted warm yellow */
 .btn-hf{background:rgba(252,211,77,.1);border-color:rgba(252,211,77,.32);color:#fcd34d}
 .btn-hf:hover{background:rgba(252,211,77,.2);transform:translateY(-3px);border-color:rgba(252,211,77,.6)}
-/* GitHub – soft warm grey */
 .btn-gh{background:rgba(180,180,200,.09);border-color:rgba(180,180,200,.28);color:#b0b8cc}
 .btn-gh:hover{background:rgba(180,180,200,.18);transform:translateY(-3px);border-color:rgba(180,180,200,.5)}
-/* Scholar – default ghost */
+/* Portfolio Site – teal/cyan tone */
+.btn-portfolio{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.32);color:#67e8f9}
+.btn-portfolio:hover{background:rgba(6,182,212,.22);transform:translateY(-3px);border-color:rgba(6,182,212,.6)}
+/* Hands-On AI – purple tone */
+.btn-handsonai{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.32);color:#c4b5fd}
+.btn-handsonai:hover{background:rgba(124,58,237,.22);transform:translateY(-3px);border-color:rgba(124,58,237,.6)}
 .btn-ghost{background:var(--glass);border-color:var(--glass-border);color:var(--text)}
 .btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
 
@@ -273,6 +275,8 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
   <div class="nav-social">
     <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
     <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://mnoorchenar.github.io/" target="_blank" title="Portfolio Site"><i class="fas fa-globe"></i></a>
+    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" title="Hands-On AI Course"><i class="fas fa-chalkboard-teacher"></i></a>
     <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
     <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
     <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
@@ -304,9 +308,10 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
     <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" class="btn btn-ghost"><i class="fas fa-graduation-cap"></i> Scholar</a>
     <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" class="btn btn-hf"><i class="fas fa-robot"></i> HuggingFace</a>
     <a href="https://github.com/mnoorchenar" target="_blank" class="btn btn-gh"><i class="fab fa-github"></i> GitHub</a>
+    <a href="https://mnoorchenar.github.io/" target="_blank" class="btn btn-portfolio"><i class="fas fa-globe"></i> Portfolio</a>
+    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" class="btn btn-handsonai"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
   </div>
 
-  <!-- 6 stats: experience · degrees · roles · scholarship · citations · h-index -->
   <div class="hero-stats">
     <div class="stat"><div class="stat-num" data-target="10" data-suffix="+">0</div><div class="stat-label">Years Experience</div></div>
     <div class="stat-divider"></div>
@@ -529,7 +534,6 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
       <p class="section-desc">Peer-reviewed journals, conference proceedings, and preprints — click any paper to expand</p>
     </div>
 
-    <!-- Scholar stats -->
     <div class="pub-stats fade-up">
       <div class="pub-stat-badge">
         <i class="fas fa-quote-left"></i>
@@ -887,6 +891,8 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
       <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i> Email</a>
       <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
       <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://mnoorchenar.github.io/" target="_blank"><i class="fas fa-globe"></i> Portfolio</a>
+      <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
       <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i> Scholar</a>
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i> HuggingFace</a>
     </div>
@@ -919,32 +925,29 @@ function mkPt(){
     x:Math.random()*W, y:Math.random()*H,
     vx:(Math.random()-.5)*.32, vy:(Math.random()-.5)*.32,
     r:big ? Math.random()*3.5+2.5 : Math.random()*1.6+.6,
-    a:big ? Math.random()*.25+.42 : Math.random()*.2+.28,  /* regular 0.28–0.48, hubs 0.42–0.67 */
+    a:big ? Math.random()*.25+.42 : Math.random()*.2+.28,
     big
   };
 }
 function initPts(){resize();pts=[];for(let i=0;i<110;i++)pts.push(mkPt());}
 function draw(){
   ctx.clearRect(0,0,W,H);
-  /* Draw connections first (behind dots) */
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
     if(d<130){
-      const alpha=.20*(1-d/130); /* was .32 — softer connections */
+      const alpha=.20*(1-d/130);
       ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(100,160,255,${alpha})`; /* slightly lighter blue for better visibility */
+      ctx.strokeStyle=`rgba(100,160,255,${alpha})`;
       ctx.lineWidth= pts[i].big||pts[j].big ? 0.9 : 0.55;
       ctx.stroke();
     }
   }
-  /* Draw dots on top */
   pts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fillStyle=`rgba(79,142,247,${p.a})`;
     ctx.fill();
-    /* soft glow ring on hub nodes */
     if(p.big){
       ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);
       ctx.strokeStyle=`rgba(79,142,247,${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();
@@ -981,7 +984,7 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
 /* ── COUNTERS ── */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
-  const dur=5000; /* all counters take exactly 5 seconds */
+  const dur=5000;
   (function step(ts){
     const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,4);
     el.textContent=pre+Math.round(e*t)+suf;
@@ -998,12 +1001,10 @@ function togglePub(header){
   const item=header.parentElement;
   const body=item.querySelector('.pub-body');
   const isOpen=item.classList.contains('open');
-  /* Close all first */
   document.querySelectorAll('.pub-item.open').forEach(i=>{
     i.classList.remove('open');
     i.querySelector('.pub-body').style.maxHeight='0';
   });
-  /* Open clicked if it was closed */
   if(!isOpen){
     item.classList.add('open');
     body.style.maxHeight=body.scrollHeight+'px';
