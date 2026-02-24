@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YOUR PROJECT TITLE | Mohammad Noorchenarboo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+<!-- ★ ONLY TWO LINES NEEDED FOR THEME + SHARED STYLES ★ -->
+<link rel="stylesheet" href="shared.css">
+<script src="shared.js" defer></script>
+
+<style>
+/*
+  Put ONLY page-specific styles here.
+  Theme variables (--accent, --navy, --glass, etc.) are
+  already available from shared.css — just use them freely.
+
+  Example page-specific styles below:
+*/
+
+/* hero gradient unique to this project */
+.hero { padding: 110px 24px 56px; position: relative; overflow: hidden; }
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 55% at 50% -10%,
+    rgba(79,142,247,.16) 0%, transparent 65%);
+}
+
+/* layout */
+.main-layout {
+  max-width: 1100px; margin: 0 auto;
+  padding: 48px 24px;
+  display: grid; grid-template-columns: 1fr 310px; gap: 32px;
+}
+.content-col { display: flex; flex-direction: column; gap: 28px; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* cards */
+.card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 28px; transition: all .25s;
+}
+.card:hover {
+  background: var(--card-hover-bg); border-color: var(--card-hover-border);
+  transform: translateY(-3px);
+}
+.card-title {
+  font-size: 1rem; font-weight: 800; margin-bottom: 16px;
+  color: var(--text); display: flex; align-items: center; gap: 10px;
+}
+.card-title i { color: var(--accent); font-size: .9rem; }
+
+/* sidebar */
+.sidebar-card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 20px;
+}
+.sidebar-card h3 {
+  font-size: .82rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--muted); margin-bottom: 14px;
+}
+.info-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+
+@media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV — copy/paste as-is for every project ═══════ -->
+<nav class="sh-nav">
+  <a href="../index.html" class="sh-nav-logo">MN</a>
+  <div class="sh-nav-links">
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#experience">Experience</a>
+    <a href="../index.html#publications">Publications</a>
+    <a href="../index.html#skills">Skills</a>
+    <a href="index.html" class="active">Projects</a>
+  </div>
+  <div class="sh-nav-right">
+    <div class="sh-nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="toggle-sun">☀️</span>
+      <span class="toggle-moon">🌙</span>
+      <span id="toggleLabel">Light</span>
+    </button>
+  </div>
+</nav>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+
+<!-- YOUR PAGE CONTENT GOES HERE -->
+<section class="hero fade-up">
+  <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1">
+    <div class="breadcrumb" style="font-size:.78rem;color:var(--muted);margin-bottom:18px">
+      <a href="../index.html" style="color:var(--muted)">Home</a>
+      <span style="margin:0 6px;opacity:.4">›</span>
+      <a href="index.html" style="color:var(--muted)">Projects</a>
+      <span style="margin:0 6px;opacity:.4">›</span>
+      YOUR PROJECT NAME
+    </div>
+    <span class="s-tag s-tag-blue">YOUR DOMAIN</span>
+    <h1 style="font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-bottom:12px">
+      Your Project <span class="grad-text">Title Here</span>
+    </h1>
+    <p style="color:var(--muted);max-width:680px;font-size:.95rem">
+      One-sentence description of the project for non-technical readers.
+    </p>
+  </div>
+</section>
+
+<div class="main-layout">
+  <div class="content-col">
+    <div class="card fade-up">
+      <span class="s-tag s-tag-blue">The Problem</span>
+      <h2 class="card-title"><i class="fas fa-question-circle"></i> Section Title</h2>
+      <p style="color:var(--muted);font-size:.92rem;line-height:1.7">Your content here…</p>
+    </div>
+    <!-- Add more .card.fade-up blocks as needed -->
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-card fade-up">
+      <h3>Project Info</h3>
+      <div class="info-row"><span class="info-key">Status</span><span class="info-val">Preprint</span></div>
+      <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Your Domain</span></div>
+      <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+    </div>
+    <!-- Add more sidebar-card blocks as needed -->
+  </div>
+</div>
+
+
+<!-- ═══════ FOOTER — copy/paste as-is for every project ═══════ -->
+<footer class="sh-footer">
+  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
+  <div class="sh-footer-role">Machine Learning Researcher · Healthcare AI · Ontario, Canada</div>
+  <div class="sh-footer-icons">
+    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+    <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+  </div>
+  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo</div>
+</footer>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<!-- Page-specific JS only — theme & fade-up are handled by shared.js -->
+<script>
+  // Your chart inits, interactive demos, etc. go here
+</script>
+
+</body>
+</html>
