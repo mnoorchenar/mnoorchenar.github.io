@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,45 +7,175 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{
-  --navy:#070d1f;--navy2:#0d1530;--navy3:#111d3c;
-  --accent:#4f8ef7;--accent2:#7c3aed;--teal:#06b6d4;
-  --green:#22c55e;--gold:#f59e0b;--text:#e2e8f0;--muted:#8892a4;
-  --glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.08);
-  --radius:14px;
+/* ═══════════════════════════════════════════
+   DARK THEME (default)
+═══════════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --navy:      #070d1f;
+  --navy2:     #0d1530;
+  --navy3:     #111d3c;
+  --body-bg:   #070d1f;
+  --section-alt: #0d1530;
+  --accent:    #4f8ef7;
+  --accent2:   #7c3aed;
+  --teal:      #06b6d4;
+  --green:     #22c55e;
+  --gold:      #f59e0b;
+  --text:      #e2e8f0;
+  --muted:     #8892a4;
+  --glass:     rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --hero-gradient: radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,142,247,.18) 0%,transparent 65%),
+                   radial-gradient(ellipse 50% 40% at 85% 85%,rgba(124,58,237,.14) 0%,transparent 55%),
+                   radial-gradient(ellipse 40% 30% at 10% 70%,rgba(6,182,212,.1) 0%,transparent 50%);
+  --hero-grid-color: rgba(79,142,247,.04);
+  --scrollbar-track: #0d1530;
+  --card-hover-bg: rgba(255,255,255,0.06);
+  --card-hover-border: rgba(79,142,247,0.3);
+  --nav-scrolled-bg: rgba(7,13,31,.95);
+  --shadow-card: 0 16px 50px rgba(0,0,0,.3);
+  --award-shadow: 0 20px 56px rgba(0,0,0,.35);
+  --radius: 14px;
+  --particle-color: rgba(79,142,247,1);
+  --line-color: 100,160,255;
+  --tag-blue-bg:   rgba(79,142,247,.1);
+  --tag-blue-bdr:  rgba(79,142,247,.25);
+  --tag-blue-clr:  #93c5fd;
+  --tag-purple-bg: rgba(124,58,237,.1);
+  --tag-purple-bdr:rgba(124,58,237,.25);
+  --tag-purple-clr:#c4b5fd;
+  --tag-teal-bg:   rgba(6,182,212,.1);
+  --tag-teal-bdr:  rgba(6,182,212,.25);
+  --tag-teal-clr:  #67e8f9;
+  --hcard-body-bg: var(--glass);
+  --skills-gradient: linear-gradient(180deg,var(--section-alt) 0%,var(--navy) 100%);
+  --toggle-bg:   rgba(255,255,255,0.08);
+  --toggle-bdr:  rgba(255,255,255,0.15);
+  --toggle-clr:  #fbbf24;
+  --toggle-icon: "☀️";
+  --footer-bg: var(--navy2);
 }
+
+/* ═══════════════════════════════════════════
+   LIGHT THEME
+═══════════════════════════════════════════ */
+[data-theme="light"] {
+  --navy:      #f0f4ff;
+  --navy2:     #e8edf8;
+  --navy3:     #dce3f4;
+  --body-bg:   #f5f7ff;
+  --section-alt: #e8edf8;
+  --accent:    #2563eb;
+  --accent2:   #6d28d9;
+  --teal:      #0891b2;
+  --green:     #16a34a;
+  --gold:      #d97706;
+  --text:      #0f172a;
+  --muted:     #4b5675;
+  --glass:     rgba(255,255,255,0.75);
+  --glass-border: rgba(37,99,235,0.14);
+  --hero-gradient: radial-gradient(ellipse 80% 60% at 50% -10%,rgba(37,99,235,.12) 0%,transparent 65%),
+                   radial-gradient(ellipse 50% 40% at 85% 85%,rgba(109,40,217,.10) 0%,transparent 55%),
+                   radial-gradient(ellipse 40% 30% at 10% 70%,rgba(8,145,178,.08) 0%,transparent 50%);
+  --hero-grid-color: rgba(37,99,235,.05);
+  --scrollbar-track: #dce3f4;
+  --card-hover-bg: rgba(37,99,235,0.05);
+  --card-hover-border: rgba(37,99,235,0.35);
+  --nav-scrolled-bg: rgba(240,244,255,.95);
+  --shadow-card: 0 8px 32px rgba(30,64,175,.12);
+  --award-shadow: 0 12px 40px rgba(30,64,175,.15);
+  --particle-color: rgba(37,99,235,1);
+  --line-color: 37,99,235;
+  --tag-blue-bg:   rgba(37,99,235,.09);
+  --tag-blue-bdr:  rgba(37,99,235,.22);
+  --tag-blue-clr:  #1d4ed8;
+  --tag-purple-bg: rgba(109,40,217,.09);
+  --tag-purple-bdr:rgba(109,40,217,.22);
+  --tag-purple-clr:#5b21b6;
+  --tag-teal-bg:   rgba(8,145,178,.09);
+  --tag-teal-bdr:  rgba(8,145,178,.22);
+  --tag-teal-clr:  #0e7490;
+  --hcard-body-bg: rgba(255,255,255,0.9);
+  --skills-gradient: linear-gradient(180deg,var(--section-alt) 0%,var(--body-bg) 100%);
+  --toggle-bg:   rgba(37,99,235,0.1);
+  --toggle-bdr:  rgba(37,99,235,0.25);
+  --toggle-clr:  #1d4ed8;
+  --footer-bg: #e0e7f8;
+}
+
+/* ═══════════════════════════════════════════
+   BASE STYLES
+═══════════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--text);line-height:1.6;overflow-x:hidden}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--body-bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  transition: background .35s, color .35s;
+}
 ::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--navy2)}
+::-webkit-scrollbar-track{background:var(--scrollbar-track)}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-toggle{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;
+  background:var(--toggle-bg);
+  border:1.5px solid var(--toggle-bdr);
+  color:var(--toggle-clr);
+  padding:6px 13px;
+  border-radius:20px;
+  font-size:.78em;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+  letter-spacing:.4px;
+  white-space:nowrap;
+  user-select:none;
+}
+.theme-toggle:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(79,142,247,.2);
+}
+.theme-toggle .toggle-sun,
+.theme-toggle .toggle-moon { font-size:1em; line-height:1; }
+[data-theme="dark"]  .toggle-sun  { display:none; }
+[data-theme="dark"]  .toggle-moon { display:inline; }
+[data-theme="light"] .toggle-sun  { display:inline; }
+[data-theme="light"] .toggle-moon { display:none; }
+[data-theme="light"] .theme-toggle { color: var(--toggle-clr); }
 
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:.3s}
-nav.scrolled{background:rgba(7,13,31,.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border)}
-.nav-logo{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+nav.scrolled{background:var(--nav-scrolled-bg);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border)}
+.nav-logo{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
 .nav-links{display:flex;gap:4px}
 .nav-links a{color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:500;transition:.25s;border:1px solid transparent}
-.nav-links a:hover,.nav-links a.active{color:#fff;border-color:var(--glass-border);background:var(--glass)}
+.nav-links a:hover,.nav-links a.active{color:var(--text);border-color:var(--glass-border);background:var(--glass)}
+.nav-right{display:flex;align-items:center;gap:14px}
 .nav-social{display:flex;gap:14px}
 .nav-social a{color:var(--muted);font-size:1.05em;transition:.2s}
 .nav-social a:hover{color:var(--accent)}
 
 /* ── HERO ── */
 #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:80px 20px 60px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,142,247,.18) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(124,58,237,.14) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 10% 70%,rgba(6,182,212,.1) 0%,transparent 50%);pointer-events:none}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-bg{position:absolute;inset:0;background:var(--hero-gradient);pointer-events:none;transition:.5s}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--hero-grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--hero-grid-color) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;transition:.5s}
 #particles-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block}
 .hero-avatar-wrap{position:relative;z-index:2;margin-bottom:28px}
 .hero-avatar{width:130px;height:130px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;display:block;animation:avatarFloat 4s ease-in-out infinite}
 .avatar-ring{position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(79,142,247,.25);animation:ringPulse 3s ease-in-out infinite}
 .avatar-ring2{position:absolute;inset:-24px;border-radius:50%;border:1px solid rgba(6,182,212,.12);animation:ringPulse 3s ease-in-out infinite .7s}
-@keyframes avatarFloat{0%,100%{transform:translateY(0);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(79,142,247,.2)}50%{transform:translateY(-10px);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 50px rgba(79,142,247,.35)}}
+@keyframes avatarFloat{0%,100%{transform:translateY(0);box-shadow:0 20px 60px rgba(0,0,0,.2),0 0 30px rgba(79,142,247,.2)}50%{transform:translateY(-10px);box-shadow:0 30px 80px rgba(0,0,0,.25),0 0 50px rgba(79,142,247,.3)}}
 @keyframes ringPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
 
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.38);color:var(--green);padding:6px 18px;border-radius:20px;font-size:.78em;font-weight:700;letter-spacing:.8px;margin-bottom:20px;text-transform:uppercase;position:relative;z-index:2;overflow:hidden}
-.hero-badge::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:shimmer 3.5s ease-in-out infinite}
+.hero-badge::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimmer 3.5s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
 .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
@@ -64,20 +194,24 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:.865em;font-weight:600;text-decoration:none;transition:.25s;border:1px solid transparent}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 20px rgba(79,142,247,.3)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(79,142,247,.45)}
-.btn-linkedin{background:rgba(10,102,194,.14);border-color:rgba(10,102,194,.38);color:#7eb8f5}
+.btn-linkedin{background:rgba(10,102,194,.14);border-color:rgba(10,102,194,.38);color:#2a78d9}
 .btn-linkedin:hover{background:rgba(10,102,194,.26);transform:translateY(-3px);border-color:rgba(10,102,194,.65)}
-.btn-hf{background:rgba(252,211,77,.1);border-color:rgba(252,211,77,.32);color:#fcd34d}
+.btn-hf{background:rgba(252,211,77,.1);border-color:rgba(252,211,77,.32);color:#c9820a}
 .btn-hf:hover{background:rgba(252,211,77,.2);transform:translateY(-3px);border-color:rgba(252,211,77,.6)}
-.btn-gh{background:rgba(180,180,200,.09);border-color:rgba(180,180,200,.28);color:#b0b8cc}
-.btn-gh:hover{background:rgba(180,180,200,.18);transform:translateY(-3px);border-color:rgba(180,180,200,.5)}
-/* Portfolio Site – teal/cyan tone */
-.btn-portfolio{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.32);color:#67e8f9}
+.btn-gh{background:rgba(80,80,100,.09);border-color:rgba(80,80,100,.28);color:var(--muted)}
+.btn-gh:hover{background:rgba(80,80,100,.18);transform:translateY(-3px);border-color:rgba(80,80,100,.5)}
+.btn-portfolio{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.32);color:#0e7490}
 .btn-portfolio:hover{background:rgba(6,182,212,.22);transform:translateY(-3px);border-color:rgba(6,182,212,.6)}
-/* Hands-On AI – purple tone */
-.btn-handsonai{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.32);color:#c4b5fd}
+.btn-handsonai{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.32);color:#6d28d9}
 .btn-handsonai:hover{background:rgba(124,58,237,.22);transform:translateY(-3px);border-color:rgba(124,58,237,.6)}
 .btn-ghost{background:var(--glass);border-color:var(--glass-border);color:var(--text)}
-.btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
+.btn-ghost:hover{background:var(--card-hover-bg);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
+/* Dark mode tonal overrides */
+[data-theme="dark"] .btn-linkedin{color:#7eb8f5}
+[data-theme="dark"] .btn-hf{color:#fcd34d}
+[data-theme="dark"] .btn-gh{color:#b0b8cc}
+[data-theme="dark"] .btn-portfolio{color:#67e8f9}
+[data-theme="dark"] .btn-handsonai{color:#c4b5fd}
 
 /* Hero stats */
 .hero-stats{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
@@ -103,38 +237,37 @@ section{padding:90px 0}
 .hcard-list{display:flex;flex-direction:column;gap:22px}
 .hcard{display:grid;grid-template-columns:260px 1fr;background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:.35s;position:relative}
 .hcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),var(--teal));opacity:0;transition:.35s}
-.hcard:hover{background:rgba(255,255,255,.06);border-color:rgba(79,142,247,.3);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,.3)}
+.hcard:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px);box-shadow:var(--shadow-card)}
 .hcard:hover::before{opacity:1}
 .hcard-img{overflow:hidden;flex-shrink:0;background:var(--navy3);min-height:210px}
 .hcard-img img{width:100%;height:100%;object-fit:cover;object-position:center;transition:.4s;display:block}
 .hcard:hover .hcard-img img{transform:scale(1.04)}
-.hcard-body{padding:26px 30px;display:flex;flex-direction:column;gap:9px;min-width:0}
-.hcard-role{font-size:1.2em;font-weight:800;color:#fff;line-height:1.2}
+.hcard-body{padding:26px 30px;display:flex;flex-direction:column;gap:9px;min-width:0;background:var(--hcard-body-bg);transition:.35s}
+.hcard-role{font-size:1.2em;font-weight:800;color:var(--text);line-height:1.2}
 .hcard-org{font-size:.88em;color:var(--accent);font-weight:600}
 .hcard-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:.81em;color:var(--muted)}
 .hcard-meta span{display:flex;align-items:center;gap:5px}
 .hcard-meta i{color:var(--teal);font-size:.85em}
 .hcard-desc{font-size:.88em;color:var(--muted);line-height:1.65}
 .hcard-bullets{list-style:none;display:flex;flex-direction:column;gap:3px}
-.hcard-bullets li{font-size:.85em;color:var(--muted);padding-left:16px;position:relative;line-height:1.55;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:4px}
+.hcard-bullets li{font-size:.85em;color:var(--muted);padding-left:16px;position:relative;line-height:1.55;border-bottom:1px solid var(--glass-border);padding-bottom:4px}
 .hcard-bullets li:last-child{border-bottom:none}
 .hcard-bullets li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.8em;top:3px}
 .hcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-.hcard-tag{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.2);color:var(--accent);padding:3px 10px;border-radius:12px;font-size:.74em;font-weight:600}
-.hcard:hover .hcard-tag{background:rgba(79,142,247,.2)}
+.hcard-tag{background:var(--tag-blue-bg);border:1px solid var(--tag-blue-bdr);color:var(--accent);padding:3px 10px;border-radius:12px;font-size:.74em;font-weight:600}
+.hcard:hover .hcard-tag{background:rgba(37,99,235,.15)}
 
-/* ── PUBLICATIONS ACCORDION ── */
-#publications{background:var(--navy2)}
+/* ── PUBLICATIONS ── */
+#publications{background:var(--section-alt)}
 .pub-stats{display:flex;gap:20px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
 .pub-stat-badge{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:14px 24px;transition:.3s}
-.pub-stat-badge:hover{background:rgba(255,255,255,.07);transform:translateY(-2px)}
+.pub-stat-badge:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
 .pub-stat-badge i{font-size:1.2em;color:var(--accent)}
 .pub-stat-num{font-size:1.7em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .pub-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-
 .pub-accordion{display:flex;flex-direction:column;gap:10px}
 .pub-item{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:.3s}
-.pub-item:hover{border-color:rgba(79,142,247,.3)}
+.pub-item:hover{border-color:var(--card-hover-border)}
 .pub-item.open{border-color:rgba(79,142,247,.4);background:rgba(79,142,247,.04)}
 .pub-header{display:flex;align-items:flex-start;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;width:100%}
 .pub-header:hover .pub-toggle i{color:var(--accent)}
@@ -144,14 +277,16 @@ section{padding:90px 0}
 .pub-journal-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pub-journal-name{font-size:.8em;color:var(--teal);font-weight:500}
 .pub-type-badge{font-size:.72em;padding:2px 8px;border-radius:6px;font-weight:600}
-.pub-type-badge.journal{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
-.pub-type-badge.conference{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
-.pub-type-badge.preprint{background:rgba(124,58,237,.12);color:#c4b5fd;border:1px solid rgba(124,58,237,.25)}
+.pub-type-badge.journal{background:rgba(34,197,94,.12);color:#16a34a;border:1px solid rgba(34,197,94,.25)}
+.pub-type-badge.conference{background:rgba(245,158,11,.12);color:#c4700a;border:1px solid rgba(245,158,11,.25)}
+.pub-type-badge.preprint{background:rgba(124,58,237,.12);color:#6d28d9;border:1px solid rgba(124,58,237,.25)}
+[data-theme="dark"] .pub-type-badge.journal{color:#4ade80}
+[data-theme="dark"] .pub-type-badge.conference{color:#fbbf24}
+[data-theme="dark"] .pub-type-badge.preprint{color:#c4b5fd}
 .pub-toggle{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border-radius:8px;transition:.3s;margin-top:2px}
 .pub-toggle i{color:var(--muted);font-size:.85em;transition:.3s}
 .pub-item.open .pub-toggle{background:rgba(79,142,247,.15)}
 .pub-item.open .pub-toggle i{color:var(--accent);transform:rotate(180deg)}
-
 .pub-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
 .pub-body-inner{padding:0 22px 18px 22px;padding-left:56px;border-top:1px solid var(--glass-border)}
 .pub-authors{font-size:.84em;color:var(--muted);line-height:1.6;margin-top:12px;margin-bottom:8px}
@@ -163,80 +298,81 @@ section{padding:90px 0}
 .pub-link:hover{background:rgba(79,142,247,.2);transform:translateY(-1px)}
 
 /* ── SKILLS ── */
-#skills{background:linear-gradient(180deg,var(--navy) 0%,var(--navy2) 100%)}
+#skills{background:var(--skills-gradient)}
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:52px}
 .skill-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:26px;transition:.35s;position:relative;overflow:hidden}
 .skill-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));transform:scaleX(0);transition:.35s;transform-origin:left}
-.skill-card:hover{background:rgba(255,255,255,.06);border-color:rgba(79,142,247,.3);transform:translateY(-4px)}
+.skill-card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-4px)}
 .skill-card:hover::after{transform:scaleX(1)}
 .skill-card-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
 .skill-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1em;transition:.3s}
 .skill-icon.blue{background:rgba(79,142,247,.15);color:var(--accent)}
-.skill-icon.purple{background:rgba(124,58,237,.15);color:#a78bfa}
+.skill-icon.purple{background:rgba(124,58,237,.15);color:var(--accent2)}
 .skill-icon.teal{background:rgba(6,182,212,.15);color:var(--teal)}
 .skill-icon.gold{background:rgba(245,158,11,.15);color:var(--gold)}
-.skill-icon.green{background:rgba(34,197,94,.15);color:#4ade80}
+.skill-icon.green{background:rgba(34,197,94,.15);color:var(--green)}
 .skill-card:hover .skill-icon{transform:scale(1.12) rotate(5deg)}
-.skill-card h3{font-size:.95em;font-weight:700;color:#fff}
+.skill-card h3{font-size:.95em;font-weight:700;color:var(--text)}
 .skill-list{list-style:none}
 .skill-list li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--glass-border);font-size:.86em}
 .skill-list li:last-child{border-bottom:none}
 .skill-name{color:var(--text);font-weight:500}
 .skill-years{color:var(--muted);font-size:.78em;background:rgba(255,255,255,.05);padding:2px 8px;border-radius:8px}
+[data-theme="light"] .skill-years{background:rgba(37,99,235,.07)}
 .expertise-grid{display:flex;flex-direction:column;gap:26px}
 .exp-group h3{font-size:.88em;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .exp-group h3::after{content:'';flex:1;height:1px;background:var(--glass-border)}
 .tag-cloud{display:flex;flex-wrap:wrap;gap:10px}
 .tag{padding:8px 16px;border-radius:20px;font-size:.875em;font-weight:500;transition:.25s;cursor:default;border:1px solid}
-.tag.blue{background:rgba(79,142,247,.1);border-color:rgba(79,142,247,.25);color:#93c5fd}
-.tag.blue:hover{background:rgba(79,142,247,.2);transform:translateY(-3px)}
-.tag.purple{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.25);color:#c4b5fd}
-.tag.purple:hover{background:rgba(124,58,237,.2);transform:translateY(-3px)}
-.tag.teal{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.25);color:#67e8f9}
-.tag.teal:hover{background:rgba(6,182,212,.2);transform:translateY(-3px)}
+.tag.blue{background:var(--tag-blue-bg);border-color:var(--tag-blue-bdr);color:var(--tag-blue-clr)}
+.tag.blue:hover{background:rgba(37,99,235,.2);transform:translateY(-3px)}
+.tag.purple{background:var(--tag-purple-bg);border-color:var(--tag-purple-bdr);color:var(--tag-purple-clr)}
+.tag.purple:hover{background:rgba(109,40,217,.2);transform:translateY(-3px)}
+.tag.teal{background:var(--tag-teal-bg);border-color:var(--tag-teal-bdr);color:var(--tag-teal-clr)}
+.tag.teal:hover{background:rgba(8,145,178,.2);transform:translateY(-3px)}
 
 /* ── ABOUT ── */
-#about{background:var(--navy)}
+#about{background:var(--body-bg)}
 .about-inner{display:grid;grid-template-columns:1fr 400px;gap:52px;align-items:start}
 .about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.78}
 .about-text p strong{color:var(--text)}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .about-stat{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px 16px;text-align:center;transition:.35s;position:relative;overflow:hidden}
 .about-stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));transform:scaleX(0);transition:.35s;transform-origin:left}
-.about-stat:hover{background:rgba(255,255,255,.07);transform:translateY(-3px)}
+.about-stat:hover{background:var(--card-hover-bg);transform:translateY(-3px)}
 .about-stat:hover::after{transform:scaleX(1)}
 .about-stat-num{font-size:2em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
 .about-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
 
 /* ── AWARDS ── */
-#awards{background:var(--navy)}
+#awards{background:var(--body-bg)}
 .awards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .award-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);display:flex;flex-direction:column;transition:.35s;position:relative;overflow:hidden}
 .award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal));z-index:1}
-.award-card:hover{background:rgba(255,255,255,.06);transform:translateY(-5px);box-shadow:0 20px 56px rgba(0,0,0,.35)}
+.award-card:hover{background:var(--card-hover-bg);transform:translateY(-5px);box-shadow:var(--award-shadow)}
 .award-img{width:100%;height:175px;overflow:hidden;background:var(--navy3)}
 .award-img img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:.4s;display:block}
 .award-card:hover .award-img img{transform:scale(1.05)}
-.award-img.c1{background:linear-gradient(135deg,#0d1530,rgba(245,158,11,.25))}
-.award-img.c2{background:linear-gradient(135deg,#0d1530,rgba(79,142,247,.25))}
-.award-img.c3{background:linear-gradient(135deg,#0d1530,rgba(34,197,94,.25))}
-.award-img.c4{background:linear-gradient(135deg,#0d1530,rgba(6,182,212,.25))}
-.award-img.c5{background:linear-gradient(135deg,#0d1530,rgba(124,58,237,.25))}
+.award-img.c1{background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.25))}
+.award-img.c2{background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.25))}
+.award-img.c3{background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.25))}
+.award-img.c4{background:linear-gradient(135deg,var(--navy3),rgba(6,182,212,.25))}
+.award-img.c5{background:linear-gradient(135deg,var(--navy3),rgba(124,58,237,.25))}
 .award-body{padding:20px 22px;display:flex;flex-direction:column;gap:9px;flex:1}
 .award-icon{font-size:1.6em;line-height:1}
-.award-title{font-size:.93em;font-weight:700;color:#fff;line-height:1.35}
+.award-title{font-size:.93em;font-weight:700;color:var(--text);line-height:1.35}
 .award-org{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:.81em;font-weight:600}
 .award-date{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.77em}
 .award-desc{color:var(--muted);font-size:.845em;line-height:1.65;flex:1}
 
 /* ── FOOTER ── */
-footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:52px 32px 36px;text-align:center}
+footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padding:52px 32px 36px;text-align:center;transition:.35s}
 .footer-inner{max-width:640px;margin:0 auto}
 .footer-name{font-size:1.5em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
 .footer-role{color:var(--muted);margin-bottom:28px;font-size:.88em}
 .footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:28px}
 .footer-links a{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);text-decoration:none;padding:8px 16px;border-radius:20px;font-size:.83em;transition:.2s}
-.footer-links a:hover{color:var(--accent);border-color:rgba(79,142,247,.35);transform:translateY(-2px)}
+.footer-links a:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
 .footer-copy{color:var(--muted);font-size:.78em}
 
 /* ── ANIMATIONS ── */
@@ -257,6 +393,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
   .hero-stats{gap:18px}.stat-divider{display:none}
   .hero-cta{gap:6px}
   .btn{padding:9px 14px;font-size:.8em}
+  nav{padding:0 16px}
 }
 </style>
 </head>
@@ -264,7 +401,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo" style="text-decoration:none;">MN</a>
+  <a href="#hero" class="nav-logo">MN</a>
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#experience">Experience</a>
@@ -272,15 +409,24 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
     <a href="#publications">Publications</a>
     <a href="#skills">Skills</a>
     <a href="#awards">Honors</a>
+    <a href="projects/index.html">Projects</a>
   </div>
-  <div class="nav-social">
-    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-    <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="https://mnoorchenar.github.io/" target="_blank" title="Portfolio Site"><i class="fas fa-globe"></i></a>
-    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" title="Hands-On AI Course"><i class="fas fa-chalkboard-teacher"></i></a>
-    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-    <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://mnoorchenar.github.io/" target="_blank" title="Portfolio Site"><i class="fas fa-globe"></i></a>
+      <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" title="Hands-On AI Course"><i class="fas fa-chalkboard-teacher"></i></a>
+      <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+    <!-- ★ THEME TOGGLE BUTTON ★ -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
+      <span class="toggle-sun">☀️</span>
+      <span class="toggle-moon">🌙</span>
+      <span id="toggleLabel">Light</span>
+    </button>
   </div>
 </nav>
 
@@ -354,7 +500,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 </section>
 
 <!-- EXPERIENCE -->
-<section id="experience" style="background:var(--navy2)">
+<section id="experience" style="background:var(--section-alt)">
   <div class="container">
     <div class="section-header fade-up">
       <div class="section-tag"><i class="fas fa-briefcase"></i> Career</div>
@@ -363,7 +509,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
     </div>
     <div class="hcard-list">
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w001.png" alt="Fanshawe" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(79,142,247,.2))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w001.png" alt="Fanshawe" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(79,142,247,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Professor</div><div class="hcard-org">Fanshawe College</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>May 2024 – Present</span></div>
@@ -378,7 +524,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w002.png" alt="LHSC" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(6,182,212,.2))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w002.png" alt="LHSC" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(6,182,212,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Data Scientist (Part-Time)</div><div class="hcard-org">London Health Sciences Centre Research Institute (LHSC)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>May 2023 – Present</span></div>
@@ -392,7 +538,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w003.png" alt="London Hydro" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(245,158,11,.2))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w003.png" alt="London Hydro" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(245,158,11,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Machine Learning Researcher</div><div class="hcard-org">London Hydro</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>Nov 2022 – Apr 2023</span></div>
@@ -406,7 +552,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w004.png" alt="Western" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(124,58,237,.2))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w004.png" alt="Western" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(124,58,237,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Teaching Assistant (TA)</div><div class="hcard-org">Western University</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, ON, Canada</span><span><i class="fas fa-calendar"></i>2022 – Ongoing</span></div>
@@ -421,7 +567,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w005.png" alt="EMRI" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(34,197,94,.2))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w005.png" alt="EMRI" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(34,197,94,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Computational Data Scientist</div><div class="hcard-org">Endocrinology and Metabolism Research Institute (EMRI)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>Jan 2020 – Aug 2022</span></div>
@@ -435,7 +581,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w006.png" alt="Moshaveran" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(79,142,247,.15))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w006.png" alt="Moshaveran" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(79,142,247,.15))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Statistical Data Analyst</div><div class="hcard-org">Moshaveran Iran Research Institute</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>Jan 2014 – Feb 2018</span></div>
@@ -449,7 +595,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/work_experience/w007.png" alt="Royan" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(6,182,212,.15))'"></div>
+        <div class="hcard-img"><img src="images/work_experience/w007.png" alt="Royan" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(6,182,212,.15))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Statistical Programmer</div><div class="hcard-org">Royan Stem Cell Technology Institute, Cord Blood Bank</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>Mar 2013 – Aug 2014</span></div>
@@ -475,7 +621,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
     </div>
     <div class="hcard-list">
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/education/western.png" alt="Western University" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(79,142,247,.2))'"></div>
+        <div class="hcard-img"><img src="images/education/western.png" alt="Western University" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(79,142,247,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">Ph.D. Computer Engineering</div><div class="hcard-org">Western University</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>London, Ontario, Canada</span><span><i class="fas fa-calendar"></i>2022 – 2026 (Expected)</span></div>
@@ -490,7 +636,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/education/tums.png" alt="TUMS" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(6,182,212,.2))'"></div>
+        <div class="hcard-img"><img src="images/education/tums.png" alt="TUMS" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(6,182,212,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">M.Sc. Biostatistics</div><div class="hcard-org">Tehran University of Medical Sciences (TUMS)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>2019 – 2022</span></div>
@@ -503,7 +649,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/education/iust.png" alt="IUST" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(245,158,11,.2))'"></div>
+        <div class="hcard-img"><img src="images/education/iust.png" alt="IUST" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(245,158,11,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">M.Sc. Industrial Engineering</div><div class="hcard-org">Iran University of Science and Technology (IUST)</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Tehran, Iran</span><span><i class="fas fa-calendar"></i>2013 – 2015</span></div>
@@ -513,7 +659,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
         </div>
       </div>
       <div class="hcard fade-up">
-        <div class="hcard-img"><img src="images/education/ferdowsi.png" alt="Ferdowsi" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,#0d1530,rgba(124,58,237,.2))'"></div>
+        <div class="hcard-img"><img src="images/education/ferdowsi.png" alt="Ferdowsi" onerror="this.src='';this.parentElement.style.background='linear-gradient(135deg,var(--navy3),rgba(124,58,237,.2))'"></div>
         <div class="hcard-body">
           <div class="hcard-role">B.Sc. Statistics</div><div class="hcard-org">Ferdowsi University of Mashhad</div>
           <div class="hcard-meta"><span><i class="fas fa-map-marker-alt"></i>Mashhad, Iran</span><span><i class="fas fa-calendar"></i>2009 – 2013</span></div>
@@ -534,218 +680,106 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
       <h2 class="section-title">Publications</h2>
       <p class="section-desc">Peer-reviewed journals, conference proceedings, and preprints — click any paper to expand</p>
     </div>
-
     <div class="pub-stats fade-up">
-      <div class="pub-stat-badge">
-        <i class="fas fa-quote-left"></i>
-        <div><div class="pub-stat-num" data-target="61">0</div><div class="pub-stat-label">Citations</div></div>
-      </div>
-      <div class="pub-stat-badge">
-        <i class="fas fa-layer-group"></i>
-        <div><div class="pub-stat-num" data-target="3">0</div><div class="pub-stat-label">h-index</div></div>
-      </div>
-      <div class="pub-stat-badge">
-        <i class="fas fa-file-alt"></i>
-        <div><div class="pub-stat-num" data-target="11">0</div><div class="pub-stat-label">Papers</div></div>
-      </div>
+      <div class="pub-stat-badge"><i class="fas fa-quote-left"></i><div><div class="pub-stat-num" data-target="61">0</div><div class="pub-stat-label">Citations</div></div></div>
+      <div class="pub-stat-badge"><i class="fas fa-layer-group"></i><div><div class="pub-stat-num" data-target="3">0</div><div class="pub-stat-label">h-index</div></div></div>
+      <div class="pub-stat-badge"><i class="fas fa-file-alt"></i><div><div class="pub-stat-num" data-target="11">0</div><div class="pub-stat-label">Papers</div></div></div>
     </div>
-
     <div class="pub-accordion fade-up" id="pubAccordion">
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2026</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">DEPICT: Explainable Energy Forecasting with Pattern Integration and Temporal Attention</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">DEPICT: Explainable Energy Forecasting with Pattern Integration and Temporal Attention</div><div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div>
-            <div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5660227</span><span><i class="fas fa-calendar"></i>2026</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div><div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5660227</span><span><i class="fas fa-calendar"></i>2026</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2025</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Optimizing Surgical Efficiency: Predicting Case Duration of Common General Surgery Procedures Using Machine Learning</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Surgical Endoscopy</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Optimizing Surgical Efficiency: Predicting Case Duration of Common General Surgery Procedures Using Machine Learning</div><div class="pub-journal-row"><span class="pub-journal-name">Surgical Endoscopy</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors">Kwong, M., <strong>Noorchenarboo, M.</strong>, Grolinger, K., Hawel, J., Schlachta, C. M. &amp; Elnahas, A.</div>
-            <div class="pub-details"><span><i class="fas fa-book"></i>Surgical Endoscopy, vol. 39(8), pp. 5227–5234</span><span><i class="fas fa-building"></i>Springer US</span><span><i class="fas fa-calendar"></i>2025</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors">Kwong, M., <strong>Noorchenarboo, M.</strong>, Grolinger, K., Hawel, J., Schlachta, C. M. &amp; Elnahas, A.</div><div class="pub-details"><span><i class="fas fa-book"></i>Surgical Endoscopy, vol. 39(8), pp. 5227–5234</span><span><i class="fas fa-building"></i>Springer US</span><span><i class="fas fa-calendar"></i>2025</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2025</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Explaining Deep Learning-Based Anomaly Detection in Energy Consumption Data by Focusing on Contextually Relevant Data</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Energy and Buildings</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Explaining Deep Learning-Based Anomaly Detection in Energy Consumption Data by Focusing on Contextually Relevant Data</div><div class="pub-journal-row"><span class="pub-journal-name">Energy and Buildings</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div>
-            <div class="pub-details"><span><i class="fas fa-book"></i>Energy and Buildings, vol. 328, p. 115177</span><span><i class="fas fa-building"></i>Elsevier</span><span><i class="fas fa-calendar"></i>2025</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div><div class="pub-details"><span><i class="fas fa-book"></i>Energy and Buildings, vol. 328, p. 115177</span><span><i class="fas fa-building"></i>Elsevier</span><span><i class="fas fa-calendar"></i>2025</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2025</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Benchmarking Text Encoding Strategies in Multimodal Clinical Data for Surgical Case Duration Prediction</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Benchmarking Text Encoding Strategies in Multimodal Clinical Data for Surgical Case Duration Prediction</div><div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Kwong, M., Elnahas, A., Hawel, J., Schlachta, C. M. &amp; Grolinger, K.</div>
-            <div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5489578</span><span><i class="fas fa-calendar"></i>2025</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Kwong, M., Elnahas, A., Hawel, J., Schlachta, C. M. &amp; Grolinger, K.</div><div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5489578</span><span><i class="fas fa-calendar"></i>2025</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2025</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Temporal Deep Explainer: A Model-Agnostic Feature Attribution Approach for Interpretable Time-Series Load Forecasting</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Temporal Deep Explainer: A Model-Agnostic Feature Attribution Approach for Interpretable Time-Series Load Forecasting</div><div class="pub-journal-row"><span class="pub-journal-name">SSRN Preprint</span><span class="pub-type-badge preprint">Preprint</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div>
-            <div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5500798</span><span><i class="fas fa-calendar"></i>2025</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong> &amp; Grolinger, K.</div><div class="pub-details"><span><i class="fas fa-database"></i>SSRN 5500798</span><span><i class="fas fa-calendar"></i>2025</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2024</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">ChebyRegNet: An Unsupervised Deep Learning Technique for Deformable Medical Image Registration</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">IECON 2024 – IEEE Industrial Electronics Society</span><span class="pub-type-badge conference">Conference</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">ChebyRegNet: An Unsupervised Deep Learning Technique for Deformable Medical Image Registration</div><div class="pub-journal-row"><span class="pub-journal-name">IECON 2024 – IEEE Industrial Electronics Society</span><span class="pub-type-badge conference">Conference</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors">Danish, M. U., <strong>Noorchenarboo, M.</strong>, Narayan, A. &amp; Grolinger, K.</div>
-            <div class="pub-details"><span><i class="fas fa-users"></i>50th Annual Conference of the IEEE Industrial Electronics Society</span><span><i class="fas fa-file"></i>pp. 1–8</span><span><i class="fas fa-calendar"></i>2024</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors">Danish, M. U., <strong>Noorchenarboo, M.</strong>, Narayan, A. &amp; Grolinger, K.</div><div class="pub-details"><span><i class="fas fa-users"></i>50th Annual Conference of the IEEE Industrial Electronics Society</span><span><i class="fas fa-file"></i>pp. 1–8</span><span><i class="fas fa-calendar"></i>2024</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2023</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Metabolomics Profile and 10-Year Atherosclerotic Cardiovascular Disease (ASCVD) Risk Score</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Frontiers in Cardiovascular Medicine</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Metabolomics Profile and 10-Year Atherosclerotic Cardiovascular Disease (ASCVD) Risk Score</div><div class="pub-journal-row"><span class="pub-journal-name">Frontiers in Cardiovascular Medicine</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors">Dehghanbanadaki, H., Dodangeh, S., Parhizkar Roudsari, P., Hosseinkhani, S., Khashayar, P., <strong>Noorchenarboo, M.</strong>, et al.</div>
-            <div class="pub-details"><span><i class="fas fa-book"></i>Frontiers in Cardiovascular Medicine, vol. 10, p. 1161761</span><span><i class="fas fa-building"></i>Frontiers Media SA</span><span><i class="fas fa-calendar"></i>2023</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors">Dehghanbanadaki, H., Dodangeh, S., Parhizkar Roudsari, P., Hosseinkhani, S., Khashayar, P., <strong>Noorchenarboo, M.</strong>, et al.</div><div class="pub-details"><span><i class="fas fa-book"></i>Frontiers in Cardiovascular Medicine, vol. 10, p. 1161761</span><span><i class="fas fa-building"></i>Frontiers Media SA</span><span><i class="fas fa-calendar"></i>2023</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2022</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Multivariate and Gene-Based Association Testing of Sarcopenia: Bushehr Elderly Health Program (BEH)</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Journal of Biostatistics and Epidemiology</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Multivariate and Gene-Based Association Testing of Sarcopenia: Bushehr Elderly Health Program (BEH)</div><div class="pub-journal-row"><span class="pub-journal-name">Journal of Biostatistics and Epidemiology</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Akbarzadeh, M., Fahimfar, N., Shafiee, G., Moheimani, H., Khalagi, K., et al.</div>
-            <div class="pub-details"><span><i class="fas fa-building"></i>Tehran University of Medical Sciences (TUMS)</span><span><i class="fas fa-calendar"></i>2022</span></div>
-            <a href="https://jbe.tums.ac.ir/index.php/jbe/article/view/916" target="_blank" class="pub-link"><i class="fas fa-external-link-alt"></i> View Article</a>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Akbarzadeh, M., Fahimfar, N., Shafiee, G., Moheimani, H., Khalagi, K., et al.</div><div class="pub-details"><span><i class="fas fa-building"></i>Tehran University of Medical Sciences (TUMS)</span><span><i class="fas fa-calendar"></i>2022</span></div><a href="https://jbe.tums.ac.ir/index.php/jbe/article/view/916" target="_blank" class="pub-link"><i class="fas fa-external-link-alt"></i> View Article</a></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2021</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Gamification vs. Teach-Back Training on Adherence in Patients After Coronary Artery Bypass Graft Surgery: Randomized Clinical Trial</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Journal of Medical Internet Research</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Gamification vs. Teach-Back Training on Adherence in Patients After Coronary Artery Bypass Graft Surgery: Randomized Clinical Trial</div><div class="pub-journal-row"><span class="pub-journal-name">Journal of Medical Internet Research</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors">Ghorbani, B., Jackson, A. C., <strong>Noorchenarboo, M.</strong>, Mandegar, M. H., Sharifi, F., Mirmoghtadaie, Z. &amp; Bahramnezhad, F.</div>
-            <div class="pub-details"><span><i class="fas fa-book"></i>JMIR, vol. 23(12), e22557</span><span><i class="fas fa-building"></i>JMIR Publications</span><span><i class="fas fa-calendar"></i>2021</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors">Ghorbani, B., Jackson, A. C., <strong>Noorchenarboo, M.</strong>, Mandegar, M. H., Sharifi, F., Mirmoghtadaie, Z. &amp; Bahramnezhad, F.</div><div class="pub-details"><span><i class="fas fa-book"></i>JMIR, vol. 23(12), e22557</span><span><i class="fas fa-building"></i>JMIR Publications</span><span><i class="fas fa-calendar"></i>2021</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2021</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Developing a Diagnostic Decision Support Tool with ML Classification Algorithms to Improve Breast Cancer Screening</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">Cross-Sectional Study</span><span class="pub-type-badge journal">Journal</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Developing a Diagnostic Decision Support Tool with ML Classification Algorithms to Improve Breast Cancer Screening</div><div class="pub-journal-row"><span class="pub-journal-name">Cross-Sectional Study</span><span class="pub-type-badge journal">Journal</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors">Mousavi, S. A., <strong>Noorchenarboo, M.</strong> &amp; Moheimani, H.</div>
-            <div class="pub-details"><span><i class="fas fa-calendar"></i>2021</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors">Mousavi, S. A., <strong>Noorchenarboo, M.</strong> &amp; Moheimani, H.</div><div class="pub-details"><span><i class="fas fa-calendar"></i>2021</span></div></div></div>
       </div>
-
       <div class="pub-item">
         <div class="pub-header" onclick="togglePub(this)">
           <span class="pub-year-badge">2020</span>
-          <div class="pub-meta-wrap">
-            <div class="pub-title-text">Country-Level Socioeconomic and Health System Indicators Explain COVID-19 Mortality Worldwide</div>
-            <div class="pub-journal-row"><span class="pub-journal-name">SSRN</span><span class="pub-type-badge preprint">Preprint</span></div>
-          </div>
+          <div class="pub-meta-wrap"><div class="pub-title-text">Country-Level Socioeconomic and Health System Indicators Explain COVID-19 Mortality Worldwide</div><div class="pub-journal-row"><span class="pub-journal-name">SSRN</span><span class="pub-type-badge preprint">Preprint</span></div></div>
           <div class="pub-toggle"><i class="fas fa-chevron-down"></i></div>
         </div>
-        <div class="pub-body">
-          <div class="pub-body-inner">
-            <div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Mousavi, S. A. &amp; Moheimani, H.</div>
-            <div class="pub-details"><span><i class="fas fa-database"></i>SSRN 3640720</span><span><i class="fas fa-calendar"></i>2020</span></div>
-          </div>
-        </div>
+        <div class="pub-body"><div class="pub-body-inner"><div class="pub-authors"><strong>Noorchenarboo, M.</strong>, Mousavi, S. A. &amp; Moheimani, H.</div><div class="pub-details"><span><i class="fas fa-database"></i>SSRN 3640720</span><span><i class="fas fa-calendar"></i>2020</span></div></div></div>
       </div>
-
     </div>
   </div>
 </section>
 
 <!-- SKILLS -->
-<section id="skills" style="background:linear-gradient(180deg,var(--navy2) 0%,var(--navy) 100%)">
+<section id="skills">
   <div class="container">
     <div class="section-header fade-up">
       <div class="section-tag"><i class="fas fa-cogs"></i> Skills</div>
@@ -821,7 +855,7 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 </section>
 
 <!-- AWARDS -->
-<section id="awards" style="background:var(--navy)">
+<section id="awards" style="background:var(--body-bg)">
   <div class="container">
     <div class="section-header fade-up">
       <div class="section-tag"><i class="fas fa-trophy"></i> Recognition</div>
@@ -902,7 +936,35 @@ footer{background:var(--navy2);border-top:1px solid var(--glass-border);padding:
 </footer>
 
 <script>
-/* ── TYPING ── */
+/* ═══════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════ */
+const html = document.documentElement;
+const toggleBtn = document.getElementById('themeToggle');
+const toggleLabel = document.getElementById('toggleLabel');
+
+// Load saved preference
+const savedTheme = localStorage.getItem('mn-theme') || 'dark';
+html.setAttribute('data-theme', savedTheme);
+updateToggleLabel(savedTheme);
+
+toggleBtn.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('mn-theme', next);
+  updateToggleLabel(next);
+  // Reinit particles with correct color
+  initPts();
+});
+
+function updateToggleLabel(theme) {
+  toggleLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+
+/* ═══════════════════════════════════════════
+   TYPING ANIMATION
+═══════════════════════════════════════════ */
 const phrases=["Data Scientist","AI Researcher","Biostatistician","College Professor","Deep Learning Expert"];
 let pi=0,ci=0,del=false;
 const te=document.getElementById('typed-text');
@@ -914,32 +976,40 @@ function type(){
 }
 type();
 
-/* ── PARTICLES ── */
+/* ═══════════════════════════════════════════
+   PARTICLES
+═══════════════════════════════════════════ */
 const cvs=document.getElementById('particles-canvas');
 const ctx=cvs.getContext('2d');
 const heroSec=document.getElementById('hero');
 let W,H,pts=[];
+
+function getParticleRGB() {
+  return html.getAttribute('data-theme') === 'light' ? '37,99,235' : '79,142,247';
+}
+function getLineRGB() {
+  return html.getAttribute('data-theme') === 'light' ? '37,99,235' : '100,160,255';
+}
+
 function resize(){W=cvs.width=heroSec.offsetWidth;H=cvs.height=heroSec.offsetHeight;}
 function mkPt(){
   const big=Math.random()<0.18;
-  return{
-    x:Math.random()*W, y:Math.random()*H,
-    vx:(Math.random()-.5)*.32, vy:(Math.random()-.5)*.32,
-    r:big ? Math.random()*3.5+2.5 : Math.random()*1.6+.6,
-    a:big ? Math.random()*.25+.42 : Math.random()*.2+.28,
-    big
-  };
+  return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,
+    r:big?Math.random()*3.5+2.5:Math.random()*1.6+.6,
+    a:big?Math.random()*.25+.42:Math.random()*.2+.28,big};
 }
 function initPts(){resize();pts=[];for(let i=0;i<110;i++)pts.push(mkPt());}
 function draw(){
   ctx.clearRect(0,0,W,H);
+  const lineRGB=getLineRGB();
+  const ptRGB=getParticleRGB();
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
     if(d<130){
       const alpha=.20*(1-d/130);
       ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(100,160,255,${alpha})`;
-      ctx.lineWidth= pts[i].big||pts[j].big ? 0.9 : 0.55;
+      ctx.strokeStyle=`rgba(${lineRGB},${alpha})`;
+      ctx.lineWidth=pts[i].big||pts[j].big?0.9:0.55;
       ctx.stroke();
     }
   }
@@ -947,11 +1017,10 @@ function draw(){
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(79,142,247,${p.a})`;
-    ctx.fill();
+    ctx.fillStyle=`rgba(${ptRGB},${p.a})`;ctx.fill();
     if(p.big){
       ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(79,142,247,${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();
+      ctx.strokeStyle=`rgba(${ptRGB},${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();
     }
   });
   requestAnimationFrame(draw);
@@ -959,7 +1028,9 @@ function draw(){
 window.addEventListener('load',()=>{initPts();draw();});
 window.addEventListener('resize',initPts);
 
-/* ── NAVBAR ── */
+/* ═══════════════════════════════════════════
+   NAVBAR SCROLL
+═══════════════════════════════════════════ */
 const nb=document.getElementById('navbar');
 window.addEventListener('scroll',()=>{
   nb.classList.toggle('scrolled',window.scrollY>20);
@@ -968,10 +1039,12 @@ window.addEventListener('scroll',()=>{
   lks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
 });
 
-/* ── FADE IN ── */
+/* ═══════════════════════════════════════════
+   FADE IN ON SCROLL
+═══════════════════════════════════════════ */
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'),+(e.target.dataset.delay||0));
+    if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),+(e.target.dataset.delay||0));
   });
 },{threshold:.07,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
@@ -982,7 +1055,9 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
   });
 });
 
-/* ── COUNTERS ── */
+/* ═══════════════════════════════════════════
+   ANIMATED COUNTERS
+═══════════════════════════════════════════ */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
   const dur=5000;
@@ -997,7 +1072,9 @@ const co=new IntersectionObserver(e=>{
 },{threshold:.5});
 document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
 
-/* ── PUBLICATION ACCORDION ── */
+/* ═══════════════════════════════════════════
+   PUBLICATION ACCORDION
+═══════════════════════════════════════════ */
 function togglePub(header){
   const item=header.parentElement;
   const body=item.querySelector('.pub-body');
@@ -1006,10 +1083,7 @@ function togglePub(header){
     i.classList.remove('open');
     i.querySelector('.pub-body').style.maxHeight='0';
   });
-  if(!isOpen){
-    item.classList.add('open');
-    body.style.maxHeight=body.scrollHeight+'px';
-  }
+  if(!isOpen){item.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
 }
 </script>
 </body>
