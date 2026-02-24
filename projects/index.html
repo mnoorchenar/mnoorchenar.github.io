@@ -7,69 +7,25 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-/* ═══════════════════════════════════════════
-   DARK THEME — exact copy from index.html
-═══════════════════════════════════════════ */
 :root,
 [data-theme="dark"] {
-  --navy:      #070d1f;
-  --navy2:     #0d1530;
-  --navy3:     #111d3c;
-  --body-bg:   #070d1f;
-  --section-alt: #0d1530;
-  --accent:    #4f8ef7;
-  --accent2:   #7c3aed;
-  --teal:      #06b6d4;
-  --green:     #22c55e;
-  --gold:      #f59e0b;
-  --text:      #e2e8f0;
-  --muted:     #8892a4;
-  --glass:     rgba(255,255,255,0.04);
-  --glass-border: rgba(255,255,255,0.08);
-  --card-hover-bg:  rgba(255,255,255,0.06);
-  --card-hover-border: rgba(79,142,247,0.3);
-  --nav-scrolled-bg: rgba(7,13,31,.95);
-  --shadow-card: 0 16px 50px rgba(0,0,0,.3);
-  --scrollbar-track: #0d1530;
-  --toggle-bg:  rgba(255,255,255,0.08);
-  --toggle-bdr: rgba(255,255,255,0.15);
-  --toggle-clr: #fbbf24;
-  --footer-bg:  #0d1530;
-  --radius: 14px;
+  --navy:#070d1f;--navy2:#0d1530;--navy3:#111d3c;--body-bg:#070d1f;--section-alt:#0d1530;
+  --accent:#4f8ef7;--accent2:#7c3aed;--teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;
+  --text:#e2e8f0;--muted:#8892a4;--glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.08);
+  --card-hover-bg:rgba(255,255,255,0.06);--card-hover-border:rgba(79,142,247,0.3);
+  --nav-scrolled-bg:rgba(7,13,31,.95);--shadow-card:0 16px 50px rgba(0,0,0,.3);
+  --scrollbar-track:#0d1530;--toggle-bg:rgba(255,255,255,0.08);--toggle-bdr:rgba(255,255,255,0.15);
+  --toggle-clr:#fbbf24;--footer-bg:#0d1530;--radius:14px;
 }
-
-/* ═══════════════════════════════════════════
-   LIGHT THEME — exact copy from index.html
-═══════════════════════════════════════════ */
 [data-theme="light"] {
-  --navy:      #f0f4ff;
-  --navy2:     #e8edf8;
-  --navy3:     #dce3f4;
-  --body-bg:   #f5f7ff;
-  --section-alt: #e8edf8;
-  --accent:    #2563eb;
-  --accent2:   #6d28d9;
-  --teal:      #0891b2;
-  --green:     #16a34a;
-  --gold:      #d97706;
-  --text:      #0f172a;
-  --muted:     #4b5675;
-  --glass:     rgba(255,255,255,0.75);
-  --glass-border: rgba(37,99,235,0.14);
-  --card-hover-bg:  rgba(37,99,235,0.05);
-  --card-hover-border: rgba(37,99,235,0.35);
-  --nav-scrolled-bg: rgba(240,244,255,.95);
-  --shadow-card: 0 8px 32px rgba(30,64,175,.12);
-  --scrollbar-track: #dce3f4;
-  --toggle-bg:  rgba(37,99,235,0.1);
-  --toggle-bdr: rgba(37,99,235,0.25);
-  --toggle-clr: #1d4ed8;
-  --footer-bg:  #e0e7f8;
+  --navy:#f0f4ff;--navy2:#e8edf8;--navy3:#dce3f4;--body-bg:#f5f7ff;--section-alt:#e8edf8;
+  --accent:#2563eb;--accent2:#6d28d9;--teal:#0891b2;--green:#16a34a;--gold:#d97706;
+  --text:#0f172a;--muted:#4b5675;--glass:rgba(255,255,255,0.75);--glass-border:rgba(37,99,235,0.14);
+  --card-hover-bg:rgba(37,99,235,0.05);--card-hover-border:rgba(37,99,235,0.35);
+  --nav-scrolled-bg:rgba(240,244,255,.95);--shadow-card:0 8px 32px rgba(30,64,175,.12);
+  --scrollbar-track:#dce3f4;--toggle-bg:rgba(37,99,235,0.1);--toggle-bdr:rgba(37,99,235,0.25);
+  --toggle-clr:#1d4ed8;--footer-bg:#e0e7f8;
 }
-
-/* ═══════════════════════════════════════════
-   BASE — mirrors index.html
-═══════════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--body-bg);color:var(--text);line-height:1.6;overflow-x:hidden;transition:background .35s,color .35s}
@@ -77,24 +33,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--body-bg);color
 ::-webkit-scrollbar-track{background:var(--scrollbar-track)}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
 
-/* ── THEME TOGGLE — exact copy from index.html ── */
-.theme-toggle{
-  display:flex;align-items:center;justify-content:center;
-  gap:6px;background:var(--toggle-bg);border:1.5px solid var(--toggle-bdr);
-  color:var(--toggle-clr);padding:6px 13px;border-radius:20px;
-  font-size:.78em;font-weight:700;cursor:pointer;transition:.25s;
-  letter-spacing:.4px;white-space:nowrap;user-select:none;
-}
+/* THEME TOGGLE */
+.theme-toggle{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--toggle-bg);border:1.5px solid var(--toggle-bdr);color:var(--toggle-clr);padding:6px 13px;border-radius:20px;font-size:.78em;font-weight:700;cursor:pointer;transition:.25s;letter-spacing:.4px;white-space:nowrap;user-select:none}
 .theme-toggle:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(79,142,247,.2)}
-.theme-toggle .toggle-sun,
-.theme-toggle .toggle-moon{font-size:1em;line-height:1}
-[data-theme="dark"]  .toggle-sun {display:none}
-[data-theme="dark"]  .toggle-moon{display:inline}
-[data-theme="light"] .toggle-sun {display:inline}
+.theme-toggle .toggle-sun,.theme-toggle .toggle-moon{font-size:1em;line-height:1}
+[data-theme="dark"] .toggle-sun{display:none}
+[data-theme="dark"] .toggle-moon{display:inline}
+[data-theme="light"] .toggle-sun{display:inline}
 [data-theme="light"] .toggle-moon{display:none}
 [data-theme="light"] .theme-toggle{color:var(--toggle-clr)}
 
-/* ── NAV — exact copy from index.html ── */
+/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:var(--nav-scrolled-bg);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border);transition:.3s}
 .nav-logo{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
 .nav-links{display:flex;gap:4px}
@@ -105,29 +54,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;
 .nav-social a{color:var(--muted);font-size:1.05em;transition:.2s}
 .nav-social a:hover{color:var(--accent)}
 
-/* ── PAGE HERO ── */
+/* PAGE HERO */
 .page-hero{padding:110px 32px 56px;text-align:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(79,142,247,.16) 0%,transparent 65%);transition:.35s}
 [data-theme="light"] .page-hero{background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(37,99,235,.1) 0%,transparent 65%)}
 .page-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
 [data-theme="light"] .page-hero-grid{background-image:linear-gradient(rgba(37,99,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.05) 1px,transparent 1px)}
-
-/* ── SECTION TAG — exact copy from index.html ── */
 .section-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);color:var(--accent);padding:5px 14px;border-radius:20px;font-size:.75em;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;position:relative;overflow:hidden}
 .section-tag::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:shimmer 4s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
-
 .page-hero h1{font-size:clamp(2em,4.5vw,3.4em);font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:var(--text)}
 .page-hero h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .page-hero p{color:var(--muted);font-size:.95em;max-width:540px;margin:0 auto 28px}
 
-/* ── STATS BAR ── */
+/* STATS BAR */
 .stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:.35s}
 .qs-inner{max-width:1200px;margin:0 auto;padding:20px 32px;display:flex;justify-content:center;gap:36px;flex-wrap:wrap}
 .sbar-stat{text-align:center}
 .sbar-num{font-size:1.8em;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .sbar-label{font-size:.72em;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
 
-/* ── FILTER BAR ── */
+/* FILTER BAR */
 .filter-section{padding:36px 32px 0;max-width:1200px;margin:0 auto}
 .filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-bottom:28px}
 .filter-group{display:flex;gap:8px;flex-wrap:wrap}
@@ -141,7 +87,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;
 #searchInput:focus{border-color:var(--card-hover-border);background:var(--card-hover-bg)}
 #searchInput::placeholder{color:var(--muted)}
 
-/* ── PROJECT GRID ── */
+/* PROJECTS GRID */
 .projects-section{padding:8px 32px 80px;max-width:1200px;margin:0 auto}
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
 .proj-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:.35s;position:relative}
@@ -150,7 +96,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;
 .proj-card:hover::before{transform:scaleX(1)}
 .proj-card[data-hidden="true"]{display:none}
 
-/* thumbnail */
+/* THUMBNAIL */
 .proj-thumb{width:100%;height:190px;overflow:hidden;position:relative;background:var(--navy3)}
 .proj-thumb img{width:100%;height:100%;object-fit:cover;transition:.4s;display:block}
 .proj-card:hover .proj-thumb img{transform:scale(1.05)}
@@ -158,12 +104,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;
 .proj-status{position:absolute;top:12px;right:12px;padding:4px 10px;border-radius:10px;font-size:.7em;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 .status-live{background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.35);color:#16a34a}
 [data-theme="dark"] .status-live{color:#4ade80}
-.status-beta{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#c4700a}
-[data-theme="dark"] .status-beta{color:#fbbf24}
-.status-wip{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#6d28d9}
-[data-theme="dark"] .status-wip{color:#c4b5fd}
 
-/* card body */
+/* CARD BODY */
 .proj-body{padding:20px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
 .proj-domain{font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--teal)}
 .proj-title{font-size:1.05em;font-weight:800;color:var(--text);line-height:1.3}
@@ -173,27 +115,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;
 .proj-tag{padding:3px 10px;border-radius:12px;font-size:.72em;font-weight:600;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.18);color:var(--accent)}
 [data-theme="light"] .proj-tag{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.2)}
 
-/* card actions */
+/* CARD ACTIONS */
 .proj-actions{display:flex;gap:8px;padding:0 22px 20px;margin-top:auto}
 .proj-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 14px;border-radius:10px;font-size:.8em;font-weight:600;text-decoration:none;transition:.2s;border:1px solid;cursor:pointer}
 .proj-btn-details{background:rgba(79,142,247,.1);border-color:rgba(79,142,247,.28);color:var(--accent)}
 .proj-btn-details:hover{background:rgba(79,142,247,.2);transform:translateY(-2px)}
 .proj-btn-hf{background:rgba(252,211,77,.08);border-color:rgba(252,211,77,.28);color:#c9820a}
 [data-theme="dark"] .proj-btn-hf{color:#fcd34d}
-.proj-btn-hf:hover{background:rgba(252,211,77,.18);border-color:rgba(252,211,77,.55);transform:translateY(-2px)}
 .proj-btn-gh{background:rgba(80,80,100,.07);border-color:rgba(80,80,100,.22);color:var(--muted)}
-.proj-btn-gh:hover{background:rgba(80,80,100,.15);transform:translateY(-2px)}
-.proj-btn-disabled{opacity:.4;pointer-events:none}
+.proj-btn-disabled{opacity:.35;pointer-events:none;cursor:default}
 
-/* no results */
+/* NO RESULTS */
 #noResults{display:none;text-align:center;padding:60px 20px;color:var(--muted)}
 #noResults i{font-size:2.5em;margin-bottom:14px;display:block;color:var(--accent);opacity:.4}
 
-/* fade-in — exact copy from index.html */
+/* FADE */
 .fade-up{opacity:0;transform:translateY(26px);transition:.65s cubic-bezier(.22,1,.36,1)}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 
-/* footer — exact copy from index.html */
+/* FOOTER */
 footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padding:40px 32px 28px;text-align:center;transition:.35s}
 .footer-name{font-size:1.3em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
 .footer-role{color:var(--muted);margin-bottom:20px;font-size:.84em}
@@ -240,18 +180,18 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-grid"></div>
-  <div class="section-tag"><i class="fas fa-rocket"></i> Live Demos</div>
+  <div class="section-tag"><i class="fas fa-rocket"></i> Portfolio</div>
   <h1>Data Science <span>Projects</span></h1>
-  <p>Interactive ML dashboards and AI applications — all deployed on Hugging Face Spaces and open-source on GitHub.</p>
+  <p>Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.</p>
 </div>
 
 <!-- STATS BAR -->
 <div class="stats-bar">
   <div class="qs-inner">
-    <div class="sbar-stat"><div class="sbar-num" id="totalCount">8</div><div class="sbar-label">Projects</div></div>
-    <div class="sbar-stat"><div class="sbar-num" id="liveCount">6</div><div class="sbar-label">Live Demos</div></div>
-    <div class="sbar-stat"><div class="sbar-num">5</div><div class="sbar-label">Domains</div></div>
-    <div class="sbar-stat"><div class="sbar-num">HF</div><div class="sbar-label">Deployed on Spaces</div></div>
+    <div class="sbar-stat"><div class="sbar-num" id="totalCount">2</div><div class="sbar-label">Projects</div></div>
+    <div class="sbar-stat"><div class="sbar-num">2</div><div class="sbar-label">Domains</div></div>
+    <div class="sbar-stat"><div class="sbar-num">2</div><div class="sbar-label">Publications</div></div>
+    <div class="sbar-stat"><div class="sbar-num">HF</div><div class="sbar-label">Demos Coming Soon</div></div>
   </div>
 </div>
 
@@ -261,10 +201,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
     <div class="filter-group" id="filterGroup">
       <button class="filter-btn active" data-filter="all">All</button>
       <button class="filter-btn" data-filter="healthcare">Healthcare</button>
-      <button class="filter-btn" data-filter="energy">Energy</button>
       <button class="filter-btn" data-filter="nlp">NLP</button>
-      <button class="filter-btn" data-filter="genomics">Genomics</button>
-      <button class="filter-btn" data-filter="epidemiology">Epidemiology</button>
     </div>
     <div class="search-wrap">
       <i class="fas fa-search"></i>
@@ -299,121 +236,13 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
       </div>
       <div class="proj-actions">
         <a href="surgical-duration.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <span class="proj-btn proj-btn-hf proj-btn-disabled" title="Coming soon"><i class="fas fa-robot"></i> Demo</span>
-        <span class="proj-btn proj-btn-gh proj-btn-disabled" title="Coming soon"><i class="fab fa-github"></i> Code</span>
+        <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
+        <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
       </div>
     </div>
 
-    <!-- CARD 2 — Energy Anomaly -->
-    <div class="proj-card fade-up" data-domain="energy" data-tags="anomaly detection time series explainability deep learning">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_energy.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Energy Anomaly Detection">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.3))">⚡</div>
-        <span class="proj-status status-live">● Live</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Energy · Anomaly Detection</div>
-        <div class="proj-title">Explainable Energy Anomaly Detector</div>
-        <div class="proj-tagline">Why did energy consumption spike — and how do we know?</div>
-        <div class="proj-desc">Deep learning anomaly detection on energy time-series with contextual SHAP explanations. Published in Energy and Buildings, Elsevier 2025.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">LSTM</span>
-          <span class="proj-tag">SHAP</span>
-          <span class="proj-tag">Plotly</span>
-          <span class="proj-tag">Elsevier</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="energy-anomaly.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 3 — DEPICT Forecasting -->
-    <div class="proj-card fade-up" data-domain="energy" data-tags="forecasting load prediction temporal attention transformer explainability">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_forecast.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DEPICT Forecasting">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(6,182,212,.3))">📈</div>
-        <span class="proj-status status-live">● Live</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Energy · Forecasting</div>
-        <div class="proj-title">DEPICT — Interpretable Energy Forecasting</div>
-        <div class="proj-tagline">Forecasting energy demand and explaining every prediction.</div>
-        <div class="proj-desc">Pattern-integrated temporal attention model for energy load forecasting with full feature attribution. SSRN preprint 2026.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Attention</span>
-          <span class="proj-tag">Forecasting</span>
-          <span class="proj-tag">XAI</span>
-          <span class="proj-tag">Docker</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="depict-forecasting.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 4 — ChebyRegNet -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="medical image registration unsupervised deep learning computer vision">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_imaging.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="ChebyRegNet">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.3))">🧠</div>
-        <span class="proj-status status-beta">◐ Beta</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Healthcare · Computer Vision</div>
-        <div class="proj-title">ChebyRegNet — Medical Image Registration</div>
-        <div class="proj-tagline">Aligning medical scans automatically — no manual markup needed.</div>
-        <div class="proj-desc">Unsupervised deformable image registration using Chebyshev polynomial networks. Presented at IEEE IECON 2024.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">PyTorch</span>
-          <span class="proj-tag">Unsupervised</span>
-          <span class="proj-tag">IEEE</span>
-          <span class="proj-tag">CV</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="chebyregnet.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 5 — Genomics -->
-    <div class="proj-card fade-up" data-domain="genomics" data-tags="gwas sarcopenia genetics association multivariate plink">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_genomics.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Sarcopenia GWAS">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(124,58,237,.3))">🧬</div>
-        <span class="proj-status status-live">● Live</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Genomics · Statistical Genetics</div>
-        <div class="proj-title">Sarcopenia Gene Association Explorer</div>
-        <div class="proj-tagline">Which genes are linked to muscle loss as we age?</div>
-        <div class="proj-desc">Multivariate GWAS dashboard for sarcopenia traits from the Bushehr Elderly Health Program with Manhattan plots and pathway enrichment.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">GWAS</span>
-          <span class="proj-tag">PLINK</span>
-          <span class="proj-tag">Bioinformatics</span>
-          <span class="proj-tag">R</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="sarcopenia-gwas.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 6 — NLP Benchmark -->
-    <div class="proj-card fade-up" data-domain="nlp" data-tags="nlp text encoding bert clinical notes benchmarking">
+    <!-- CARD 2 — NLP Benchmark -->
+    <div class="proj-card fade-up" data-domain="nlp" data-tags="nlp text encoding bert clinical notes benchmarking clinicalbert biobert">
       <div class="proj-thumb">
         <img src="../images/projects/proj_nlp.png"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="NLP Benchmark">
@@ -434,62 +263,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
       </div>
       <div class="proj-actions">
         <a href="nlp-benchmark.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 7 — ASCVD -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="cardiovascular risk metabolomics machine learning classification shap">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_cardio.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="ASCVD Risk">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(239,68,68,.3))">❤️</div>
-        <span class="proj-status status-live">● Live</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Healthcare · Cardiovascular Risk</div>
-        <div class="proj-title">ASCVD Risk & Metabolomics Dashboard</div>
-        <div class="proj-tagline">Can your blood chemistry predict a heart attack 10 years out?</div>
-        <div class="proj-desc">ML classifier linking metabolomics profiles to 10-year ASCVD risk scores with SHAP waterfall explanations. Frontiers in Cardiovascular Medicine 2023.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Metabolomics</span>
-          <span class="proj-tag">Classification</span>
-          <span class="proj-tag">SHAP</span>
-          <span class="proj-tag">Frontiers</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="ascvd-risk.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="https://huggingface.co/spaces/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-hf"><i class="fas fa-robot"></i> Demo</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
-      </div>
-    </div>
-
-    <!-- CARD 8 — COVID -->
-    <div class="proj-card fade-up" data-domain="epidemiology" data-tags="covid socioeconomic regression mortality global health">
-      <div class="proj-thumb">
-        <img src="../images/projects/proj_covid.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="COVID Mortality">
-        <div class="proj-thumb-fallback" style="display:none;background:linear-gradient(135deg,var(--navy3),rgba(6,182,212,.3))">🌍</div>
-        <span class="proj-status status-wip">⋯ In Progress</span>
-      </div>
-      <div class="proj-body">
-        <div class="proj-domain">Epidemiology · Global Health</div>
-        <div class="proj-title">COVID-19 Mortality & Socioeconomic Factors</div>
-        <div class="proj-tagline">Why did some countries fare so much worse than others?</div>
-        <div class="proj-desc">Country-level regression dashboard exploring how health system and socioeconomic indicators predicted COVID-19 mortality. SSRN preprint 2020.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Regression</span>
-          <span class="proj-tag">Epidemiology</span>
-          <span class="proj-tag">Plotly Maps</span>
-          <span class="proj-tag">SSRN</span>
-        </div>
-      </div>
-      <div class="proj-actions">
-        <a href="covid-mortality.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-        <a href="#" class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Coming Soon</a>
-        <a href="https://github.com/mnoorchenar/REPLACE_ME" target="_blank" class="proj-btn proj-btn-gh"><i class="fab fa-github"></i> Code</a>
+        <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
+        <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
       </div>
     </div>
 
@@ -517,7 +292,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 </footer>
 
 <script>
-/* ── THEME — exact logic from index.html, minus particle reinit ── */
+/* THEME */
 const html = document.documentElement;
 const toggleBtn = document.getElementById('themeToggle');
 const toggleLabel = document.getElementById('toggleLabel');
@@ -532,7 +307,7 @@ toggleBtn.addEventListener('click', () => {
 });
 function updateLabel(t){ toggleLabel.textContent = t === 'dark' ? 'Light' : 'Dark'; }
 
-/* ── FILTER ── */
+/* FILTER */
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -558,10 +333,7 @@ function applyFilters() {
   document.getElementById('totalCount').textContent = visible;
 }
 
-/* ── LIVE COUNT ── */
-document.getElementById('liveCount').textContent = document.querySelectorAll('.status-live').length;
-
-/* ── FADE-IN — exact logic from index.html ── */
+/* FADE-IN */
 const obs = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
     if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);

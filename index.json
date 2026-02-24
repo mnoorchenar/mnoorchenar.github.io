@@ -4,6 +4,10 @@
     "folder": "projects",
     "files": [
       {
+        "name": "nlp-benchmark",
+        "html": "projects/nlp-benchmark.html"
+      },
+      {
         "name": "surgical-duration",
         "html": "projects/surgical-duration.html"
       }
