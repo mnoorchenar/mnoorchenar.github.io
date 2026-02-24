@@ -6,16 +6,27 @@
       {
         "name": "_template",
         "html": "projects/_template.html"
-      },
-      {
-        "name": "nlp-benchmark",
-        "html": "projects/nlp-benchmark.html"
-      },
-      {
-        "name": "surgical-duration",
-        "html": "projects/surgical-duration.html"
       }
     ],
-    "subfolders": []
+    "subfolders": [
+      {
+        "name": "Projects-Files",
+        "folder": "Projects-Files",
+        "files": [
+          {
+            "name": "surgical-duration",
+            "html": "projects/Projects-Files/001. surgical-duration.html"
+          },
+          {
+            "name": "nlp-benchmark",
+            "html": "projects/Projects-Files/002. nlp-benchmark.html"
+          },
+          {
+            "name": "energy-anomaly-xai",
+            "html": "projects/Projects-Files/003. energy-anomaly-xai.html"
+          }
+        ]
+      }
+    ]
   }
 ]
