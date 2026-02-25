@@ -187,6 +187,67 @@
 #noResults { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
 #noResults i { font-size: 2.5em; margin-bottom: 14px; display: block; color: var(--accent); opacity: .4; }
 
+/* ── COPYRIGHT MODAL ── */
+.copyright-modal-overlay {
+  display: none;
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,.55);
+  z-index: 9999;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  animation: fadeIn .2s ease;
+}
+.copyright-modal-overlay.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.copyright-modal-box {
+  background: var(--navy2);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 36px 32px 28px;
+  max-width: 480px; width: 90%;
+  box-shadow: 0 24px 64px rgba(0,0,0,.45);
+  animation: slideUp .25s cubic-bezier(.22,1,.36,1);
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+[data-theme="light"] .copyright-modal-box { background: #f5f7ff; }
+.copyright-modal-box h3 {
+  font-size: 1.1em; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 14px;
+}
+.copyright-modal-box p {
+  font-size: .9em; color: var(--muted); line-height: 1.7; margin-bottom: 22px;
+}
+.copyright-modal-box p strong { color: var(--text); }
+.copyright-modal-close {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border: none; border-radius: 8px;
+  padding: 9px 22px; font-size: .86em; font-weight: 600;
+  cursor: pointer; transition: .2s;
+}
+.copyright-modal-close:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,142,247,.35); }
+
+/* ── FOOTER LICENSE BUTTON ── */
+.footer-license-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: none; border: none;
+  font-size: .78em; font-weight: 600;
+  cursor: pointer; text-decoration: none; padding: 0;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: opacity .2s, transform .2s;
+  margin-top: 8px;
+}
+.footer-license-btn i {
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.footer-license-btn:hover { opacity: .75; transform: translateY(-1px); }
+
 /* responsive */
 @media (max-width: 768px) {
   .projects-grid { grid-template-columns: 1fr; }
@@ -194,40 +255,25 @@
   #searchInput, .search-wrap { width: 100%; }
 }
 </style>
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-  if (!localStorage.getItem('copyrightPopupShown')) {
-    var popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.left = '0';
-    popup.style.top = '0';
-    popup.style.width = '100vw';
-    popup.style.height = '100vh';
-    popup.style.background = 'rgba(7,13,31,0.95)';
-    popup.style.color = '#e2e8f0';
-    popup.style.display = 'flex';
-    popup.style.flexDirection = 'column';
-    popup.style.justifyContent = 'center';
-    popup.style.alignItems = 'center';
-    popup.style.zIndex = '9999';
-    popup.style.fontSize = '1.2rem';
-    popup.innerHTML = `
-      <div style="background:rgba(0,0,0,0.7);padding:2rem;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:600px;text-align:center;">
-        <h2 style="margin-bottom:1rem;color:#4f8ef7;">Copyright Notice: Strict Limitation</h2>
-        <p style="margin-bottom:2rem;">All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.</p>
-        <button id="copyrightPopupClose" style="padding:0.5rem 2rem;background:#4f8ef7;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">I Understand</button>
-      </div>
-    `;
-    document.body.appendChild(popup);
-    document.getElementById('copyrightPopupClose').onclick = function() {
-      popup.remove();
-      localStorage.setItem('copyrightPopupShown', 'true');
-    };
-  }
-});
-</script>
 </head>
 <body>
+
+<!-- ── COPYRIGHT MODAL ── -->
+<div class="copyright-modal-overlay" id="copyrightModal" role="dialog" aria-modal="true" aria-labelledby="copyrightModalTitle">
+  <div class="copyright-modal-box">
+    <h3 id="copyrightModalTitle"><i class="fas fa-shield-alt"></i> Copyright Notice</h3>
+    <p>
+      <strong>Strict Limitation:</strong> All content on this website — including text, images, code,
+      design, and all other materials — is protected by copyright.<br><br>
+      Any use, reproduction, distribution, or modification for any reason is
+      <strong>strictly prohibited</strong> and not allowed under any circumstances without
+      prior written consent from the author.
+    </p>
+    <button class="copyright-modal-close" id="closeCopyrightModal">
+      <i class="fas fa-check"></i> I Understand
+    </button>
+  </div>
+</div>
 
 <!-- ═══ NAV ═══ -->
 <nav class="sh-nav">
@@ -237,7 +283,7 @@ window.addEventListener('DOMContentLoaded', function() {
     <a href="../index.html#experience">Experience</a>
     <a href="../index.html#publications">Publications</a>
     <a href="../index.html#skills">Skills</a>
-      <a href="./" class="active">Projects</a>
+    <a href="./" class="active">Projects</a>
   </div>
   <div class="sh-nav-right">
     <div class="sh-nav-social">
@@ -265,7 +311,7 @@ window.addEventListener('DOMContentLoaded', function() {
 <!-- ═══ STATS BAR ═══ -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="sbar-stat"><div class="sbar-num" id="totalCount">3</div><div class="sbar-label">Projects</div></div>
+    <div class="sbar-stat"><div class="sbar-num" id="totalCount">6</div><div class="sbar-label">Projects</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Domains</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Publications</div></div>
     <div class="sbar-stat"><div class="sbar-num">HF</div><div class="sbar-label">Demos Coming Soon</div></div>
@@ -350,64 +396,6 @@ window.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
 
-      <!-- ─── CARD 5 — ASCVD Metabolomics ─── -->
-      <div class="proj-card fade-up" data-domain="healthcare" data-tags="ascvd metabolomics cardiovascular risk ml biostatistics">
-        <div class="proj-thumb">
-          <img src="../images/projects/proj_ascvd.png"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-               alt="ASCVD Metabolomics">
-          <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.3))">🫀</div>
-          <span class="proj-status status-live">● Live</span>
-        </div>
-        <div class="proj-body">
-          <div class="proj-num">05</div>
-          <div class="proj-domain">Healthcare · Metabolomics</div>
-          <div class="proj-title">ASCVD Metabolomics Risk Explorer</div>
-          <div class="proj-tagline">Can blood metabolites reveal hidden cardiovascular risk?</div>
-          <div class="proj-desc">Machine learning analysis of metabolomics data for ASCVD risk prediction. Integrates clinical and omics features to uncover novel biomarkers. Preprint in review.</div>
-          <div class="proj-tags">
-            <span class="proj-tag">Metabolomics</span>
-            <span class="proj-tag">ASCVD</span>
-            <span class="proj-tag">Biostatistics</span>
-            <span class="proj-tag">Machine Learning</span>
-          </div>
-        </div>
-        <div class="proj-actions">
-          <a href="Projects-Files/005-ascvd-metabolomics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-          <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
-          <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
-        </div>
-      </div>
-
-      <!-- ─── CARD 6 — CABG Gamification ─── -->
-      <div class="proj-card fade-up" data-domain="healthcare" data-tags="cabg gamification surgery patient engagement ml">
-        <div class="proj-thumb">
-          <img src="../images/projects/proj_cabg.png"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-               alt="CABG Gamification">
-          <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.3))">🎮</div>
-          <span class="proj-status status-live">● Live</span>
-        </div>
-        <div class="proj-body">
-          <div class="proj-num">06</div>
-          <div class="proj-domain">Healthcare · Gamification</div>
-          <div class="proj-title">CABG Gamification Patient Engagement</div>
-          <div class="proj-tagline">Can gamification improve surgical outcomes?</div>
-          <div class="proj-desc">Gamified patient engagement platform for CABG surgery recovery. Uses ML to personalize feedback and track progress. Preprint in review.</div>
-          <div class="proj-tags">
-            <span class="proj-tag">Gamification</span>
-            <span class="proj-tag">CABG</span>
-            <span class="proj-tag">Patient Engagement</span>
-            <span class="proj-tag">Machine Learning</span>
-          </div>
-        </div>
-        <div class="proj-actions">
-          <a href="Projects-Files/006-cabg-gamification.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
-          <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
-          <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
-        </div>
-      </div>
-
     <!-- ─── CARD 3 — Energy Anomaly XAI ─── -->
     <div class="proj-card fade-up" data-domain="energy" data-tags="energy anomaly detection xai shap lstm deep learning buildings explainability">
       <div class="proj-thumb">
@@ -436,8 +424,6 @@ window.addEventListener('DOMContentLoaded', function() {
         <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
       </div>
     </div>
-
-    <!-- ═══ ADD NEW CARDS BELOW THIS LINE ═══ -->
 
     <!-- ─── CARD 4 — Sarcopenia Genetics ─── -->
     <div class="proj-card fade-up" data-domain="healthcare" data-tags="genetics sarcopenia muscle gwas snp biostatistics">
@@ -468,6 +454,66 @@ window.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
 
+    <!-- ─── CARD 5 — ASCVD Metabolomics ─── -->
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="ascvd metabolomics cardiovascular risk ml biostatistics">
+      <div class="proj-thumb">
+        <img src="../images/projects/proj_ascvd.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="ASCVD Metabolomics">
+        <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.3))">🫀</div>
+        <span class="proj-status status-live">● Live</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">05</div>
+        <div class="proj-domain">Healthcare · Metabolomics</div>
+        <div class="proj-title">ASCVD Metabolomics Risk Explorer</div>
+        <div class="proj-tagline">Can blood metabolites reveal hidden cardiovascular risk?</div>
+        <div class="proj-desc">Machine learning analysis of metabolomics data for ASCVD risk prediction. Integrates clinical and omics features to uncover novel biomarkers. Preprint in review.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Metabolomics</span>
+          <span class="proj-tag">ASCVD</span>
+          <span class="proj-tag">Biostatistics</span>
+          <span class="proj-tag">Machine Learning</span>
+        </div>
+      </div>
+      <div class="proj-actions">
+        <a href="Projects-Files/005-ascvd-metabolomics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
+        <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
+        <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
+      </div>
+    </div>
+
+    <!-- ─── CARD 6 — CABG Gamification ─── -->
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="cabg gamification surgery patient engagement ml">
+      <div class="proj-thumb">
+        <img src="../images/projects/proj_cabg.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="CABG Gamification">
+        <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.3))">🎮</div>
+        <span class="proj-status status-live">● Live</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">06</div>
+        <div class="proj-domain">Healthcare · Gamification</div>
+        <div class="proj-title">CABG Gamification Patient Engagement</div>
+        <div class="proj-tagline">Can gamification improve surgical outcomes?</div>
+        <div class="proj-desc">Gamified patient engagement platform for CABG surgery recovery. Uses ML to personalize feedback and track progress. Preprint in review.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Gamification</span>
+          <span class="proj-tag">CABG</span>
+          <span class="proj-tag">Patient Engagement</span>
+          <span class="proj-tag">Machine Learning</span>
+        </div>
+      </div>
+      <div class="proj-actions">
+        <a href="Projects-Files/006-cabg-gamification.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
+        <span class="proj-btn proj-btn-hf proj-btn-disabled"><i class="fas fa-robot"></i> Demo</span>
+        <span class="proj-btn proj-btn-gh proj-btn-disabled"><i class="fab fa-github"></i> Code</span>
+      </div>
+    </div>
+
+    <!-- ═══ ADD NEW CARDS BELOW THIS LINE ═══ -->
+
   </div>
 
   <div id="noResults">
@@ -490,11 +536,23 @@ window.addEventListener('DOMContentLoaded', function() {
     <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
   </div>
   <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · Built for academic &amp; portfolio purposes</div>
+  <button class="footer-license-btn" id="openCopyrightModal">
+    <i class="fas fa-shield-alt"></i> Copyright License
+  </button>
 </footer>
 
 <!-- ═══ PAGE-SPECIFIC JS ═══ -->
 <script>
-/* FILTER */
+/* ─── COPYRIGHT MODAL ─── */
+const modal    = document.getElementById('copyrightModal');
+const openBtn  = document.getElementById('openCopyrightModal');
+const closeBtn = document.getElementById('closeCopyrightModal');
+openBtn.addEventListener('click', () => modal.classList.add('active'));
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('active'); });
+
+/* ─── FILTER ─── */
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -520,30 +578,8 @@ function applyFilters() {
   document.getElementById('totalCount').textContent = visible;
 }
 
-// Automatically update the total project count on page load
-function updateTotalProjectCount() {
-  const cards = document.querySelectorAll('.proj-card');
-  document.getElementById('totalCount').textContent = cards.length;
-}
-updateTotalProjectCount();
+/* ─── TOTAL COUNT ON LOAD ─── */
+document.getElementById('totalCount').textContent = document.querySelectorAll('.proj-card').length;
 </script>
-
-<!-- ── COPYRIGHT MODAL (hidden by default, opens on footer link click) ── -->
-<div class="copyright-modal-overlay" id="copyrightModal" role="dialog" aria-modal="true" aria-labelledby="copyrightModalTitle">
-  <div class="copyright-modal-box">
-    <h3 id="copyrightModalTitle"><i class="fas fa-shield-alt"></i> Copyright Notice</h3>
-    <p>
-      <strong>Strict Limitation:</strong> All content on this website — including text, images, code,
-      design, and all other materials — is protected by copyright.<br><br>
-      Any use, reproduction, distribution, or modification for any reason is
-      <strong>strictly prohibited</strong> and not allowed under any circumstances without
-      prior written consent from the author.
-    </p>
-    <button class="copyright-modal-close" id="closeCopyrightModal">
-      <i class="fas fa-check"></i> I Understand
-    </button>
-  </div>
-</div>
-
 </body>
 </html>

@@ -418,13 +418,22 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 .footer-links a:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
 .footer-copy{color:var(--muted);font-size:.78em;margin-bottom:10px}
 .footer-license-btn{
-  display:inline-flex;align-items:center;gap:6px;
+  display:inline-flex;align-items:center;gap:7px;
   background:none;border:none;
-  color:var(--accent);font-size:.78em;font-weight:600;
-  cursor:pointer;text-decoration:underline;
-  transition:.2s;padding:0;
+  font-size:.78em;font-weight:600;
+  cursor:pointer;text-decoration:none;
+  padding:0;
+  background:linear-gradient(135deg,var(--accent),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  transition:opacity .2s, transform .2s;
 }
-.footer-license-btn:hover{opacity:.75}
+.footer-license-btn i{
+  background:linear-gradient(135deg,var(--accent),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.footer-license-btn:hover{opacity:.75;transform:translateY(-1px)}
 
 /* ── ANIMATIONS ── */
 .fade-up{opacity:0;transform:translateY(26px);transition:.65s cubic-bezier(.22,1,.36,1)}
