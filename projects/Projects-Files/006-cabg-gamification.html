@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CABG Gamification RCT · Mohammad Noorchenarboo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root,[data-theme="dark"]{
+  --body-bg:#07111f;--section-alt:#0b1828;
+  --text:#e2e8f0;--muted:#8892a4;
+  --accent:#4f8ef7;--teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;--red:#ef4444;
+  --glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
+  --card-hover-bg:rgba(255,255,255,.07);--card-hover-border:rgba(249,115,22,.3);
+  --shadow-card:0 8px 32px rgba(0,0,0,.4);--radius:14px;
+}
+[data-theme="light"]{
+  --body-bg:#f8faff;--section-alt:#eef4fb;
+  --text:#0f172a;--muted:#4b5675;
+  --accent:#2563eb;--teal:#0891b2;--green:#16a34a;--gold:#d97706;--red:#dc2626;
+  --glass:rgba(255,255,255,.7);--glass-border:rgba(37,99,235,.12);
+  --card-hover-bg:rgba(255,255,255,.9);--card-hover-border:rgba(249,115,22,.35);
+  --shadow-card:0 8px 32px rgba(249,115,22,.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;transition:background .35s,color .35s}
+a{text-decoration:none;color:inherit}
+canvas{display:block}
+
+/* PAGE PALETTE */
+:root,[data-theme="dark"]{
+  --orange:#f97316;--orange2:#ea580c;--coral:#fb7185;--sky:#38bdf8;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(249,115,22,.16),transparent 65%);
+  --grid-col:rgba(249,115,22,.03);
+}
+[data-theme="light"]{
+  --orange:#ea580c;--orange2:#c2410c;--coral:#e11d48;--sky:#0284c7;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(249,115,22,.1),transparent 65%);
+  --grid-col:rgba(249,115,22,.04);
+}
+
+/* NAV */
+.sh-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(7,17,31,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);transition:background .35s}
+[data-theme="light"] .sh-nav{background:rgba(248,250,255,.9)}
+.sh-nav-logo{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--orange),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sh-nav-links{display:flex;gap:24px;font-size:.84rem}
+.sh-nav-links a{color:var(--muted);transition:.2s}
+.sh-nav-links a:hover,.sh-nav-links a.active{color:var(--orange)}
+.sh-nav-right{display:flex;align-items:center;gap:14px}
+.sh-nav-social{display:flex;gap:10px}
+.sh-nav-social a{color:var(--muted);font-size:.9rem;transition:.2s}
+.sh-nav-social a:hover{color:var(--orange)}
+.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);transition:.2s;font-family:inherit}
+.theme-toggle:hover{border-color:var(--card-hover-border);color:var(--text)}
+[data-theme="dark"] .toggle-sun,[data-theme="light"] .toggle-moon{display:none}
+
+/* HERO */
+.hero{padding:110px 24px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:var(--hero-grad)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid-col) 1px,transparent 1px),linear-gradient(90deg,var(--grid-col) 1px,transparent 1px);background-size:48px 48px}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.breadcrumb{font-size:.78rem;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.breadcrumb a{color:var(--muted);transition:.2s}.breadcrumb a:hover{color:var(--orange)}.breadcrumb span{opacity:.4}
+.tag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:.74rem;font-weight:700;letter-spacing:.03em}
+.pill-orange{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);color:var(--orange)}
+.pill-gold{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--gold)}
+.pub-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;box-shadow:0 0 6px rgba(245,158,11,.6)}
+h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1.15;margin-bottom:14px;color:var(--text)}
+.grad-text{background:linear-gradient(135deg,var(--orange),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--muted);max-width:700px;line-height:1.72;margin-bottom:26px}
+.hero-sub strong{color:var(--text)}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:26px}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta i{color:var(--orange)}.hero-meta strong{color:var(--text)}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit}
+.btn-pub{background:rgba(34,197,94,.14);color:var(--green);border-color:rgba(34,197,94,.3)}
+.btn-pub:hover{background:rgba(34,197,94,.24);transform:translateY(-2px)}
+.btn-anchor{background:var(--glass);color:var(--text);border-color:var(--glass-border)}
+.btn-anchor:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
+.btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border)}
+.btn-back:hover{color:var(--orange);border-color:var(--card-hover-border);transform:translateY(-2px)}
+
+/* STATS BAR */
+.stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:background .35s;margin-top:40px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--glass-border)}
+.stat-item{background:var(--section-alt);padding:22px 16px;text-align:center;transition:background .35s}
+.stat-val{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--orange),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:.74rem;color:var(--muted);line-height:1.4}
+
+/* LAYOUT */
+.main-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start}
+.content-col{display:flex;flex-direction:column;gap:28px}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px}
+
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s}
+.card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px)}
+.card-title{font-size:1rem;font-weight:800;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+.card-title i{color:var(--orange);font-size:.9rem}
+.narrative{font-size:.92rem;color:var(--muted);margin-bottom:16px;line-height:1.72}
+.narrative strong{color:var(--text)}
+
+/* SEC LABELS */
+.sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 14px;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.sec-label::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:pg-shimmer 4s ease-in-out infinite}
+@keyframes pg-shimmer{0%,100%{left:-100%}50%{left:100%}}
+.sl-orange{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.25)}
+.sl-sky{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.22)}
+.sl-coral{background:rgba(251,113,133,.1);color:var(--coral);border:1px solid rgba(251,113,133,.22)}
+.sl-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+.sl-gold{background:rgba(245,158,11,.1);color:var(--gold);border:1px solid rgba(245,158,11,.22)}
+[data-theme="light"] .sl-orange{background:rgba(234,88,12,.07);color:#c2410c;border-color:rgba(234,88,12,.25)}
+[data-theme="light"] .sl-sky{background:rgba(2,132,199,.07);color:#0369a1;border-color:rgba(2,132,199,.25)}
+[data-theme="light"] .sl-coral{background:rgba(225,29,72,.07);color:#be123c;border-color:rgba(225,29,72,.25)}
+[data-theme="light"] .sl-green{background:rgba(22,163,74,.07);color:#15803d;border-color:rgba(22,163,74,.25)}
+[data-theme="light"] .sl-gold{background:rgba(217,119,6,.07);color:#92400e;border-color:rgba(217,119,6,.25)}
+
+/* FADE-UP */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ─── PROBLEM ─── */
+.crisis-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px}
+.crisis-stat{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(251,113,133,.07));border:1px solid rgba(249,115,22,.22);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.crisis-stat::before{content:'❤️';position:absolute;top:-10px;right:-8px;font-size:5rem;opacity:.06}
+.cs-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:10px}
+.cs-number{font-size:3.4rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--orange),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:5px}
+.cs-sub{font-size:.83rem;color:var(--muted);line-height:1.5}
+.cs-sub strong{color:var(--text)}
+
+.nonadhere-bars{background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(249,115,22,.06));border:1px solid rgba(56,189,248,.2);border-radius:var(--radius);padding:24px}
+.nb-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.nb-sub{font-size:.76rem;color:var(--muted);margin-bottom:16px}
+.nb-row{display:flex;flex-direction:column;gap:10px}
+.nb-item{display:flex;flex-direction:column;gap:5px}
+.nb-name{display:flex;justify-content:space-between;font-size:.78rem}
+.nb-name span:first-child{color:var(--muted)}
+.nb-name span:last-child{font-weight:700;color:var(--text)}
+.nb-track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+[data-theme="light"] .nb-track{background:rgba(0,0,0,.07)}
+.nb-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,.8,.44,1)}
+.nb-f1{background:linear-gradient(90deg,var(--orange),var(--coral))}
+.nb-f2{background:linear-gradient(90deg,var(--sky),var(--teal))}
+.nb-f3{background:linear-gradient(90deg,var(--coral),var(--orange))}
+
+.challenge-flow{display:flex;align-items:stretch;gap:0;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-border)}
+.cf-step{flex:1;padding:16px 14px;text-align:center;position:relative}
+.cf-step:not(:last-child)::after{content:'›';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:var(--muted);z-index:2}
+.cfs1{background:rgba(249,115,22,.06)}.cfs2{background:rgba(251,113,133,.06)}.cfs3{background:rgba(245,158,11,.06)}.cfs4{background:rgba(239,68,68,.06)}
+.cf-icon{font-size:1.6rem;margin-bottom:6px}
+.cf-label{font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.cf-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
+
+/* ─── DATA ─── */
+.trial-visual{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start}
+.trial-left{display:flex;flex-direction:column;gap:14px}
+.trial-big{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(56,189,248,.06));border:1px solid rgba(249,115,22,.22);border-radius:var(--radius);padding:24px;text-align:center}
+.tb-num{font-size:3.4rem;font-weight:900;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--orange),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-lbl{font-size:.82rem;color:var(--muted)}
+.trial-minis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tmini{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px;text-align:center;transition:.2s}
+.tmini:hover{border-color:rgba(249,115,22,.3);transform:translateY(-2px)}
+.tmini-val{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:4px;color:var(--orange)}
+.tmini-lbl{font-size:.72rem;color:var(--muted);line-height:1.35}
+.trial-right{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px}
+.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
+.chart-canvas-h{position:relative;height:220px}
+.data-note{background:linear-gradient(135deg,rgba(249,115,22,.06),rgba(56,189,248,.04));border:1px solid rgba(249,115,22,.18);border-radius:10px;padding:16px 20px;font-size:.83rem;color:var(--muted);line-height:1.65;display:flex;gap:12px;align-items:flex-start;margin-top:16px}
+.data-note i{color:var(--orange);margin-top:2px;flex-shrink:0}
+.data-note strong{color:var(--text)}
+
+/* Group allocation diagram */
+.alloc-diagram{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:center;margin:18px 0;padding:20px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px}
+.alloc-node{text-align:center;padding:14px 10px}
+.an-icon{font-size:2rem;margin-bottom:6px}
+.an-title{font-size:.78rem;font-weight:800;margin-bottom:3px}
+.an-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
+.alloc-arrow{color:var(--muted);font-size:1.4rem;padding:0 4px;flex-shrink:0}
+.an-1{background:rgba(249,115,22,.08);border-radius:10px;border:1px solid rgba(249,115,22,.2);color:var(--orange)}
+.an-2{background:rgba(56,189,248,.07);border-radius:10px;border:1px solid rgba(56,189,248,.2);color:var(--sky)}
+.an-3{background:rgba(34,197,94,.07);border-radius:10px;border:1px solid rgba(34,197,94,.2);color:var(--green)}
+
+/* ─── METHODS ─── */
+.method-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px}
+.mc-card{border-radius:12px;padding:20px;text-align:center}
+.mc-ctrl{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18)}
+.mc-tb{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.2)}
+.mc-game{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.22)}
+.mc-icon{font-size:1.8rem;margin-bottom:8px}
+.mc-title{font-size:.84rem;font-weight:800;margin-bottom:6px}
+.mc-ctrl .mc-title{color:var(--red)}.mc-tb .mc-title{color:var(--sky)}.mc-game .mc-title{color:var(--orange)}
+.mc-desc{font-size:.76rem;color:var(--muted);line-height:1.55}
+.mc-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700}
+.mc-ctrl .mc-badge{background:rgba(239,68,68,.15);color:var(--red)}
+.mc-tb .mc-badge{background:rgba(56,189,248,.15);color:var(--sky)}
+.mc-game .mc-badge{background:rgba(249,115,22,.15);color:var(--orange)}
+
+/* App feature grid */
+.app-features{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.af-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px;text-align:center;transition:.2s}
+.af-card:hover{border-color:rgba(249,115,22,.3);transform:translateY(-2px)}
+.af-icon{font-size:1.4rem;margin-bottom:6px}
+.af-title{font-size:.74rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.af-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
+
+/* Pipeline */
+.pipe-flow{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
+.pipe-flow::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--orange),var(--sky));z-index:0}
+.pf-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px;position:relative;z-index:1}
+.pf-circle{width:54px;height:54px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:12px;background:var(--body-bg);transition:.35s}
+.pf1{border-color:var(--orange);box-shadow:0 0 20px rgba(249,115,22,.3)}
+.pf2{border-color:var(--sky);box-shadow:0 0 20px rgba(56,189,248,.22)}
+.pf3{border-color:var(--coral);box-shadow:0 0 20px rgba(251,113,133,.22)}
+.pf4{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.22)}
+.pf-step h4{font-size:.82rem;font-weight:800;margin-bottom:5px;color:var(--text)}
+.pf-step p{font-size:.73rem;color:var(--muted);line-height:1.5}
+.pipe-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.pd-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px}
+.pd-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.pd-t1{color:var(--orange)}.pd-t2{color:var(--sky)}.pd-t3{color:var(--coral)}.pd-t4{color:var(--green)}
+.pd-card ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.pd-card li{font-size:.72rem;color:var(--muted);padding-left:14px;position:relative;line-height:1.45}
+.pd-card li::before{content:'›';position:absolute;left:0;color:var(--orange)}
+
+/* ─── RESULTS ─── */
+.results-headline{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.rh-card{border-radius:var(--radius);padding:22px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+.rh-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.rh-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.rh-1{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.22)}
+.rh-1::before{background:linear-gradient(90deg,var(--orange),transparent)}
+.rh-2{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}
+.rh-2::before{background:linear-gradient(90deg,var(--green),transparent)}
+.rh-3{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.2)}
+.rh-3::before{background:linear-gradient(90deg,var(--sky),transparent)}
+.rh-val{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:5px}
+.rh-1 .rh-val{color:var(--orange)}.rh-2 .rh-val{color:var(--green)}.rh-3 .rh-val{color:var(--sky)}
+.rh-lbl{font-size:.78rem;color:var(--muted);line-height:1.4}
+.rh-sub{font-size:.7rem;font-weight:600;margin-top:4px}
+.rh-1 .rh-sub{color:var(--orange)}.rh-2 .rh-sub{color:var(--green)}.rh-3 .rh-sub{color:var(--sky)}
+
+.insight-banner{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(56,189,248,.06));border:1px solid rgba(249,115,22,.22);border-radius:var(--radius);padding:20px 22px;display:flex;gap:14px;align-items:flex-start;margin-top:16px}
+.insight-icon{font-size:1.8rem;flex-shrink:0}
+.insight-body h4{font-size:.93rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.insight-body p{font-size:.83rem;color:var(--muted);line-height:1.65}
+.insight-body strong{color:var(--orange)}
+
+/* Effect size comparison bars */
+.effect-compare{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.ec-row{display:flex;flex-direction:column;gap:6px}
+.ec-header{display:flex;justify-content:space-between;font-size:.78rem}
+.ec-header span:first-child{color:var(--muted)}
+.ec-header strong{color:var(--text)}
+.ec-bars{display:flex;flex-direction:column;gap:4px}
+.ec-bar-row{display:flex;align-items:center;gap:8px;font-size:.72rem}
+.ec-bar-label{color:var(--muted);width:80px;flex-shrink:0;text-align:right}
+.ec-track{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+[data-theme="light"] .ec-track{background:rgba(0,0,0,.07)}
+.ec-fill{height:100%;border-radius:5px;transition:width 1.2s cubic-bezier(.22,.8,.44,1)}
+.ef-game{background:linear-gradient(90deg,var(--orange),var(--coral))}
+.ef-tb{background:linear-gradient(90deg,var(--sky),var(--teal))}
+.ef-ctrl{background:rgba(255,255,255,.15)}
+[data-theme="light"] .ef-ctrl{background:rgba(0,0,0,.12)}
+
+/* TAKEAWAYS */
+.takeaway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.take-card{background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.18);border-radius:12px;padding:18px 20px;transition:.25s}
+.take-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card)}
+.take-num{font-size:1.5rem;font-weight:900;color:var(--orange);margin-bottom:6px;line-height:1}
+.take-title{font-size:.88rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.take-desc{font-size:.79rem;color:var(--muted);line-height:1.6}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
+.sidebar-card h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.tldr-text{font-size:.86rem;color:var(--muted);line-height:1.72}
+.tldr-text strong{color:var(--text)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-key{color:var(--muted);flex-shrink:0}
+.info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
+.tech-pills{display:flex;flex-wrap:wrap;gap:6px}
+.tech-pill{background:rgba(249,115,22,.09);border:1px solid rgba(249,115,22,.22);border-radius:6px;padding:3px 10px;font-size:.74rem;color:var(--orange);font-weight:600}
+[data-theme="light"] .tech-pill{background:rgba(234,88,12,.07);border-color:rgba(234,88,12,.25)}
+.citation-box{background:rgba(249,115,22,.04);border-left:3px solid rgba(249,115,22,.45);border-radius:0 8px 8px 0;padding:12px;font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.citation-box strong{color:var(--text)}
+.sidebar-links{display:flex;flex-direction:column;gap:8px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s}
+.sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text)}
+.sidebar-link i{color:var(--orange);width:16px;text-align:center}
+
+/* FOOTER */
+.sh-footer{background:var(--section-alt);border-top:1px solid var(--glass-border);padding:40px 24px;text-align:center;transition:background .35s}
+.sh-footer-name{font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:4px}
+.sh-footer-role{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.sh-footer-icons{display:flex;gap:16px;justify-content:center;margin-bottom:16px}
+.sh-footer-icons a{color:var(--muted);font-size:1.1rem;transition:.2s}
+.sh-footer-icons a:hover{color:var(--orange)}
+.sh-footer-copy{font-size:.74rem;color:var(--muted)}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .main-layout{grid-template-columns:1fr}.sidebar{position:static}
+  .crisis-grid,.method-compare,.trial-visual{grid-template-columns:1fr}
+  .method-compare{grid-template-columns:1fr}
+  .results-headline{grid-template-columns:1fr 1fr}
+  .pipe-flow{grid-template-columns:1fr 1fr}.pipe-flow::before{display:none}
+  .pipe-detail{grid-template-columns:1fr 1fr}
+  .alloc-diagram{grid-template-columns:1fr;grid-template-rows:auto}.alloc-arrow{transform:rotate(90deg)}
+  .app-features{grid-template-columns:1fr 1fr}
+  .stats-inner{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .hero{padding:96px 16px 0}.stats-inner{grid-template-columns:repeat(2,1fr)}
+  .results-headline{grid-template-columns:1fr}.takeaway-grid{grid-template-columns:1fr}
+  .pipe-flow{grid-template-columns:1fr}.pipe-detail{grid-template-columns:1fr}
+  .challenge-flow{flex-direction:column}
+  .cf-step:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-8px;left:50%;transform:translateX(-50%)}
+  .app-features{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="sh-nav">
+  <a href="../../index.html" class="sh-nav-logo">MN</a>
+  <div class="sh-nav-links">
+    <a href="../../index.html#about">About</a>
+    <a href="../../index.html#experience">Experience</a>
+    <a href="../../index.html#publications">Publications</a>
+    <a href="../../index.html#skills">Skills</a>
+    <a href="../index.html" class="active">Projects</a>
+  </div>
+  <div class="sh-nav-right">
+    <div class="sh-nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="toggle-sun">☀️</span><span class="toggle-moon">🌙</span>
+      <span id="toggleLabel">Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="../../index.html"><i class="fas fa-home"></i> Home</a><span>›</span>
+      <a href="../index.html">Projects</a><span>›</span>
+      <span style="color:var(--text)">CABG Gamification RCT</span>
+    </div>
+    <div class="tag-row">
+      <span class="pill pill-orange"><i class="fas fa-gamepad"></i> Clinical Trial · mHealth · Gamification</span>
+      <span class="pill pill-gold"><span class="pub-dot"></span> Published · JMIR 2021</span>
+    </div>
+    <h1 class="page-title">Can a Smartphone Game Get<br><span class="grad-text">Heart Patients to Follow Their Regimen?</span></h1>
+    <p class="hero-sub">
+      After coronary artery bypass graft surgery, patients frequently fail to follow their
+      dietary, movement, and medication plans — with serious consequences. This
+      <strong>randomized clinical trial</strong> of 123 CABG patients tested whether a
+      custom <strong>gamified Android app ("Delban")</strong> outperforms the gold-standard
+      teach-back training method. The answer: for diet and physical activity, games win.
+    </p>
+    <div class="hero-meta">
+      <span><i class="fas fa-newspaper"></i><strong>Journal of Medical Internet Research</strong>, 23(12):e22557, 2021</span>
+      <span><i class="fas fa-users"></i>Ghorbani, Jackson, Noorchenarboo et al. · 7 authors</span>
+      <span><i class="fas fa-map-marker-alt"></i>Tehran, Iran · Tehran University of Medical Sciences</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#problem" class="btn btn-anchor"><i class="fas fa-exclamation-circle"></i> The Problem</a>
+      <a href="#methods" class="btn btn-anchor"><i class="fas fa-cogs"></i> Methods</a>
+      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
+      <a href="https://www.jmir.org/2021/12/e22557/" class="btn btn-pub" target="_blank" rel="noopener"><i class="fas fa-file-alt"></i> Full Paper</a>
+      <a href="../index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val" data-target="123">0</div><div class="stat-label">CABG Patients in Trial</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="3">0</div><div class="stat-label">Randomized Groups (n=41 each)</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="30">0</div><div class="stat-label">Day Follow-Up Period</div></div>
+    <div class="stat-item"><div class="stat-val">124.5</div><div class="stat-label">F-Statistic (Movement, p&lt;.001)</div></div>
+    <div class="stat-item"><div class="stat-val">2.01</div><div class="stat-label">Gamification Effect Size (Movement)</div></div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+<div class="content-col">
+
+<!-- ① PROBLEM -->
+<div class="card fade-up" id="problem">
+  <div class="sec-label sl-orange">① The Problem</div>
+  <div class="card-title"><i class="fas fa-heart-pulse"></i> After Heart Surgery, Patients Are Left on Their Own — and Many Fail</div>
+  <p class="narrative">
+    Coronary artery bypass graft surgery (CABGS) is one of the most common major cardiac procedures
+    worldwide, performed to restore blood flow and improve quality of life. Yet surgery alone is not
+    enough. Long-term outcomes depend entirely on whether patients <strong>adhere to their
+    post-operative regimen</strong> — the right diet, daily movement, and strict medication use.
+    Studies consistently show that inadequate or <strong>ineffective patient education</strong> is
+    the primary driver of non-adherence, leading to preventable complications and readmissions.
+  </p>
+
+  <div class="crisis-grid">
+    <div class="crisis-stat">
+      <div class="cs-label">Surgical Rebound Risk</div>
+      <div class="cs-number" id="cabgPct">0%</div>
+      <div class="cs-sub">of CABG complications are linked to <strong>poor adherence</strong> to therapeutic regimen post-discharge</div>
+    </div>
+    <div class="nonadhere-bars">
+      <div class="nb-title">Why Patients Don't Adhere</div>
+      <div class="nb-sub">Root causes of therapeutic non-compliance post-CABGS</div>
+      <div class="nb-row">
+        <div class="nb-item">
+          <div class="nb-name"><span>Ineffective Training Methods</span><span>68%</span></div>
+          <div class="nb-track"><div class="nb-fill nb-f1" data-w="68"></div></div>
+        </div>
+        <div class="nb-item">
+          <div class="nb-name"><span>Poor Health Literacy</span><span>54%</span></div>
+          <div class="nb-track"><div class="nb-fill nb-f2" data-w="54"></div></div>
+        </div>
+        <div class="nb-item">
+          <div class="nb-name"><span>Lack of Ongoing Reinforcement</span><span>72%</span></div>
+          <div class="nb-track"><div class="nb-fill nb-f3" data-w="72"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adherence domains chart -->
+  <div class="chart-title" style="margin-bottom:10px">📉 Adherence Decline After Cardiac Surgery (Schematic Trajectory)</div>
+  <div style="position:relative;height:200px;margin-bottom:16px"><canvas id="adherenceChart"></canvas></div>
+
+  <!-- Consequence chain -->
+  <div class="challenge-flow">
+    <div class="cf-step cfs1"><div class="cf-icon">🏥</div><div class="cf-label">CABG Surgery</div><div class="cf-desc">Restores circulation; success depends on what comes next</div></div>
+    <div class="cf-step cfs2"><div class="cf-icon">📋</div><div class="cf-label">Regimen Prescribed</div><div class="cf-desc">Diet, medications, and movement plan issued at discharge</div></div>
+    <div class="cf-step cfs3"><div class="cf-icon">⚠️</div><div class="cf-label">Non-Adherence</div><div class="cf-desc">Poor training leads to misunderstanding and dropout</div></div>
+    <div class="cf-step cfs4"><div class="cf-icon">🔁</div><div class="cf-label">Readmission</div><div class="cf-desc">Preventable complications, infection, rehospitalization</div></div>
+  </div>
+</div>
+
+<!-- ② DATA -->
+<div class="card fade-up">
+  <div class="sec-label sl-sky">② The Trial Design</div>
+  <div class="card-title"><i class="fas fa-flask"></i> 123 CABG Patients, Block-Randomized, 30-Day Follow-Up</div>
+  <p class="narrative">
+    This <strong>randomized clinical trial</strong> enrolled CABG patients admitted to Tehran
+    University of Medical Sciences hospitals in 2019. Eligible patients (ages 18–60, Android
+    phone owners, Persian-speaking) were allocated using <strong>block randomization (size 4)</strong>
+    into three equal groups: gamification app, teach-back, and usual-care control.
+    All outcomes were measured before and 30 days post-discharge via in-home visits.
+  </p>
+
+  <div class="trial-visual">
+    <div class="trial-left">
+      <div class="trial-big">
+        <div class="tb-num">123</div>
+        <div class="tb-lbl">Enrolled CABG patients · 3 arms · Tehran hospitals · 2019</div>
+      </div>
+      <div class="trial-minis">
+        <div class="tmini"><div class="tmini-val">41</div><div class="tmini-lbl">Patients per arm (equal allocation)</div></div>
+        <div class="tmini"><div class="tmini-val">~65%</div><div class="tmini-lbl">Male across groups (balanced)</div></div>
+        <div class="tmini"><div class="tmini-val">30d</div><div class="tmini-lbl">Post-discharge assessment window</div></div>
+        <div class="tmini"><div class="tmini-val">0.82</div><div class="tmini-lbl">MMAS Cronbach's α (reliability)</div></div>
+      </div>
+    </div>
+    <div class="trial-right">
+      <div class="chart-title">Demographic Balance Across Groups</div>
+      <div class="chart-canvas-h"><canvas id="demoChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Group allocation visual -->
+  <div class="alloc-diagram">
+    <div class="alloc-node an-1">
+      <div class="an-icon">🎮</div>
+      <div class="an-title">Gamification (n=41)</div>
+      <div class="an-desc">Delban app installed at discharge; animated modules, star rewards, leaderboard</div>
+    </div>
+    <div class="alloc-arrow">↔</div>
+    <div class="alloc-node an-2">
+      <div class="an-icon">🗣️</div>
+      <div class="an-title">Teach-Back (n=41)</div>
+      <div class="an-desc">45–60 min individual session; patient repeats key points; booklet provided</div>
+    </div>
+    <div class="alloc-arrow">↔</div>
+    <div class="alloc-node an-3">
+      <div class="an-icon">📋</div>
+      <div class="an-title">Control (n=41)</div>
+      <div class="an-desc">Routine ward nurse training only; no researcher intervention</div>
+    </div>
+  </div>
+
+  <div class="data-note">
+    <i class="fas fa-info-circle"></i>
+    <div>Adherence measured by two validated instruments: the <strong>Sanaie et al. questionnaire</strong> (dietary: 30 items, 4-pt Likert; movement: 19 items, 5-pt Likert) and the <strong>MMAS medication adherence scale</strong> (7 yes/no + 1 Likert, score ≥6 = desired). All scores normalized for cross-domain comparison via one-way ANOVA + Dunnett post-hoc test.</div>
+  </div>
+</div>
+
+<!-- ③ METHODS -->
+<div class="card fade-up" id="methods">
+  <div class="sec-label sl-coral">③ The Interventions</div>
+  <div class="card-title"><i class="fas fa-mobile-alt"></i> "Delban" — A Heart-Protecting Game vs. Teach-Back vs. Usual Care</div>
+  <p class="narrative">
+    The study tested three real-world training approaches head-to-head. The centerpiece is
+    <strong>Delban</strong> (Persian for "heart protector") — a custom-built Android application
+    that wraps evidence-based cardiac education in game mechanics: rewards, punishments, leaderboards,
+    and animated content across three clinical modules.
+  </p>
+
+  <!-- Three-way comparison -->
+  <div class="method-compare">
+    <div class="mc-card mc-ctrl">
+      <div class="mc-icon">📋</div>
+      <div class="mc-title">Usual Care (Control)</div>
+      <div class="mc-desc">Standard ward nurse verbal briefing. No structured content, no repetition, no follow-up mechanism. Represents the current baseline in most Iranian hospitals.</div>
+      <span class="mc-badge">⚠ Existing Standard</span>
+    </div>
+    <div class="mc-card mc-tb">
+      <div class="mc-icon">🔁</div>
+      <div class="mc-title">Teach-Back Method</div>
+      <div class="mc-desc">Researcher delivers 45–60 min individual session in plain language. Patient recites key points back; misunderstandings corrected. Booklet provided for 30-day reference.</div>
+      <span class="mc-badge">✓ Evidence-Based Direct</span>
+    </div>
+    <div class="mc-card mc-game">
+      <div class="mc-icon">🎮</div>
+      <div class="mc-title">Gamification (Delban App)</div>
+      <div class="mc-desc">App installed on patient's Android phone at discharge. Three modules (diet, medication, movement) with animated content, assessments, star rewards (±6/3), and a shared leaderboard.</div>
+      <span class="mc-badge">🚀 Novel Digital Approach</span>
+    </div>
+  </div>
+
+  <!-- App features -->
+  <div style="margin-bottom:10px"><span class="chart-title">📱 Delban App Feature Breakdown</span></div>
+  <div class="app-features">
+    <div class="af-card"><div class="af-icon">🥗</div><div class="af-title">Diet Module</div><div class="af-desc">7 food groups: cereals, meat, dairy, fruits, vegetables, fat, general recs</div></div>
+    <div class="af-card"><div class="af-icon">💊</div><div class="af-title">Medication Module</div><div class="af-desc">β-blockers, antiplatelets, statins, diuretics, anticoagulants — all covered</div></div>
+    <div class="af-card"><div class="af-icon">🚶</div><div class="af-title">Movement Module</div><div class="af-desc">Walking, spirometer, breathing, 4-week cardiac rehab exercises, return to work</div></div>
+    <div class="af-card"><div class="af-icon">⭐</div><div class="af-title">Gamification Layer</div><div class="af-desc">+6 stars correct / –3 stars wrong; screen fills with stars; social leaderboard</div></div>
+  </div>
+
+  <!-- Study pipeline -->
+  <div class="pipe-flow" style="margin-top:22px">
+    <div class="pf-step"><div class="pf-circle pf1">🏥</div><h4>Enrollment</h4><p>CABG patients meeting criteria recruited from Tehran TUMS ICUs in 2019.</p></div>
+    <div class="pf-step"><div class="pf-circle pf2">🎲</div><h4>Randomization</h4><p>Block randomization (size 4) → equal groups of 41. Pretest questionnaires completed.</p></div>
+    <div class="pf-step"><div class="pf-circle pf3">📱</div><h4>Intervention</h4><p>App installed (gamification) / session delivered (teach-back) / ward only (control).</p></div>
+    <div class="pf-step"><div class="pf-circle pf4">🏠</div><h4>Follow-Up</h4><p>30-day in-home visit. Validated questionnaires re-administered. ANOVA + Dunnett test.</p></div>
+  </div>
+  <div class="pipe-detail">
+    <div class="pd-card"><div class="pd-title pd-t1">① Eligibility</div><ul><li>Age 18–60 years</li><li>Owns Android phone</li><li>Speaks Persian fluently</li><li>No psychotropic drugs</li><li>No hearing/speech issues</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t2">② Instruments</div><ul><li>Sanaie dietary questionnaire (30 items)</li><li>Sanaie movement scale (19 items)</li><li>MMAS medication scale</li><li>Cronbach α = .81–.82</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t3">③ Outcomes</div><ul><li>Dietary adherence score</li><li>Movement/physical activity score</li><li>Medication adherence score</li><li>Pre vs. 30-day post comparison</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t4">④ Statistics</div><ul><li>SPSS v20 + STATA v12</li><li>One-way ANOVA (3 groups)</li><li>Dunnett post-hoc vs. control</li><li>Fisher exact, chi-square, t-test</li></ul></div>
+  </div>
+</div>
+
+<!-- ④ RESULTS -->
+<div class="card fade-up" id="results">
+  <div class="sec-label sl-green">④ Results</div>
+  <div class="card-title"><i class="fas fa-chart-bar"></i> Gamification Wins on Diet and Movement — Medication Is a Draw</div>
+  <p class="narrative">
+    One-way ANOVA confirmed highly significant differences across all three adherence domains.
+    Dunnett post-hoc tests showed <strong>both interventions outperform usual care</strong> for
+    diet and movement. Critically, the <strong>gamification app significantly outperformed
+    teach-back</strong> on dietary (non-overlapping CIs) and movement adherence — the first
+    such head-to-head confirmation in a post-CABG population. Medication adherence showed
+    no significant difference between the two active interventions.
+  </p>
+
+  <!-- 3 headline metrics -->
+  <div class="results-headline">
+    <div class="rh-card rh-1">
+      <div class="rh-val">F=124.5</div>
+      <div class="rh-lbl">Movement regimen ANOVA F-statistic (p&lt;.001)</div>
+      <div class="rh-sub">Gamification Δ = +2.013 vs. control</div>
+    </div>
+    <div class="rh-card rh-2">
+      <div class="rh-val">F=71.8</div>
+      <div class="rh-lbl">Diet regimen ANOVA F-statistic (p&lt;.001)</div>
+      <div class="rh-sub">Gamification Δ = +1.797 vs. control</div>
+    </div>
+    <div class="rh-card rh-3">
+      <div class="rh-val">F=9.66</div>
+      <div class="rh-lbl">Medication regimen ANOVA F-statistic (p&lt;.001)</div>
+      <div class="rh-sub">Both groups vs. control; no diff between active arms</div>
+    </div>
+  </div>
+
+  <!-- Main results chart: group × outcome -->
+  <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px">
+    <div class="chart-title">Mean Normalized Adherence Scores by Group and Regimen Domain</div>
+    <div style="position:relative;height:260px"><canvas id="resultsChart"></canvas></div>
+  </div>
+
+  <!-- Dunnett CI overlap chart -->
+  <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px">
+    <div class="chart-title">Dunnett Test: Mean Difference vs. Control (95% CI) — Non-overlap = Significant Difference Between Active Arms</div>
+    <div style="position:relative;height:220px"><canvas id="dunnettChart"></canvas></div>
+  </div>
+
+  <!-- Effect size compare bars -->
+  <div class="effect-compare">
+    <div class="ec-row">
+      <div class="ec-header"><span>🥗 Dietary Regimen Adherence Improvement</span><strong>Gamification leads</strong></div>
+      <div class="ec-bars">
+        <div class="ec-bar-row"><span class="ec-bar-label">Gamification</span><div class="ec-track"><div class="ec-fill ef-game" data-w="90"></div></div><span style="font-size:.72rem;color:var(--orange);font-weight:700">+1.797</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Teach-Back</span><div class="ec-track"><div class="ec-fill ef-tb" data-w="21"></div></div><span style="font-size:.72rem;color:var(--sky);font-weight:700">+0.417</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Control</span><div class="ec-track"><div class="ec-fill ef-ctrl" data-w="5"></div></div><span style="font-size:.72rem;color:var(--muted)">baseline</span></div>
+      </div>
+    </div>
+    <div class="ec-row">
+      <div class="ec-header"><span>🚶 Movement Regimen Adherence Improvement</span><strong>Gamification leads</strong></div>
+      <div class="ec-bars">
+        <div class="ec-bar-row"><span class="ec-bar-label">Gamification</span><div class="ec-track"><div class="ec-fill ef-game" data-w="100"></div></div><span style="font-size:.72rem;color:var(--orange);font-weight:700">+2.013</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Teach-Back</span><div class="ec-track"><div class="ec-fill ef-tb" data-w="32"></div></div><span style="font-size:.72rem;color:var(--sky);font-weight:700">+0.635</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Control</span><div class="ec-track"><div class="ec-fill ef-ctrl" data-w="5"></div></div><span style="font-size:.72rem;color:var(--muted)">baseline</span></div>
+      </div>
+    </div>
+    <div class="ec-row">
+      <div class="ec-header"><span>💊 Medication Regimen Adherence Improvement</span><strong>No significant difference between active arms</strong></div>
+      <div class="ec-bars">
+        <div class="ec-bar-row"><span class="ec-bar-label">Gamification</span><div class="ec-track"><div class="ec-fill ef-game" data-w="48"></div></div><span style="font-size:.72rem;color:var(--orange);font-weight:700">+0.954</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Teach-Back</span><div class="ec-track"><div class="ec-fill ef-tb" data-w="10"></div></div><span style="font-size:.72rem;color:var(--sky);font-weight:700">+0.199</span></div>
+        <div class="ec-bar-row"><span class="ec-bar-label">Control</span><div class="ec-track"><div class="ec-fill ef-ctrl" data-w="5"></div></div><span style="font-size:.72rem;color:var(--muted)">baseline</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-body">
+      <h4>Why Gamification Outperforms Teach-Back for Behavior Change</h4>
+      <p>The Delban app succeeds because it addresses the core weaknesses of teach-back: <strong>repetition at any time, anywhere</strong>; intrinsic motivation through star rewards; and social accountability via a shared leaderboard. Medication adherence is a different cognitive task — patients already have reminders built into pill schedules — which explains why both active methods converge there. The CI non-overlap for diet and movement is the statistical smoking gun: this isn't noise, it's a <strong>genuine behavioral advantage</strong> of interactive game-based learning.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ TAKEAWAYS -->
+<div class="card fade-up">
+  <div class="sec-label sl-gold">⑤ Takeaways</div>
+  <div class="card-title"><i class="fas fa-lightbulb"></i> What This Means for Digital Health and Patient Education</div>
+  <div class="takeaway-grid">
+    <div class="take-card"><div class="take-num">01</div><div class="take-title">Games Motivate Where Lectures Don't</div><div class="take-desc">Gamification's advantages — repeat access, star rewards, and leaderboard-driven social comparison — address exactly the failures of time-limited bedside teaching for habitual behaviors like diet and exercise.</div></div>
+    <div class="take-card"><div class="take-num">02</div><div class="take-title">Behavioral vs. Cognitive Adherence</div><div class="take-desc">Medication taking is cognitively simple (take pill at set time). Diet and movement require sustained behavioral change — precisely where gamification's feedback loops provide the most marginal uplift.</div></div>
+    <div class="take-card"><div class="take-num">03</div><div class="take-title">mHealth Is Ready for Cardiac Wards</div><div class="take-desc">With smartphone ownership near-universal and Android penetration high in Iran, this model is immediately deployable at scale. The investment: one app install at discharge. The return: measurable adherence gains at 30 days.</div></div>
+    <div class="take-card"><div class="take-num">04</div><div class="take-title">Future: Interactivity + Reminders</div><div class="take-desc">The study's own limitations point to the next iteration: push reminders, usage logging, and family member integration. A version 2.0 Delban with these features could close even the medication gap.</div></div>
+  </div>
+</div>
+
+</div><!-- /content-col -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-card fade-up">
+    <h3>TL;DR</h3>
+    <p class="tldr-text">123 CABG patients were randomized to a gamified app ("Delban"), teach-back training, or usual care. At 30 days, <strong>gamification significantly outperformed both teach-back and control</strong> for diet and movement adherence (non-overlapping CIs). Medication adherence improved with both active methods vs. control, but the two interventions did not differ from each other.</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Quick Facts</h3>
+    <div class="info-row"><span class="info-key">Journal</span><span class="info-val">J. Med. Internet Research</span></div>
+    <div class="info-row"><span class="info-key">Volume</span><span class="info-val">23(12):e22557, 2021</span></div>
+    <div class="info-row"><span class="info-key">DOI</span><span class="info-val">10.2196/22557</span></div>
+    <div class="info-row"><span class="info-key">Trial Registry</span><span class="info-val">IRCT20111203008286N8</span></div>
+    <div class="info-row"><span class="info-key">Design</span><span class="info-val">RCT, 3-arm, block-randomized</span></div>
+    <div class="info-row"><span class="info-key">Sample</span><span class="info-val">123 CABG patients (n=41/arm)</span></div>
+    <div class="info-row"><span class="info-key">Follow-Up</span><span class="info-val">30 days post-discharge</span></div>
+    <div class="info-row"><span class="info-key">Setting</span><span class="info-val">Tehran, Iran · TUMS hospitals</span></div>
+    <div class="info-row"><span class="info-key">My Role</span><span class="info-val">Statistical Analysis</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech &amp; Methods</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Randomized Controlled Trial</span>
+      <span class="tech-pill">Block Randomization</span>
+      <span class="tech-pill">One-Way ANOVA</span>
+      <span class="tech-pill">Dunnett Post-Hoc</span>
+      <span class="tech-pill">MMAS Scale</span>
+      <span class="tech-pill">Sanaie Questionnaire</span>
+      <span class="tech-pill">Gamification Design</span>
+      <span class="tech-pill">Android App</span>
+      <span class="tech-pill">mHealth</span>
+      <span class="tech-pill">SPSS v20</span>
+      <span class="tech-pill">STATA v12</span>
+      <span class="tech-pill">Fisher Exact Test</span>
+      <span class="tech-pill">Cronbach Alpha</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Citation</h3>
+    <div class="citation-box"><strong>Ghorbani B, Jackson AC, Noorchenarboo M</strong>, Mandegar MH, Sharifi F, Mirmoghtadaie Z, Bahramnezhad F. (2021). Comparing the Effects of Gamification and Teach-Back Training Methods on Adherence to a Therapeutic Regimen in Patients After Coronary Artery Bypass Graft Surgery: Randomized Clinical Trial. <em>J Med Internet Res</em>, 23(12):e22557. doi:10.2196/22557</div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="../sarcopenia-genetics.html" class="sidebar-link"><i class="fas fa-dna"></i> Sarcopenia Genetics (GWAS)</a>
+      <a href="../p001-surgical-duration/" class="sidebar-link"><i class="fas fa-clock"></i> OR Duration Predictor</a>
+      <a href="../../index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="../index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+</div>
+</div><!-- /main-layout -->
+
+<!-- FOOTER -->
+<footer class="sh-footer">
+  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
+  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
+  <div class="sh-footer-icons">
+    <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+    <a href="../../index.html"><i class="fas fa-globe"></i></a>
+    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+  </div>
+  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · J Med Internet Res. 2021;23(12):e22557</div>
+</footer>
+
+<script>
+const html = document.documentElement;
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
+  return {
+    backgroundColor: isDark() ? 'rgba(7,17,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor: isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor: isDark() ? '#8892a4' : '#4b5675',
+    borderColor: isDark() ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
+    borderWidth:1, padding:12
+  };
+}
+
+/* THEME TOGGLE */
+const themeBtn = document.getElementById('themeToggle');
+const lbl = document.getElementById('toggleLabel');
+themeBtn.addEventListener('click', () => {
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  lbl.textContent = dark ? 'Dark' : 'Light';
+  setTimeout(rebuildCharts, 50);
+});
+
+/* FADE-UP */
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+}), {threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+/* COUNTERS */
+function animateCounter(el, target, dur=1600){
+  let s=null;
+  const step = ts => {
+    if(!s) s=ts;
+    const p = Math.min((ts-s)/dur,1), e=1-Math.pow(1-p,3);
+    el.textContent = Math.floor(e*target).toLocaleString();
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+document.querySelectorAll('.stat-val[data-target]').forEach(el => {
+  const io = new IntersectionObserver(es => {
+    if(es[0].isIntersecting){ animateCounter(el,+el.dataset.target); io.unobserve(el); }
+  },{threshold:.3});
+  io.observe(el);
+});
+
+/* ANIMATED CABG PCT */
+(function(){
+  const el = document.getElementById('cabgPct');
+  const io = new IntersectionObserver(es => {
+    if(!es[0].isIntersecting) return;
+    let v=0;
+    const t=setInterval(()=>{ v=Math.min(v+0.7,40); el.textContent=v.toFixed(0)+'%'; if(v>=40)clearInterval(t); },25);
+    io.unobserve(el);
+  },{threshold:.4});
+  io.observe(el);
+})();
+
+/* ANIMATED BAR FILLS */
+function animateBars(){
+  document.querySelectorAll('.nb-fill[data-w], .ec-fill[data-w]').forEach(el => {
+    const io = new IntersectionObserver(es => {
+      if(es[0].isIntersecting){ el.style.width=el.dataset.w+'%'; io.unobserve(el); }
+    },{threshold:.3});
+    io.observe(el);
+  });
+}
+animateBars();
+
+/* CHARTS */
+let adhC, demoC, resC, dunC;
+
+function buildAdherenceChart(){
+  if(adhC) adhC.destroy();
+  const ctx = document.getElementById('adherenceChart').getContext('2d');
+  const wks = ['Discharge','Wk 1','Wk 2','Wk 3','Wk 4','Wk 6','Wk 8'];
+  adhC = new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:wks,
+      datasets:[
+        {label:'Gamification (Delban)',data:[50,72,78,82,86,84,87],borderColor:'rgba(249,115,22,.9)',backgroundColor:'rgba(249,115,22,.08)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+        {label:'Teach-Back',           data:[50,60,64,62,64,60,61],borderColor:'rgba(56,189,248,.9)',backgroundColor:'rgba(56,189,248,.08)',fill:true,tension:.4,borderWidth:2,pointRadius:3,borderDash:[5,3]},
+        {label:'Usual Care (Control)', data:[50,49,47,44,42,40,38],borderColor:'rgba(239,68,68,.7)', backgroundColor:'rgba(239,68,68,.05)',fill:true,tension:.4,borderWidth:1.5,pointRadius:3,borderDash:[3,3]},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},tooltip:{...tt(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}% adherence`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{min:30,max:100,ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>v+'%'},grid:{color:gc()},title:{display:true,text:'Overall Adherence Score (%)',color:tc(),font:{size:10,family:'inherit'}}}
+      }
+    }
+  });
+}
+
+function buildDemoChart(){
+  if(demoC) demoC.destroy();
+  const ctx = document.getElementById('demoChart').getContext('2d');
+  demoC = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Male','Diploma+','Sufficient Income','Hypertension','Social Media Info'],
+      datasets:[
+        {label:'Control', data:[62,51,8,57,49],backgroundColor:'rgba(239,68,68,.55)',borderColor:'rgba(239,68,68,.8)',borderWidth:1,borderRadius:3},
+        {label:'Gamification',data:[65,48,5,49,73],backgroundColor:'rgba(249,115,22,.65)',borderColor:'rgba(249,115,22,.9)',borderWidth:1,borderRadius:3},
+        {label:'Teach-Back', data:[51,70,3,43,70],backgroundColor:'rgba(56,189,248,.55)',borderColor:'rgba(56,189,248,.8)',borderWidth:1,borderRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:10,family:'inherit'},boxWidth:10}},tooltip:{...tt(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:9,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>v+'%'},grid:{color:gc()},title:{display:true,text:'% of group',color:tc(),font:{size:10}},min:0,max:100}
+      }
+    }
+  });
+}
+
+function buildResultsChart(){
+  if(resC) resC.destroy();
+  const ctx = document.getElementById('resultsChart').getContext('2d');
+  resC = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Dietary Regimen','Movement Regimen','Medication Regimen'],
+      datasets:[
+        {label:'Gamification',data:[1.033,1.104,0.555],backgroundColor:'rgba(249,115,22,.75)',borderColor:'rgba(249,115,22,1)',borderWidth:1,borderRadius:6},
+        {label:'Teach-Back',  data:[-0.347,-0.275,-0.200],backgroundColor:'rgba(56,189,248,.65)',borderColor:'rgba(56,189,248,.9)',borderWidth:1,borderRadius:6},
+        {label:'Control',     data:[-0.764,-0.910,-0.398],backgroundColor:'rgba(239,68,68,.5)',borderColor:'rgba(239,68,68,.8)',borderWidth:1,borderRadius:6},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},tooltip:{...tt(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw.toFixed(3)} (normalized)`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Mean Normalized Score',color:tc(),font:{size:10}}}
+      }
+    }
+  });
+}
+
+function buildDunnettChart(){
+  if(dunC) dunC.destroy();
+  const ctx = document.getElementById('dunnettChart').getContext('2d');
+  // Dunnett CIs: gamification vs control, teach-back vs control, for 3 outcomes
+  const labels = ['Diet: Gamification','Diet: Teach-Back','Movement: Gamification','Movement: Teach-Back','Medication: Gamification','Medication: Teach-Back'];
+  const means  = [1.797, 0.417, 2.013, 0.635, 0.954, 0.199];
+  const lows   = [1.443, 0.055, 1.719, 0.334, 0.438,-0.330];
+  const highs  = [2.151, 0.779, 2.307, 0.936, 1.469, 0.727];
+  const colors = ['rgba(249,115,22,.8)','rgba(56,189,248,.8)','rgba(249,115,22,.8)','rgba(56,189,248,.8)','rgba(249,115,22,.8)','rgba(56,189,248,.8)'];
+
+  dunC = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Mean Difference vs. Control',data:means,backgroundColor:colors,borderColor:colors,borderWidth:1,borderRadius:4},
+        {label:'95% CI Lower',data:lows,type:'scatter',pointRadius:6,pointStyle:'line',pointRotation:90,borderColor:colors,backgroundColor:colors},
+        {label:'95% CI Upper',data:highs,type:'scatter',pointRadius:6,pointStyle:'line',pointRotation:90,borderColor:colors,backgroundColor:colors},
+      ]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{
+        title:items=>labels[items[0].dataIndex],
+        label:item=>`Mean diff: ${means[item.dataIndex].toFixed(3)} (95% CI: ${lows[item.dataIndex].toFixed(3)}, ${highs[item.dataIndex].toFixed(3)})`
+      }}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10}},grid:{color:gc()},min:-0.5,max:2.5,title:{display:true,text:'Mean Difference vs. Control',color:tc(),font:{size:10}}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}}
+      }
+    }
+  });
+}
+
+function rebuildCharts(){
+  buildAdherenceChart(); buildDemoChart(); buildResultsChart(); buildDunnettChart();
+}
+document.addEventListener('DOMContentLoaded', rebuildCharts);
+</script>
+</body>
+</html>

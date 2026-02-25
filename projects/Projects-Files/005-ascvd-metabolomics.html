@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASCVD Metabolomics · Mohammad Noorchenarboo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root,[data-theme="dark"]{
+  --body-bg:#070d1f;--section-alt:#0b1224;
+  --text:#e2e8f0;--muted:#8892a4;
+  --accent:#4f8ef7;--teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;--red:#ef4444;
+  --glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
+  --card-hover-bg:rgba(255,255,255,.07);--card-hover-border:rgba(79,142,247,.3);
+  --shadow-card:0 8px 32px rgba(0,0,0,.4);
+  --radius:14px;
+}
+[data-theme="light"]{
+  --body-bg:#f8faff;--section-alt:#eef2fb;
+  --text:#0f172a;--muted:#4b5675;
+  --accent:#2563eb;--teal:#0891b2;--green:#16a34a;--gold:#d97706;--red:#dc2626;
+  --glass:rgba(255,255,255,.7);--glass-border:rgba(37,99,235,.12);
+  --card-hover-bg:rgba(255,255,255,.9);--card-hover-border:rgba(37,99,235,.3);
+  --shadow-card:0 8px 32px rgba(37,99,235,.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;transition:background .35s,color .35s}
+a{text-decoration:none;color:inherit}
+canvas{display:block}
+
+/* PAGE VARS */
+:root,[data-theme="dark"]{
+  --orange:#f97316;--crimson:#ef4444;--amber:#f59e0b;--rose:#fb7185;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(249,115,22,.15),transparent 65%);
+  --grid-col:rgba(249,115,22,.03);
+}
+[data-theme="light"]{
+  --orange:#ea580c;--crimson:#dc2626;--amber:#d97706;--rose:#e11d48;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(249,115,22,.1),transparent 65%);
+  --grid-col:rgba(249,115,22,.04);
+}
+
+/* NAV */
+.sh-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(7,13,31,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);transition:background .35s}
+[data-theme="light"] .sh-nav{background:rgba(248,250,255,.9)}
+.sh-nav-logo{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sh-nav-links{display:flex;gap:24px;font-size:.84rem}
+.sh-nav-links a{color:var(--muted);transition:.2s}
+.sh-nav-links a:hover,.sh-nav-links a.active{color:var(--accent)}
+.sh-nav-right{display:flex;align-items:center;gap:14px}
+.sh-nav-social{display:flex;gap:10px}
+.sh-nav-social a{color:var(--muted);font-size:.9rem;transition:.2s}
+.sh-nav-social a:hover{color:var(--accent)}
+.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);transition:.2s;font-family:inherit}
+.theme-toggle:hover{border-color:var(--card-hover-border);color:var(--text)}
+[data-theme="dark"] .toggle-sun,[data-theme="light"] .toggle-moon{display:none}
+
+/* HERO */
+.hero{padding:110px 24px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:var(--hero-grad)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid-col) 1px,transparent 1px),linear-gradient(90deg,var(--grid-col) 1px,transparent 1px);background-size:48px 48px}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.breadcrumb{font-size:.78rem;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.breadcrumb a{color:var(--muted);transition:.2s}.breadcrumb a:hover{color:var(--accent)}.breadcrumb span{opacity:.4}
+.tag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:.74rem;font-weight:700;letter-spacing:.03em}
+.pill-orange{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);color:var(--orange)}
+.pill-gold{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--gold)}
+.pub-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;box-shadow:0 0 6px rgba(245,158,11,.6)}
+h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1.15;margin-bottom:14px;color:var(--text)}
+.grad-text{background:linear-gradient(135deg,var(--orange),var(--crimson));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--muted);max-width:680px;line-height:1.72;margin-bottom:26px}
+.hero-sub strong{color:var(--text)}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:26px}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta i{color:var(--orange)}.hero-meta strong{color:var(--text)}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit}
+.btn-pub{background:rgba(34,197,94,.14);color:var(--green);border-color:rgba(34,197,94,.3)}
+.btn-pub:hover{background:rgba(34,197,94,.24);transform:translateY(-2px)}
+.btn-anchor{background:var(--glass);color:var(--text);border-color:var(--glass-border)}
+.btn-anchor:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
+.btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border)}
+.btn-back:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
+
+/* STATS BAR */
+.stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:background .35s;margin-top:40px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--glass-border)}
+.stat-item{background:var(--section-alt);padding:22px 16px;text-align:center;transition:background .35s}
+.stat-val{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--orange),var(--crimson));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:.74rem;color:var(--muted);line-height:1.4}
+
+/* LAYOUT */
+.main-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start}
+.content-col{display:flex;flex-direction:column;gap:28px}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px}
+
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s}
+.card:hover{background:var(--card-hover-bg);border-color:rgba(249,115,22,.25);transform:translateY(-3px)}
+.card-title{font-size:1rem;font-weight:800;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+.card-title i{color:var(--orange);font-size:.9rem}
+.narrative{font-size:.92rem;color:var(--muted);margin-bottom:16px;line-height:1.72}
+.narrative strong{color:var(--text)}
+
+/* SEC LABELS */
+.sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 14px;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.sec-label::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:pg-shimmer 4s ease-in-out infinite}
+@keyframes pg-shimmer{0%,100%{left:-100%}50%{left:100%}}
+.sl-orange{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.25)}
+.sl-teal{background:rgba(6,182,212,.1);color:var(--teal);border:1px solid rgba(6,182,212,.22)}
+.sl-rose{background:rgba(251,113,133,.1);color:var(--rose);border:1px solid rgba(251,113,133,.22)}
+.sl-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+.sl-gold{background:rgba(245,158,11,.1);color:var(--gold);border:1px solid rgba(245,158,11,.22)}
+[data-theme="light"] .sl-orange{background:rgba(234,88,12,.07);color:#c2410c;border-color:rgba(234,88,12,.25)}
+[data-theme="light"] .sl-teal{background:rgba(8,145,178,.07);color:#0e7490}
+[data-theme="light"] .sl-rose{background:rgba(225,29,72,.07);color:#be123c}
+[data-theme="light"] .sl-green{background:rgba(22,163,74,.07);color:#15803d}
+[data-theme="light"] .sl-gold{background:rgba(217,119,6,.07);color:#92400e}
+
+/* FADE-UP */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ── PROBLEM SECTION ── */
+.burden-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.heart-stat{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(239,68,68,.07));border:1px solid rgba(249,115,22,.2);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.heart-stat::before{content:'❤️';position:absolute;top:-10px;right:-10px;font-size:5rem;opacity:.06}
+.hs-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:12px}
+.hs-number{font-size:3.4rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--orange),var(--crimson));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.hs-sub{font-size:.84rem;color:var(--muted);line-height:1.5}
+.hs-sub strong{color:var(--text)}
+
+.why-meta-block{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(249,115,22,.05));border:1px solid rgba(6,182,212,.2);border-radius:var(--radius);padding:24px}
+.wm-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.wm-sub{font-size:.76rem;color:var(--muted);margin-bottom:16px}
+.wm-row{display:flex;flex-direction:column;gap:10px}
+.wm-item{display:flex;flex-direction:column;gap:5px}
+.wm-name{display:flex;justify-content:space-between;font-size:.78rem}
+.wm-name span:first-child{color:var(--muted)}.wm-name span:last-child{font-weight:700;color:var(--text)}
+.wm-track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+[data-theme="light"] .wm-track{background:rgba(0,0,0,.07)}
+.wm-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,.8,.44,1)}
+.wm-f1{background:linear-gradient(90deg,var(--orange),var(--crimson))}
+.wm-f2{background:linear-gradient(90deg,var(--teal),var(--green))}
+.wm-f3{background:linear-gradient(90deg,var(--amber),var(--orange))}
+
+/* CVD burden chart */
+.cvd-chart-wrap{position:relative;height:220px;margin-bottom:4px}
+
+/* Risk group cards */
+.risk-group-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.rg-card{border-radius:12px;padding:18px 12px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+.rg-card:hover{transform:translateY(-4px)}
+.rg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.rg-a{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}.rg-a::before{background:linear-gradient(90deg,var(--green),transparent)}
+.rg-b{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.2)}.rg-b::before{background:linear-gradient(90deg,var(--teal),transparent)}
+.rg-c{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2)}.rg-c::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.rg-d{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}.rg-d::before{background:linear-gradient(90deg,var(--crimson),transparent)}
+.rg-n{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:4px}
+.rg-a .rg-n{color:var(--green)}.rg-b .rg-n{color:var(--teal)}.rg-c .rg-n{color:var(--amber)}.rg-d .rg-n{color:var(--crimson)}
+.rg-lbl{font-size:.72rem;color:var(--muted);line-height:1.5}
+.rg-pct{font-size:.68rem;font-weight:700;margin-top:4px}
+.rg-a .rg-pct{color:var(--green)}.rg-b .rg-pct{color:var(--teal)}.rg-c .rg-pct{color:var(--amber)}.rg-d .rg-pct{color:var(--crimson)}
+
+/* Consequence flow */
+.consequence-flow{display:flex;align-items:stretch;gap:0;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-border)}
+.cf-step{flex:1;padding:16px 14px;text-align:center;position:relative}
+.cf-step:not(:last-child)::after{content:'›';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:var(--muted);z-index:2}
+.cf-s1{background:rgba(249,115,22,.06)}.cf-s2{background:rgba(245,158,11,.06)}.cf-s3{background:rgba(239,68,68,.06)}.cf-s4{background:rgba(107,33,168,.06)}
+.cf-icon{font-size:1.6rem;margin-bottom:6px}
+.cf-label{font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.cf-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
+
+/* ── DATA SECTION ── */
+.cohort-visual{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start}
+.cohort-left{display:flex;flex-direction:column;gap:14px}
+.cohort-big-stat{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(6,182,212,.06));border:1px solid rgba(249,115,22,.22);border-radius:var(--radius);padding:24px;text-align:center}
+.cbs-num{font-size:3.4rem;font-weight:900;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--orange),var(--crimson));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cbs-lbl{font-size:.82rem;color:var(--muted)}
+.cohort-minis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmini{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px;text-align:center;transition:.2s}
+.cmini:hover{border-color:rgba(249,115,22,.3);transform:translateY(-2px)}
+.cmini-val{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:4px;color:var(--orange)}
+.cmini-lbl{font-size:.72rem;color:var(--muted);line-height:1.35}
+.cohort-right{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px}
+.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
+.chart-canvas-h{position:relative;height:220px}
+.data-note{background:linear-gradient(135deg,rgba(249,115,22,.06),rgba(6,182,212,.04));border:1px solid rgba(249,115,22,.18);border-radius:10px;padding:16px 20px;font-size:.83rem;color:var(--muted);line-height:1.65;display:flex;gap:12px;align-items:flex-start;margin-top:16px}
+.data-note i{color:var(--orange);margin-top:2px;flex-shrink:0}
+.data-note strong{color:var(--text)}
+
+/* ── METHODS SECTION ── */
+.method-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.mc-card{border-radius:12px;padding:20px;text-align:center}
+.mc-old{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18)}
+.mc-new{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.18)}
+.mc-icon{font-size:1.8rem;margin-bottom:8px}
+.mc-title{font-size:.84rem;font-weight:800;margin-bottom:6px}
+.mc-old .mc-title{color:var(--crimson)}.mc-new .mc-title{color:var(--green)}
+.mc-desc{font-size:.76rem;color:var(--muted);line-height:1.55}
+.mc-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700}
+.mc-old .mc-badge{background:rgba(239,68,68,.15);color:var(--crimson)}
+.mc-new .mc-badge{background:rgba(34,197,94,.15);color:var(--green)}
+
+/* Pipeline */
+.pipe-flow{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
+.pipe-flow::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--orange),var(--crimson));z-index:0}
+.pf-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px;position:relative;z-index:1}
+.pf-circle{width:54px;height:54px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:12px;background:var(--body-bg);transition:.35s}
+.pf1{border-color:var(--orange);box-shadow:0 0 20px rgba(249,115,22,.3)}
+.pf2{border-color:var(--amber);box-shadow:0 0 20px rgba(245,158,11,.22)}
+.pf3{border-color:var(--rose);box-shadow:0 0 20px rgba(251,113,133,.22)}
+.pf4{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.22)}
+.pf-step h4{font-size:.82rem;font-weight:800;margin-bottom:5px;color:var(--text)}
+.pf-step p{font-size:.73rem;color:var(--muted);line-height:1.5}
+.pipe-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.pd-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px}
+.pd-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.pd-t1{color:var(--orange)}.pd-t2{color:var(--amber)}.pd-t3{color:var(--rose)}.pd-t4{color:var(--green)}
+.pd-card ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.pd-card li{font-size:.72rem;color:var(--muted);padding-left:14px;position:relative;line-height:1.45}
+.pd-card li::before{content:'›';position:absolute;left:0;color:var(--orange)}
+
+/* PCA chart */
+.pca-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
+.pca-h{position:relative;height:200px}
+
+/* ── RESULTS SECTION ── */
+.results-headline{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.rh-card{border-radius:var(--radius);padding:22px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+.rh-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.rh-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.rh-1{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.22)}.rh-1::before{background:linear-gradient(90deg,var(--orange),transparent)}
+.rh-2{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}.rh-2::before{background:linear-gradient(90deg,var(--green),transparent)}
+.rh-3{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.2)}.rh-3::before{background:linear-gradient(90deg,var(--teal),transparent)}
+.rh-val{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:5px}
+.rh-1 .rh-val{color:var(--orange)}.rh-2 .rh-val{color:var(--green)}.rh-3 .rh-val{color:var(--teal)}
+.rh-lbl{font-size:.78rem;color:var(--muted);line-height:1.4}
+.rh-sub{font-size:.7rem;font-weight:600;margin-top:4px}
+.rh-1 .rh-sub{color:var(--orange)}.rh-2 .rh-sub{color:var(--green)}.rh-3 .rh-sub{color:var(--teal)}
+
+/* Metabolite association chart */
+.metab-chart-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
+.metab-h{position:relative;height:260px}
+
+/* OR table */
+.or-table-wrap{overflow-x:auto;margin-top:8px}
+.or-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.or-table th{text-align:left;padding:8px 12px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--glass-border)}
+.or-table td{padding:8px 12px;color:var(--muted);border-bottom:1px solid var(--glass-border)}
+.or-table tr:last-child td{border-bottom:none}
+.or-table tr.sig{background:rgba(249,115,22,.05)}
+.or-table tr.sig td{color:var(--text)}
+.or-table td.factor-id{font-weight:700;color:var(--orange);font-family:monospace}
+.sig-badge{display:inline-block;background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);border-radius:6px;padding:1px 7px;font-size:.66rem;font-weight:700;color:var(--orange)}
+.neg-badge{display:inline-block;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.3);border-radius:6px;padding:1px 7px;font-size:.66rem;font-weight:700;color:var(--teal)}
+
+/* Pathway chart */
+.pathway-chart-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
+.pathway-h{position:relative;height:220px}
+
+/* Insight banner */
+.insight-banner{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(6,182,212,.06));border:1px solid rgba(249,115,22,.22);border-radius:var(--radius);padding:20px 22px;display:flex;gap:14px;align-items:flex-start;margin-top:12px}
+.insight-icon{font-size:1.8rem;flex-shrink:0}
+.insight-body h4{font-size:.93rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.insight-body p{font-size:.83rem;color:var(--muted);line-height:1.65}
+.insight-body strong{color:var(--orange)}
+
+/* Biological pathway visual */
+.pathway-vis{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:0;align-items:center;margin:18px 0;padding:20px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px}
+.pathway-node{text-align:center;padding:12px 8px}
+.pn-icon{font-size:1.8rem;margin-bottom:6px}
+.pn-title{font-size:.76rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.pn-desc{font-size:.66rem;color:var(--muted);line-height:1.4}
+.pathway-arrow{color:var(--muted);font-size:1.4rem;padding:0 4px;flex-shrink:0}
+.pathway-node.highlight{background:rgba(249,115,22,.08);border-radius:10px;border:1px solid rgba(249,115,22,.2)}
+
+/* ── TAKEAWAYS ── */
+.takeaway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.take-card{background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.18);border-radius:12px;padding:18px 20px;transition:.25s}
+.take-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card)}
+.take-num{font-size:1.5rem;font-weight:900;color:var(--orange);margin-bottom:6px;line-height:1}
+.take-title{font-size:.88rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.take-desc{font-size:.79rem;color:var(--muted);line-height:1.6}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
+.sidebar-card h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.tldr-text{font-size:.86rem;color:var(--muted);line-height:1.72}
+.tldr-text strong{color:var(--text)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-key{color:var(--muted);flex-shrink:0}
+.info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
+.tech-pills{display:flex;flex-wrap:wrap;gap:6px}
+.tech-pill{background:rgba(249,115,22,.09);border:1px solid rgba(249,115,22,.22);border-radius:6px;padding:3px 10px;font-size:.74rem;color:var(--orange);font-weight:600}
+[data-theme="light"] .tech-pill{background:rgba(234,88,12,.07);border-color:rgba(234,88,12,.25)}
+.citation-box{background:rgba(249,115,22,.04);border-left:3px solid rgba(249,115,22,.45);border-radius:0 8px 8px 0;padding:12px;font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.citation-box strong{color:var(--text)}
+.sidebar-links{display:flex;flex-direction:column;gap:8px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s}
+.sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text)}
+.sidebar-link i{color:var(--orange);width:16px;text-align:center}
+
+/* FOOTER */
+.sh-footer{background:var(--section-alt);border-top:1px solid var(--glass-border);padding:40px 24px;text-align:center;transition:background .35s}
+.sh-footer-name{font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:4px}
+.sh-footer-role{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.sh-footer-icons{display:flex;gap:16px;justify-content:center;margin-bottom:16px}
+.sh-footer-icons a{color:var(--muted);font-size:1.1rem;transition:.2s}
+.sh-footer-icons a:hover{color:var(--accent)}
+.sh-footer-copy{font-size:.74rem;color:var(--muted)}
+
+/* HB-style correlation bar */
+.corr-block{margin-top:16px}
+.corr-label-row{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:6px}
+.corr-label-row strong{color:var(--text)}
+.corr-track{height:14px;background:rgba(255,255,255,.05);border-radius:7px;overflow:hidden;position:relative}
+[data-theme="light"] .corr-track{background:rgba(0,0,0,.07)}
+.corr-fill{height:100%;width:0;border-radius:7px;background:linear-gradient(90deg,var(--orange),var(--crimson));transition:width 1.4s cubic-bezier(.22,.8,.44,1);position:relative}
+.corr-fill::after{content:attr(data-val);position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.68rem;font-weight:800;color:#fff}
+.corr-desc{font-size:.75rem;color:var(--muted);margin-top:6px;line-height:1.5}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .main-layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .burden-grid,.method-compare,.cohort-visual{grid-template-columns:1fr}
+  .risk-group-grid{grid-template-columns:1fr 1fr}
+  .results-headline{grid-template-columns:1fr 1fr}
+  .pipe-flow{grid-template-columns:1fr 1fr}
+  .pipe-flow::before{display:none}
+  .pipe-detail{grid-template-columns:1fr 1fr}
+  .pathway-vis{grid-template-columns:1fr;grid-template-rows:auto}
+  .pathway-arrow{transform:rotate(90deg)}
+  .takeaway-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .hero{padding:96px 16px 0}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .risk-group-grid{grid-template-columns:1fr 1fr}
+  .results-headline{grid-template-columns:1fr}
+  .cohort-minis{grid-template-columns:1fr 1fr}
+  .pipe-flow,.pipe-detail{grid-template-columns:1fr}
+  .consequence-flow{flex-direction:column}
+  .cf-step:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-8px;left:50%;transform:translateX(-50%)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="sh-nav">
+  <a href="../../index.html" class="sh-nav-logo">MN</a>
+  <div class="sh-nav-links">
+    <a href="../../index.html#about">About</a>
+    <a href="../../index.html#experience">Experience</a>
+    <a href="../../index.html#publications">Publications</a>
+    <a href="../../index.html#skills">Skills</a>
+    <a href="../index.html" class="active">Projects</a>
+  </div>
+  <div class="sh-nav-right">
+    <div class="sh-nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="toggle-sun">☀️</span><span class="toggle-moon">🌙</span>
+      <span id="toggleLabel">Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="../../index.html"><i class="fas fa-home"></i> Home</a><span>›</span>
+      <a href="../index.html">Projects</a><span>›</span>
+      <span style="color:var(--text)">ASCVD Metabolomics</span>
+    </div>
+    <div class="tag-row">
+      <span class="pill pill-orange"><i class="fas fa-heartbeat"></i> Metabolomics · Cardiovascular</span>
+      <span class="pill pill-gold"><span class="pub-dot"></span> Published · Frontiers in Cardiovascular Medicine 2023</span>
+    </div>
+    <h1 class="page-title">Can Your Blood's Chemical<br><span class="grad-text">Fingerprint Predict a Heart Attack?</span></h1>
+    <p class="hero-sub">
+      Cardiovascular disease kills more people than any other condition on Earth —
+      yet its molecular precursors remain largely unknown. This study profiled
+      <strong>50 metabolites</strong> (30 acylcarnitines + 20 amino acids) in <strong>1,102 Iranians</strong>
+      to find which chemical signatures predict your 10-year ASCVD risk,
+      identifying <strong>14 key biomarker candidates</strong> and mapping the metabolic
+      pathways that drive heart disease risk.
+    </p>
+    <div class="hero-meta">
+      <span><i class="fas fa-newspaper"></i><strong>Frontiers in Cardiovascular Medicine</strong>, 10:1161761, 2023</span>
+      <span><i class="fas fa-users"></i>Dehghanbanadaki, Dodangeh, Noorchenarboo et al. · 17 co-authors</span>
+      <span><i class="fas fa-map-marker-alt"></i>Tehran University of Medical Sciences, Iran</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#problem" class="btn btn-anchor"><i class="fas fa-exclamation-circle"></i> The Problem</a>
+      <a href="#methods" class="btn btn-anchor"><i class="fas fa-cogs"></i> Methods</a>
+      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
+      <a href="https://www.frontiersin.org/journals/cardiovascular-medicine/articles/10.3389/fcvm.2023.1161761/full" class="btn btn-pub" target="_blank" rel="noopener"><i class="fas fa-file-alt"></i> Full Paper</a>
+      <a href="../index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val" data-target="1102">0</div><div class="stat-label">Participants Profiled (Age 40–79)</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="50">0</div><div class="stat-label">Metabolites Measured (FIA-MS/MS)</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="14">0</div><div class="stat-label">Candidate ASCVD Biomarkers</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="10">0</div><div class="stat-label">PCA Metabolite Factors</div></div>
+    <div class="stat-item"><div class="stat-val">r = 0.28</div><div class="stat-label">Strongest Metabolite Correlation (C16OH)</div></div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+<div class="content-col">
+
+<!-- ① PROBLEM -->
+<div class="card fade-up" id="problem">
+  <div class="sec-label sl-orange">① The Problem</div>
+  <div class="card-title"><i class="fas fa-heartbeat"></i> Heart Disease Is the World's #1 Killer — Its Molecular Drivers Are Largely Unknown</div>
+  <p class="narrative">
+    Cardiovascular disease accounts for nearly <strong>1 in 3 deaths globally</strong>. While risk scores
+    like the ACC/AHA ASCVD tool estimate 10-year event probability from clinical features,
+    the <em>underlying molecular mechanisms</em> — the metabolite fingerprints that distinguish
+    a future heart attack victim from someone who will stay healthy — are poorly understood.
+    Metabolomics offers a direct window into these biochemical perturbations, capturing
+    real-time snapshots of how your metabolism shifts as cardiovascular risk builds.
+  </p>
+
+  <div class="burden-grid">
+    <div class="heart-stat">
+      <div class="hs-label">Global CVD Death Share</div>
+      <div class="hs-number" id="cvdNum">0%</div>
+      <div class="hs-sub">Of all global deaths are cardiovascular. More than cancer, diabetes, and respiratory disease <strong>combined</strong>.</div>
+    </div>
+    <div class="why-meta-block">
+      <div class="wm-title">Why Metabolomics Fills the Gap</div>
+      <div class="wm-sub">Existing tools miss these molecular layers</div>
+      <div class="wm-row">
+        <div class="wm-item">
+          <div class="wm-name"><span>Acylcarnitines (lipid metabolism)</span><span>30 profiled</span></div>
+          <div class="wm-track"><div class="wm-fill wm-f1" data-w="85"></div></div>
+        </div>
+        <div class="wm-item">
+          <div class="wm-name"><span>Amino acids (protein metabolism)</span><span>20 profiled</span></div>
+          <div class="wm-track"><div class="wm-fill wm-f2" data-w="70"></div></div>
+        </div>
+        <div class="wm-item">
+          <div class="wm-name"><span>Metabolic pathway coverage</span><span>5 key pathways</span></div>
+          <div class="wm-track"><div class="wm-fill wm-f3" data-w="60"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CVD risk spectrum chart -->
+  <div class="chart-title" style="margin-bottom:10px">📈 10-Year ASCVD Risk Distribution Across Study Population (n = 1,102)</div>
+  <div class="cvd-chart-wrap"><canvas id="riskDistChart"></canvas></div>
+
+  <!-- Risk group cards -->
+  <div class="risk-group-grid">
+    <div class="rg-card rg-a">
+      <div class="rg-n">620</div>
+      <div class="rg-lbl"><strong>Low Risk</strong><br>ASCVD score 0–5%</div>
+      <div class="rg-pct">56.3% of cohort</div>
+    </div>
+    <div class="rg-card rg-b">
+      <div class="rg-n">110</div>
+      <div class="rg-lbl"><strong>Borderline Risk</strong><br>ASCVD score 5–7.5%</div>
+      <div class="rg-pct">10.0% of cohort</div>
+    </div>
+    <div class="rg-card rg-c">
+      <div class="rg-n">225</div>
+      <div class="rg-lbl"><strong>Intermediate Risk</strong><br>ASCVD score 7.5–20%</div>
+      <div class="rg-pct">20.4% of cohort</div>
+    </div>
+    <div class="rg-card rg-d">
+      <div class="rg-n">147</div>
+      <div class="rg-lbl"><strong>High Risk</strong><br>ASCVD score ≥ 20%</div>
+      <div class="rg-pct">13.3% of cohort</div>
+    </div>
+  </div>
+
+  <!-- Consequence flow -->
+  <div class="consequence-flow">
+    <div class="cf-step cf-s1"><div class="cf-icon">🧬</div><div class="cf-label">Metabolic Shift</div><div class="cf-desc">Acylcarnitines & amino acids signal dysfunction early</div></div>
+    <div class="cf-step cf-s2"><div class="cf-icon">🔥</div><div class="cf-label">Inflammation</div><div class="cf-desc">Lipid peroxidation & vascular stress escalate</div></div>
+    <div class="cf-step cf-s3"><div class="cf-icon">🩸</div><div class="cf-label">Atherosclerosis</div><div class="cf-desc">Plaque formation in coronary arteries</div></div>
+    <div class="cf-step cf-s4"><div class="cf-icon">🏥</div><div class="cf-label">ASCVD Event</div><div class="cf-desc">Stroke, MI or coronary death within 10 years</div></div>
+  </div>
+</div>
+
+<!-- ② DATA -->
+<div class="card fade-up">
+  <div class="sec-label sl-teal">② The Data</div>
+  <div class="card-title"><i class="fas fa-database"></i> A Large-Scale Iranian Metabolomics Cohort — 50 Metabolites, 4 Risk Groups</div>
+  <p class="narrative">
+    Participants were randomly selected from the <strong>STEPs 2016 national survey</strong> covering
+    31,050 individuals across Iran. Individuals aged 40–79 with LDL &lt;190 mg/dL and no
+    pre-existing ASCVD were enrolled. Fasting plasma was collected and analysed via
+    <strong>FIA-MS/MS (flow-injection tandem mass spectrometry)</strong> — a fast, accurate approach
+    that simultaneously measures acylcarnitines and amino acids. Critically, the 10-year ASCVD
+    risk score was calculated per <strong>2013 ACC/AHA guidelines</strong> for each participant, enabling
+    stratified comparisons across four clinically meaningful groups.
+  </p>
+
+  <div class="cohort-visual">
+    <div class="cohort-left">
+      <div class="cohort-big-stat">
+        <div class="cbs-num">1,102</div>
+        <div class="cbs-lbl">Eligible participants with full metabolomics + ASCVD risk profiling</div>
+      </div>
+      <div class="cohort-minis">
+        <div class="cmini"><div class="cmini-val">53%</div><div class="cmini-lbl">Female participants in the study</div></div>
+        <div class="cmini"><div class="cmini-val">54.4</div><div class="cmini-lbl">Mean age (years ± 10.2)</div></div>
+        <div class="cmini"><div class="cmini-val">30</div><div class="cmini-lbl">Acylcarnitines measured per sample</div></div>
+        <div class="cmini"><div class="cmini-val">20</div><div class="cmini-lbl">Amino acids measured per sample</div></div>
+      </div>
+    </div>
+    <div class="cohort-right">
+      <div class="chart-title">Participant Distribution by Age Group & Sex</div>
+      <div class="chart-canvas-h"><canvas id="ageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="corr-block">
+    <div class="corr-label-row">
+      <span>Strongest Metabolite–ASCVD Correlation: C16OH (3-OH-hexadecanoylcarnitine)</span>
+      <strong>r = 0.279, p &lt; 0.001</strong>
+    </div>
+    <div class="corr-track"><div class="corr-fill" data-w="56" data-val="r = 0.279"></div></div>
+    <div class="corr-desc">The long-chain acylcarnitine C16OH showed the strongest positive association with the 10-year ASCVD score — evidence of disrupted fatty-acid oxidation as cardiovascular risk climbs. All 30 acylcarnitines were positively correlated with the ASCVD risk score.</div>
+  </div>
+
+  <div class="data-note">
+    <i class="fas fa-info-circle"></i>
+    <div>Blood was sampled after <strong>≥ 12 hours overnight fasting</strong> — critical because acylcarnitines show stronger associations with CVD risk in fasting subjects. Metabolites were quantified using the <strong>derivatisation butanol-HCL method</strong> with a SCIEX API 3200 triple quadrupole mass spectrometer.</div>
+  </div>
+</div>
+
+<!-- ③ METHODS -->
+<div class="card fade-up" id="methods">
+  <div class="sec-label sl-rose">③ The Method</div>
+  <div class="card-title"><i class="fas fa-cogs"></i> From 50 Raw Metabolites to 14 Actionable Biomarkers</div>
+  <p class="narrative">
+    With 50 highly correlated metabolites and only 1,102 participants, a naïve regression
+    would suffer from multicollinearity and loss of interpretability. The solution: first reduce
+    dimensionality with <strong>Principal Component Analysis (PCA)</strong> to group correlated metabolites
+    into independent factors, then apply <strong>logistic regression</strong> on those factors to identify
+    ASCVD risk predictors, and finally use <strong>MetaboAnalyst pathway enrichment</strong>
+    (KEGG database) to map the biology.
+  </p>
+
+  <!-- Approach comparison -->
+  <div class="method-compare">
+    <div class="mc-card mc-old">
+      <div class="mc-icon">📊</div>
+      <div class="mc-title">Naïve Approach</div>
+      <div class="mc-desc">Test all 50 metabolites individually against ASCVD risk. Severe multicollinearity (correlated metabolites inflate error). Multiple testing burden (50 comparisons). Results hard to interpret biologically.</div>
+      <span class="mc-badge">⚠ Collinearity Problem</span>
+    </div>
+    <div class="mc-card mc-new">
+      <div class="mc-icon">🔬</div>
+      <div class="mc-title">PCA + Pathway Enrichment</div>
+      <div class="mc-desc">Group correlated metabolites into 10 orthogonal (uncorrelated) factors via PCA. Regress factors against risk groups. Identify enriched KEGG metabolic pathways among significant metabolites.</div>
+      <span class="mc-badge">✓ Interpretable & Robust</span>
+    </div>
+  </div>
+
+  <!-- PCA eigenvalue chart -->
+  <div class="pca-wrap">
+    <div class="chart-title">PCA Scree Plot — Metabolite Factors by Variance Explained</div>
+    <div class="pca-h"><canvas id="pcaChart"></canvas></div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipe-flow">
+    <div class="pf-step"><div class="pf-circle pf1">🔬</div><h4>FIA-MS/MS</h4><p>30 acylcarnitines + 20 amino acids measured from fasting plasma per participant.</p></div>
+    <div class="pf-step"><div class="pf-circle pf2">📐</div><h4>PCA + KMO Test</h4><p>KMO = 0.874, Bartlett p &lt; 0.001. Varimax rotation → 10 orthogonal metabolite factors.</p></div>
+    <div class="pf-step"><div class="pf-circle pf3">📈</div><h4>Logistic Regression</h4><p>Binary logistic regression for each risk group vs. low-risk. OR, 95% CI, adjusted for BMI.</p></div>
+    <div class="pf-step"><div class="pf-circle pf4">🗺️</div><h4>Pathway Enrichment</h4><p>MetaboAnalyst v5.0 / KEGG: enrichment ratios for metabolic pathways per risk comparison.</p></div>
+  </div>
+
+  <div class="pipe-detail">
+    <div class="pd-card"><div class="pd-title pd-t1">① Measurement</div><ul><li>Flow injection tandem MS</li><li>SCIEX API 3200 (ESI)</li><li>Butanol-HCl derivatisation</li><li>Internal standard calibration</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t2">② PCA</div><ul><li>Z-score standardisation (ln)</li><li>Eigenvalue &gt; 1.0 criterion</li><li>Loadings &gt; 0.4 retained</li><li>Varimax Kaiser rotation</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t3">③ Regression</div><ul><li>Low-risk as reference category</li><li>Stepwise multiple linear reg.</li><li>Benjamini-Hochberg FDR</li><li>BMI-adjusted sensitivity</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t4">④ Pathways</div><ul><li>MetaboAnalyst v5.0</li><li>KEGG metabolic database</li><li>Fisher's exact test (enrichment)</li><li>p &lt; 0.05 significance</li></ul></div>
+  </div>
+</div>
+
+<!-- ④ RESULTS -->
+<div class="card fade-up" id="results">
+  <div class="sec-label sl-green">④ Results</div>
+  <div class="card-title"><i class="fas fa-chart-bar"></i> 14 Biomarkers Pinpointed — Three Metabolic Pathways Dominate Risk</div>
+  <p class="narrative">
+    Multiple linear regression on all 50 metabolites distilled <strong>14 significant ASCVD predictors</strong>:
+    3 acylcarnitines and 11 amino acids. PCA logistic regression confirmed that <strong>8 of 10 factors
+    were significantly elevated in high-risk patients</strong> while one protective factor (glycine/serine/threonine)
+    was significantly depleted. Pathway enrichment revealed the dominant metabolic perturbations
+    driving risk stratification.
+  </p>
+
+  <div class="results-headline">
+    <div class="rh-card rh-1"><div class="rh-val">14</div><div class="rh-lbl">Significant metabolite predictors of 10-year ASCVD risk</div><div class="rh-sub">3 acylcarnitines + 11 amino acids</div></div>
+    <div class="rh-card rh-2"><div class="rh-val">1.570</div><div class="rh-lbl">Highest odds ratio — Factor 10 (ornithine + citrulline)</div><div class="rh-sub">in high-risk vs. low-risk group</div></div>
+    <div class="rh-card rh-3"><div class="rh-val">0.741</div><div class="rh-lbl">Lowest odds ratio — Factor 9 (glycine, serine, threonine)</div><div class="rh-sub">Protective — depleted in high-risk</div></div>
+  </div>
+
+  <!-- Top metabolite associations chart -->
+  <div class="metab-chart-wrap">
+    <div class="chart-title">Top Metabolite Associations with 10-Year ASCVD Risk (Spearman r)</div>
+    <div class="metab-h"><canvas id="metaboliteChart"></canvas></div>
+  </div>
+
+  <!-- Pathway enrichment chart -->
+  <div class="pathway-chart-wrap">
+    <div class="chart-title">Pathway Enrichment Ratios — Low-Risk vs. High-Risk Group (Top Pathways)</div>
+    <div class="pathway-h"><canvas id="pathwayChart"></canvas></div>
+  </div>
+
+  <!-- Factor OR table -->
+  <div class="or-table-wrap">
+    <table class="or-table">
+      <thead><tr><th>Factor</th><th>Key Metabolites</th><th>OR (High-Risk)</th><th>95% CI</th><th>p-value</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="sig"><td class="factor-id">Factor 1</td><td>12 long-chain acylcarnitines</td><td>1.103</td><td>(1.072–1.134)</td><td>&lt;0.001</td><td><span class="sig-badge">↑ Elevated</span></td></tr>
+        <tr class="sig"><td class="factor-id">Factor 5</td><td>6 short-chain acylcarnitines</td><td>1.205</td><td>(1.128–1.287)</td><td>&lt;0.001</td><td><span class="sig-badge">↑ Elevated</span></td></tr>
+        <tr class="sig"><td class="factor-id">Factor 7</td><td>Alanine, proline</td><td>1.343</td><td>(1.140–1.582)</td><td>&lt;0.001</td><td><span class="sig-badge">↑ Elevated</span></td></tr>
+        <tr class="sig"><td class="factor-id">Factor 10</td><td>Ornithine, citrulline</td><td>1.570</td><td>(1.338–1.841)</td><td>&lt;0.001</td><td><span class="sig-badge">↑ Elevated</span></td></tr>
+        <tr><td class="factor-id" style="color:var(--teal)">Factor 9</td><td>Glycine, serine, threonine</td><td>0.741</td><td>(0.642–0.856)</td><td>&lt;0.001</td><td><span class="neg-badge">↓ Protective</span></td></tr>
+        <tr><td class="factor-id" style="color:var(--muted)">Factor 4</td><td>—</td><td>0.971</td><td>(0.907–1.039)</td><td>0.395</td><td style="color:var(--muted);font-size:.72rem">Not significant</td></tr>
+        <tr><td colspan="6" style="text-align:center;color:var(--muted);font-size:.74rem;padding:10px">· · · Factor 2, 3, 6, 8 also significant (OR 1.063–1.229) — see full paper · · ·</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">🧪</div>
+    <div class="insight-body">
+      <h4>The 14 Key Biomarkers Identified</h4>
+      <p>Three acylcarnitines (<strong>C4DC, C8:1, C16OH</strong>) and eleven amino acids (<strong>citrulline, histidine, alanine, threonine, glycine, glutamine, tryptophan, phenylalanine, glutamic acid, arginine, aspartic acid</strong>) emerged as significant ASCVD predictors from multiple linear regression — even after BMI adjustment. These represent potential early-detection targets for risk stratification before clinical disease manifests.</p>
+    </div>
+  </div>
+
+  <!-- Biological pathway visual -->
+  <div class="pathway-vis">
+    <div class="pathway-node">
+      <div class="pn-icon">🥩</div>
+      <div class="pn-title">BCAA Metabolism</div>
+      <div class="pn-desc">Leucine, valine, isoleucine dysregulation</div>
+    </div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node highlight">
+      <div class="pn-icon">⚡</div>
+      <div class="pn-title">Metabolic Stress</div>
+      <div class="pn-desc">Acylcarnitine accumulation signals mitochondrial dysfunction</div>
+    </div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node">
+      <div class="pn-icon">🔥</div>
+      <div class="pn-title">Vascular Injury</div>
+      <div class="pn-desc">Endothelial dysfunction; phenylalanine pathway disrupted</div>
+    </div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node">
+      <div class="pn-icon">❤️</div>
+      <div class="pn-title">ASCVD Event</div>
+      <div class="pn-desc">Stroke, MI, or coronary death within 10 years</div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ TAKEAWAYS -->
+<div class="card fade-up">
+  <div class="sec-label sl-gold">⑤ Takeaways</div>
+  <div class="card-title"><i class="fas fa-lightbulb"></i> What This Means Beyond the Numbers</div>
+  <div class="takeaway-grid">
+    <div class="take-card"><div class="take-num">01</div><div class="take-title">A 14-Metabolite Cardiovascular Fingerprint</div><div class="take-desc">C4DC, C8:1, C16OH, and 11 amino acids provide a blood-based molecular signature of ASCVD risk — potentially detectable years before a clinical event or symptom appears.</div></div>
+    <div class="take-card"><div class="take-num">02</div><div class="take-title">Amino Acids Matter as Much as Lipids</div><div class="take-desc">Conventional CVD risk focuses on cholesterol. This study shows amino acid pathways — especially BCAA biosynthesis and glutamate/glutamine metabolism — are equally important predictors of cardiovascular fate.</div></div>
+    <div class="take-card"><div class="take-num">03</div><div class="take-title">Glycine & Serine Are Protective</div><div class="take-desc">Factor 9 (glycine, serine, threonine) was the only factor inversely associated with risk (OR = 0.741). These amino acids may be therapeutic targets — dietary or pharmacological supplementation warrants investigation.</div></div>
+    <div class="take-card"><div class="take-num">04</div><div class="take-title">Metabolomics Upgrades Risk Prediction</div><div class="take-desc">Adding metabolomic profiling to the standard ASCVD score could identify high-risk individuals who are missed by traditional biomarkers — enabling earlier, more personalised preventive intervention in clinical practice.</div></div>
+  </div>
+</div>
+
+</div><!-- /content-col -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-card fade-up">
+    <h3>TL;DR</h3>
+    <p class="tldr-text">Heart disease risk has a metabolic fingerprint. By measuring <em>50 metabolites</em> in 1,102 Iranians and stratifying by 10-year ASCVD risk, this study found <strong>14 key biomarkers</strong> — including 3 acylcarnitines and 11 amino acids — and mapped 5 key metabolic pathways that distinguish low-risk from high-risk individuals.</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Quick Facts</h3>
+    <div class="info-row"><span class="info-key">Journal</span><span class="info-val">Front. Cardiovasc. Med.</span></div>
+    <div class="info-row"><span class="info-key">Volume</span><span class="info-val">10:1161761, 2023</span></div>
+    <div class="info-row"><span class="info-key">Source Cohort</span><span class="info-val">STEPs 2016, Iran (n=31,050)</span></div>
+    <div class="info-row"><span class="info-key">Study Sample</span><span class="info-val">1,102 (Age 40–79)</span></div>
+    <div class="info-row"><span class="info-key">Metabolites</span><span class="info-val">30 acylcarnitines + 20 AAs</span></div>
+    <div class="info-row"><span class="info-key">Method</span><span class="info-val">FIA-MS/MS, PCA, Logistic Reg.</span></div>
+    <div class="info-row"><span class="info-key">Key Biomarkers</span><span class="info-val">14 significant predictors</span></div>
+    <div class="info-row"><span class="info-key">Affiliation</span><span class="info-val">Tehran Univ. of Medical Sciences</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech &amp; Methods</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">FIA-MS/MS</span><span class="tech-pill">PCA (Varimax)</span>
+      <span class="tech-pill">Logistic Regression</span><span class="tech-pill">Spearman Correlation</span>
+      <span class="tech-pill">MetaboAnalyst v5.0</span><span class="tech-pill">KEGG Pathway</span>
+      <span class="tech-pill">Benjamini-Hochberg FDR</span><span class="tech-pill">KMO Test</span>
+      <span class="tech-pill">Bartlett's Test</span><span class="tech-pill">Acylcarnitines</span>
+      <span class="tech-pill">Amino Acids</span><span class="tech-pill">SPSS v19.0</span>
+      <span class="tech-pill">ACC/AHA 2013</span><span class="tech-pill">BMI Adjustment</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Citation</h3>
+    <div class="citation-box"><strong>Dehghanbanadaki H, Dodangeh S, … Noorchenarboo M,</strong> … Larijani B &amp; Razi F (2023). Metabolomics profile and 10-year atherosclerotic cardiovascular disease (ASCVD) risk score. <em>Front. Cardiovasc. Med.</em>, 10:1161761. doi: 10.3389/fcvm.2023.1161761</div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="../sarcopenia-genetics/" class="sidebar-link"><i class="fas fa-dna"></i> Sarcopenia Genetics</a>
+      <a href="../p001-surgical-duration/" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+      <a href="../../index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="../index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+</div>
+</div><!-- /main-layout -->
+
+<!-- FOOTER -->
+<footer class="sh-footer">
+  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
+  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
+  <div class="sh-footer-icons">
+    <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+    <a href="../../index.html"><i class="fas fa-globe"></i></a>
+    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+  </div>
+  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · Front. Cardiovasc. Med. 2023;10:1161761</div>
+</footer>
+
+<script>
+const html = document.documentElement;
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
+  return {
+    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor: isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor: isDark() ? '#8892a4' : '#4b5675',
+    borderColor: isDark() ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
+    borderWidth:1, padding:12
+  };
+}
+
+/* THEME */
+const themeBtn = document.getElementById('themeToggle');
+const lbl = document.getElementById('toggleLabel');
+themeBtn.addEventListener('click', () => {
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  lbl.textContent = dark ? 'Dark' : 'Light';
+  setTimeout(rebuildCharts, 50);
+});
+
+/* FADE-UP */
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+}), { threshold:0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+/* COUNTERS */
+function animateCounter(el, target, duration=1600){
+  let start=null;
+  const step=ts=>{
+    if(!start) start=ts;
+    const p=Math.min((ts-start)/duration,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(ease*target).toLocaleString();
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+document.querySelectorAll('.stat-val[data-target]').forEach(el=>{
+  const io=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting){ animateCounter(el,+el.dataset.target); io.unobserve(el); }
+  },{threshold:.3});
+  io.observe(el);
+});
+
+/* CVD % animation */
+function animateCVD(){
+  const el=document.getElementById('cvdNum');
+  const io=new IntersectionObserver(es=>{
+    if(!es[0].isIntersecting) return;
+    let v=0;
+    const t=setInterval(()=>{
+      v=Math.min(v+.5,32);
+      el.textContent=v.toFixed(0)+'%';
+      if(v>=32) clearInterval(t);
+    },30);
+    io.unobserve(el);
+  },{threshold:.4});
+  io.observe(el);
+}
+animateCVD();
+
+/* BAR FILLS */
+function animateBars(){
+  document.querySelectorAll('.wm-fill[data-w],.corr-fill[data-w]').forEach(el=>{
+    const io=new IntersectionObserver(es=>{
+      if(es[0].isIntersecting){ el.style.width=el.dataset.w+'%'; io.unobserve(el); }
+    },{threshold:.3});
+    io.observe(el);
+  });
+}
+animateBars();
+
+/* CHARTS */
+let riskC, ageC, pcaC, metabC, pathwayC;
+
+function buildRiskDistChart(){
+  if(riskC) riskC.destroy();
+  const ctx=document.getElementById('riskDistChart').getContext('2d');
+  riskC=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['0–2%','2–4%','4–6%','6–8%','8–12%','12–20%','20–30%','30–40%','40%+'],
+      datasets:[{
+        label:'Participants',
+        data:[310,200,110,70,100,125,80,47,20],
+        backgroundColor:[
+          'rgba(34,197,94,.65)','rgba(34,197,94,.5)','rgba(6,182,212,.6)',
+          'rgba(6,182,212,.5)','rgba(245,158,11,.6)','rgba(245,158,11,.5)',
+          'rgba(239,68,68,.55)','rgba(239,68,68,.7)','rgba(239,68,68,.85)'
+        ],
+        borderColor:[
+          'rgba(34,197,94,.9)','rgba(34,197,94,.7)','rgba(6,182,212,.9)',
+          'rgba(6,182,212,.7)','rgba(245,158,11,.9)','rgba(245,158,11,.7)',
+          'rgba(239,68,68,.8)','rgba(239,68,68,.9)','rgba(239,68,68,1)'
+        ],
+        borderWidth:1,borderRadius:5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{label:c=>`${c.raw} participants`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'10-Year ASCVD Risk Score',color:tc(),font:{size:10}}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Participants (n)',color:tc(),font:{size:10}}}
+      }
+    }
+  });
+}
+
+function buildAgeChart(){
+  if(ageC) ageC.destroy();
+  const ctx=document.getElementById('ageChart').getContext('2d');
+  ageC=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['40–44','45–49','50–54','55–59','60–64','65–69','70–75','75–79'],
+      datasets:[
+        {label:'Women',data:[118,105,98,90,75,60,25,15],backgroundColor:'rgba(249,115,22,.65)',borderColor:'rgba(249,115,22,.9)',borderWidth:1,borderRadius:4},
+        {label:'Men',  data:[88, 85, 90,80,70,58,30,20],backgroundColor:'rgba(6,182,212,.55)',borderColor:'rgba(6,182,212,.9)',borderWidth:1,borderRadius:4},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},tooltip:{...tt()}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Participants',color:tc(),font:{size:10}}}
+      }
+    }
+  });
+}
+
+function buildPCAChart(){
+  if(pcaC) pcaC.destroy();
+  const ctx=document.getElementById('pcaChart').getContext('2d');
+  const factors=['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10'];
+  const variance=[22.4,10.8,8.3,6.9,5.7,4.8,4.1,3.5,3.0,2.8];
+  const cumulative=[22.4,33.2,41.5,48.4,54.1,58.9,63.0,66.5,69.5,72.3];
+  pcaC=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:factors,
+      datasets:[
+        {label:'Variance Explained (%)',data:variance,backgroundColor:'rgba(249,115,22,.6)',borderColor:'rgba(249,115,22,.9)',borderWidth:1,borderRadius:5,yAxisID:'y'},
+        {label:'Cumulative Variance (%)',data:cumulative,type:'line',borderColor:'rgba(6,182,212,.9)',backgroundColor:'transparent',pointRadius:5,pointBackgroundColor:'rgba(6,182,212,.9)',tension:.4,borderWidth:2.5,yAxisID:'y1'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},tooltip:{...tt()}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>v+'%'},grid:{color:gc()},title:{display:true,text:'Variance Explained',color:tc(),font:{size:10}},min:0,max:30,yAxisID:'y'},
+        y1:{position:'right',ticks:{color:tc(),font:{size:10},callback:v=>v+'%'},grid:{display:false},title:{display:true,text:'Cumulative %',color:tc(),font:{size:10}},min:0,max:100}
+      }
+    }
+  });
+}
+
+function buildMetaboliteChart(){
+  if(metabC) metabC.destroy();
+  const ctx=document.getElementById('metaboliteChart').getContext('2d');
+  const metabolites=['C16OH','C3','Leucine','C5','C5OH','C5DC','Citrulline','Valine','Alanine','C4','Phenylalanine','Ornithine','Proline','C16'];
+  const rVals=[0.279,0.262,0.256,0.251,0.250,0.245,0.240,0.235,0.218,0.215,0.210,0.205,0.195,0.188];
+  const colors=rVals.map(v=>v>0.25?'rgba(239,68,68,.75)':v>0.22?'rgba(249,115,22,.7)':'rgba(245,158,11,.65)');
+  const borders=rVals.map(v=>v>0.25?'rgba(239,68,68,.95)':v>0.22?'rgba(249,115,22,.9)':'rgba(245,158,11,.85)');
+  metabC=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:metabolites,
+      datasets:[{label:'Spearman r with ASCVD risk',data:rVals,backgroundColor:colors,borderColor:borders,borderWidth:1,borderRadius:5}]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{label:c=>`r = ${c.raw.toFixed(3)} (p < 0.001)`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>v.toFixed(2)},grid:{color:gc()},title:{display:true,text:'Spearman r',color:tc(),font:{size:10}},min:0,max:0.33},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}}
+      }
+    }
+  });
+}
+
+function buildPathwayChart(){
+  if(pathwayC) pathwayC.destroy();
+  const ctx=document.getElementById('pathwayChart').getContext('2d');
+  const pathways=[
+    'D-Glutamine & D-Glutamate Metabolism',
+    'Phe, Tyr & Trp Biosynthesis',
+    'Val, Leu & Ile Biosynthesis',
+    'Arginine Biosynthesis',
+    'Aminoacyl-tRNA Biosynthesis',
+    'Phenylalanine Metabolism',
+    'Glutathione Metabolism',
+    'Arginine & Proline Metabolism'
+  ];
+  const enrich=[28.4,22.1,18.7,15.3,12.8,10.5,8.2,6.7];
+  const bColors=['rgba(239,68,68,.7)','rgba(249,115,22,.7)','rgba(249,115,22,.6)','rgba(245,158,11,.65)',
+    'rgba(245,158,11,.6)','rgba(34,197,94,.6)','rgba(34,197,94,.55)','rgba(6,182,212,.55)'];
+  pathwayC=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:pathways,
+      datasets:[{label:'Enrichment Ratio',data:enrich,backgroundColor:bColors,borderColor:bColors.map(c=>c.replace('.7','1').replace('.6','1').replace('.55','1')),borderWidth:1,borderRadius:5}]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{label:c=>`Enrichment ratio: ${c.raw}`}}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Enrichment Ratio',color:tc(),font:{size:10}}},
+        y:{ticks:{color:tc(),font:{size:9,family:'inherit'}},grid:{color:gc()}}
+      }
+    }
+  });
+}
+
+function rebuildCharts(){
+  buildRiskDistChart();
+  buildAgeChart();
+  buildPCAChart();
+  buildMetaboliteChart();
+  buildPathwayChart();
+}
+
+document.addEventListener('DOMContentLoaded', rebuildCharts);
+</script>
+</body>
+</html>

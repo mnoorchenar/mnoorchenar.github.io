@@ -28,6 +28,14 @@
           {
             "name": "004-sarcopenia-genetics",
             "html": "projects/Projects-Files/004-sarcopenia-genetics.html"
+          },
+          {
+            "name": "005-ascvd-metabolomics",
+            "html": "projects/Projects-Files/005-ascvd-metabolomics.html"
+          },
+          {
+            "name": "006-cabg-gamification",
+            "html": "projects/Projects-Files/006-cabg-gamification.html"
           }
         ]
       }
