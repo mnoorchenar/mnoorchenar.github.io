@@ -1,3 +1,10 @@
+# mnoorchenar.github.io
+
+## Copyright Notice
+
+All content, images, and code in this repository are © 2026 Mohammad Noorchenarboo unless otherwise stated. Unauthorized copying, reproduction, or redistribution of any part of this repository is strictly prohibited without explicit written permission from the copyright holder.
+
+For inquiries regarding usage, licensing, or permissions, please contact mohammadnoorchenarboo@gmail.com.
 # 👋 Hi, I'm Mohammad Noorchenarboo!
 
 🎯 **Biostatistician | Senior Data Scientist | AI Researcher**  
