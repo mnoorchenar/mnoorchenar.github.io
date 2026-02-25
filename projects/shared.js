@@ -2,14 +2,33 @@
    shared.js  —  place in /projects/
    Handles: nav & footer injection, theme, fade-up, copyright modal,
             active link, per-page footer note, project nav strip.
+
    Each project page just needs:
      <script src="/projects/shared.js" defer></script>
+
+   ▶ THEME FLICKER: also add this ONE line to every page's <head>
+     BEFORE any <link rel="stylesheet">:
+       <script>document.documentElement.setAttribute('data-theme',
+         localStorage.getItem('mn-theme') || 'dark')</script>
+
    Optionally on <body>:
      data-footer-note="Surgical Endoscopy · DOI 10.1007/..."
-     data-project-index="0"   ← 0-based, omit on the index overview page
+     data-project-index="0"   ← 0-based; omit on the index overview page
+
+   ▶ PATH NOTE for project sub-pages inside /projects/Projects-Files/:
+     Use  ../shared.css  and  ../shared.js  (one level up).
+     The index overview page at /projects/index.html uses  shared.css / shared.js.
 ═══════════════════════════════════════════════════════════════ */
 
 (function () {
+
+  /* ── DOUBLE-INJECTION GUARD ──────────────────────────────────
+     Prevents duplicate nav/strip/footer if shared.js is ever
+     accidentally included twice on the same page.
+  ─────────────────────────────────────────────────────────────*/
+  if (window.__sharedJsLoaded) return;
+  window.__sharedJsLoaded = true;
+
 
   /* ─────────────────────────────────────────
      0.  PROJECT REGISTRY

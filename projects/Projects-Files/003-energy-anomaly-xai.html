@@ -3,31 +3,14 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Energy Anomaly XAI · Mohammad Noorchenarboo</title>
+<!-- ▶ THEME FLICKER FIX: apply saved theme before first paint -->
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <link rel="stylesheet" href="/projects/shared.css">
 <script src="/projects/shared.js" defer></script>
 <style>
-/* ─── SHARED TOKENS ─── */
-:root,[data-theme="dark"]{
-  --body-bg:#070d1f;--text:#e2e8f0;--muted:#8892a4;--accent:#4f8ef7;
-  --teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;--red:#ef4444;
-  --glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
-  --card-hover-bg:rgba(255,255,255,.06);--card-hover-border:rgba(255,255,255,.14);
-  --section-alt:#0b1222;--shadow-card:0 8px 32px rgba(0,0,0,.45);
-  --radius:14px;
-}
-[data-theme="light"]{
-  --body-bg:#f8fafc;--text:#0f172a;--muted:#4b5675;--accent:#2563eb;
-  --teal:#0891b2;--green:#16a34a;--gold:#d97706;--red:#dc2626;
-  --glass:rgba(255,255,255,.85);--glass-border:rgba(0,0,0,.08);
-  --card-hover-bg:rgba(0,0,0,.02);--card-hover-border:rgba(0,0,0,.14);
-  --section-alt:#f1f5f9;--shadow-card:0 8px 24px rgba(0,0,0,.1);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--body-bg);color:var(--text);transition:background .35s,color .35s;line-height:1.6;}
-a{text-decoration:none;color:inherit;}
 .grad-text{background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
 /* ─── PAGE VARS ─── */
@@ -54,20 +37,6 @@ a{text-decoration:none;color:inherit;}
   --insight-bg:linear-gradient(135deg,rgba(101,163,13,.06),rgba(8,145,178,.05));--insight-bdr:rgba(101,163,13,.28);
 }
 
-/* ─── NAV ─── */
-.sh-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;display:flex;align-items:center;padding:0 28px;gap:24px;backdrop-filter:blur(16px);background:rgba(7,13,31,.75);border-bottom:1px solid var(--glass-border);transition:background .35s;}
-[data-theme="light"] .sh-nav{background:rgba(248,250,252,.82);}
-.sh-nav-logo{font-weight:900;font-size:1.1rem;background:linear-gradient(135deg,#4f8ef7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.sh-nav-links{display:flex;gap:4px;margin-left:auto;}
-.sh-nav-links a{font-size:.82rem;color:var(--muted);padding:6px 12px;border-radius:7px;transition:.2s;font-weight:600;}
-.sh-nav-links a:hover,.sh-nav-links a.active{color:var(--text);background:var(--glass);}
-.sh-nav-right{display:flex;align-items:center;gap:12px;}
-.sh-nav-social{display:flex;gap:8px;}
-.sh-nav-social a{color:var(--muted);font-size:.82rem;transition:.2s;padding:4px;border-radius:6px;}
-.sh-nav-social a:hover{color:var(--accent);}
-.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:700;transition:.2s;}
-.theme-toggle:hover{background:var(--card-hover-bg);color:var(--text);}
-[data-theme="dark"] .toggle-sun,[data-theme="light"] .toggle-moon{display:none;}
 
 /* ─── HERO ─── */
 .hero{padding:110px 24px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s;}
@@ -258,7 +227,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 [data-theme="light"] .citation-box{background:rgba(101,163,13,.03);border-left-color:rgba(101,163,13,.4);}
 .citation-box strong{color:var(--text);}
 .sidebar-links{display:flex;flex-direction:column;gap:8px;}
-.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s;}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s;text-decoration:none;}
 .sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text);}
 .sidebar-link i{color:var(--lime);width:16px;text-align:center;}
 
@@ -288,32 +257,9 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 }
 </style>
 </head>
-<body>
+<!-- ▶ FIX: was &amp;amp; (double-encoded) — corrected to &amp; -->
+<body data-project-index="2" data-footer-note="Energy &amp; Buildings 2025 · DOI 10.1016/j.enbuild.2024.115177">
 
-<!-- NAV -->
-<nav class="sh-nav">
-  <a href="/index.html" class="sh-nav-logo">MN</a>
-  <div class="sh-nav-links">
-    <a href="/index.html#about">About</a>
-    <a href="/index.html#experience">Experience</a>
-    <a href="/index.html#publications">Publications</a>
-    <a href="/index.html#skills">Skills</a>
-    <a href="/projects/index.html" class="active">Projects</a>
-  </div>
-  <div class="sh-nav-right">
-    <div class="sh-nav-social">
-      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-      <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
-      <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
-    </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="toggle-sun">☀️</span>
-      <span class="toggle-moon">🌙</span>
-      <span id="toggleLabel">Light</span>
-    </button>
-  </div>
-</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -394,7 +340,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </div>
   </div>
 
-  <!-- ② ANOMALY VISUALIZATION (new) -->
+  <!-- ② ANOMALY VISUALIZATION -->
   <div class="ts-card" id="anomaly-viz">
     <div class="sec-label sl-red" style="margin-bottom:16px">② What Anomalies Look Like in Real Data</div>
     <div class="ts-header">
@@ -413,7 +359,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       <canvas id="tsChart"></canvas>
     </div>
 
-    <!-- Anomaly annotation cards -->
     <div class="anomaly-labels">
       <div class="anom-card ac-red">
         <div class="anom-icon">🌡️</div>
@@ -554,7 +499,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 <!-- SIDEBAR -->
 <div class="sidebar">
 
-  <!-- AT A GLANCE (was Overview) -->
   <div class="sidebar-card">
     <div class="ataglance-header">
       <h3 style="margin-bottom:0">At a Glance</h3>
@@ -569,7 +513,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </p>
   </div>
 
-  <!-- Quick Facts -->
   <div class="sidebar-card">
     <h3>Quick Facts</h3>
     <div class="info-row"><span class="info-key">Journal</span><span class="info-val">Energy &amp; Buildings</span></div>
@@ -583,7 +526,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     <div class="info-row"><span class="info-key">Co-author</span><span class="info-val">K. Grolinger, Western University</span></div>
   </div>
 
-  <!-- Tech Stack -->
   <div class="sidebar-card">
     <h3>Tech &amp; Methods</h3>
     <div class="tech-pills">
@@ -596,7 +538,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </div>
   </div>
 
-  <!-- Citation -->
   <div class="sidebar-card">
     <h3>Citation</h3>
     <div class="citation-box">
@@ -604,12 +545,12 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </div>
   </div>
 
-  <!-- Related -->
+  <!-- ▶ FIX: corrected relative links to absolute paths -->
   <div class="sidebar-card">
     <h3>Related Work</h3>
     <div class="sidebar-links">
-      <a href="surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
-      <a href="nlp-benchmark.html" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
+      <a href="/projects/Projects-Files/001-surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+      <a href="/projects/Projects-Files/002-nlp-benchmark.html" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
       <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
       <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
     </div>
@@ -621,13 +562,8 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 <script>
 const html = document.documentElement;
 
-/* ─── theme toggle ─── */
-document.getElementById('themeToggle').addEventListener('click', () => {
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('toggleLabel').textContent = isDark ? 'Dark' : 'Light';
-  setTimeout(() => { buildBarChart(); buildTsChart(); }, 50);
-});
+/* ─── chart rebuild on theme change (called by shared.js) ─── */
+function rebuildCharts() { buildBarChart(); buildTsChart(); }
 
 function isDark()  { return html.getAttribute('data-theme') !== 'light'; }
 function gc()      { return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
@@ -645,13 +581,11 @@ function tooltipTheme() {
 /* ══════════════════════════════════
    TIME-SERIES CHART
 ══════════════════════════════════ */
-// Generate 7 days × 24 hours of synthetic office building data
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const N = 7 * 24;
 const tsLabels = [];
 const baseConsumption = [];
 
-// Anomaly definitions: index, actual value, colour, label
 const ANOMALIES = [
   { idx:  2, val: 46.2, col:'#ef4444', label:'HVAC Malfunction\n+2.8× normal' },
   { idx: 62, val: 54.8, col:'#f97316', label:'Equipment Fault\nSustained high' },
@@ -660,11 +594,9 @@ const ANOMALIES = [
 ];
 const anomIdx = new Set(ANOMALIES.map(a => a.idx));
 
-// Expected band (±1.5 σ around a smooth pattern)
 const bandUpper = [], bandLower = [];
 
 function rng(seed) {
-  // simple deterministic pseudo-random
   let s = seed;
   return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
 }
@@ -676,7 +608,6 @@ for (let i = 0; i < N; i++) {
   const label = (hr === 0) ? DAYS[day] : (hr === 12 ? '12pm' : (hr % 6 === 0 ? `${hr}h` : ''));
   tsLabels.push(label);
 
-  // Smooth daily rhythm: low overnight, peaks mid-morning & mid-afternoon
   const dayShape = 18 + 14 * Math.sin((hr - 7) * Math.PI / 10) + 5 * Math.sin((hr - 15) * Math.PI / 5);
   const occupancy = isWeekend ? 0.35 : 1.0;
   const base = Math.max(4, dayShape * occupancy + (rand() - 0.5) * 4);
@@ -685,20 +616,15 @@ for (let i = 0; i < N; i++) {
   bandLower.push(Math.max(2, base - 7));
 }
 
-// Scatter points for anomalies
-const anomalyPoints = ANOMALIES.map(a => ({ x: a.idx, y: a.val, col: a.col, label: a.label }));
-
 let tsChart, barChart;
 
 function buildTsChart() {
   if (tsChart) tsChart.destroy();
   const ctx = document.getElementById('tsChart').getContext('2d');
 
-  // Build anomaly scatter data aligned with line length
   const anomScatterData = Array(N).fill(null);
   ANOMALIES.forEach(a => { anomScatterData[a.idx] = a.val; });
 
-  // Normal line: replace anomaly indices with null so the line breaks naturally
   const normalLine = baseConsumption.map((v, i) => anomIdx.has(i) ? null : v);
 
   tsChart = new Chart(ctx, {
@@ -706,7 +632,6 @@ function buildTsChart() {
     data: {
       labels: tsLabels,
       datasets: [
-        // Band upper (fill to lower)
         {
           label: 'Expected Upper',
           data: bandUpper,
@@ -716,7 +641,6 @@ function buildTsChart() {
           backgroundColor: isDark() ? 'rgba(132,204,22,.10)' : 'rgba(101,163,13,.09)',
           tension: 0.4, spanGaps: true, order: 3,
         },
-        // Band lower
         {
           label: 'Expected Lower',
           data: bandLower,
@@ -725,7 +649,6 @@ function buildTsChart() {
           fill: false,
           tension: 0.4, spanGaps: true, order: 4,
         },
-        // Normal consumption line
         {
           label: 'Energy (kWh)',
           data: normalLine,
@@ -738,7 +661,6 @@ function buildTsChart() {
           spanGaps: false,
           order: 2,
         },
-        // Anomaly scatter
         {
           label: 'Anomaly',
           data: anomScatterData,
