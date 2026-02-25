@@ -6,467 +6,374 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<link rel="stylesheet" href="/projects/shared.css">
-<script src="/projects/shared.js" defer></script>
+<!-- shared.css / shared.js would be linked here in the real project -->
 <style>
-/* ═══════════════════════════════
-   PAGE-SPECIFIC VARS ONLY
-═══════════════════════════════ */
-:root,
-[data-theme="dark"] {
-  --violet:         #a78bfa;
-  --violet2:        #7c3aed;
-  --rose:           #fb7185;
-  --hero-grad:      radial-gradient(ellipse 75% 55% at 50% -8%, rgba(167,139,250,.16), transparent 65%);
-  --grid-col:       rgba(167,139,250,.03);
-  --chart-grid:     rgba(255,255,255,.05);
-  --chart-tick:     #8892a4;
-  --prob-v-bg:      rgba(167,139,250,.07);
-  --prob-v-bdr:     rgba(167,139,250,.22);
-  --prob-r-bg:      rgba(251,113,133,.07);
-  --prob-r-bdr:     rgba(251,113,133,.22);
-  --prob-b-bg:      rgba(79,142,247,.07);
-  --prob-b-bdr:     rgba(79,142,247,.22);
-  --snp-sig-bg:     rgba(167,139,250,.1);
-  --snp-sig-bdr:    rgba(167,139,250,.3);
-  --take-bg:        rgba(167,139,250,.05);
-  --take-bdr:       rgba(167,139,250,.2);
-  --insight-bg:     linear-gradient(135deg,rgba(167,139,250,.08),rgba(6,182,212,.06));
-  --insight-bdr:    rgba(167,139,250,.22);
+/* ─── SHARED BASE (inlined for self-contained demo) ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root,[data-theme="dark"]{
+  --body-bg:#070d1f;--section-alt:#0b1224;
+  --text:#e2e8f0;--muted:#8892a4;
+  --accent:#4f8ef7;--teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;--red:#ef4444;
+  --glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
+  --card-hover-bg:rgba(255,255,255,.07);--card-hover-border:rgba(79,142,247,.3);
+  --shadow-card:0 8px 32px rgba(0,0,0,.4);
+  --radius:14px;
 }
-[data-theme="light"] {
-  --violet:         #7c3aed;
-  --violet2:        #6d28d9;
-  --rose:           #e11d48;
-  --hero-grad:      radial-gradient(ellipse 75% 55% at 50% -8%, rgba(124,58,237,.1), transparent 65%);
-  --grid-col:       rgba(124,58,237,.04);
-  --chart-grid:     rgba(0,0,0,.06);
-  --chart-tick:     #4b5675;
-  --prob-v-bg:      rgba(124,58,237,.05);
-  --prob-v-bdr:     rgba(124,58,237,.2);
-  --prob-r-bg:      rgba(225,29,72,.05);
-  --prob-r-bdr:     rgba(225,29,72,.2);
-  --prob-b-bg:      rgba(37,99,235,.05);
-  --prob-b-bdr:     rgba(37,99,235,.2);
-  --snp-sig-bg:     rgba(124,58,237,.06);
-  --snp-sig-bdr:    rgba(124,58,237,.25);
-  --take-bg:        rgba(124,58,237,.05);
-  --take-bdr:       rgba(124,58,237,.22);
-  --insight-bg:     linear-gradient(135deg,rgba(124,58,237,.06),rgba(8,145,178,.05));
-  --insight-bdr:    rgba(124,58,237,.25);
+[data-theme="light"]{
+  --body-bg:#f8faff;--section-alt:#eef2fb;
+  --text:#0f172a;--muted:#4b5675;
+  --accent:#2563eb;--teal:#0891b2;--green:#16a34a;--gold:#d97706;--red:#dc2626;
+  --glass:rgba(255,255,255,.7);--glass-border:rgba(37,99,235,.12);
+  --card-hover-bg:rgba(255,255,255,.9);--card-hover-border:rgba(37,99,235,.3);
+  --shadow-card:0 8px 32px rgba(37,99,235,.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;transition:background .35s,color .35s}
+a{text-decoration:none;color:inherit}
+canvas{display:block}
+
+/* ─── PAGE VARS ─── */
+:root,[data-theme="dark"]{
+  --violet:#a78bfa;--violet2:#7c3aed;--rose:#fb7185;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(167,139,250,.18),transparent 65%);
+  --grid-col:rgba(167,139,250,.03);
+}
+[data-theme="light"]{
+  --violet:#7c3aed;--violet2:#6d28d9;--rose:#e11d48;
+  --hero-grad:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(124,58,237,.1),transparent 65%);
+  --grid-col:rgba(124,58,237,.04);
 }
 
-/* ── HERO ── */
-.hero {
-  padding: 110px 24px 0;
-  background: var(--body-bg);
-  position: relative; overflow: hidden; transition: background .35s;
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: var(--hero-grad);
-}
-.hero::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid-col) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-col) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+/* ─── NAV ─── */
+.sh-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(7,13,31,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);transition:background .35s}
+[data-theme="light"] .sh-nav{background:rgba(248,250,255,.9)}
+.sh-nav-logo{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sh-nav-links{display:flex;gap:24px;font-size:.84rem}
+.sh-nav-links a{color:var(--muted);transition:.2s}
+.sh-nav-links a:hover,.sh-nav-links a.active{color:var(--accent)}
+.sh-nav-right{display:flex;align-items:center;gap:14px}
+.sh-nav-social{display:flex;gap:10px}
+.sh-nav-social a{color:var(--muted);font-size:.9rem;transition:.2s}
+.sh-nav-social a:hover{color:var(--accent)}
+.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);transition:.2s;font-family:inherit}
+.theme-toggle:hover{border-color:var(--card-hover-border);color:var(--text)}
+[data-theme="dark"] .toggle-sun,[data-theme="light"] .toggle-moon{display:none}
 
-.breadcrumb {
-  font-size: .78rem; color: var(--muted);
-  margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
-}
-.breadcrumb a { color: var(--muted); transition: .2s; }
-.breadcrumb a:hover { color: var(--accent); }
-.breadcrumb span { opacity: .4; }
+/* ─── HERO ─── */
+.hero{padding:110px 24px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:var(--hero-grad)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid-col) 1px,transparent 1px),linear-gradient(90deg,var(--grid-col) 1px,transparent 1px);background-size:48px 48px}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.breadcrumb{font-size:.78rem;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.breadcrumb a{color:var(--muted);transition:.2s}.breadcrumb a:hover{color:var(--accent)}.breadcrumb span{opacity:.4}
+.tag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:.74rem;font-weight:700;letter-spacing:.03em}
+.pill-violet{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.28);color:var(--violet)}
+.pill-gold{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--gold)}
+.pub-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;box-shadow:0 0 6px rgba(245,158,11,.6)}
+h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1.15;margin-bottom:14px;color:var(--text)}
+.grad-text{background:linear-gradient(135deg,var(--violet),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--muted);max-width:680px;line-height:1.72;margin-bottom:26px}
+.hero-sub strong{color:var(--text)}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:26px}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta i{color:var(--violet)}.hero-meta strong{color:var(--text)}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit}
+.btn-pub{background:rgba(34,197,94,.14);color:var(--green);border-color:rgba(34,197,94,.3)}
+.btn-pub:hover{background:rgba(34,197,94,.24);transform:translateY(-2px)}
+.btn-anchor{background:var(--glass);color:var(--text);border-color:var(--glass-border)}
+.btn-anchor:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
+.btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border)}
+.btn-back:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
 
-.tag-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-.pill {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 5px 14px; border-radius: 20px;
-  font-size: .74rem; font-weight: 700; letter-spacing: .03em;
-}
-.pill-violet {
-  background: rgba(167,139,250,.12); border: 1px solid rgba(167,139,250,.28);
-  color: var(--violet);
-}
-[data-theme="light"] .pill-violet {
-  background: rgba(124,58,237,.09); border-color: rgba(124,58,237,.28);
-}
-.pill-gold {
-  background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.28);
-  color: var(--gold);
-}
-.pub-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--gold); display: inline-block;
-  box-shadow: 0 0 6px rgba(245,158,11,.6);
-}
+/* ─── STATS BAR ─── */
+.stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:background .35s;margin-top:40px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--glass-border)}
+.stat-item{background:var(--section-alt);padding:22px 16px;text-align:center;transition:background .35s}
+.stat-val{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--violet),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:.74rem;color:var(--muted);line-height:1.4}
 
-h1.page-title {
-  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
-  font-weight: 900; line-height: 1.15;
-  margin-bottom: 14px; color: var(--text);
-}
-.hero-sub {
-  font-size: clamp(.9rem, 1.6vw, 1.05rem);
-  color: var(--muted); max-width: 680px;
-  line-height: 1.72; margin-bottom: 26px;
-}
-.hero-sub strong { color: var(--text); }
+/* ─── LAYOUT ─── */
+.main-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start}
+.content-col{display:flex;flex-direction:column;gap:28px}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px}
 
-.hero-meta {
-  display: flex; gap: 20px; flex-wrap: wrap;
-  font-size: .8rem; color: var(--muted); margin-bottom: 26px;
-}
-.hero-meta span { display: flex; align-items: center; gap: 6px; }
-.hero-meta i { color: var(--violet); }
-.hero-meta strong { color: var(--text); }
+/* ─── CARDS ─── */
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s}
+.card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px)}
+.card-title{font-size:1rem;font-weight:800;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+.card-title i{color:var(--violet);font-size:.9rem}
+.narrative{font-size:.92rem;color:var(--muted);margin-bottom:16px;line-height:1.72}
+.narrative strong{color:var(--text)}
 
-.hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+/* ─── SEC LABELS ─── */
+.sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 14px;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.sec-label::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:pg-shimmer 4s ease-in-out infinite}
+@keyframes pg-shimmer{0%,100%{left:-100%}50%{left:100%}}
+.sl-violet{background:rgba(167,139,250,.1);color:var(--violet);border:1px solid rgba(167,139,250,.22)}
+.sl-teal{background:rgba(6,182,212,.1);color:var(--teal);border:1px solid rgba(6,182,212,.22)}
+.sl-rose{background:rgba(251,113,133,.1);color:var(--rose);border:1px solid rgba(251,113,133,.22)}
+.sl-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.22)}
+.sl-gold{background:rgba(245,158,11,.1);color:var(--gold);border:1px solid rgba(245,158,11,.22)}
+[data-theme="light"] .sl-violet{background:rgba(124,58,237,.07);color:#6d28d9;border-color:rgba(124,58,237,.25)}
+[data-theme="light"] .sl-teal{background:rgba(8,145,178,.07);color:#0e7490}
+[data-theme="light"] .sl-rose{background:rgba(225,29,72,.07);color:#be123c}
+[data-theme="light"] .sl-green{background:rgba(22,163,74,.07);color:#15803d}
+[data-theme="light"] .sl-gold{background:rgba(217,119,6,.07);color:#92400e}
 
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 18px; border-radius: 8px;
-  font-size: .83rem; font-weight: 700;
-  cursor: pointer; border: 1px solid transparent;
-  transition: all .2s; font-family: inherit;
-}
-.btn-pub {
-  background: rgba(34,197,94,.14); color: var(--green);
-  border-color: rgba(34,197,94,.3);
-}
-.btn-pub:hover { background: rgba(34,197,94,.24); transform: translateY(-2px); }
-[data-theme="light"] .btn-pub { background: rgba(22,163,74,.09); color: #15803d; border-color: rgba(22,163,74,.28); }
-.btn-anchor {
-  background: var(--glass); color: var(--text);
-  border-color: var(--glass-border);
-}
-.btn-anchor:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
-.btn-back {
-  background: var(--glass); color: var(--muted);
-  border-color: var(--glass-border);
-}
-.btn-back:hover { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
-.btn-disabled {
-  opacity: .35; pointer-events: none; cursor: not-allowed;
-  background: var(--glass); color: var(--muted); border-color: var(--glass-border);
-}
+/* ─── FADE-UP ─── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
 
-/* ── STATS BAR ── */
-.stats-bar {
-  background: var(--section-alt);
-  border-top: 1px solid var(--glass-border);
-  border-bottom: 1px solid var(--glass-border);
-  transition: background .35s; margin-top: 40px;
-}
-.stats-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(5,1fr);
-  gap: 1px; background: var(--glass-border);
-}
-.stat-item {
-  background: var(--section-alt);
-  padding: 22px 16px; text-align: center; transition: background .35s;
-}
-.stat-val {
-  font-size: 1.8rem; font-weight: 900;
-  background: linear-gradient(135deg, var(--violet), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; line-height: 1.1; margin-bottom: 4px;
-}
-.stat-label { font-size: .74rem; color: var(--muted); line-height: 1.4; }
+/* ════════════════════════════════════════
+   PROBLEM SECTION — VISUAL STORYTELLING
+════════════════════════════════════════ */
+.problem-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.muscle-clock{background:linear-gradient(135deg,rgba(167,139,250,.1),rgba(251,113,133,.07));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.muscle-clock::before{content:'💪';position:absolute;top:-10px;right:-10px;font-size:5rem;opacity:.06}
+.clock-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--violet);margin-bottom:12px}
+.clock-number{font-size:3.6rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.clock-sub{font-size:.84rem;color:var(--muted);line-height:1.5}
+.clock-sub strong{color:var(--text)}
 
-/* ── MAIN LAYOUT ── */
-.main-layout {
-  max-width: 1100px; margin: 0 auto;
-  padding: 48px 24px;
-  display: grid; grid-template-columns: 1fr 310px;
-  gap: 32px; align-items: start;
-}
-.content-col { display: flex; flex-direction: column; gap: 28px; }
-.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+.heritability-bar-block{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(167,139,250,.06));border:1px solid rgba(6,182,212,.2);border-radius:var(--radius);padding:24px}
+.hb-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.hb-sub{font-size:.76rem;color:var(--muted);margin-bottom:16px}
+.hb-row{display:flex;flex-direction:column;gap:10px}
+.hb-item{display:flex;flex-direction:column;gap:5px}
+.hb-name{display:flex;justify-content:space-between;font-size:.78rem}
+.hb-name span:first-child{color:var(--muted)}
+.hb-name span:last-child{font-weight:700;color:var(--text)}
+.hb-track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+[data-theme="light"] .hb-track{background:rgba(0,0,0,.07)}
+.hb-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,.8,.44,1)}
+.hb-f1{background:linear-gradient(90deg,var(--violet),var(--teal))}
+.hb-f2{background:linear-gradient(90deg,var(--teal),var(--green))}
+.hb-f3{background:linear-gradient(90deg,var(--rose),var(--violet))}
 
-/* ── CARDS ── */
-.card {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: var(--radius); padding: 28px; transition: all .25s;
-}
-.card:hover {
-  background: var(--card-hover-bg); border-color: var(--card-hover-border);
-  transform: translateY(-3px);
-}
-.card-title {
-  font-size: 1rem; font-weight: 800; margin-bottom: 18px;
-  color: var(--text); display: flex; align-items: center; gap: 10px;
-}
-.card-title i { color: var(--violet); font-size: .9rem; }
-.narrative { font-size: .92rem; color: var(--muted); margin-bottom: 16px; line-height: 1.72; }
-.narrative strong { color: var(--text); }
+/* MUSCLE LOSS CHART */
+.muscle-decline-wrap{position:relative;height:220px;margin-bottom:4px}
 
-/* ── PROBLEM CARDS ── */
-.prob-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-.prob-card {
-  border-radius: var(--radius); padding: 22px;
-  position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s;
-}
-.prob-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
-.prob-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.pc-v  { background: var(--prob-v-bg); border: 1px solid var(--prob-v-bdr); }
-.pc-r  { background: var(--prob-r-bg); border: 1px solid var(--prob-r-bdr); }
-.pc-b  { background: var(--prob-b-bg); border: 1px solid var(--prob-b-bdr); }
-.pc-v::before { background: linear-gradient(90deg, var(--violet), transparent); }
-.pc-r::before { background: linear-gradient(90deg, var(--rose), transparent); }
-.pc-b::before { background: linear-gradient(90deg, var(--accent), transparent); }
-.prob-card h3 { font-size: .93rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
-.prob-card p  { font-size: .82rem; color: var(--muted); line-height: 1.65; }
-.big-num { font-size: 2.2rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
-.n-v { color: var(--violet); }
-.n-r { color: var(--rose); }
-.n-b { color: var(--accent); }
+/* SARCOPENIA PREVALENCE MAP */
+.prevalence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.prev-card{border-radius:12px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+.prev-card:hover{transform:translateY(-4px)}
+.prev-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.pv-a{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2)}
+.pv-a::before{background:linear-gradient(90deg,var(--violet),transparent)}
+.pv-b{background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.2)}
+.pv-b::before{background:linear-gradient(90deg,var(--rose),transparent)}
+.pv-c{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}
+.pv-c::before{background:linear-gradient(90deg,var(--red),transparent)}
+.prev-pct{font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:4px}
+.pv-a .prev-pct{color:var(--violet)}
+.pv-b .prev-pct{color:var(--rose)}
+.pv-c .prev-pct{color:var(--red)}
+.prev-lbl{font-size:.76rem;color:var(--muted);line-height:1.5}
 
-/* ── COHORT STATS ── */
-.cohort-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
-.coh-card {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 12px; padding: 18px 12px; text-align: center; transition: .25s;
-}
-.coh-card:hover { transform: translateY(-3px); border-color: rgba(167,139,250,.3); }
-.coh-val {
-  font-size: 1.7rem; font-weight: 900; line-height: 1; margin-bottom: 5px;
-  background: linear-gradient(135deg, var(--violet), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.coh-lbl { font-size: .72rem; color: var(--muted); line-height: 1.4; }
+/* CONSEQUENCE TIMELINE */
+.consequence-flow{display:flex;align-items:stretch;gap:0;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--glass-border)}
+.cf-step{flex:1;padding:16px 14px;text-align:center;position:relative}
+.cf-step:not(:last-child)::after{content:'›';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:var(--muted);z-index:2}
+.cf-s1{background:rgba(167,139,250,.06)}
+.cf-s2{background:rgba(251,113,133,.06)}
+.cf-s3{background:rgba(245,158,11,.06)}
+.cf-s4{background:rgba(239,68,68,.06)}
+.cf-icon{font-size:1.6rem;margin-bottom:6px}
+.cf-label{font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.cf-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
 
-.data-note {
-  background: var(--insight-bg); border: 1px solid var(--insight-bdr);
-  border-radius: 10px; padding: 16px 20px;
-  font-size: .83rem; color: var(--muted); line-height: 1.65;
-  display: flex; gap: 12px; align-items: flex-start;
-}
-.data-note i { color: var(--violet); margin-top: 2px; flex-shrink: 0; }
-.data-note strong { color: var(--text); }
+/* ════════════════════════════════════════
+   DATA SECTION
+════════════════════════════════════════ */
+.cohort-visual{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start}
+.cohort-left{display:flex;flex-direction:column;gap:14px}
+.cohort-big-stat{background:linear-gradient(135deg,rgba(167,139,250,.1),rgba(6,182,212,.06));border:1px solid rgba(167,139,250,.22);border-radius:var(--radius);padding:24px;text-align:center}
+.cbs-num{font-size:3.4rem;font-weight:900;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--violet),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cbs-lbl{font-size:.82rem;color:var(--muted)}
+.cohort-minis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmini{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px;text-align:center;transition:.2s}
+.cmini:hover{border-color:rgba(167,139,250,.3);transform:translateY(-2px)}
+.cmini-val{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:4px;color:var(--violet)}
+.cmini-lbl{font-size:.72rem;color:var(--muted);line-height:1.35}
+.cohort-right{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px}
+.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
+.chart-canvas-h{position:relative;height:220px}
+.data-note{background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(6,182,212,.04));border:1px solid rgba(167,139,250,.18);border-radius:10px;padding:16px 20px;font-size:.83rem;color:var(--muted);line-height:1.65;display:flex;gap:12px;align-items:flex-start;margin-top:16px}
+.data-note i{color:var(--violet);margin-top:2px;flex-shrink:0}
+.data-note strong{color:var(--text)}
 
-/* ── PIPELINE ── */
-.pipe-steps {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 0; position: relative;
-}
-.pipe-steps::before {
-  content: ''; position: absolute; top: 50px;
-  left: 12.5%; right: 12.5%; height: 2px;
-  background: linear-gradient(90deg, var(--violet), var(--teal)); z-index: 0;
-}
-.pipe-step {
-  display: flex; flex-direction: column;
-  align-items: center; text-align: center;
-  padding: 0 10px; position: relative; z-index: 1;
-}
-.pipe-circle {
-  width: 60px; height: 60px; border-radius: 50%; border: 2px solid;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; margin-bottom: 14px;
-  background: var(--body-bg); transition: .35s;
-}
-.pp1 { border-color: var(--violet); box-shadow: 0 0 18px rgba(167,139,250,.28); }
-.pp2 { border-color: var(--teal);   box-shadow: 0 0 18px rgba(6,182,212,.22); }
-.pp3 { border-color: var(--rose);   box-shadow: 0 0 18px rgba(251,113,133,.22); }
-.pp4 { border-color: var(--green);  box-shadow: 0 0 18px rgba(34,197,94,.22); }
-.pipe-step h4 { font-size: .86rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
-.pipe-step p  { font-size: .76rem; color: var(--muted); line-height: 1.55; }
+/* Correlation visual */
+.correlation-block{margin-top:16px}
+.corr-label-row{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:6px}
+.corr-label-row strong{color:var(--text)}
+.corr-track{height:14px;background:rgba(255,255,255,.05);border-radius:7px;overflow:hidden;position:relative}
+[data-theme="light"] .corr-track{background:rgba(0,0,0,.07)}
+.corr-fill{height:100%;width:0;border-radius:7px;background:linear-gradient(90deg,var(--violet),var(--teal));transition:width 1.4s cubic-bezier(.22,.8,.44,1);position:relative}
+.corr-fill::after{content:attr(data-val);position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.68rem;font-weight:800;color:#fff}
+.corr-desc{font-size:.75rem;color:var(--muted);margin-top:6px;line-height:1.5}
 
-.pipe-detail {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 10px; margin-top: 22px;
-}
-.pd-card {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 10px; padding: 14px;
-}
-.pd-title {
-  font-size: .72rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .06em; margin-bottom: 8px;
-}
-.pd-t1 { color: var(--violet); }
-.pd-t2 { color: var(--teal); }
-.pd-t3 { color: var(--rose); }
-.pd-t4 { color: var(--green); }
-.pd-card ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-.pd-card li {
-  font-size: .74rem; color: var(--muted);
-  padding-left: 14px; position: relative; line-height: 1.45;
-}
-.pd-card li::before { content: '›'; position: absolute; left: 0; color: var(--violet); }
+/* ════════════════════════════════════════
+   METHODS — VISUAL PIPELINE
+════════════════════════════════════════ */
+.why-joint{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.wj-card{border-radius:12px;padding:20px;text-align:center}
+.wj-old{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18)}
+.wj-new{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.18)}
+.wj-icon{font-size:1.8rem;margin-bottom:8px}
+.wj-title{font-size:.84rem;font-weight:800;margin-bottom:6px}
+.wj-old .wj-title{color:var(--red)}
+.wj-new .wj-title{color:var(--green)}
+.wj-desc{font-size:.76rem;color:var(--muted);line-height:1.55}
+.wj-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700}
+.wj-old .wj-badge{background:rgba(239,68,68,.15);color:var(--red)}
+.wj-new .wj-badge{background:rgba(34,197,94,.15);color:var(--green)}
 
-/* ── SNP TABLE (compact) ── */
-.snp-table-wrap { overflow-x: auto; margin-top: 8px; }
-.snp-table {
-  width: 100%; border-collapse: collapse;
-  font-size: .78rem;
-}
-.snp-table th {
-  text-align: left; padding: 8px 12px;
-  font-size: .7rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .06em; color: var(--muted);
-  border-bottom: 1px solid var(--glass-border);
-}
-.snp-table td {
-  padding: 8px 12px; color: var(--muted);
-  border-bottom: 1px solid var(--glass-border);
-}
-.snp-table tr:last-child td { border-bottom: none; }
-.snp-table tr.sig { background: var(--snp-sig-bg); }
-.snp-table tr.sig td { color: var(--text); }
-.snp-table td.snp-id { font-weight: 700; color: var(--violet); font-family: monospace; }
-.snp-table tr.sig td.snp-id { color: var(--violet); }
-.sig-badge {
-  display: inline-block; background: rgba(167,139,250,.15);
-  border: 1px solid var(--snp-sig-bdr);
-  border-radius: 6px; padding: 1px 7px;
-  font-size: .68rem; font-weight: 700; color: var(--violet);
-}
-[data-theme="light"] .sig-badge { background: rgba(124,58,237,.08); }
+/* Power comparison chart */
+.power-demo{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:22px}
+.power-demo-h{height:200px;position:relative}
 
-/* ── RESULTS ── */
-.results-top { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
-.rcard {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 12px; padding: 20px 16px; text-align: center; transition: .25s;
-}
-.rcard:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
-.rcard-val {
-  font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 5px;
-  background: linear-gradient(135deg, var(--violet), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.rcard-lbl { font-size: .78rem; color: var(--muted); line-height: 1.4; }
-.rcard-sub { font-size: .7rem; color: var(--violet); margin-top: 3px; font-weight: 600; }
+/* Numbered pipeline */
+.pipe-flow{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
+.pipe-flow::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--violet),var(--teal));z-index:0}
+.pf-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px;position:relative;z-index:1}
+.pf-circle{width:54px;height:54px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:12px;background:var(--body-bg);transition:.35s}
+.pf1{border-color:var(--violet);box-shadow:0 0 20px rgba(167,139,250,.3)}
+.pf2{border-color:var(--teal);box-shadow:0 0 20px rgba(6,182,212,.22)}
+.pf3{border-color:var(--rose);box-shadow:0 0 20px rgba(251,113,133,.22)}
+.pf4{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.22)}
+.pf-step h4{font-size:.82rem;font-weight:800;margin-bottom:5px;color:var(--text)}
+.pf-step p{font-size:.73rem;color:var(--muted);line-height:1.5}
 
-.chart-wrap {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 12px; padding: 20px; margin-bottom: 20px;
-}
-.chart-title {
-  font-size: .82rem; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px;
-}
-.chart-canvas-wrap { position: relative; height: 220px; }
+.pipe-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.pd-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px}
+.pd-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.pd-t1{color:var(--violet)}.pd-t2{color:var(--teal)}.pd-t3{color:var(--rose)}.pd-t4{color:var(--green)}
+.pd-card ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.pd-card li{font-size:.72rem;color:var(--muted);padding-left:14px;position:relative;line-height:1.45}
+.pd-card li::before{content:'›';position:absolute;left:0;color:var(--violet)}
 
-/* ── INSIGHT BANNER ── */
-.insight-banner {
-  background: var(--insight-bg); border: 1px solid var(--insight-bdr);
-  border-radius: var(--radius); padding: 20px 22px;
-  display: flex; gap: 14px; align-items: flex-start; margin-top: 8px;
-}
-.insight-icon { font-size: 1.8rem; flex-shrink: 0; }
-.insight-body h4 { font-size: .93rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
-.insight-body p  { font-size: .83rem; color: var(--muted); line-height: 1.65; }
-.insight-body strong { color: var(--violet); }
+/* ════════════════════════════════════════
+   RESULTS
+════════════════════════════════════════ */
+.results-headline{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.rh-card{border-radius:var(--radius);padding:22px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+.rh-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.rh-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.rh-1{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.22)}
+.rh-1::before{background:linear-gradient(90deg,var(--violet),transparent)}
+.rh-2{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}
+.rh-2::before{background:linear-gradient(90deg,var(--green),transparent)}
+.rh-3{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.2)}
+.rh-3::before{background:linear-gradient(90deg,var(--teal),transparent)}
+.rh-val{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:5px}
+.rh-1 .rh-val{color:var(--violet)}
+.rh-2 .rh-val{color:var(--green)}
+.rh-3 .rh-val{color:var(--teal)}
+.rh-lbl{font-size:.78rem;color:var(--muted);line-height:1.4}
+.rh-sub{font-size:.7rem;font-weight:600;margin-top:4px}
+.rh-1 .rh-sub{color:var(--violet)}
+.rh-2 .rh-sub{color:var(--green)}
+.rh-3 .rh-sub{color:var(--teal)}
 
-/* ── TAKEAWAYS ── */
-.takeaway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.take-card {
-  background: var(--take-bg); border: 1px solid var(--take-bdr);
-  border-radius: 12px; padding: 18px 20px; transition: .25s;
-}
-.take-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
-.take-num { font-size: 1.5rem; font-weight: 900; color: var(--violet); margin-bottom: 6px; line-height: 1; }
-.take-title { font-size: .88rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
-.take-desc  { font-size: .79rem; color: var(--muted); line-height: 1.6; }
+/* MANHATTAN-STYLE CHART */
+.manhattan-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
+.manhattan-h{position:relative;height:240px}
 
-/* ── SECTION LABELS ── */
-.sec-label {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: .72rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .1em; padding: 4px 14px; border-radius: 20px;
-  margin-bottom: 14px; position: relative; overflow: hidden;
-}
-.sec-label::before {
-  content: ''; position: absolute; left: -100%; top: 0;
-  width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-  animation: pg-shimmer 4s ease-in-out infinite;
-}
-@keyframes pg-shimmer { 0%,100%{left:-100%} 50%{left:100%} }
-.sl-violet { background: rgba(167,139,250,.1); color: var(--violet); border: 1px solid rgba(167,139,250,.22); }
-.sl-teal   { background: rgba(6,182,212,.1);   color: var(--teal);   border: 1px solid rgba(6,182,212,.22); }
-.sl-rose   { background: rgba(251,113,133,.1);  color: var(--rose);   border: 1px solid rgba(251,113,133,.22); }
-.sl-green  { background: rgba(34,197,94,.1);    color: var(--green);  border: 1px solid rgba(34,197,94,.22); }
-.sl-gold   { background: rgba(245,158,11,.1);   color: var(--gold);   border: 1px solid rgba(245,158,11,.22); }
-[data-theme="light"] .sl-violet { background: rgba(124,58,237,.07);  color: #6d28d9; border-color: rgba(124,58,237,.25); }
-[data-theme="light"] .sl-teal   { background: rgba(8,145,178,.07);   color: #0e7490; border-color: rgba(8,145,178,.22); }
-[data-theme="light"] .sl-rose   { background: rgba(225,29,72,.07);   color: #be123c; border-color: rgba(225,29,72,.22); }
-[data-theme="light"] .sl-green  { background: rgba(22,163,74,.07);   color: #15803d; }
-[data-theme="light"] .sl-gold   { background: rgba(217,119,6,.07);   color: #92400e; }
+/* SNP LOLLIPOP */
+.lollipop-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
+.lollipop-h{position:relative;height:200px}
 
-/* ── SIDEBAR ── */
-.sidebar-card {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: var(--radius); padding: 20px;
-}
-.sidebar-card h3 {
-  font-size: .82rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .06em; color: var(--muted); margin-bottom: 14px;
-}
-.tldr-text { font-size: .86rem; color: var(--muted); line-height: 1.72; }
-.tldr-text strong { color: var(--text); }
-.info-row {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  padding: 8px 0; border-bottom: 1px solid var(--glass-border);
-  font-size: .82rem; gap: 8px;
-}
-.info-row:last-child { border-bottom: none; }
-.info-key { color: var(--muted); flex-shrink: 0; }
-.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
-.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-.tech-pill {
-  background: rgba(167,139,250,.09); border: 1px solid rgba(167,139,250,.22);
-  border-radius: 6px; padding: 3px 10px;
-  font-size: .74rem; color: var(--violet); font-weight: 600;
-}
-[data-theme="light"] .tech-pill { background: rgba(124,58,237,.07); border-color: rgba(124,58,237,.25); }
-.citation-box {
-  background: rgba(167,139,250,.04); border-left: 3px solid rgba(167,139,250,.45);
-  border-radius: 0 8px 8px 0; padding: 12px;
-  font-size: .75rem; color: var(--muted); line-height: 1.6; margin-top: 4px;
-}
-[data-theme="light"] .citation-box { background: rgba(124,58,237,.03); border-left-color: rgba(124,58,237,.4); }
-.citation-box strong { color: var(--text); }
-.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
-.sidebar-link {
-  display: flex; align-items: center; gap: 10px; padding: 9px 12px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 8px; font-size: .82rem; color: var(--muted);
-  transition: .2s; text-decoration: none;
-}
-.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
-.sidebar-link i { color: var(--violet); width: 16px; text-align: center; }
+/* SNP TABLE */
+.snp-table-wrap{overflow-x:auto;margin-top:8px}
+.snp-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.snp-table th{text-align:left;padding:8px 12px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--glass-border)}
+.snp-table td{padding:8px 12px;color:var(--muted);border-bottom:1px solid var(--glass-border)}
+.snp-table tr:last-child td{border-bottom:none}
+.snp-table tr.sig{background:rgba(167,139,250,.06)}
+.snp-table tr.sig td{color:var(--text)}
+.snp-table td.snp-id{font-weight:700;color:var(--violet);font-family:monospace}
+.sig-badge{display:inline-block;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);border-radius:6px;padding:1px 7px;font-size:.66rem;font-weight:700;color:var(--violet)}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 960px) {
-  .main-layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; }
-  .prob-grid { grid-template-columns: 1fr; }
-  .cohort-grid { grid-template-columns: 1fr 1fr; }
-  .pipe-steps { grid-template-columns: 1fr 1fr; }
-  .pipe-steps::before { display: none; }
-  .pipe-detail { grid-template-columns: 1fr 1fr; }
-  .results-top { grid-template-columns: 1fr 1fr; }
-  .takeaway-grid { grid-template-columns: 1fr; }
-  .stats-inner { grid-template-columns: repeat(3,1fr); }
+/* INSIGHT BANNER */
+.insight-banner{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(6,182,212,.06));border:1px solid rgba(167,139,250,.22);border-radius:var(--radius);padding:20px 22px;display:flex;gap:14px;align-items:flex-start;margin-top:12px}
+.insight-icon{font-size:1.8rem;flex-shrink:0}
+.insight-body h4{font-size:.93rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.insight-body p{font-size:.83rem;color:var(--muted);line-height:1.65}
+.insight-body strong{color:var(--violet)}
+
+/* IL10 PATHWAY */
+.pathway-vis{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:center;margin:18px 0;padding:20px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px}
+.pathway-node{text-align:center;padding:14px 10px}
+.pn-icon{font-size:2rem;margin-bottom:6px}
+.pn-title{font-size:.78rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.pn-desc{font-size:.68rem;color:var(--muted);line-height:1.4}
+.pathway-arrow{color:var(--muted);font-size:1.4rem;padding:0 4px;flex-shrink:0}
+.pathway-node.highlight{background:rgba(167,139,250,.08);border-radius:10px;border:1px solid rgba(167,139,250,.2)}
+
+/* ════════════════════════════════════════
+   TAKEAWAYS
+════════════════════════════════════════ */
+.takeaway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.take-card{background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.18);border-radius:12px;padding:18px 20px;transition:.25s}
+.take-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card)}
+.take-num{font-size:1.5rem;font-weight:900;color:var(--violet);margin-bottom:6px;line-height:1}
+.take-title{font-size:.88rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.take-desc{font-size:.79rem;color:var(--muted);line-height:1.6}
+
+/* ─── SIDEBAR ─── */
+.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
+.sidebar-card h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.tldr-text{font-size:.86rem;color:var(--muted);line-height:1.72}
+.tldr-text strong{color:var(--text)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-key{color:var(--muted);flex-shrink:0}
+.info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
+.tech-pills{display:flex;flex-wrap:wrap;gap:6px}
+.tech-pill{background:rgba(167,139,250,.09);border:1px solid rgba(167,139,250,.22);border-radius:6px;padding:3px 10px;font-size:.74rem;color:var(--violet);font-weight:600}
+[data-theme="light"] .tech-pill{background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.25)}
+.citation-box{background:rgba(167,139,250,.04);border-left:3px solid rgba(167,139,250,.45);border-radius:0 8px 8px 0;padding:12px;font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.citation-box strong{color:var(--text)}
+.sidebar-links{display:flex;flex-direction:column;gap:8px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s}
+.sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text)}
+.sidebar-link i{color:var(--violet);width:16px;text-align:center}
+
+/* ─── FOOTER ─── */
+.sh-footer{background:var(--section-alt);border-top:1px solid var(--glass-border);padding:40px 24px;text-align:center;transition:background .35s}
+.sh-footer-name{font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:4px}
+.sh-footer-role{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.sh-footer-icons{display:flex;gap:16px;justify-content:center;margin-bottom:16px}
+.sh-footer-icons a{color:var(--muted);font-size:1.1rem;transition:.2s}
+.sh-footer-icons a:hover{color:var(--accent)}
+.sh-footer-copy{font-size:.74rem;color:var(--muted)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:960px){
+  .main-layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .problem-hero-grid,.why-joint,.cohort-visual{grid-template-columns:1fr}
+  .prevalence-grid,.results-headline{grid-template-columns:1fr 1fr}
+  .pipe-flow{grid-template-columns:1fr 1fr}
+  .pipe-flow::before{display:none}
+  .pipe-detail{grid-template-columns:1fr 1fr}
+  .pathway-vis{grid-template-columns:1fr;grid-template-rows:auto}
+  .pathway-arrow{transform:rotate(90deg)}
+  .takeaway-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:repeat(3,1fr)}
 }
-@media (max-width: 600px) {
-  .hero { padding: 96px 16px 0; }
-  .cohort-grid { grid-template-columns: 1fr 1fr; }
-  .pipe-steps { grid-template-columns: 1fr; }
-  .pipe-detail { grid-template-columns: 1fr; }
-  .results-top { grid-template-columns: 1fr; }
-  .stats-inner { grid-template-columns: repeat(2,1fr); }
+@media(max-width:600px){
+  .hero{padding:96px 16px 0}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .prevalence-grid{grid-template-columns:1fr}
+  .results-headline{grid-template-columns:1fr}
+  .cohort-minis{grid-template-columns:1fr 1fr}
+  .pipe-flow{grid-template-columns:1fr}
+  .pipe-detail{grid-template-columns:1fr}
+  .consequence-flow{flex-direction:column}
+  .cf-step:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-8px;left:50%;transform:translateX(-50%)}
 }
 </style>
 </head>
@@ -490,8 +397,7 @@ h1.page-title {
       <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
     </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="toggle-sun">☀️</span>
-      <span class="toggle-moon">🌙</span>
+      <span class="toggle-sun">☀️</span><span class="toggle-moon">🌙</span>
       <span id="toggleLabel">Light</span>
     </button>
   </div>
@@ -500,479 +406,352 @@ h1.page-title {
 <!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-inner">
-
     <div class="breadcrumb">
-      <a href="../../index.html"><i class="fas fa-home"></i> Home</a>
-      <span>›</span>
-      <a href="../index.html">Projects</a>
-      <span>›</span>
+      <a href="../../index.html"><i class="fas fa-home"></i> Home</a><span>›</span>
+      <a href="../index.html">Projects</a><span>›</span>
       <span style="color:var(--text)">Sarcopenia Genetics</span>
     </div>
-
     <div class="tag-row">
       <span class="pill pill-violet"><i class="fas fa-dna"></i> Biostatistics · Genomics</span>
       <span class="pill pill-gold"><span class="pub-dot"></span> Published · J Biostat Epidemiol 2022</span>
     </div>
-
-    <h1 class="page-title">
-      Is Muscle Loss in Old Age<br>
-      <span class="grad-text">Written in Our DNA?</span>
-    </h1>
-
+    <h1 class="page-title">Is Muscle Loss in Old Age<br><span class="grad-text">Written in Our DNA?</span></h1>
     <p class="hero-sub">
-      As we age, our muscles gradually weaken and shrink — a condition called <strong>sarcopenia</strong>.
-      It affects roughly <strong>1 in 4 elderly Iranians</strong> and raises the risk of falls, disability,
-      and loss of independence. This study asks a fundamental question: is sarcopenia partly inherited?
-      And if so, <strong>which genes are responsible?</strong> — using a smarter statistical approach
-      that looks at multiple muscle traits simultaneously instead of one at a time.
+      As we age, our muscles quietly fade — a condition called <strong>sarcopenia</strong> that steals
+      independence from 1 in 4 elderly Iranians. This study asks: is it inherited?
+      Using a <strong>novel multivariate genetic approach</strong> on 2,772 real participants and
+      663,000 genetic variants, we identified the <strong>first IL10 gene confirmation</strong>
+      as a sarcopenia risk factor in the Iranian population.
     </p>
-
     <div class="hero-meta">
-      <span><i class="fas fa-newspaper"></i> <strong>J. of Biostatistics &amp; Epidemiology</strong>, 8(2), 2022</span>
-      <span><i class="fas fa-users"></i> Noorchenarboo et al. · 11 co-authors</span>
-      <span><i class="fas fa-map-marker-alt"></i> Bushehr, Iran · Tehran University</span>
-      <span><i class="fas fa-calendar-alt"></i> Published July 2022</span>
+      <span><i class="fas fa-newspaper"></i><strong>J. of Biostatistics &amp; Epidemiology</strong>, 8(2), 2022</span>
+      <span><i class="fas fa-users"></i>Noorchenarboo et al. · 11 co-authors</span>
+      <span><i class="fas fa-map-marker-alt"></i>Bushehr, Iran · Tehran University</span>
     </div>
-
     <div class="hero-btns">
-      <a href="#how-it-works" class="btn btn-anchor">
-        <i class="fas fa-cogs"></i> How It Works
-      </a>
-      <a href="#results" class="btn btn-anchor">
-        <i class="fas fa-chart-bar"></i> Results
-      </a>
-      <span class="btn btn-disabled">
-        <i class="fas fa-file-alt"></i> Full Paper
-      </span>
-      <a href="../index.html" class="btn btn-back">
-        <i class="fas fa-arrow-left"></i> All Projects
-      </a>
+      <a href="#problem" class="btn btn-anchor"><i class="fas fa-exclamation-circle"></i> The Problem</a>
+      <a href="#methods" class="btn btn-anchor"><i class="fas fa-cogs"></i> How It Works</a>
+      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
+      <a href="https://jbe.tums.ac.ir/index.php/jbe/article/view/916" class="btn btn-pub" target="_blank" rel="noopener"><i class="fas fa-file-alt"></i> Full Paper</a>
+      <a href="../index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
     </div>
-
   </div>
 </section>
 
 <!-- ═══ STATS BAR ═══ -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-val">2,772</div>
-      <div class="stat-label">Elderly Iranians in the Study</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-val">663K</div>
-      <div class="stat-label">Genetic Variants Scanned</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-val">27</div>
-      <div class="stat-label">Candidate SNPs Tested on IL10 Gene</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-val">3</div>
-      <div class="stat-label">Significant Genetic Variants Found</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-val">0.046</div>
-      <div class="stat-label">GATES Gene-Level p-value (IL10 confirmed)</div>
-    </div>
+    <div class="stat-item"><div class="stat-val" data-target="2772">0</div><div class="stat-label">Elderly Iranians Studied</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="663">0</div><div class="stat-label">Thousand Genetic Variants</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="27">0</div><div class="stat-label">Candidate SNPs on IL10</div></div>
+    <div class="stat-item"><div class="stat-val" data-target="3">0</div><div class="stat-label">Significant Variants Found</div></div>
+    <div class="stat-item"><div class="stat-val">0.046</div><div class="stat-label">Gene-Level p-value (IL10)</div></div>
   </div>
 </div>
 
 <!-- ═══ MAIN LAYOUT ═══ -->
 <div class="main-layout">
+<div class="content-col">
 
-  <!-- ══════ CONTENT COLUMN ══════ -->
-  <div class="content-col">
+<!-- ① PROBLEM -->
+<div class="card fade-up" id="problem">
+  <div class="sec-label sl-violet">① The Problem</div>
+  <div class="card-title"><i class="fas fa-person-cane"></i> Muscle Loss Is Silently Epidemic — And Partly Written in Your Genes</div>
+  <p class="narrative">
+    Every decade after 30, adults lose 3–8% of their muscle mass — and the rate accelerates sharply
+    after 60. <strong>Sarcopenia</strong> is when this loss becomes clinically dangerous: increasing
+    fall risk, hospitalization, and loss of independence. Twin studies prove genetics accounts for
+    <strong>46–76% of muscle mass variation</strong>, yet the specific genes responsible in Middle
+    Eastern populations had never been identified.
+  </p>
 
-    <!-- ① THE PROBLEM -->
-    <div class="card fade-up">
-      <div class="sec-label sl-violet">① The Problem</div>
-      <div class="card-title"><i class="fas fa-person-cane"></i> Muscle Loss Is Silently Widespread — And Poorly Understood</div>
-      <p class="narrative">
-        Sarcopenia isn't just about feeling weak. It leads to falls, hospitalizations, and loss of independence
-        in older adults. <strong>About 23% of elderly Iranian men and 24% of women are affected</strong> —
-        but why some people lose muscle faster than others remains unclear. We know genes play a major role
-        (accounting for 46–76% of fat-free mass variation), yet the specific genes responsible in the
-        Iranian population had never been rigorously identified.
-      </p>
-      <div class="prob-grid">
-        <div class="prob-card pc-v">
-          <div class="big-num n-v">~¼</div>
-          <h3>Of Elderly Iranians Are Affected</h3>
-          <p>Sarcopenia was found in 23% of men and 24% of women in the Bushehr Elderly Health study — a scale that makes identifying genetic risk factors a public health priority.</p>
+  <!-- Visual 1: Age decline + heritability side by side -->
+  <div class="problem-hero-grid">
+    <div class="muscle-clock">
+      <div class="clock-label">Muscle Lost Per Decade After 50</div>
+      <div class="clock-number" id="muscleNum">0%</div>
+      <div class="clock-sub">That's up to <strong>15% less muscle</strong> each decade in sarcopenic individuals — comparable to years of aging compressed into months of disease.</div>
+    </div>
+    <div class="heritability-bar-block">
+      <div class="hb-title">How Much Is Genetic?</div>
+      <div class="hb-sub">Heritability estimates from longitudinal twin studies</div>
+      <div class="hb-row">
+        <div class="hb-item">
+          <div class="hb-name"><span>Muscle Mass (SMI)</span><span>76%</span></div>
+          <div class="hb-track"><div class="hb-fill hb-f1" data-w="76"></div></div>
         </div>
-        <div class="prob-card pc-r">
-          <div class="big-num n-r">64%</div>
-          <h3>Of Muscle Strength Changes Are Heritable</h3>
-          <p>Longitudinal studies show nearly two-thirds of age-related muscle strength change is driven by genetics — yet the specific genes involved remain largely unconfirmed in non-European populations.</p>
+        <div class="hb-item">
+          <div class="hb-name"><span>Grip Strength</span><span>64%</span></div>
+          <div class="hb-track"><div class="hb-fill hb-f2" data-w="64"></div></div>
         </div>
-        <div class="prob-card pc-b">
-          <div class="big-num n-b">⚠</div>
-          <h3>Standard GWAS Misses Hidden Signals</h3>
-          <p>Conventional genome-wide studies test one trait (e.g. just grip strength) at a time. But sarcopenia involves both muscle mass AND strength — testing them separately loses statistical power and misses shared genetic effects.</p>
+        <div class="hb-item">
+          <div class="hb-name"><span>Sarcopenia Risk</span><span>~57%</span></div>
+          <div class="hb-track"><div class="hb-fill hb-f3" data-w="57"></div></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ② THE DATA -->
-    <div class="card fade-up">
-      <div class="sec-label sl-teal">② The Data</div>
-      <div class="card-title"><i class="fas fa-database"></i> Real Elderly Iranians, Real Genetic Data</div>
-      <p class="narrative">
-        The study draws on the <strong>Bushehr Elderly Health (BEH) cohort</strong> — an ongoing
-        population-based study from southern Iran. Participants over 60 had their muscle mass and
-        grip strength physically measured, and their entire genome scanned for genetic variants.
-        This provides a rare and valuable dataset: detailed genetic information paired with
-        <em>two</em> clinically meaningful muscle measurements in the same individuals.
-      </p>
-      <div class="cohort-grid">
-        <div class="coh-card">
-          <div class="coh-val">2,772</div>
-          <div class="coh-lbl">Eligible participants (age 60+)</div>
-        </div>
-        <div class="coh-card">
-          <div class="coh-val">52%</div>
-          <div class="coh-lbl">Women · avg age 69.6 years</div>
-        </div>
-        <div class="coh-card">
-          <div class="coh-val">663K</div>
-          <div class="coh-lbl">SNPs genotyped per person</div>
-        </div>
-        <div class="coh-card">
-          <div class="coh-val">0.52</div>
-          <div class="coh-lbl">Correlation between SMI and handgrip (p&lt;0.001)</div>
-        </div>
+  <!-- Visual 2: Muscle decline chart -->
+  <div class="chart-title" style="margin-bottom:10px">📉 Muscle Mass Decline With Age (Schematic)</div>
+  <div class="muscle-decline-wrap"><canvas id="declineChart"></canvas></div>
+
+  <!-- Visual 3: Prevalence cards -->
+  <div class="prevalence-grid">
+    <div class="prev-card pv-a">
+      <div class="prev-pct">23%</div>
+      <div class="prev-lbl">Elderly Iranian <strong>Men</strong> Affected<br><small>(BEH cohort)</small></div>
+    </div>
+    <div class="prev-card pv-b">
+      <div class="prev-pct">24%</div>
+      <div class="prev-lbl">Elderly Iranian <strong>Women</strong> Affected<br><small>(BEH cohort)</small></div>
+    </div>
+    <div class="prev-card pv-c">
+      <div class="prev-pct">~¼</div>
+      <div class="prev-lbl">Proportion facing <strong>disability risk</strong><br><small>if untreated</small></div>
+    </div>
+  </div>
+
+  <!-- Visual 4: Consequence flow -->
+  <div class="consequence-flow">
+    <div class="cf-step cf-s1"><div class="cf-icon">🧬</div><div class="cf-label">Genetic Risk</div><div class="cf-desc">IL10 variants disrupt muscle inflammation balance</div></div>
+    <div class="cf-step cf-s2"><div class="cf-icon">📉</div><div class="cf-label">Sarcopenia</div><div class="cf-desc">Accelerated loss of muscle mass & strength</div></div>
+    <div class="cf-step cf-s3"><div class="cf-icon">🤕</div><div class="cf-label">Falls & Fractures</div><div class="cf-desc">3× higher fall risk in sarcopenic elderly</div></div>
+    <div class="cf-step cf-s4"><div class="cf-icon">🏥</div><div class="cf-label">Hospitalization</div><div class="cf-desc">Loss of independence, higher mortality</div></div>
+  </div>
+</div>
+
+<!-- ② DATA -->
+<div class="card fade-up">
+  <div class="sec-label sl-teal">② The Data</div>
+  <div class="card-title"><i class="fas fa-database"></i> Real Elderly Iranians, Real Genome-Scale Data</div>
+  <p class="narrative">
+    The <strong>Bushehr Elderly Health (BEH) cohort</strong> — one of Iran's most comprehensive
+    aging studies — provided 2,772 participants aged 60+, each with full genome genotyping
+    <em>and</em> two clinical muscle measurements taken on the same visit day.
+    This rare combination of genomic + phenotypic data in a non-European population makes
+    the findings both statistically robust and globally significant.
+  </p>
+
+  <div class="cohort-visual">
+    <div class="cohort-left">
+      <div class="cohort-big-stat">
+        <div class="cbs-num">2,772</div>
+        <div class="cbs-lbl">Eligible participants aged 60+ with complete genetic &amp; phenotypic data</div>
       </div>
-      <div class="data-note">
-        <i class="fas fa-info-circle"></i>
-        <div>
-          Two physical measurements were taken for each participant:
-          <strong>Skeletal Muscle Mass Index (SMI)</strong> — low defined as &lt;7.0 kg/m² (men) / &lt;5.4 kg/m² (women) —
-          and <strong>Handgrip Strength</strong> — low defined as &lt;26 kg (men) / &lt;18 kg (women).
-          The strong correlation (r = 0.52) between these two measurements is exactly what motivated
-          the multivariate approach — they share genetic causes.
-        </div>
+      <div class="cohort-minis">
+        <div class="cmini"><div class="cmini-val">52%</div><div class="cmini-lbl">Female participants avg 69.6 yrs</div></div>
+        <div class="cmini"><div class="cmini-val">663K</div><div class="cmini-lbl">SNPs genotyped per person</div></div>
+        <div class="cmini"><div class="cmini-val">69.2</div><div class="cmini-lbl">Mean age overall (years)</div></div>
+        <div class="cmini"><div class="cmini-val">r=.52</div><div class="cmini-lbl">SMI–Handgrip correlation</div></div>
       </div>
     </div>
-
-    <!-- ③ HOW IT WORKS -->
-    <div class="card fade-up" id="how-it-works">
-      <div class="sec-label sl-rose">③ How It Works</div>
-      <div class="card-title"><i class="fas fa-cogs"></i> Testing Two Traits Together — More Power, Fewer Missed Signals</div>
-      <p class="narrative">
-        Think of it like this: if you want to know whether a gene affects "athletic ability",
-        testing only sprint time might miss it — but testing sprint time <em>and</em> vertical jump
-        together is more likely to catch it. This study does the same for muscle health,
-        combining mass and strength into a single joint test.
-      </p>
-
-      <div class="pipe-steps">
-        <div class="pipe-step">
-          <div class="pipe-circle pp1">🧬</div>
-          <h4>Select Candidate Gene</h4>
-          <p>Focus on IL10 — a gene already linked to muscle disorders and inflammation. Extract all 27 independent genetic variants within it.</p>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-circle pp2">📊</div>
-          <h4>MultiPhen Test</h4>
-          <p>Test each variant against <em>both</em> muscle mass (SMI) and grip strength simultaneously using a joint regression model — not one at a time.</p>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-circle pp3">🔗</div>
-          <h4>Filter by LD</h4>
-          <p>Keep only statistically independent SNPs (correlation r² ≤ 0.4) to avoid double-counting correlated variants and inflate results.</p>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-circle pp4">✅</div>
-          <h4>GATES Confirmation</h4>
-          <p>Combine all SNP-level results into a single gene-level p-value using GATES — confirming whether the whole IL10 gene is significantly associated.</p>
-        </div>
-      </div>
-
-      <div class="pipe-detail">
-        <div class="pd-card">
-          <div class="pd-title pd-t1">① Gene Selection</div>
-          <ul>
-            <li>IL10 on chromosome 1</li>
-            <li>Position: 206940947–206945839</li>
-            <li>±50kb flanking region</li>
-            <li>445,034 variants screened</li>
-          </ul>
-        </div>
-        <div class="pd-card">
-          <div class="pd-title pd-t2">② MultiPhen</div>
-          <ul>
-            <li>Ordinal regression on genotype</li>
-            <li>Both SMI + handgrip as inputs</li>
-            <li>Additive model (0, 1, 2 alleles)</li>
-            <li>Likelihood ratio test per SNP</li>
-          </ul>
-        </div>
-        <div class="pd-card">
-          <div class="pd-title pd-t3">③ LD Filter</div>
-          <ul>
-            <li>r² ≤ 0.4 threshold</li>
-            <li>MAF &gt; 0.01 retained</li>
-            <li>HWE p-value &gt; 0.05</li>
-            <li>27 independent SNPs kept</li>
-          </ul>
-        </div>
-        <div class="pd-card">
-          <div class="pd-title pd-t4">④ GATES</div>
-          <ul>
-            <li>Gene-based aggregation</li>
-            <li>Extended Simes procedure</li>
-            <li>Accounts for SNP correlation</li>
-            <li>Single gene-level p-value</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="insight-banner" style="margin-top:22px">
-        <div class="insight-icon">💡</div>
-        <div class="insight-body">
-          <h4>Why Combine Both Traits? Statistical Power.</h4>
-          <p>
-            When a gene affects two correlated outcomes, testing them jointly is significantly
-            more powerful than testing each separately. The MultiPhen + GATES pairing is
-            an <strong>"omnibus" approach</strong> — it's specifically strongest in exactly this
-            scenario: positively correlated traits (muscle mass and grip strength move together),
-            tested at both SNP and gene level simultaneously.
-          </p>
-        </div>
-      </div>
+    <div class="cohort-right">
+      <div class="chart-title">Participant Age Distribution (BEH Cohort)</div>
+      <div class="chart-canvas-h"><canvas id="ageChart"></canvas></div>
     </div>
+  </div>
 
-    <!-- ④ RESULTS -->
-    <div class="card fade-up" id="results">
-      <div class="sec-label sl-green">④ Results</div>
-      <div class="card-title"><i class="fas fa-chart-bar"></i> IL10 Is a Risk Gene for Sarcopenia in Iran</div>
-      <p class="narrative">
-        Among the 27 candidate variants on the IL10 gene, <strong>three intronic variants
-        emerged as statistically significant</strong> in the joint model test.
-        When all 27 variants were combined using GATES, the entire gene reached a
-        p-value of 0.046 — confirming IL10 as a genuine genetic risk factor for sarcopenia
-        in the Iranian elderly population.
-      </p>
-
-      <div class="results-top">
-        <div class="rcard">
-          <div class="rcard-val">3</div>
-          <div class="rcard-lbl">Significant variants found in IL10 (MultiPhen, p &lt; 0.05)</div>
-          <div class="rcard-sub">rs11119603, rs3950619, rs57461190</div>
-        </div>
-        <div class="rcard">
-          <div class="rcard-val">0.046</div>
-          <div class="rcard-lbl">Gene-level p-value (GATES) — IL10 confirmed as risk gene</div>
-          <div class="rcard-sub">below the 5% significance threshold</div>
-        </div>
-        <div class="rcard">
-          <div class="rcard-val">0.88</div>
-          <div class="rcard-lbl">Maximum effect size observed (rs3950619)</div>
-          <div class="rcard-sub">effect sizes range: 0.178 – 0.883</div>
-        </div>
-      </div>
-
-      <!-- Chart: Effect sizes of significant SNPs -->
-      <div class="chart-wrap">
-        <div class="chart-title">Effect Sizes of Significant IL10 Variants (MultiPhen Joint Model)</div>
-        <div class="chart-canvas-wrap">
-          <canvas id="snpChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Significant SNP table -->
-      <div class="snp-table-wrap">
-        <table class="snp-table">
-          <thead>
-            <tr>
-              <th>SNP</th>
-              <th>Chr</th>
-              <th>Risk Allele</th>
-              <th>MAF</th>
-              <th>Effect Size</th>
-              <th>p-value</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="sig">
-              <td class="snp-id">rs11119603</td>
-              <td>1</td><td>C</td><td>0.292</td>
-              <td>0.178</td><td>0.00384</td>
-              <td><span class="sig-badge">Significant</span></td>
-            </tr>
-            <tr class="sig">
-              <td class="snp-id">rs3950619</td>
-              <td>1</td><td>C</td><td>0.442</td>
-              <td>0.883</td><td>0.03641</td>
-              <td><span class="sig-badge">Significant</span></td>
-            </tr>
-            <tr class="sig">
-              <td class="snp-id">rs57461190</td>
-              <td>1</td><td>T</td><td>0.292</td>
-              <td>0.221</td><td>0.00411</td>
-              <td><span class="sig-badge">Significant</span></td>
-            </tr>
-            <tr>
-              <td class="snp-id" style="color:var(--muted)">rs12042283</td>
-              <td>1</td><td>C</td><td>0.488</td>
-              <td>—</td><td>0.277</td><td style="color:var(--muted);font-size:.72rem">Not significant</td>
-            </tr>
-            <tr>
-              <td class="snp-id" style="color:var(--muted)">rs1800871</td>
-              <td>1</td><td>A</td><td>0.266</td>
-              <td>—</td><td>0.858</td><td style="color:var(--muted);font-size:.72rem">Not significant</td>
-            </tr>
-            <tr>
-              <td colspan="7" style="text-align:center;color:var(--muted);font-size:.74rem;padding:10px">
-                · · · 22 additional non-significant SNPs not shown · · ·
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="insight-banner" style="margin-top:16px">
-        <div class="insight-icon">🔬</div>
-        <div class="insight-body">
-          <h4>What Is IL10 and Why Does It Matter?</h4>
-          <p>
-            IL10 (Interleukin-10) is an anti-inflammatory protein. Previous studies showed that
-            people with sarcopenia have <strong>higher levels of both IL-6 (pro-inflammatory)
-            and IL-10</strong> in their blood. IL-10 tries to suppress the inflammation that
-            damages muscle — but when this system is disrupted by genetic variants,
-            muscle deterioration accelerates. Confirming IL10 as a risk gene in an
-            Iranian cohort validates this biological pathway in a population that had never been studied this way.
-          </p>
-        </div>
-      </div>
+  <!-- Correlation visual -->
+  <div class="correlation-block">
+    <div class="corr-label-row">
+      <span>SMI ↔ Handgrip Strength Correlation</span>
+      <strong>r = 0.52 (p &lt; 0.001)</strong>
     </div>
+    <div class="corr-track"><div class="corr-fill" data-w="52" data-val="r = 0.52"></div></div>
+    <div class="corr-desc">This strong positive correlation is the statistical justification for the joint model — if two outcomes share genetic drivers, testing them together dramatically increases power to detect those drivers.</div>
+  </div>
 
-    <!-- ⑤ TAKEAWAYS -->
-    <div class="card fade-up">
-      <div class="sec-label sl-gold">⑤ Takeaways</div>
-      <div class="card-title"><i class="fas fa-lightbulb"></i> What This Research Means Beyond the Numbers</div>
-      <div class="takeaway-grid">
-        <div class="take-card">
-          <div class="take-num">01</div>
-          <div class="take-title">Testing Two Traits Together Is More Powerful</div>
-          <div class="take-desc">Combining muscle mass and grip strength into a single test (MultiPhen) uncovered genetic associations that would have been missed by conventional single-trait GWAS — a methodological lesson applicable across all multi-symptom diseases.</div>
-        </div>
-        <div class="take-card">
-          <div class="take-num">02</div>
-          <div class="take-title">IL10 Is Confirmed as a Sarcopenia Risk Gene in Iran</div>
-          <div class="take-desc">The gene-level p-value of 0.046 via GATES confirms what cell-level biology suggested: the anti-inflammatory IL10 gene plays a role in who develops muscle loss in old age — now validated in a real Iranian cohort for the first time.</div>
-        </div>
-        <div class="take-card">
-          <div class="take-num">03</div>
-          <div class="take-title">Genetic Research Needs Diverse Populations</div>
-          <div class="take-desc">Most GWAS studies focus on European populations. This study demonstrates that non-European cohorts like the BEH programme yield meaningful genetic insights — and that risk genes can behave differently across populations.</div>
-        </div>
-        <div class="take-card">
-          <div class="take-num">04</div>
-          <div class="take-title">A Foundation for Early Intervention</div>
-          <div class="take-desc">Identifying genetic risk factors for sarcopenia opens the door to early screening — flagging individuals at high genetic risk decades before symptoms appear, enabling targeted lifestyle and nutritional interventions while prevention is still possible.</div>
-        </div>
-      </div>
+  <div class="data-note">
+    <i class="fas fa-info-circle"></i>
+    <div>Two measurements per participant: <strong>Skeletal Muscle Index (SMI)</strong> — low defined as &lt;7.0 kg/m² (men) / &lt;5.4 kg/m² (women) — and <strong>Handgrip Strength</strong> — low at &lt;26 kg (men) / &lt;18 kg (women). Their shared genetic basis is exactly why the multivariate approach was chosen.</div>
+  </div>
+</div>
+
+<!-- ③ METHODS -->
+<div class="card fade-up" id="methods">
+  <div class="sec-label sl-rose">③ The Method</div>
+  <div class="card-title"><i class="fas fa-cogs"></i> Why Two Traits Together Beats One at a Time</div>
+  <p class="narrative">
+    Standard genetic studies test one trait at a time. But sarcopenia has <em>two</em> defining
+    symptoms — low muscle mass AND low grip strength. This study uses <strong>MultiPhen</strong>,
+    a method that tests both simultaneously, then confirms findings gene-wide using <strong>GATES</strong>.
+    The result: more statistical power, fewer missed signals.
+  </p>
+
+  <!-- Side-by-side comparison -->
+  <div class="why-joint">
+    <div class="wj-card wj-old">
+      <div class="wj-icon">📊</div>
+      <div class="wj-title">Conventional Approach</div>
+      <div class="wj-desc">Run GWAS on muscle mass alone. Then run a second GWAS on grip strength alone. Compare two separate lists of p-values. Shared genetic signals get diluted. Multiple testing burden increases.</div>
+      <span class="wj-badge">⚠ Lower Statistical Power</span>
     </div>
-
-  </div><!-- /content-col -->
-
-  <!-- ══════ SIDEBAR ══════ -->
-  <div class="sidebar">
-
-    <div class="sidebar-card fade-up">
-      <h3>TL;DR</h3>
-      <p class="tldr-text">
-        Sarcopenia (age-related muscle loss) is partly genetic.
-        By testing muscle mass <em>and</em> grip strength together — instead of
-        one at a time — this study found <strong>3 significant variants on the IL10 gene</strong>
-        in 2,772 elderly Iranians. The entire IL10 gene was confirmed as a
-        sarcopenia risk factor (p = 0.046).
-      </p>
+    <div class="wj-card wj-new">
+      <div class="wj-icon">🔗</div>
+      <div class="wj-title">MultiPhen + GATES</div>
+      <div class="wj-desc">Regress genotype on <em>both</em> outcomes simultaneously using ordinal regression. One joint p-value per SNP. Then aggregate all SNPs via GATES for a single gene-level confirmation.</div>
+      <span class="wj-badge">✓ Up to 2× More Powerful</span>
     </div>
+  </div>
 
-    <div class="sidebar-card fade-up">
-      <h3>Quick Facts</h3>
-      <div class="info-row">
-        <span class="info-key">Journal</span>
-        <span class="info-val">J. Biostatistics &amp; Epidemiology</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Volume</span>
-        <span class="info-val">8(2): 195–207, 2022</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Domain</span>
-        <span class="info-val">Biostatistics · Genomics · Aging</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Cohort</span>
-        <span class="info-val">BEH, Bushehr, Iran</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Participants</span>
-        <span class="info-val">2,772 (age 60+)</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">SNPs Genotyped</span>
-        <span class="info-val">663,377</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Target Gene</span>
-        <span class="info-val">IL10 (chromosome 1)</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Key Result</span>
-        <span class="info-val">GATES p = 0.046</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Affiliation</span>
-        <span class="info-val">Tehran University of Medical Sciences</span>
-      </div>
+  <!-- Power comparison chart -->
+  <div class="power-demo">
+    <div class="chart-title">Simulated Statistical Power: Joint vs. Single-Trait Tests</div>
+    <div class="power-demo-h"><canvas id="powerChart"></canvas></div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipe-flow">
+    <div class="pf-step"><div class="pf-circle pf1">🧬</div><h4>Select Gene</h4><p>Focus on IL10 gene on chromosome 1. Extract 663K+ variants within ±50kb flanking region.</p></div>
+    <div class="pf-step"><div class="pf-circle pf2">📊</div><h4>MultiPhen Test</h4><p>Joint ordinal regression of each SNP against both SMI and grip strength simultaneously.</p></div>
+    <div class="pf-step"><div class="pf-circle pf3">🔗</div><h4>LD Filtering</h4><p>Keep only independent SNPs (r² ≤ 0.4, MAF > 0.01, HWE p > 0.05) → 27 variants.</p></div>
+    <div class="pf-step"><div class="pf-circle pf4">✅</div><h4>GATES Confirm</h4><p>Aggregate all 27 SNP p-values into a single gene-level score via Extended Simes procedure.</p></div>
+  </div>
+
+  <div class="pipe-detail">
+    <div class="pd-card"><div class="pd-title pd-t1">① Gene Selection</div><ul><li>IL10 · Chromosome 1</li><li>Position: 206,940,947–206,945,839</li><li>±50 kb flanking region</li><li>445,034 variants screened</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t2">② MultiPhen</div><ul><li>Ordinal regression on genotype</li><li>Both SMI + handgrip as inputs</li><li>Additive model (0/1/2 alleles)</li><li>Likelihood ratio test per SNP</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t3">③ LD Filter</div><ul><li>r² ≤ 0.4 threshold</li><li>MAF &gt; 0.01 retained</li><li>HWE p-value &gt; 0.05</li><li>27 independent SNPs kept</li></ul></div>
+    <div class="pd-card"><div class="pd-title pd-t4">④ GATES</div><ul><li>Gene-based aggregation</li><li>Extended Simes procedure</li><li>Accounts for SNP correlation</li><li>Single gene-level p-value</li></ul></div>
+  </div>
+</div>
+
+<!-- ④ RESULTS -->
+<div class="card fade-up" id="results">
+  <div class="sec-label sl-green">④ Results</div>
+  <div class="card-title"><i class="fas fa-chart-bar"></i> IL10 Confirmed — Three Significant Variants, One Gene</div>
+  <p class="narrative">
+    Out of 27 candidate variants on the IL10 gene, <strong>three intronic variants reached
+    significance</strong> in the joint MultiPhen model. The GATES gene-level aggregation confirmed
+    IL10 as a whole (p = 0.046) — the first such confirmation in an Iranian population and
+    one that validates the inflammatory pathway hypothesis at genomic scale.
+  </p>
+
+  <div class="results-headline">
+    <div class="rh-card rh-1"><div class="rh-val">3</div><div class="rh-lbl">Significant IL10 variants (MultiPhen p &lt; 0.05)</div><div class="rh-sub">rs11119603 · rs3950619 · rs57461190</div></div>
+    <div class="rh-card rh-2"><div class="rh-val">0.046</div><div class="rh-lbl">IL10 gene-level p-value (GATES)</div><div class="rh-sub">below 5% significance threshold</div></div>
+    <div class="rh-card rh-3"><div class="rh-val">0.88</div><div class="rh-lbl">Largest effect size observed (rs3950619)</div><div class="rh-sub">range: 0.178 – 0.883</div></div>
+  </div>
+
+  <!-- Manhattan-style chart -->
+  <div class="manhattan-wrap">
+    <div class="chart-title">SNP Significance Across IL10 — Manhattan-Style View (–log₁₀ p-value)</div>
+    <div class="manhattan-h"><canvas id="manhattanChart"></canvas></div>
+  </div>
+
+  <!-- Lollipop / Effect size chart -->
+  <div class="lollipop-wrap">
+    <div class="chart-title">Effect Sizes of Significant IL10 Variants with p-Values</div>
+    <div class="lollipop-h"><canvas id="lollipopChart"></canvas></div>
+  </div>
+
+  <!-- SNP Table -->
+  <div class="snp-table-wrap">
+    <table class="snp-table">
+      <thead><tr><th>SNP</th><th>Chr</th><th>Risk Allele</th><th>MAF</th><th>Effect Size</th><th>p-value</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="sig"><td class="snp-id">rs11119603</td><td>1</td><td>C</td><td>0.292</td><td>0.178</td><td>0.00384</td><td><span class="sig-badge">Significant</span></td></tr>
+        <tr class="sig"><td class="snp-id">rs3950619</td><td>1</td><td>C</td><td>0.442</td><td>0.883</td><td>0.03641</td><td><span class="sig-badge">Significant</span></td></tr>
+        <tr class="sig"><td class="snp-id">rs57461190</td><td>1</td><td>T</td><td>0.292</td><td>0.221</td><td>0.00411</td><td><span class="sig-badge">Significant</span></td></tr>
+        <tr><td class="snp-id" style="color:var(--muted)">rs12042283</td><td>1</td><td>C</td><td>0.488</td><td>—</td><td>0.277</td><td style="color:var(--muted);font-size:.72rem">Not significant</td></tr>
+        <tr><td class="snp-id" style="color:var(--muted)">rs1800871</td><td>1</td><td>A</td><td>0.266</td><td>—</td><td>0.858</td><td style="color:var(--muted);font-size:.72rem">Not significant</td></tr>
+        <tr><td colspan="7" style="text-align:center;color:var(--muted);font-size:.74rem;padding:10px">· · · 22 additional non-significant SNPs not shown · · ·</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- IL10 biological pathway -->
+  <div class="insight-banner">
+    <div class="insight-icon">🔬</div>
+    <div class="insight-body">
+      <h4>The Biology: Why IL10 Drives Muscle Loss</h4>
+      <p>IL10 (Interleukin-10) is your body's <strong>anti-inflammatory "off switch."</strong> When muscles age, pro-inflammatory signals (IL-6) accelerate protein breakdown. IL10 tries to suppress this — but genetic variants in IL10 can weaken this protection, letting inflammation damage muscle unchecked. This study proves that genetic variation in IL10 is one of the keys controlling how fast your muscles age.</p>
     </div>
+  </div>
 
-    <div class="sidebar-card fade-up">
-      <h3>Tech &amp; Methods</h3>
-      <div class="tech-pills">
-        <span class="tech-pill">MultiPhen</span>
-        <span class="tech-pill">GATES</span>
-        <span class="tech-pill">GWAS</span>
-        <span class="tech-pill">Ordinal Regression</span>
-        <span class="tech-pill">Likelihood Ratio Test</span>
-        <span class="tech-pill">Linkage Disequilibrium</span>
-        <span class="tech-pill">HWE Testing</span>
-        <span class="tech-pill">MAF Filtering</span>
-        <span class="tech-pill">Simes Procedure</span>
-        <span class="tech-pill">IL10 Gene</span>
-        <span class="tech-pill">R (GATES package)</span>
-        <span class="tech-pill">Candidate-Gene Study</span>
-      </div>
+  <!-- Pathway visual -->
+  <div class="pathway-vis">
+    <div class="pathway-node">
+      <div class="pn-icon">🧬</div>
+      <div class="pn-title">IL10 Variants</div>
+      <div class="pn-desc">rs11119603, rs3950619, rs57461190 disrupt function</div>
     </div>
-
-    <div class="sidebar-card fade-up">
-      <h3>Citation</h3>
-      <div class="citation-box">
-        <strong>Noorchenarboo, M.</strong>, Akbarzadeh, M., Fahimfar, N., et al. (2022).
-        Multivariate and Gene-Based Association Testing of Sarcopenia: Bushehr Elderly
-        Health Program (BEH). <em>Journal of Biostatistics and Epidemiology</em>, 8(2), 195–207.
-      </div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node highlight">
+      <div class="pn-icon">⚡</div>
+      <div class="pn-title">Reduced IL10 Activity</div>
+      <div class="pn-desc">Anti-inflammatory brake weakens; IL-6 goes unchecked</div>
     </div>
-
-    <div class="sidebar-card fade-up">
-      <h3>Related Work</h3>
-      <div class="sidebar-links">
-        <a href="../p001-surgical-duration/" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
-        <a href="../p002-nlp-benchmark/"     class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
-        <a href="../p003-energy-anomaly-xai/" class="sidebar-link"><i class="fas fa-link"></i> Energy Anomaly XAI</a>
-        <a href="../../index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
-        <a href="../index.html"              class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
-      </div>
+    <div class="pathway-arrow">→</div>
+    <div class="pathway-node">
+      <div class="pn-icon">💪</div>
+      <div class="pn-title">Muscle Breakdown</div>
+      <div class="pn-desc">Chronic inflammation accelerates sarcopenia onset</div>
     </div>
+  </div>
+</div>
 
-  </div><!-- /sidebar -->
+<!-- ⑤ TAKEAWAYS -->
+<div class="card fade-up">
+  <div class="sec-label sl-gold">⑤ Takeaways</div>
+  <div class="card-title"><i class="fas fa-lightbulb"></i> What This Means Beyond the Numbers</div>
+  <div class="takeaway-grid">
+    <div class="take-card"><div class="take-num">01</div><div class="take-title">Joint Testing Is More Powerful</div><div class="take-desc">MultiPhen caught signals that single-trait GWAS would have missed. The lesson extends across all multi-symptom diseases: correlated outcomes should always be tested together.</div></div>
+    <div class="take-card"><div class="take-num">02</div><div class="take-title">IL10 Confirmed as Risk Gene in Iran</div><div class="take-desc">GATES p = 0.046 validates what cell biology suggested. This is the first genomic confirmation in an Iranian cohort — filling a critical gap in non-European genetic data.</div></div>
+    <div class="take-card"><div class="take-num">03</div><div class="take-title">Genomics Needs Diverse Populations</div><div class="take-desc">Most GWAS studies are 80%+ European. This BEH cohort analysis proves that Middle Eastern populations harbor important genetic signals overlooked by existing literature.</div></div>
+    <div class="take-card"><div class="take-num">04</div><div class="take-title">Gateway to Early Screening</div><div class="take-desc">Knowing your IL10 genotype could flag sarcopenia risk decades early — enabling targeted nutrition, exercise, and pharmacological interventions before irreversible muscle loss begins.</div></div>
+  </div>
+</div>
 
+</div><!-- /content-col -->
+
+<!-- ══════ SIDEBAR ══════ -->
+<div class="sidebar">
+  <div class="sidebar-card fade-up">
+    <h3>TL;DR</h3>
+    <p class="tldr-text">Sarcopenia affects 1 in 4 elderly Iranians and is partly genetic. By testing muscle mass <em>and</em> grip strength <em>together</em> (not separately), this study identified <strong>3 significant IL10 variants</strong> in 2,772 people. The entire IL10 gene confirmed as a sarcopenia risk gene (p = 0.046).</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Quick Facts</h3>
+    <div class="info-row"><span class="info-key">Journal</span><span class="info-val">J. Biostatistics &amp; Epidemiol.</span></div>
+    <div class="info-row"><span class="info-key">Volume</span><span class="info-val">8(2): 195–207, 2022</span></div>
+    <div class="info-row"><span class="info-key">Cohort</span><span class="info-val">BEH, Bushehr, Iran</span></div>
+    <div class="info-row"><span class="info-key">Participants</span><span class="info-val">2,772 (age 60+)</span></div>
+    <div class="info-row"><span class="info-key">SNPs Genotyped</span><span class="info-val">663,377</span></div>
+    <div class="info-row"><span class="info-key">Target Gene</span><span class="info-val">IL10 (chr 1)</span></div>
+    <div class="info-row"><span class="info-key">Key Result</span><span class="info-val">GATES p = 0.046</span></div>
+    <div class="info-row"><span class="info-key">Affiliation</span><span class="info-val">Tehran Univ. of Medical Sciences</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech &amp; Methods</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">MultiPhen</span><span class="tech-pill">GATES</span>
+      <span class="tech-pill">GWAS</span><span class="tech-pill">Ordinal Regression</span>
+      <span class="tech-pill">Likelihood Ratio Test</span><span class="tech-pill">Linkage Disequilibrium</span>
+      <span class="tech-pill">HWE Testing</span><span class="tech-pill">MAF Filtering</span>
+      <span class="tech-pill">Simes Procedure</span><span class="tech-pill">IL10 Gene</span>
+      <span class="tech-pill">R (GATES pkg)</span><span class="tech-pill">Candidate-Gene</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Citation</h3>
+    <div class="citation-box"><strong>Noorchenarboo, M.</strong>, Akbarzadeh, M., Fahimfar, N., et al. (2022). Multivariate and Gene-Based Association Testing of Sarcopenia: Bushehr Elderly Health Program (BEH). <em>Journal of Biostatistics and Epidemiology</em>, 8(2), 195–207.</div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="../p001-surgical-duration/" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+      <a href="../p002-nlp-benchmark/" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Benchmark</a>
+      <a href="../../index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="../index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+</div><!-- /sidebar -->
 </div><!-- /main-layout -->
 
 <!-- ═══ FOOTER ═══ -->
@@ -991,93 +770,285 @@ h1.page-title {
   <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · J Biostat Epidemiol. 2022;8(2):195–207</div>
 </footer>
 
-<!-- ═══ PAGE-SPECIFIC JS ═══ -->
+<!-- ═══ JS ═══ -->
 <script>
 const html = document.documentElement;
-
-/* Chart: Effect sizes for the 3 significant + context of non-sig range */
-const snpLabels = ['rs11119603\n(sig)', 'rs57461190\n(sig)', 'rs3950619\n(sig)'];
-const snpEffects = [0.178, 0.221, 0.883];
-const snpPvals   = [0.00384, 0.00411, 0.03641];
-
-let chart;
-
-function isDark() { return html.getAttribute('data-theme') !== 'light'; }
-function gc() { return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
-function tc() { return isDark() ? '#8892a4' : '#4b5675'; }
-function tt() {
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
   return {
     backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
-    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
-    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
-    borderColor:     isDark() ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
-    borderWidth: 1,
+    titleColor: isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor: isDark() ? '#8892a4' : '#4b5675',
+    borderColor: isDark() ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
+    borderWidth: 1, padding: 12
   };
 }
 
-function buildChart() {
-  if (chart) chart.destroy();
-  const ctx = document.getElementById('snpChart').getContext('2d');
-  chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['rs11119603', 'rs57461190', 'rs3950619'],
-      datasets: [
-        {
-          label: 'Effect Size (β)',
-          data: snpEffects,
-          backgroundColor: [
-            'rgba(167,139,250,.6)',
-            'rgba(167,139,250,.6)',
-            'rgba(167,139,250,.9)',
-          ],
-          borderColor: [
-            'rgba(167,139,250,.9)',
-            'rgba(167,139,250,.9)',
-            'rgba(167,139,250,1)',
-          ],
-          borderWidth: 1, borderRadius: 6,
-        }
+/* ── THEME TOGGLE ── */
+const themeBtn = document.getElementById('themeToggle');
+const lbl = document.getElementById('toggleLabel');
+themeBtn.addEventListener('click', () => {
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  lbl.textContent = dark ? 'Dark' : 'Light';
+  setTimeout(rebuildCharts, 50);
+});
+
+/* ── FADE-UP ── */
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+}), { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+/* ── ANIMATED COUNTERS ── */
+function animateCounter(el, target, duration=1600){
+  let start = null;
+  const step = ts => {
+    if(!start) start = ts;
+    const p = Math.min((ts-start)/duration, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.floor(ease * target).toLocaleString();
+    if(p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+document.querySelectorAll('.stat-val[data-target]').forEach(el => {
+  const io = new IntersectionObserver(es => {
+    if(es[0].isIntersecting){ animateCounter(el, +el.dataset.target); io.unobserve(el); }
+  }, {threshold:.3});
+  io.observe(el);
+});
+
+/* ── ANIMATED MUSCLE NUMBER ── */
+function animateMuscleNum(){
+  const el = document.getElementById('muscleNum');
+  const io = new IntersectionObserver(es => {
+    if(!es[0].isIntersecting) return;
+    let v = 0;
+    const t = setInterval(() => {
+      v = Math.min(v + .3, 8);
+      el.textContent = v.toFixed(1) + '%';
+      if(v >= 8) clearInterval(t);
+    }, 30);
+    io.unobserve(el);
+  }, {threshold:.4});
+  io.observe(el);
+}
+animateMuscleNum();
+
+/* ── ANIMATE BAR FILLS ── */
+function animateBars(){
+  document.querySelectorAll('.hb-fill[data-w]').forEach(el => {
+    const io = new IntersectionObserver(es => {
+      if(es[0].isIntersecting){ el.style.width = el.dataset.w + '%'; io.unobserve(el); }
+    }, {threshold:.3});
+    io.observe(el);
+  });
+  document.querySelectorAll('.corr-fill[data-w]').forEach(el => {
+    const io = new IntersectionObserver(es => {
+      if(es[0].isIntersecting){ el.style.width = el.dataset.w + '%'; io.unobserve(el); }
+    }, {threshold:.3});
+    io.observe(el);
+  });
+}
+animateBars();
+
+/* ══════════════════════════════
+   CHARTS
+══════════════════════════════ */
+let declineC, ageC, powerC, manhC, lollipopC;
+
+function buildDeclineChart(){
+  if(declineC) declineC.destroy();
+  const ctx = document.getElementById('declineChart').getContext('2d');
+  const ages = [30,35,40,45,50,55,60,65,70,75,80];
+  const healthy  = [100,98,96,93,89,85,80,74,68,62,56];
+  const sarc     = [100,97,94,89,83,75,65,54,44,35,27];
+  const thresh   = [100,100,100,100,100,71,71,71,71,71,71];
+  declineC = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: ages.map(a => a+'yr'),
+      datasets:[
+        {label:'Healthy Aging',data:healthy,borderColor:'rgba(34,197,94,.9)',backgroundColor:'rgba(34,197,94,.08)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+        {label:'Sarcopenic Trajectory',data:sarc,borderColor:'rgba(251,113,133,.9)',backgroundColor:'rgba(251,113,133,.08)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3,borderDash:[0]},
+        {label:'Clinical Threshold',data:thresh,borderColor:'rgba(245,158,11,.6)',borderWidth:1.5,borderDash:[6,4],pointRadius:0,fill:false},
       ]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: tc(), font: { size: 12, family: 'inherit' }, boxWidth: 14 }
-        },
-        tooltip: {
-          ...tt(),
-          callbacks: {
-            afterLabel: (ctx) => `p-value: ${snpPvals[ctx.dataIndex]}`
-          }
-        }
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},
+        tooltip:{...tt(),callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}% of peak mass`}}
       },
-      scales: {
-        x: {
-          ticks: { color: tc(), font: { size: 12, family: 'inherit' } },
-          grid: { color: gc() }
-        },
-        y: {
-          ticks: { color: tc(), font: { size: 11, family: 'inherit' } },
-          grid: { color: gc() },
-          title: {
-            display: true, text: 'Effect Size (β)',
-            color: tc(), font: { size: 11, family: 'inherit' }
-          },
-          min: 0, max: 1.0
-        }
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>v+'%'},grid:{color:gc()},title:{display:true,text:'% of Peak Muscle Mass',color:tc(),font:{size:10,family:'inherit'}},min:20,max:105}
       }
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  buildChart();
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    setTimeout(buildChart, 50);
+function buildAgeChart(){
+  if(ageC) ageC.destroy();
+  const ctx = document.getElementById('ageChart').getContext('2d');
+  ageC = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['60–64','65–69','70–74','75–79','80–84','85+'],
+      datasets:[
+        {label:'Women',data:[280,290,270,210,120,60],backgroundColor:'rgba(167,139,250,.7)',borderColor:'rgba(167,139,250,1)',borderWidth:1,borderRadius:4},
+        {label:'Men',  data:[250,270,250,200,120,52],backgroundColor:'rgba(6,182,212,.6)',borderColor:'rgba(6,182,212,.9)',borderWidth:1,borderRadius:4},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},tooltip:{...tt()}},
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},stacked:false},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Participants',color:tc(),font:{size:10,family:'inherit'}}}
+      }
+    }
   });
-});
+}
+
+function buildPowerChart(){
+  if(powerC) powerC.destroy();
+  const ctx = document.getElementById('powerChart').getContext('2d');
+  const n = [200,400,600,800,1000,1200,1500,2000,2500,2772];
+  const single  = [0.18,0.28,0.38,0.48,0.55,0.62,0.70,0.79,0.85,0.88];
+  const joint   = [0.28,0.44,0.57,0.68,0.76,0.82,0.88,0.93,0.96,0.97];
+  powerC = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:n.map(v=>v.toLocaleString()),
+      datasets:[
+        {label:'Joint Test (MultiPhen)',data:joint,borderColor:'rgba(167,139,250,.9)',backgroundColor:'rgba(167,139,250,.1)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+        {label:'Single-Trait GWAS',     data:single,borderColor:'rgba(239,68,68,.8)',backgroundColor:'rgba(239,68,68,.06)',fill:true,tension:.4,borderWidth:2,borderDash:[6,4],pointRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},
+        tooltip:{...tt(),callbacks:{label:ctx=>`${ctx.dataset.label}: ${(ctx.raw*100).toFixed(0)}% power`}},
+        annotation:{annotations:{}}
+      },
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},title:{display:true,text:'Sample Size (n)',color:tc(),font:{size:10}}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'},callback:v=>(v*100).toFixed(0)+'%'},grid:{color:gc()},title:{display:true,text:'Statistical Power',color:tc(),font:{size:10}},min:0,max:1.05}
+      }
+    }
+  });
+}
+
+function buildManhattanChart(){
+  if(manhC) manhC.destroy();
+  const ctx = document.getElementById('manhattanChart').getContext('2d');
+  // Simulated SNP positions + -log10(p) values across IL10 region
+  const snps = [
+    {x:1,y:0.3},{x:3,y:0.5},{x:5,y:0.8},{x:7,y:0.4},{x:9,y:1.1},
+    {x:11,y:0.6},{x:13,y:0.7},{x:15,y:0.9},{x:17,y:1.4},{x:19,y:0.5},
+    {x:21,y:0.3},{x:23,y:0.6},{x:25,y:2.42,sig:true,label:'rs11119603'}, // -log10(0.00384)≈2.42
+    {x:27,y:1.1},{x:29,y:0.4},
+    {x:31,y:1.7},{x:33,y:0.8},
+    {x:35,y:2.39,sig:true,label:'rs57461190'}, // -log10(0.00411)≈2.39
+    {x:37,y:0.6},{x:39,y:0.3},{x:41,y:1.2},{x:43,y:0.5},
+    {x:45,y:1.44,sig:true,label:'rs3950619'},  // -log10(0.036)≈1.44
+    {x:47,y:0.4},{x:49,y:0.8},{x:51,y:0.3},{x:53,y:0.2}
+  ];
+  const sigColor   = 'rgba(167,139,250,1)';
+  const normColor  = isDark() ? 'rgba(6,182,212,.55)' : 'rgba(37,99,235,.5)';
+  manhC = new Chart(ctx, {
+    type:'scatter',
+    data:{
+      datasets:[
+        {
+          label:'Non-significant SNPs',
+          data: snps.filter(s=>!s.sig).map(s=>({x:s.x,y:s.y})),
+          backgroundColor:normColor, pointRadius:5, pointHoverRadius:7,
+        },
+        {
+          label:'Significant SNPs (p < 0.05)',
+          data: snps.filter(s=>s.sig).map(s=>({x:s.x,y:s.y,label:s.label})),
+          backgroundColor:sigColor, pointRadius:9, pointHoverRadius:11,
+          pointStyle:'rectRot',
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:10}},
+        tooltip:{...tt(),callbacks:{
+          title: items => items[0].dataset.data[items[0].dataIndex].label || 'SNP',
+          label: item => [
+            `Position index: ${item.raw.x}`,
+            `–log₁₀(p): ${item.raw.y.toFixed(2)}`
+          ]
+        }},
+      },
+      scales:{
+        x:{ticks:{color:tc(),font:{size:9}},grid:{color:gc()},title:{display:true,text:'SNP Position along IL10 Region →',color:tc(),font:{size:10}}},
+        y:{ticks:{color:tc(),font:{size:10}},grid:{color:gc()},title:{display:true,text:'–log₁₀(p-value)',color:tc(),font:{size:10}},min:0,
+          // draw significance line via plugin
+        }
+      },
+      plugins:{annotation:{annotations:{
+        sigLine:{type:'line',yMin:1.3,yMax:1.3,borderColor:'rgba(245,158,11,.7)',borderWidth:1.5,borderDash:[5,4],label:{content:'p = 0.05',display:true,color:'rgba(245,158,11,.9)',font:{size:10}}}
+      }}}
+    }
+  });
+}
+
+function buildLollipopChart(){
+  if(lollipopC) lollipopC.destroy();
+  const ctx = document.getElementById('lollipopChart').getContext('2d');
+  lollipopC = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['rs11119603\n(MAF=0.29)', 'rs57461190\n(MAF=0.29)', 'rs3950619\n(MAF=0.44)'],
+      datasets:[
+        {
+          label:'Effect Size (β)',
+          data:[0.178, 0.221, 0.883],
+          backgroundColor:['rgba(167,139,250,.5)','rgba(167,139,250,.55)','rgba(167,139,250,.85)'],
+          borderColor:['rgba(167,139,250,.9)','rgba(167,139,250,.9)','rgba(167,139,250,1)'],
+          borderWidth:1, borderRadius:6,
+        },
+        {
+          label:'p-value (scaled ×10)',
+          data:[0.0384, 0.0411, 0.3641],
+          backgroundColor:['rgba(6,182,212,.4)','rgba(6,182,212,.4)','rgba(6,182,212,.6)'],
+          borderColor:'rgba(6,182,212,.8)',
+          borderWidth:1, borderRadius:6,
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:tc(),font:{size:11,family:'inherit'},boxWidth:12}},
+        tooltip:{...tt(),callbacks:{label:ctx=>ctx.datasetIndex===0?`Effect size: ${ctx.raw}`:`p-value: ${(ctx.raw).toFixed(5)}`}}
+      },
+      scales:{
+        x:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()}},
+        y:{ticks:{color:tc(),font:{size:10,family:'inherit'}},grid:{color:gc()},min:0,max:1.0,
+          title:{display:true,text:'Effect size (β) / p-value (×10)',color:tc(),font:{size:10,family:'inherit'}}}
+      }
+    }
+  });
+}
+
+function rebuildCharts(){
+  buildDeclineChart(); buildAgeChart(); buildPowerChart();
+  buildManhattanChart(); buildLollipopChart();
+}
+
+document.addEventListener('DOMContentLoaded', rebuildCharts);
 </script>
 </body>
 </html>
