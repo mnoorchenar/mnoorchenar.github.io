@@ -6,6 +6,14 @@
       {
         "name": "_template",
         "html": "projects/_template.html"
+      },
+      {
+        "name": "footer",
+        "html": "projects/footer.html"
+      },
+      {
+        "name": "nav",
+        "html": "projects/nav.html"
       }
     ],
     "subfolders": [

@@ -60,10 +60,7 @@
   background: linear-gradient(135deg, var(--accent), var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.sbar-label {
-  font-size: .72em; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .6px; margin-top: 3px;
-}
+.sbar-label { font-size: .72em; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 3px; }
 
 /* filter bar */
 .filter-section { padding: 36px 32px 0; max-width: 1200px; margin: 0 auto; }
@@ -78,21 +75,10 @@
   color: var(--muted); cursor: pointer; transition: .2s; font-family: inherit;
 }
 .filter-btn:hover { color: var(--text); border-color: var(--card-hover-border); }
-.filter-btn.active {
-  background: rgba(79,142,247,.15);
-  border-color: rgba(79,142,247,.45);
-  color: var(--accent);
-}
-[data-theme="light"] .filter-btn.active {
-  background: rgba(37,99,235,.12);
-  border-color: rgba(37,99,235,.4);
-  color: var(--accent);
-}
+.filter-btn.active { background: rgba(79,142,247,.15); border-color: rgba(79,142,247,.45); color: var(--accent); }
+[data-theme="light"] .filter-btn.active { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.4); }
 .search-wrap { position: relative; }
-.search-wrap i {
-  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-  color: var(--muted); font-size: .85em; pointer-events: none;
-}
+.search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .85em; pointer-events: none; }
 #searchInput {
   background: var(--glass); border: 1px solid var(--glass-border);
   color: var(--text); padding: 8px 14px 8px 34px;
@@ -104,11 +90,7 @@
 
 /* project grid */
 .projects-section { padding: 8px 32px 80px; max-width: 1200px; margin: 0 auto; }
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
-}
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
 
 /* project card */
 .proj-card {
@@ -122,10 +104,7 @@
   background: linear-gradient(90deg, var(--accent), var(--teal));
   transform: scaleX(0); transition: transform .35s; transform-origin: left; z-index: 1;
 }
-.proj-card:hover {
-  background: var(--card-hover-bg); border-color: var(--card-hover-border);
-  transform: translateY(-5px); box-shadow: var(--shadow-card);
-}
+.proj-card:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-5px); box-shadow: var(--shadow-card); }
 .proj-card:hover::before { transform: scaleX(1); }
 .proj-card[data-hidden="true"] { display: none; }
 
@@ -133,120 +112,41 @@
 .proj-thumb { width: 100%; height: 190px; overflow: hidden; position: relative; background: var(--navy3); }
 .proj-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; display: block; }
 .proj-card:hover .proj-thumb img { transform: scale(1.05); }
-.proj-thumb-fallback {
-  width: 100%; height: 100%; display: none;
-  align-items: center; justify-content: center; font-size: 3em;
-}
-.proj-status {
-  position: absolute; top: 12px; right: 12px;
-  padding: 4px 10px; border-radius: 10px;
-  font-size: .7em; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-}
-.status-live   { background: rgba(34,197,94,.18);  border: 1px solid rgba(34,197,94,.35);  color: #16a34a; }
-.status-beta   { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3);  color: #c4700a; }
-.status-wip    { background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.3);  color: #6d28d9; }
+.proj-thumb-fallback { width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 3em; }
+.proj-status { position: absolute; top: 12px; right: 12px; padding: 4px 10px; border-radius: 10px; font-size: .7em; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+.status-live { background: rgba(34,197,94,.18); border: 1px solid rgba(34,197,94,.35); color: #16a34a; }
+.status-beta { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3);  color: #c4700a; }
+.status-wip  { background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.3);  color: #6d28d9; }
 [data-theme="dark"] .status-live { color: #4ade80; }
 [data-theme="dark"] .status-beta { color: #fbbf24; }
 [data-theme="dark"] .status-wip  { color: #c4b5fd; }
 
 /* card body */
 .proj-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.proj-num {
-  font-size: .68em; font-weight: 700; letter-spacing: .12em; font-family: monospace;
-  color: var(--muted); opacity: .3; line-height: 1;
-}
+.proj-num { font-size: .68em; font-weight: 700; letter-spacing: .12em; font-family: monospace; color: var(--muted); opacity: .3; line-height: 1; }
 .proj-domain { font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--teal); }
 .proj-title  { font-size: 1.05em; font-weight: 800; color: var(--text); line-height: 1.3; }
 .proj-tagline{ font-size: .8em; font-style: italic; color: var(--teal); margin-top: -4px; }
 .proj-desc   { font-size: .85em; color: var(--muted); line-height: 1.65; flex: 1; }
 .proj-tags   { display: flex; gap: 6px; flex-wrap: wrap; }
-.proj-tag {
-  padding: 3px 10px; border-radius: 12px; font-size: .72em; font-weight: 600;
-  background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.18); color: var(--accent);
-}
+.proj-tag { padding: 3px 10px; border-radius: 12px; font-size: .72em; font-weight: 600; background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.18); color: var(--accent); }
 [data-theme="light"] .proj-tag { background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.2); }
 
 /* card actions */
 .proj-actions { display: flex; gap: 8px; padding: 0 22px 20px; margin-top: auto; }
-.proj-btn {
-  flex: 1; display: inline-flex; align-items: center; justify-content: center;
-  gap: 7px; padding: 9px 14px; border-radius: 10px;
-  font-size: .8em; font-weight: 600; text-decoration: none;
-  transition: .2s; border: 1px solid; cursor: pointer; font-family: inherit;
-}
-.proj-btn-details { background: rgba(79,142,247,.1);  border-color: rgba(79,142,247,.28); color: var(--accent); }
+.proj-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 14px; border-radius: 10px; font-size: .8em; font-weight: 600; text-decoration: none; transition: .2s; border: 1px solid; cursor: pointer; font-family: inherit; }
+.proj-btn-details { background: rgba(79,142,247,.1); border-color: rgba(79,142,247,.28); color: var(--accent); }
 .proj-btn-details:hover { background: rgba(79,142,247,.2); transform: translateY(-2px); }
-.proj-btn-hf  { background: rgba(252,211,77,.08); border-color: rgba(252,211,77,.28); color: #c9820a; }
+.proj-btn-hf { background: rgba(252,211,77,.08); border-color: rgba(252,211,77,.28); color: #c9820a; }
 [data-theme="dark"] .proj-btn-hf { color: #fcd34d; }
 .proj-btn-hf:hover { background: rgba(252,211,77,.18); border-color: rgba(252,211,77,.55); transform: translateY(-2px); }
-.proj-btn-gh  { background: rgba(80,80,100,.07); border-color: rgba(80,80,100,.22); color: var(--muted); }
+.proj-btn-gh { background: rgba(80,80,100,.07); border-color: rgba(80,80,100,.22); color: var(--muted); }
 .proj-btn-gh:hover { background: rgba(80,80,100,.15); transform: translateY(-2px); }
 .proj-btn-disabled { opacity: .35; pointer-events: none; cursor: default; }
 
 /* no results */
 #noResults { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
 #noResults i { font-size: 2.5em; margin-bottom: 14px; display: block; color: var(--accent); opacity: .4; }
-
-/* ── COPYRIGHT MODAL ── */
-.copyright-modal-overlay {
-  display: none;
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,.55);
-  z-index: 9999;
-  align-items: center; justify-content: center;
-  backdrop-filter: blur(4px);
-  animation: fadeIn .2s ease;
-}
-.copyright-modal-overlay.active { display: flex; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.copyright-modal-box {
-  background: var(--navy2);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 36px 32px 28px;
-  max-width: 480px; width: 90%;
-  box-shadow: 0 24px 64px rgba(0,0,0,.45);
-  animation: slideUp .25s cubic-bezier(.22,1,.36,1);
-}
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-[data-theme="light"] .copyright-modal-box { background: #f5f7ff; }
-.copyright-modal-box h3 {
-  font-size: 1.1em; font-weight: 700;
-  background: linear-gradient(135deg, var(--accent), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: 14px;
-}
-.copyright-modal-box p {
-  font-size: .9em; color: var(--muted); line-height: 1.7; margin-bottom: 22px;
-}
-.copyright-modal-box p strong { color: var(--text); }
-.copyright-modal-close {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #fff; border: none; border-radius: 8px;
-  padding: 9px 22px; font-size: .86em; font-weight: 600;
-  cursor: pointer; transition: .2s;
-}
-.copyright-modal-close:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,142,247,.35); }
-
-/* ── FOOTER LICENSE BUTTON ── */
-.footer-license-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: none; border: none;
-  font-size: .78em; font-weight: 600;
-  cursor: pointer; text-decoration: none; padding: 0;
-  background: linear-gradient(135deg, var(--accent), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: opacity .2s, transform .2s;
-  margin-top: 8px;
-}
-.footer-license-btn i {
-  background: linear-gradient(135deg, var(--accent), var(--teal));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.footer-license-btn:hover { opacity: .75; transform: translateY(-1px); }
 
 /* responsive */
 @media (max-width: 768px) {
@@ -256,49 +156,9 @@
 }
 </style>
 </head>
+
+<!-- No data-project-index = overview page (prev arrow disabled, counter shows "Overview") -->
 <body>
-
-<!-- ── COPYRIGHT MODAL ── -->
-<div class="copyright-modal-overlay" id="copyrightModal" role="dialog" aria-modal="true" aria-labelledby="copyrightModalTitle">
-  <div class="copyright-modal-box">
-    <h3 id="copyrightModalTitle"><i class="fas fa-shield-alt"></i> Copyright Notice</h3>
-    <p>
-      <strong>Strict Limitation:</strong> All content on this website — including text, images, code,
-      design, and all other materials — is protected by copyright.<br><br>
-      Any use, reproduction, distribution, or modification for any reason is
-      <strong>strictly prohibited</strong> and not allowed under any circumstances without
-      prior written consent from the author.
-    </p>
-    <button class="copyright-modal-close" id="closeCopyrightModal">
-      <i class="fas fa-check"></i> I Understand
-    </button>
-  </div>
-</div>
-
-<!-- ═══ NAV ═══ -->
-<nav class="sh-nav">
-  <a href="../" class="sh-nav-logo">MN</a>
-  <div class="sh-nav-links">
-    <a href="../index.html#about">About</a>
-    <a href="../index.html#experience">Experience</a>
-    <a href="../index.html#publications">Publications</a>
-    <a href="../index.html#skills">Skills</a>
-    <a href="./" class="active">Projects</a>
-  </div>
-  <div class="sh-nav-right">
-    <div class="sh-nav-social">
-      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-      <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-      <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-    </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="toggle-sun">☀️</span>
-      <span class="toggle-moon">🌙</span>
-      <span id="toggleLabel">Light</span>
-    </button>
-  </div>
-</nav>
 
 <!-- ═══ PAGE HERO ═══ -->
 <div class="page-hero">
@@ -338,12 +198,10 @@
 <div class="projects-section">
   <div class="projects-grid" id="projectsGrid">
 
-    <!-- ─── CARD 1 — Surgical Duration ─── -->
+    <!-- ─── CARD 1 ─── -->
     <div class="proj-card fade-up" data-domain="healthcare" data-tags="deep learning bert surgical prediction or scheduling">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_surgical.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Surgical Duration Predictor">
+        <img src="../images/projects/proj_surgical.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Surgical Duration Predictor">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.3))">🏥</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -353,12 +211,7 @@
         <div class="proj-title">Surgical Case Duration Predictor</div>
         <div class="proj-tagline">Can AI predict how long a surgery will take better than the surgeon?</div>
         <div class="proj-desc">Multimodal ML system predicting general surgery duration using structured clinical data and BERT-encoded operative notes. Published in Surgical Endoscopy 2025.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">BERT</span>
-          <span class="proj-tag">Transformers</span>
-          <span class="proj-tag">SHAP</span>
-          <span class="proj-tag">Flask</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">BERT</span><span class="proj-tag">Transformers</span><span class="proj-tag">SHAP</span><span class="proj-tag">Flask</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/001-surgical-duration.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -367,12 +220,10 @@
       </div>
     </div>
 
-    <!-- ─── CARD 2 — NLP Benchmark ─── -->
+    <!-- ─── CARD 2 ─── -->
     <div class="proj-card fade-up" data-domain="nlp" data-tags="nlp text encoding bert clinical notes benchmarking clinicalbert biobert">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_nlp.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="NLP Benchmark">
+        <img src="../images/projects/proj_nlp.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="NLP Benchmark">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.35))">💬</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -382,12 +233,7 @@
         <div class="proj-title">Clinical Text Encoder Benchmark</div>
         <div class="proj-tagline">Which AI reading strategy works best on doctor's notes?</div>
         <div class="proj-desc">Side-by-side benchmark of TF-IDF, Word2Vec, BioBERT, and ClinicalBERT on surgical notes for duration prediction. SSRN preprint 2025.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">ClinicalBERT</span>
-          <span class="proj-tag">BioBERT</span>
-          <span class="proj-tag">NLP</span>
-          <span class="proj-tag">Benchmarking</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">ClinicalBERT</span><span class="proj-tag">BioBERT</span><span class="proj-tag">NLP</span><span class="proj-tag">Benchmarking</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/002-nlp-benchmark.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -396,12 +242,10 @@
       </div>
     </div>
 
-    <!-- ─── CARD 3 — Energy Anomaly XAI ─── -->
+    <!-- ─── CARD 3 ─── -->
     <div class="proj-card fade-up" data-domain="energy" data-tags="energy anomaly detection xai shap lstm deep learning buildings explainability">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_energy.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Energy Anomaly XAI">
+        <img src="../images/projects/proj_energy.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Energy Anomaly XAI">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(132,204,22,.3))">⚡</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -411,12 +255,7 @@
         <div class="proj-title">Energy Anomaly Explainer</div>
         <div class="proj-tagline">Why is this building wasting energy — and how do we know for sure?</div>
         <div class="proj-desc">Context-aware SHAP explanations for deep learning anomaly detection in building energy data. Reduces explanation variability by 38% on average. Published in Energy &amp; Buildings 2025.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">SHAP</span>
-          <span class="proj-tag">LSTM</span>
-          <span class="proj-tag">XAI</span>
-          <span class="proj-tag">Anomaly Detection</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">SHAP</span><span class="proj-tag">LSTM</span><span class="proj-tag">XAI</span><span class="proj-tag">Anomaly Detection</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/003-energy-anomaly-xai.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -425,12 +264,10 @@
       </div>
     </div>
 
-    <!-- ─── CARD 4 — Sarcopenia Genetics ─── -->
+    <!-- ─── CARD 4 ─── -->
     <div class="proj-card fade-up" data-domain="healthcare" data-tags="genetics sarcopenia muscle gwas snp biostatistics">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_sarcopenia.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Sarcopenia Genetics">
+        <img src="../images/projects/proj_sarcopenia.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Sarcopenia Genetics">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(167,139,250,.3))">🧬</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -440,12 +277,7 @@
         <div class="proj-title">Sarcopenia Genetics Explorer</div>
         <div class="proj-tagline">How do genes shape muscle loss in aging?</div>
         <div class="proj-desc">Interactive GWAS visualization and SNP analysis for sarcopenia, integrating biostatistics and machine learning. Uncovers novel genetic associations and risk factors. Preprint in review.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">GWAS</span>
-          <span class="proj-tag">SNP</span>
-          <span class="proj-tag">Biostatistics</span>
-          <span class="proj-tag">Machine Learning</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">GWAS</span><span class="proj-tag">SNP</span><span class="proj-tag">Biostatistics</span><span class="proj-tag">Machine Learning</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/004-sarcopenia-genetics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -454,12 +286,10 @@
       </div>
     </div>
 
-    <!-- ─── CARD 5 — ASCVD Metabolomics ─── -->
+    <!-- ─── CARD 5 ─── -->
     <div class="proj-card fade-up" data-domain="healthcare" data-tags="ascvd metabolomics cardiovascular risk ml biostatistics">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_ascvd.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="ASCVD Metabolomics">
+        <img src="../images/projects/proj_ascvd.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="ASCVD Metabolomics">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.3))">🫀</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -469,12 +299,7 @@
         <div class="proj-title">ASCVD Metabolomics Risk Explorer</div>
         <div class="proj-tagline">Can blood metabolites reveal hidden cardiovascular risk?</div>
         <div class="proj-desc">Machine learning analysis of metabolomics data for ASCVD risk prediction. Integrates clinical and omics features to uncover novel biomarkers. Preprint in review.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Metabolomics</span>
-          <span class="proj-tag">ASCVD</span>
-          <span class="proj-tag">Biostatistics</span>
-          <span class="proj-tag">Machine Learning</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">Metabolomics</span><span class="proj-tag">ASCVD</span><span class="proj-tag">Biostatistics</span><span class="proj-tag">Machine Learning</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/005-ascvd-metabolomics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -483,12 +308,10 @@
       </div>
     </div>
 
-    <!-- ─── CARD 6 — CABG Gamification ─── -->
+    <!-- ─── CARD 6 ─── -->
     <div class="proj-card fade-up" data-domain="healthcare" data-tags="cabg gamification surgery patient engagement ml">
       <div class="proj-thumb">
-        <img src="../images/projects/proj_cabg.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="CABG Gamification">
+        <img src="../images/projects/proj_cabg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="CABG Gamification">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.3))">🎮</div>
         <span class="proj-status status-live">● Live</span>
       </div>
@@ -498,12 +321,7 @@
         <div class="proj-title">CABG Gamification Patient Engagement</div>
         <div class="proj-tagline">Can gamification improve surgical outcomes?</div>
         <div class="proj-desc">Gamified patient engagement platform for CABG surgery recovery. Uses ML to personalize feedback and track progress. Preprint in review.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Gamification</span>
-          <span class="proj-tag">CABG</span>
-          <span class="proj-tag">Patient Engagement</span>
-          <span class="proj-tag">Machine Learning</span>
-        </div>
+        <div class="proj-tags"><span class="proj-tag">Gamification</span><span class="proj-tag">CABG</span><span class="proj-tag">Patient Engagement</span><span class="proj-tag">Machine Learning</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/006-cabg-gamification.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -515,7 +333,6 @@
     <!-- ═══ ADD NEW CARDS BELOW THIS LINE ═══ -->
 
   </div>
-
   <div id="noResults">
     <i class="fas fa-search"></i>
     <div>No projects match your search.</div>
@@ -523,36 +340,9 @@
   </div>
 </div>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="sh-footer">
-  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
-  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
-  <div class="sh-footer-icons">
-    <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-    <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="../index.html" title="Portfolio"><i class="fas fa-globe"></i></a>
-    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-  </div>
-  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · Built for academic &amp; portfolio purposes</div>
-  <button class="footer-license-btn" id="openCopyrightModal">
-    <i class="fas fa-shield-alt"></i> Copyright License
-  </button>
-</footer>
-
-<!-- ═══ PAGE-SPECIFIC JS ═══ -->
+<!-- ═══ PAGE-SPECIFIC JS ONLY ═══ -->
 <script>
-/* ─── COPYRIGHT MODAL ─── */
-const modal    = document.getElementById('copyrightModal');
-const openBtn  = document.getElementById('openCopyrightModal');
-const closeBtn = document.getElementById('closeCopyrightModal');
-openBtn.addEventListener('click', () => modal.classList.add('active'));
-closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('active'); });
-
-/* ─── FILTER ─── */
+/* Filter & search — index page only */
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -564,22 +354,19 @@ document.getElementById('searchInput').addEventListener('input', applyFilters);
 
 function applyFilters() {
   const active = document.querySelector('.filter-btn.active').dataset.filter;
-  const q = document.getElementById('searchInput').value.toLowerCase().trim();
-  const cards = document.querySelectorAll('.proj-card');
-  let visible = 0;
-  cards.forEach(c => {
+  const q      = document.getElementById('searchInput').value.toLowerCase().trim();
+  let visible  = 0;
+  document.querySelectorAll('.proj-card').forEach(c => {
     const domainMatch = active === 'all' || c.dataset.domain === active;
-    const searchable = (c.dataset.tags || '') + ' ' + c.querySelector('.proj-title').textContent.toLowerCase();
-    const show = domainMatch && (!q || searchable.includes(q));
-    c.dataset.hidden = show ? 'false' : 'true';
+    const searchable  = (c.dataset.tags || '') + ' ' + c.querySelector('.proj-title').textContent.toLowerCase();
+    const show        = domainMatch && (!q || searchable.includes(q));
+    c.dataset.hidden  = show ? 'false' : 'true';
     if (show) visible++;
   });
-  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
-  document.getElementById('totalCount').textContent = visible;
+  document.getElementById('noResults').style.display  = visible === 0 ? 'block' : 'none';
+  document.getElementById('totalCount').textContent   = visible;
 }
-
-/* ─── TOTAL COUNT ON LOAD ─── */
-document.getElementById('totalCount').textContent = document.querySelectorAll('.proj-card').length;
 </script>
+
 </body>
 </html>
