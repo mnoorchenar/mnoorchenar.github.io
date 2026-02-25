@@ -1,9 +1,13 @@
 /* ═══════════════════════════════════════════
-   shared.css  —  drop this ONE file into /projects/
-   Every project page links to it. No more copy-paste.
+   shared.css  —  /projects/shared.css
+   Covers: theme vars, base, nav, footer,
+           copyright modal, project nav strip,
+           section tags, fade-up, utilities.
 ═══════════════════════════════════════════ */
 
-/* ── DARK THEME (default) ── */
+/* ════════════════════════════════
+   1. THEME VARIABLES
+════════════════════════════════ */
 :root,
 [data-theme="dark"] {
   --navy:      #070d1f;
@@ -21,9 +25,9 @@
   --muted:     #8892a4;
   --glass:     rgba(255,255,255,0.04);
   --glass-border: rgba(255,255,255,0.08);
-  --card-hover-bg:    rgba(255,255,255,0.06);
+  --card-hover-bg:     rgba(255,255,255,0.06);
   --card-hover-border: rgba(79,142,247,0.3);
-  --nav-scrolled-bg:  rgba(7,13,31,.95);
+  --nav-scrolled-bg:   rgba(7,13,31,.95);
   --shadow-card: 0 16px 50px rgba(0,0,0,.3);
   --scrollbar-track: #0d1530;
   --toggle-bg:  rgba(255,255,255,0.08);
@@ -32,7 +36,6 @@
   --footer-bg:  #0d1530;
   --radius: 14px;
 
-  /* tag colour sets */
   --tag-blue-bg:    rgba(79,142,247,.1);
   --tag-blue-bdr:   rgba(79,142,247,.25);
   --tag-blue-clr:   #93c5fd;
@@ -50,7 +53,6 @@
   --tag-gold-clr:   #fbbf24;
 }
 
-/* ── LIGHT THEME ── */
 [data-theme="light"] {
   --navy:      #f0f4ff;
   --navy2:     #e8edf8;
@@ -67,9 +69,9 @@
   --muted:     #4b5675;
   --glass:     rgba(255,255,255,0.75);
   --glass-border: rgba(37,99,235,0.14);
-  --card-hover-bg:    rgba(37,99,235,0.05);
+  --card-hover-bg:     rgba(37,99,235,0.05);
   --card-hover-border: rgba(37,99,235,0.35);
-  --nav-scrolled-bg:  rgba(240,244,255,.95);
+  --nav-scrolled-bg:   rgba(240,244,255,.95);
   --shadow-card: 0 8px 32px rgba(30,64,175,.12);
   --scrollbar-track: #dce3f4;
   --toggle-bg:  rgba(37,99,235,0.1);
@@ -94,7 +96,10 @@
   --tag-gold-clr:   #92400e;
 }
 
-/* ── BASE ── */
+
+/* ════════════════════════════════
+   2. BASE RESET
+════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -110,13 +115,17 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-/* ── THEME TOGGLE ── */
+
+/* ════════════════════════════════
+   3. THEME TOGGLE BUTTON
+════════════════════════════════ */
 .theme-toggle {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   background: var(--toggle-bg); border: 1.5px solid var(--toggle-bdr);
   color: var(--toggle-clr); padding: 6px 13px; border-radius: 20px;
   font-size: .78em; font-weight: 700; cursor: pointer; transition: .25s;
   letter-spacing: .4px; white-space: nowrap; user-select: none;
+  font-family: inherit;
 }
 .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(79,142,247,.2); }
 .theme-toggle .toggle-sun,
@@ -126,7 +135,10 @@ a { color: inherit; text-decoration: none; }
 [data-theme="light"] .toggle-sun  { display: inline; }
 [data-theme="light"] .toggle-moon { display: none; }
 
-/* ── NAV ── */
+
+/* ════════════════════════════════
+   4. NAVIGATION
+════════════════════════════════ */
 .sh-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   padding: 0 48px; height: 64px;
@@ -135,10 +147,9 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid var(--glass-border); transition: .3s;
 }
 .sh-nav-logo {
-  font-size: 1.1em; font-weight: 700;
+  font-size: 1.1em; font-weight: 700; text-decoration: none;
   background: linear-gradient(135deg, var(--accent), var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  text-decoration: none;
 }
 .sh-nav-links { display: flex; gap: 4px; }
 .sh-nav-links a {
@@ -150,33 +161,196 @@ a { color: inherit; text-decoration: none; }
 .sh-nav-links a.active {
   color: var(--text); border-color: var(--glass-border); background: var(--glass);
 }
-.sh-nav-right { display: flex; align-items: center; gap: 14px; }
+.sh-nav-right  { display: flex; align-items: center; gap: 14px; }
 .sh-nav-social { display: flex; gap: 14px; }
 .sh-nav-social a { color: var(--muted); font-size: 1.05em; transition: .2s; }
 .sh-nav-social a:hover { color: var(--accent); }
 
-/* ── FOOTER ── */
+@media (max-width: 768px) {
+  .sh-nav { padding: 0 16px; }
+  .sh-nav-links { display: none; }
+}
+
+
+/* ════════════════════════════════
+   5. PROJECT NAV STRIP  (← 1 of 6 →)
+   Injected by shared.js below the main nav.
+════════════════════════════════ */
+.proj-nav-strip {
+  position: sticky;
+  top: 64px;              /* sits flush under the 64px fixed nav */
+  z-index: 98;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 0 28px; height: 46px;
+  background: var(--navy2);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background .35s;
+}
+
+/* arrow links */
+.pns-arrow {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--muted);
+  transition: color .2s; flex: 1; min-width: 0;
+}
+.pns-arrow:hover { color: var(--accent); }
+.pns-arrow.pns-disabled { opacity: .3; pointer-events: none; }
+.pns-prev { justify-content: flex-start; }
+.pns-next { justify-content: flex-end; }
+.pns-arrow i { font-size: .85em; flex-shrink: 0; }
+
+/* label inside each arrow */
+.pns-label { display: flex; flex-direction: column; min-width: 0; }
+.pns-prev .pns-label { text-align: left; }
+.pns-next .pns-label { text-align: right; }
+.pns-hint {
+  font-size: .64em; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--muted); opacity: .7; line-height: 1;
+}
+.pns-name {
+  font-size: .77em; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 200px; line-height: 1.3;
+}
+
+/* centre: "All Projects" button + counter */
+.pns-center {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; flex-shrink: 0;
+}
+.pns-all {
+  display: inline-flex; align-items: center; gap: 6px;
+  text-decoration: none; font-size: .77em; font-weight: 700;
+  color: var(--accent);
+  background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.2);
+  border-radius: 16px; padding: 3px 12px; transition: background .2s;
+}
+.pns-all:hover { background: rgba(79,142,247,.2); }
+[data-theme="light"] .pns-all {
+  background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.25);
+}
+[data-theme="light"] .pns-all:hover { background: rgba(37,99,235,.18); }
+.pns-counter {
+  font-size: .63em; color: var(--muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .07em;
+}
+
+@media (max-width: 640px) {
+  .proj-nav-strip { padding: 0 16px; }
+  .pns-name { display: none; }
+}
+
+
+/* ════════════════════════════════
+   6. FOOTER
+════════════════════════════════ */
 .sh-footer {
-  background: var(--footer-bg); border-top: 1px solid var(--glass-border);
-  padding: 40px 24px; text-align: center; margin-top: 48px; transition: .35s;
+  background: var(--footer-bg);
+  border-top: 1px solid var(--glass-border);
+  padding: 40px 24px; text-align: center;
+  margin-top: 48px; transition: background .35s;
 }
 .sh-footer-name {
-  font-size: 1.3rem; font-weight: 900;
+  font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;
   background: linear-gradient(135deg, var(--accent), var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: 4px;
 }
-.sh-footer-role { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
+.sh-footer-role  { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
 .sh-footer-icons { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
 .sh-footer-icons a { color: var(--muted); font-size: 1rem; transition: color .2s; }
 .sh-footer-icons a:hover { color: var(--accent); }
-.sh-footer-copy { font-size: .75rem; color: var(--muted); }
+.sh-footer-copy  { font-size: .75rem; color: var(--muted); }
 
-/* ── SECTION TAGS ── */
+/* "Copyright License" button inside footer */
+.footer-license-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: none; border: none; padding: 0; margin-top: 10px;
+  font-family: inherit; font-size: .78em; font-weight: 600; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  transition: opacity .2s, transform .2s;
+}
+.footer-license-btn i {
+  /* icon needs its own gradient because -webkit-text-fill-color doesn't apply to pseudo-content */
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.footer-license-btn:hover { opacity: .7; transform: translateY(-1px); }
+
+
+/* ════════════════════════════════
+   7. COPYRIGHT MODAL
+   The overlay is injected by footer.html
+   and must be hidden by default.
+════════════════════════════════ */
+.copyright-modal-overlay {
+  /* Hidden until .active is added by shared.js */
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
+  align-items: center; justify-content: center;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(5px);
+}
+.copyright-modal-overlay.active {
+  display: flex;
+  animation: cm-fadein .2s ease;
+}
+@keyframes cm-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.copyright-modal-box {
+  background: var(--navy2);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 36px 32px 28px;
+  max-width: 480px; width: 90%;
+  box-shadow: 0 24px 64px rgba(0,0,0,.5);
+  animation: cm-slideup .25s cubic-bezier(.22,1,.36,1);
+}
+@keyframes cm-slideup {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[data-theme="light"] .copyright-modal-box {
+  background: #f5f7ff;
+  box-shadow: 0 16px 48px rgba(30,64,175,.15);
+}
+
+.copyright-modal-box h3 {
+  font-size: 1.1em; font-weight: 700; margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.copyright-modal-box p {
+  font-size: .9em; color: var(--muted);
+  line-height: 1.75; margin-bottom: 24px;
+}
+.copyright-modal-box p strong { color: var(--text); }
+
+.copyright-modal-close {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border: none; border-radius: 9px;
+  padding: 10px 24px; font-family: inherit;
+  font-size: .86em; font-weight: 600; cursor: pointer;
+  transition: opacity .2s, transform .2s, box-shadow .2s;
+}
+.copyright-modal-close:hover {
+  opacity: .9; transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79,142,247,.35);
+}
+
+
+/* ════════════════════════════════
+   8. SECTION TAGS  (.s-tag-*)
+════════════════════════════════ */
 .s-tag {
   display: inline-block; font-size: .7rem; text-transform: uppercase;
   letter-spacing: .1em; font-weight: 700; padding: 3px 10px;
-  border-radius: 10px; margin-bottom: 10px; position: relative; overflow: hidden;
+  border-radius: 10px; margin-bottom: 10px;
+  position: relative; overflow: hidden;
 }
 .s-tag::after {
   content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
@@ -190,18 +364,22 @@ a { color: inherit; text-decoration: none; }
 .s-tag-green  { background: var(--tag-green-bg);  color: var(--tag-green-clr);  border: 1px solid var(--tag-green-bdr); }
 .s-tag-gold   { background: var(--tag-gold-bg);   color: var(--tag-gold-clr);   border: 1px solid var(--tag-gold-bdr); }
 
-/* ── FADE-UP ANIMATION ── */
-.fade-up { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+
+/* ════════════════════════════════
+   9. FADE-UP ANIMATION
+════════════════════════════════ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .55s ease, transform .55s ease;
+}
 .fade-up.visible { opacity: 1; transform: none; }
 
-/* ── UTILITY GRADIENT TEXT ── */
+
+/* ════════════════════════════════
+   10. UTILITIES
+════════════════════════════════ */
 .grad-text {
   background: linear-gradient(135deg, var(--accent), var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-
-/* ── RESPONSIVE NAV ── */
-@media (max-width: 768px) {
-  .sh-nav { padding: 0 16px; }
-  .sh-nav-links { display: none; }
 }
