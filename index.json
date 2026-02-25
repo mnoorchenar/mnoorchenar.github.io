@@ -24,6 +24,10 @@
           {
             "name": "003-energy-anomaly-xai",
             "html": "projects/Projects-Files/003-energy-anomaly-xai.html"
+          },
+          {
+            "name": "004-sarcopenia-genetics",
+            "html": "projects/Projects-Files/004-sarcopenia-genetics.html"
           }
         ]
       }
