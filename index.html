@@ -948,11 +948,11 @@ window.addEventListener('DOMContentLoaded', function() {
             <div class="award-card fade-up">
               <div class="award-img c6"><img src="images/honors_awards/h007.png" alt="Basic SPSS Training Workshop" onerror="this.style.display='none'"></div>
               <div class="award-body">
-                <div class="award-icon">🧑‍🏫</div>
-                <div class="award-title">Basic SPSS Training Workshop</div>
-                <div class="award-org"><i class="fas fa-university"></i> Dept. of Epidemiology & Biostatistics</div>
-                <div class="award-date"><i class="fas fa-calendar"></i> Khordad 1398</div>
-                <p class="award-desc">Held for beginner students on Khordad 2, 1398. Over 30 participants attended, including students from Nursing. Instructor Mohammad Noorchenarboo used practical examples to clarify statistical concepts. Participants completed a satisfaction survey at the end.</p>
+                  <div class="award-icon">🧑‍🏫</div>
+                  <div class="award-title">Basic SPSS Training Workshop</div>
+                  <div class="award-org"><i class="fas fa-university"></i> Dept. of Epidemiology & Biostatistics</div>
+                  <div class="award-date"><i class="fas fa-calendar"></i> May 23, 2019</div>
+                  <p class="award-desc">Held for beginner students on May 23, 2019. Over 30 participants attended, including students from Nursing. Practical examples were used to clarify statistical concepts.</p>
               </div>
             </div>
     </div>
@@ -974,10 +974,16 @@ window.addEventListener('DOMContentLoaded', function() {
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i> HuggingFace</a>
     </div>
     <div class="footer-copy">© 2025 Mohammad Noorchenarboo · Built for academic &amp; portfolio purposes</div>
-    <div style="margin-top:24px; color:#e74c3c; font-weight:bold; font-size:1em;">
-      Copyright Notice: Strict Limitation<br>
-      All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.
-    </div>
+      <div class="footer-license">
+        <a href="#" id="copyrightLicenseLink" style="color:var(--accent);font-weight:600;text-decoration:underline;">Copyright License</a>
+      </div>
+      <div id="copyrightModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--glass);border-radius:12px;padding:32px 28px;max-width:420px;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);color:var(--text);">
+          <h3 style="margin-bottom:12px;color:var(--accent);">Copyright Notice: Strict Limitation</h3>
+          <p style="font-size:1em;line-height:1.6;">All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.</p>
+          <button id="closeCopyrightModal" style="margin-top:18px;padding:8px 18px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;">Close</button>
+        </div>
+      </div>
   </div>
 </footer>
 
