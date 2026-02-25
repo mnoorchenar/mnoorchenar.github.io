@@ -53,7 +53,6 @@
   --toggle-bg:   rgba(255,255,255,0.08);
   --toggle-bdr:  rgba(255,255,255,0.15);
   --toggle-clr:  #fbbf24;
-  --toggle-icon: "☀️";
   --footer-bg: var(--navy2);
 }
 
@@ -206,7 +205,6 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 .btn-handsonai:hover{background:rgba(124,58,237,.22);transform:translateY(-3px);border-color:rgba(124,58,237,.6)}
 .btn-ghost{background:var(--glass);border-color:var(--glass-border);color:var(--text)}
 .btn-ghost:hover{background:var(--card-hover-bg);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
-/* Dark mode tonal overrides */
 [data-theme="dark"] .btn-linkedin{color:#7eb8f5}
 [data-theme="dark"] .btn-hf{color:#fcd34d}
 [data-theme="dark"] .btn-gh{color:#b0b8cc}
@@ -365,6 +363,51 @@ section{padding:90px 0}
 .award-date{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.77em}
 .award-desc{color:var(--muted);font-size:.845em;line-height:1.65;flex:1}
 
+/* ── COPYRIGHT MODAL ── */
+.copyright-modal-overlay{
+  display:none;
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
+  background:rgba(0,0,0,.55);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(4px);
+  animation:fadeIn .2s ease;
+}
+.copyright-modal-overlay.active{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.copyright-modal-box{
+  background:var(--navy2);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:36px 32px 28px;
+  max-width:480px;
+  width:90%;
+  box-shadow:0 24px 64px rgba(0,0,0,.45);
+  position:relative;
+  animation:slideUp .25s cubic-bezier(.22,1,.36,1);
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+[data-theme="light"] .copyright-modal-box{background:#f5f7ff}
+.copyright-modal-box h3{
+  font-size:1.1em;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:14px;
+}
+.copyright-modal-box p{
+  font-size:.9em;color:var(--muted);line-height:1.7;margin-bottom:22px;
+}
+.copyright-modal-box p strong{color:var(--text)}
+.copyright-modal-close{
+  display:inline-flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:8px;
+  padding:9px 22px;font-size:.86em;font-weight:600;
+  cursor:pointer;transition:.2s;
+}
+.copyright-modal-close:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,142,247,.35)}
+
 /* ── FOOTER ── */
 footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padding:52px 32px 36px;text-align:center;transition:.35s}
 .footer-inner{max-width:640px;margin:0 auto}
@@ -373,7 +416,15 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 .footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:28px}
 .footer-links a{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);text-decoration:none;padding:8px 16px;border-radius:20px;font-size:.83em;transition:.2s}
 .footer-links a:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
-.footer-copy{color:var(--muted);font-size:.78em}
+.footer-copy{color:var(--muted);font-size:.78em;margin-bottom:10px}
+.footer-license-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:none;border:none;
+  color:var(--accent);font-size:.78em;font-weight:600;
+  cursor:pointer;text-decoration:underline;
+  transition:.2s;padding:0;
+}
+.footer-license-btn:hover{opacity:.75}
 
 /* ── ANIMATIONS ── */
 .fade-up{opacity:0;transform:translateY(26px);transition:.65s cubic-bezier(.22,1,.36,1)}
@@ -396,40 +447,25 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
   nav{padding:0 16px}
 }
 </style>
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-  if (!localStorage.getItem('copyrightPopupShown')) {
-    var popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.left = '0';
-    popup.style.top = '0';
-    popup.style.width = '100vw';
-    popup.style.height = '100vh';
-    popup.style.background = 'rgba(7,13,31,0.95)';
-    popup.style.color = '#e2e8f0';
-    popup.style.display = 'flex';
-    popup.style.flexDirection = 'column';
-    popup.style.justifyContent = 'center';
-    popup.style.alignItems = 'center';
-    popup.style.zIndex = '9999';
-    popup.style.fontSize = '1.2rem';
-    popup.innerHTML = `
-      <div style="background:rgba(0,0,0,0.7);padding:2rem;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:600px;text-align:center;">
-        <h2 style="margin-bottom:1rem;color:#4f8ef7;">Copyright Notice: Strict Limitation</h2>
-        <p style="margin-bottom:2rem;">All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.</p>
-        <button id="copyrightPopupClose" style="padding:0.5rem 2rem;background:#4f8ef7;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">I Understand</button>
-      </div>
-    `;
-    document.body.appendChild(popup);
-    document.getElementById('copyrightPopupClose').onclick = function() {
-      popup.remove();
-      localStorage.setItem('copyrightPopupShown', 'true');
-    };
-  }
-});
-</script>
 </head>
 <body>
+
+<!-- ── COPYRIGHT MODAL (hidden by default, opens on footer link click) ── -->
+<div class="copyright-modal-overlay" id="copyrightModal" role="dialog" aria-modal="true" aria-labelledby="copyrightModalTitle">
+  <div class="copyright-modal-box">
+    <h3 id="copyrightModalTitle"><i class="fas fa-shield-alt"></i> Copyright Notice</h3>
+    <p>
+      <strong>Strict Limitation:</strong> All content on this website — including text, images, code,
+      design, and all other materials — is protected by copyright.<br><br>
+      Any use, reproduction, distribution, or modification for any reason is
+      <strong>strictly prohibited</strong> and not allowed under any circumstances without
+      prior written consent from the author.
+    </p>
+    <button class="copyright-modal-close" id="closeCopyrightModal">
+      <i class="fas fa-check"></i> I Understand
+    </button>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav id="navbar">
@@ -453,7 +489,6 @@ window.addEventListener('DOMContentLoaded', function() {
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
       <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
     </div>
-    <!-- ★ THEME TOGGLE BUTTON ★ -->
     <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
       <span class="toggle-sun">☀️</span>
       <span class="toggle-moon">🌙</span>
@@ -945,16 +980,16 @@ window.addEventListener('DOMContentLoaded', function() {
           <p class="award-desc">Reviewed manuscripts on biostatistical methods, clinical trial design, survival analysis, and longitudinal studies to ensure scientific rigor.</p>
         </div>
       </div>
-            <div class="award-card fade-up">
-              <div class="award-img c6"><img src="images/honors_awards/h007.png" alt="Basic SPSS Training Workshop" onerror="this.style.display='none'"></div>
-              <div class="award-body">
-                  <div class="award-icon">🧑‍🏫</div>
-                  <div class="award-title">Basic SPSS Training Workshop</div>
-                  <div class="award-org"><i class="fas fa-university"></i> Dept. of Epidemiology & Biostatistics</div>
-                  <div class="award-date"><i class="fas fa-calendar"></i> May 23, 2019</div>
-                  <p class="award-desc">Held for beginner students on May 23, 2019. Over 30 participants attended, including students from Nursing. Practical examples were used to clarify statistical concepts.</p>
-              </div>
-            </div>
+      <div class="award-card fade-up">
+        <div class="award-img c6"><img src="images/honors_awards/h007.png" alt="Basic SPSS Training Workshop" onerror="this.style.display='none'"></div>
+        <div class="award-body">
+          <div class="award-icon">🧑‍🏫</div>
+          <div class="award-title">Basic SPSS Training Workshop</div>
+          <div class="award-org"><i class="fas fa-university"></i> Dept. of Epidemiology &amp; Biostatistics</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> May 23, 2019</div>
+          <p class="award-desc">Held for beginner students on May 23, 2019. Over 30 participants attended, including students from Nursing. Practical examples were used to clarify statistical concepts.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -974,49 +1009,41 @@ window.addEventListener('DOMContentLoaded', function() {
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i> HuggingFace</a>
     </div>
     <div class="footer-copy">© 2025 Mohammad Noorchenarboo · Built for academic &amp; portfolio purposes</div>
-      <div class="footer-license">
-        <a href="javascript:void(0)" id="copyrightLicenseLink" style="color:var(--accent);font-weight:600;text-decoration:underline;">Copyright License</a>
-      </div>
-      <div id="copyrightModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;display:flex;align-items:center;justify-content:center;">
-        <div style="background:var(--glass);border-radius:10px;padding:24px 22px;max-width:380px;width:90%;box-shadow:0 6px 24px rgba(0,0,0,0.13);color:var(--text);text-align:left;">
-          <div style="font-size:1.1em;font-weight:600;color:var(--accent);margin-bottom:10px;">Copyright Notice</div>
-          <div style="font-size:.98em;line-height:1.55;">Strict Limitation: All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.</div>
-          <button id="closeCopyrightModal" style="margin-top:16px;padding:7px 16px;border:none;border-radius:5px;background:var(--accent);color:#fff;font-weight:500;cursor:pointer;float:right;">Close</button>
-        </div>
-      </div>
+    <button class="footer-license-btn" id="openCopyrightModal">
+      <i class="fas fa-shield-alt"></i> Copyright License
+    </button>
   </div>
 </footer>
 
 <script>
-/* ═══════════════════════════════════════════
-   THEME TOGGLE
-═══════════════════════════════════════════ */
+/* ─── THEME TOGGLE ─── */
 const html = document.documentElement;
 const toggleBtn = document.getElementById('themeToggle');
 const toggleLabel = document.getElementById('toggleLabel');
-
-// Load saved preference
 const savedTheme = localStorage.getItem('mn-theme') || 'dark';
 html.setAttribute('data-theme', savedTheme);
 updateToggleLabel(savedTheme);
-
 toggleBtn.addEventListener('click', () => {
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('mn-theme', next);
   updateToggleLabel(next);
-  // Reinit particles with correct color
   initPts();
 });
-
 function updateToggleLabel(theme) {
   toggleLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
 }
 
-/* ═══════════════════════════════════════════
-   TYPING ANIMATION
-═══════════════════════════════════════════ */
+/* ─── COPYRIGHT MODAL ─── */
+const modal   = document.getElementById('copyrightModal');
+const openBtn = document.getElementById('openCopyrightModal');
+const closeBtn= document.getElementById('closeCopyrightModal');
+openBtn.addEventListener('click', () => modal.classList.add('active'));
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('active'); });
+
+/* ─── TYPING ANIMATION ─── */
 const phrases=["Data Scientist","AI Researcher","Biostatistician","College Professor","Deep Learning Expert"];
 let pi=0,ci=0,del=false;
 const te=document.getElementById('typed-text');
@@ -1028,21 +1055,13 @@ function type(){
 }
 type();
 
-/* ═══════════════════════════════════════════
-   PARTICLES
-═══════════════════════════════════════════ */
+/* ─── PARTICLES ─── */
 const cvs=document.getElementById('particles-canvas');
 const ctx=cvs.getContext('2d');
 const heroSec=document.getElementById('hero');
 let W,H,pts=[];
-
-function getParticleRGB() {
-  return html.getAttribute('data-theme') === 'light' ? '37,99,235' : '79,142,247';
-}
-function getLineRGB() {
-  return html.getAttribute('data-theme') === 'light' ? '37,99,235' : '100,160,255';
-}
-
+function getParticleRGB(){return html.getAttribute('data-theme')==='light'?'37,99,235':'79,142,247';}
+function getLineRGB(){return html.getAttribute('data-theme')==='light'?'37,99,235':'100,160,255';}
 function resize(){W=cvs.width=heroSec.offsetWidth;H=cvs.height=heroSec.offsetHeight;}
 function mkPt(){
   const big=Math.random()<0.18;
@@ -1053,16 +1072,13 @@ function mkPt(){
 function initPts(){resize();pts=[];for(let i=0;i<110;i++)pts.push(mkPt());}
 function draw(){
   ctx.clearRect(0,0,W,H);
-  const lineRGB=getLineRGB();
-  const ptRGB=getParticleRGB();
+  const lineRGB=getLineRGB(),ptRGB=getParticleRGB();
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
     if(d<130){
-      const alpha=.20*(1-d/130);
       ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(${lineRGB},${alpha})`;
-      ctx.lineWidth=pts[i].big||pts[j].big?0.9:0.55;
-      ctx.stroke();
+      ctx.strokeStyle=`rgba(${lineRGB},${.20*(1-d/130)})`;
+      ctx.lineWidth=pts[i].big||pts[j].big?0.9:0.55;ctx.stroke();
     }
   }
   pts.forEach(p=>{
@@ -1080,9 +1096,7 @@ function draw(){
 window.addEventListener('load',()=>{initPts();draw();});
 window.addEventListener('resize',initPts);
 
-/* ═══════════════════════════════════════════
-   NAVBAR SCROLL
-═══════════════════════════════════════════ */
+/* ─── NAVBAR SCROLL ─── */
 const nb=document.getElementById('navbar');
 window.addEventListener('scroll',()=>{
   nb.classList.toggle('scrolled',window.scrollY>20);
@@ -1091,13 +1105,9 @@ window.addEventListener('scroll',()=>{
   lks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
 });
 
-/* ═══════════════════════════════════════════
-   FADE IN ON SCROLL
-═══════════════════════════════════════════ */
+/* ─── FADE IN ON SCROLL ─── */
 const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),+(e.target.dataset.delay||0));
-  });
+  entries.forEach(e=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),+(e.target.dataset.delay||0));});
 },{threshold:.07,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
@@ -1107,14 +1117,11 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
   });
 });
 
-/* ═══════════════════════════════════════════
-   ANIMATED COUNTERS
-═══════════════════════════════════════════ */
+/* ─── ANIMATED COUNTERS ─── */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
-  const dur=5000;
   (function step(ts){
-    const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,4);
+    const p=Math.min((ts-s)/5000,1),e=1-Math.pow(1-p,4);
     el.textContent=pre+Math.round(e*t)+suf;
     if(p<1)requestAnimationFrame(step);
   })(s);
@@ -1124,23 +1131,15 @@ const co=new IntersectionObserver(e=>{
 },{threshold:.5});
 document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
 
-/* ═══════════════════════════════════════════
-   PUBLICATION ACCORDION
-═══════════════════════════════════════════ */
+/* ─── PUBLICATION ACCORDION ─── */
 function togglePub(header){
-  const item=header.parentElement;
-  const body=item.querySelector('.pub-body');
-  const isOpen=item.classList.contains('open');
-  document.querySelectorAll('.pub-item.open').forEach(i=>{
-    i.classList.remove('open');
-    i.querySelector('.pub-body').style.maxHeight='0';
-  });
+  const item=header.parentElement,body=item.querySelector('.pub-body'),isOpen=item.classList.contains('open');
+  document.querySelectorAll('.pub-item.open').forEach(i=>{i.classList.remove('open');i.querySelector('.pub-body').style.maxHeight='0';});
   if(!isOpen){item.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
 }
 </script>
 </body>
 <!--
-  Copyright Notice: Strict Limitation
-  All content on this website is protected by copyright. Any use, reproduction, distribution, or modification for any reason is strictly prohibited and not allowed under any circumstances.
+  Copyright Notice: All content is protected. Reproduction prohibited.
 -->
 </html>
