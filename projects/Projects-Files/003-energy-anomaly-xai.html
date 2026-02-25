@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energy Anomaly XAI · Mohammad Noorchenarboo</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/projects/shared.css">
+<script src="/projects/shared.js" defer></script>
+<style>
+/* ═══════════════════════════════
+   PAGE-SPECIFIC VARS ONLY
+═══════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --lime:           #84cc16;
+  --orange:         #f97316;
+  --hero-grad:      radial-gradient(ellipse 75% 55% at 50% -8%, rgba(132,204,22,.14), transparent 65%);
+  --grid-col:       rgba(132,204,22,.03);
+  --chart-grid:     rgba(255,255,255,.05);
+  --chart-tick:     #8892a4;
+  --prob-red-bg:    rgba(239,68,68,.07);
+  --prob-red-bdr:   rgba(239,68,68,.22);
+  --prob-gold-bg:   rgba(245,158,11,.07);
+  --prob-gold-bdr:  rgba(245,158,11,.22);
+  --prob-blue-bg:   rgba(79,142,247,.07);
+  --prob-blue-bdr:  rgba(79,142,247,.22);
+  --bld-bg:         rgba(255,255,255,.04);
+  --bld-bdr:        rgba(255,255,255,.08);
+  --bld-hover:      rgba(132,204,22,.06);
+  --take-bg:        rgba(132,204,22,.05);
+  --take-bdr:       rgba(132,204,22,.2);
+  --insight-bg:     linear-gradient(135deg,rgba(132,204,22,.07),rgba(6,182,212,.06));
+  --insight-bdr:    rgba(132,204,22,.22);
+}
+[data-theme="light"] {
+  --lime:           #65a30d;
+  --orange:         #ea580c;
+  --hero-grad:      radial-gradient(ellipse 75% 55% at 50% -8%, rgba(101,163,13,.12), transparent 65%);
+  --grid-col:       rgba(101,163,13,.045);
+  --chart-grid:     rgba(0,0,0,.06);
+  --chart-tick:     #4b5675;
+  --prob-red-bg:    rgba(220,38,38,.05);
+  --prob-red-bdr:   rgba(220,38,38,.18);
+  --prob-gold-bg:   rgba(217,119,6,.05);
+  --prob-gold-bdr:  rgba(217,119,6,.2);
+  --prob-blue-bg:   rgba(37,99,235,.05);
+  --prob-blue-bdr:  rgba(37,99,235,.2);
+  --bld-bg:         rgba(0,0,0,.02);
+  --bld-bdr:        rgba(0,0,0,.08);
+  --bld-hover:      rgba(101,163,13,.06);
+  --take-bg:        rgba(101,163,13,.06);
+  --take-bdr:       rgba(101,163,13,.25);
+  --insight-bg:     linear-gradient(135deg,rgba(101,163,13,.06),rgba(8,145,178,.05));
+  --insight-bdr:    rgba(101,163,13,.28);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 110px 24px 0;
+  background: var(--body-bg);
+  position: relative; overflow: hidden; transition: background .35s;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: var(--hero-grad);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-col) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-col) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; padding-bottom: 0; }
+
+.breadcrumb {
+  font-size: .78rem; color: var(--muted);
+  margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+}
+.breadcrumb a { color: var(--muted); transition: .2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { opacity: .4; }
+
+.tag-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 14px; border-radius: 20px;
+  font-size: .74rem; font-weight: 700; letter-spacing: .03em;
+}
+.pill-lime {
+  background: rgba(132,204,22,.12); border: 1px solid rgba(132,204,22,.28);
+  color: var(--lime);
+}
+[data-theme="light"] .pill-lime {
+  background: rgba(101,163,13,.09); border-color: rgba(101,163,13,.3);
+}
+.pill-gold {
+  background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.28);
+  color: var(--gold);
+}
+.pub-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); display: inline-block;
+  box-shadow: 0 0 6px rgba(245,158,11,.6);
+}
+
+h1.page-title {
+  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+  font-weight: 900; line-height: 1.15;
+  margin-bottom: 14px; color: var(--text);
+}
+.hero-sub {
+  font-size: clamp(.9rem, 1.6vw, 1.05rem);
+  color: var(--muted); max-width: 680px;
+  line-height: 1.72; margin-bottom: 26px;
+}
+.hero-sub strong { color: var(--text); }
+
+.hero-meta {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  font-size: .8rem; color: var(--muted);
+  margin-bottom: 26px;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta i { color: var(--lime); }
+.hero-meta strong { color: var(--text); }
+
+.hero-btns {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding-bottom: 0;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 8px;
+  font-size: .83rem; font-weight: 700;
+  cursor: pointer; border: 1px solid transparent;
+  transition: all .2s; font-family: inherit;
+}
+.btn-pub {
+  background: rgba(34,197,94,.14); color: var(--green);
+  border-color: rgba(34,197,94,.3);
+}
+.btn-pub:hover { background: rgba(34,197,94,.24); transform: translateY(-2px); }
+[data-theme="light"] .btn-pub {
+  background: rgba(22,163,74,.09); color: #15803d;
+  border-color: rgba(22,163,74,.28);
+}
+.btn-anchor {
+  background: var(--glass); color: var(--text);
+  border-color: var(--glass-border);
+}
+.btn-anchor:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-back {
+  background: var(--glass); color: var(--muted);
+  border-color: var(--glass-border);
+}
+.btn-back:hover { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
+.btn-disabled {
+  opacity: .35; pointer-events: none; cursor: not-allowed;
+  background: var(--glass); color: var(--muted); border-color: var(--glass-border);
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--section-alt);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background .35s;
+  margin-top: 40px;
+}
+.stats-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 1px; background: var(--glass-border);
+}
+.stat-item {
+  background: var(--section-alt);
+  padding: 22px 16px; text-align: center;
+  transition: background .35s;
+}
+.stat-val {
+  font-size: 1.8rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--lime), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1.1; margin-bottom: 4px;
+}
+.stat-label { font-size: .74rem; color: var(--muted); line-height: 1.4; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  max-width: 1100px; margin: 0 auto;
+  padding: 48px 24px;
+  display: grid; grid-template-columns: 1fr 310px;
+  gap: 32px; align-items: start;
+}
+.content-col { display: flex; flex-direction: column; gap: 28px; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 28px; transition: all .25s;
+}
+.card:hover {
+  background: var(--card-hover-bg); border-color: var(--card-hover-border);
+  transform: translateY(-3px);
+}
+.card-title {
+  font-size: 1rem; font-weight: 800; margin-bottom: 18px;
+  color: var(--text); display: flex; align-items: center; gap: 10px;
+}
+.card-title i { color: var(--lime); font-size: .9rem; }
+.narrative { font-size: .92rem; color: var(--muted); margin-bottom: 16px; line-height: 1.72; }
+.narrative strong { color: var(--text); }
+
+/* ── PROBLEM CARDS ── */
+.prob-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.prob-card {
+  border-radius: var(--radius); padding: 22px;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.prob-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+.prob-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.pc-red  { background: var(--prob-red-bg);  border: 1px solid var(--prob-red-bdr); }
+.pc-gold { background: var(--prob-gold-bg); border: 1px solid var(--prob-gold-bdr); }
+.pc-blue { background: var(--prob-blue-bg); border: 1px solid var(--prob-blue-bdr); }
+.pc-red::before  { background: linear-gradient(90deg, var(--red), transparent); }
+.pc-gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+.pc-blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+.prob-card h3 { font-size: .93rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+.prob-card p  { font-size: .82rem; color: var(--muted); line-height: 1.65; }
+.big-num { font-size: 2.2rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.n-red   { color: var(--red); }
+.n-gold  { color: var(--gold); }
+.n-blue  { color: var(--accent); }
+
+/* ── BUILDING TYPES ── */
+.building-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+  margin-bottom: 20px;
+}
+.bld-card {
+  background: var(--bld-bg); border: 1px solid var(--bld-bdr);
+  border-radius: 12px; padding: 16px 10px; text-align: center;
+  transition: .25s;
+}
+.bld-card:hover {
+  background: var(--bld-hover); border-color: rgba(132,204,22,.3);
+  transform: translateY(-3px);
+}
+.bld-icon { font-size: 1.9rem; margin-bottom: 8px; line-height: 1; }
+.bld-name { font-size: .74rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.bld-detail { font-size: .68rem; color: var(--muted); line-height: 1.45; }
+.data-note {
+  background: var(--insight-bg); border: 1px solid var(--insight-bdr);
+  border-radius: 10px; padding: 16px 20px;
+  font-size: .83rem; color: var(--muted); line-height: 1.65;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.data-note i { color: var(--lime); margin-top: 2px; flex-shrink: 0; }
+.data-note strong { color: var(--text); }
+
+/* ── PIPELINE ── */
+.pipe-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; position: relative;
+}
+.pipe-steps::before {
+  content: ''; position: absolute; top: 50px;
+  left: 12.5%; right: 12.5%; height: 2px;
+  background: linear-gradient(90deg, var(--lime), var(--teal)); z-index: 0;
+}
+.pipe-step {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 0 10px; position: relative; z-index: 1;
+}
+.pipe-circle {
+  width: 60px; height: 60px; border-radius: 50%; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; margin-bottom: 14px;
+  background: var(--body-bg); transition: .35s;
+}
+.pp1 { border-color: var(--orange); box-shadow: 0 0 18px rgba(249,115,22,.28); }
+.pp2 { border-color: var(--lime);   box-shadow: 0 0 18px rgba(132,204,22,.22); }
+.pp3 { border-color: var(--teal);   box-shadow: 0 0 18px rgba(6,182,212,.22); }
+.pp4 { border-color: var(--accent); box-shadow: 0 0 18px rgba(79,142,247,.22); }
+.pipe-step h4 { font-size: .86rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+.pipe-step p  { font-size: .76rem; color: var(--muted); line-height: 1.55; }
+.pipe-detail {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; margin-top: 22px;
+}
+.pd-card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 14px;
+}
+.pd-title {
+  font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .06em; margin-bottom: 8px;
+}
+.pd-t1 { color: var(--orange); }
+.pd-t2 { color: var(--lime); }
+.pd-t3 { color: var(--teal); }
+.pd-t4 { color: var(--accent); }
+.pd-card ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.pd-card li {
+  font-size: .74rem; color: var(--muted);
+  padding-left: 14px; position: relative; line-height: 1.45;
+}
+.pd-card li::before { content: '›'; position: absolute; left: 0; color: var(--lime); }
+
+/* ── RESULTS ── */
+.results-top {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-bottom: 24px;
+}
+.rcard {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 20px 16px; text-align: center;
+  transition: .25s;
+}
+.rcard:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.rcard-val {
+  font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 5px;
+  background: linear-gradient(135deg, var(--lime), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.rcard-lbl { font-size: .78rem; color: var(--muted); line-height: 1.4; }
+.rcard-sub { font-size: .7rem; color: var(--lime); margin-top: 3px; font-weight: 600; }
+
+.chart-wrap {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 20px; margin-bottom: 20px;
+}
+.chart-title {
+  font-size: .82rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin-bottom: 14px;
+}
+.chart-canvas-wrap { position: relative; height: 220px; }
+
+.model-row-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px; margin-top: 8px;
+}
+.m-chip {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 8px; padding: 8px 6px; text-align: center;
+  font-size: .72rem; font-weight: 700; color: var(--muted);
+  transition: .2s;
+}
+.m-chip:hover { color: var(--text); border-color: var(--card-hover-border); }
+
+/* ── INSIGHT BANNER ── */
+.insight-banner {
+  background: var(--insight-bg); border: 1px solid var(--insight-bdr);
+  border-radius: var(--radius); padding: 20px 22px;
+  display: flex; gap: 14px; align-items: flex-start; margin-top: 8px;
+}
+.insight-icon { font-size: 1.8rem; flex-shrink: 0; }
+.insight-body h4 { font-size: .93rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.insight-body p  { font-size: .83rem; color: var(--muted); line-height: 1.65; }
+.insight-body strong { color: var(--lime); }
+
+/* ── TAKEAWAYS ── */
+.takeaway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.take-card {
+  background: var(--take-bg); border: 1px solid var(--take-bdr);
+  border-radius: 12px; padding: 18px 20px;
+  transition: .25s;
+}
+.take-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.take-num {
+  font-size: 1.5rem; font-weight: 900; line-height: 1;
+  color: var(--lime); margin-bottom: 6px;
+}
+.take-title { font-size: .88rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.take-desc  { font-size: .79rem; color: var(--muted); line-height: 1.6; }
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; padding: 4px 14px; border-radius: 20px;
+  margin-bottom: 14px; position: relative; overflow: hidden;
+}
+.sec-label::before {
+  content: ''; position: absolute; left: -100%; top: 0;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  animation: pg-shimmer 4s ease-in-out infinite;
+}
+@keyframes pg-shimmer { 0%,100%{left:-100%} 50%{left:100%} }
+.sl-red    { background: rgba(239,68,68,.1);   color: var(--red);    border: 1px solid rgba(239,68,68,.22); }
+.sl-lime   { background: rgba(132,204,22,.1);  color: var(--lime);   border: 1px solid rgba(132,204,22,.22); }
+.sl-teal   { background: rgba(6,182,212,.1);   color: var(--teal);   border: 1px solid rgba(6,182,212,.22); }
+.sl-green  { background: rgba(34,197,94,.1);   color: var(--green);  border: 1px solid rgba(34,197,94,.22); }
+.sl-gold   { background: rgba(245,158,11,.1);  color: var(--gold);   border: 1px solid rgba(245,158,11,.22); }
+[data-theme="light"] .sl-red   { background: rgba(220,38,38,.07); }
+[data-theme="light"] .sl-lime  { background: rgba(101,163,13,.07); color: #4d7c0f; border-color: rgba(101,163,13,.25); }
+[data-theme="light"] .sl-teal  { background: rgba(8,145,178,.07);  color: #0e7490; border-color: rgba(8,145,178,.22); }
+[data-theme="light"] .sl-green { background: rgba(22,163,74,.07);  color: #15803d; }
+[data-theme="light"] .sl-gold  { background: rgba(217,119,6,.07);  color: #92400e; }
+
+/* ── SIDEBAR ── */
+.sidebar-card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 20px;
+}
+.sidebar-card h3 {
+  font-size: .82rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--muted); margin-bottom: 14px;
+}
+.tldr-text { font-size: .86rem; color: var(--muted); line-height: 1.72; }
+.tldr-text strong { color: var(--text); }
+.info-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--glass-border);
+  font-size: .82rem; gap: 8px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-pill {
+  background: rgba(132,204,22,.09); border: 1px solid rgba(132,204,22,.22);
+  border-radius: 6px; padding: 3px 10px;
+  font-size: .74rem; color: var(--lime); font-weight: 600;
+}
+[data-theme="light"] .tech-pill {
+  background: rgba(101,163,13,.07); border-color: rgba(101,163,13,.25);
+}
+.citation-box {
+  background: rgba(132,204,22,.04); border-left: 3px solid rgba(132,204,22,.45);
+  border-radius: 0 8px 8px 0; padding: 12px;
+  font-size: .75rem; color: var(--muted); line-height: 1.6; margin-top: 4px;
+}
+[data-theme="light"] .citation-box {
+  background: rgba(101,163,13,.03); border-left-color: rgba(101,163,13,.4);
+}
+.citation-box strong { color: var(--text); }
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 8px; font-size: .82rem; color: var(--muted);
+  transition: .2s; text-decoration: none;
+}
+.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
+.sidebar-link i { color: var(--lime); width: 16px; text-align: center; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .prob-grid { grid-template-columns: 1fr; }
+  .building-grid { grid-template-columns: repeat(3,1fr); }
+  .pipe-steps { grid-template-columns: 1fr 1fr; }
+  .pipe-steps::before { display: none; }
+  .pipe-detail { grid-template-columns: 1fr 1fr; }
+  .results-top { grid-template-columns: 1fr 1fr; }
+  .model-row-grid { grid-template-columns: repeat(5,1fr); }
+  .takeaway-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 600px) {
+  .hero { padding: 96px 16px 0; }
+  .building-grid { grid-template-columns: 1fr 1fr; }
+  .pipe-steps { grid-template-columns: 1fr; }
+  .pipe-detail { grid-template-columns: 1fr; }
+  .results-top { grid-template-columns: 1fr; }
+  .model-row-grid { grid-template-columns: repeat(3,1fr); }
+  .stats-inner { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="sh-nav">
+  <a href="/index.html" class="sh-nav-logo">MN</a>
+  <div class="sh-nav-links">
+    <a href="/index.html#about">About</a>
+    <a href="/index.html#experience">Experience</a>
+    <a href="/index.html#publications">Publications</a>
+    <a href="/index.html#skills">Skills</a>
+    <a href="/projects/index.html" class="active">Projects</a>
+  </div>
+  <div class="sh-nav-right">
+    <div class="sh-nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="toggle-sun">☀️</span>
+      <span class="toggle-moon">🌙</span>
+      <span id="toggleLabel">Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+      <span>›</span>
+      <a href="/projects/index.html">Projects</a>
+      <span>›</span>
+      <span style="color:var(--text)">Energy Anomaly XAI</span>
+    </div>
+
+    <!-- Pills -->
+    <div class="tag-row">
+      <span class="pill pill-lime"><i class="fas fa-bolt"></i> Energy · XAI</span>
+      <span class="pill pill-gold"><span class="pub-dot"></span> Published · Energy &amp; Buildings 2025</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="page-title">
+      Why Is This Building<br>
+      <span class="grad-text">Wasting Energy?</span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="hero-sub">
+      Buildings account for <strong>one-third of global energy consumption</strong> — and anomalies like
+      broken equipment or inefficiencies go unnoticed for months.
+      While deep learning can <em>detect</em> these problems, it can't
+      <em>explain</em> them. This research gives AI the ability to say <strong>why</strong>,
+      not just <strong>that</strong>, something is wrong — and makes those explanations
+      reliably consistent every single time.
+    </p>
+
+    <!-- Meta -->
+    <div class="hero-meta">
+      <span><i class="fas fa-newspaper"></i> <strong>Energy &amp; Buildings</strong>, Vol. 328, 2025</span>
+      <span><i class="fas fa-link"></i> DOI: 10.1016/j.enbuild.2024.115177</span>
+      <span><i class="fas fa-user-graduate"></i> Western University</span>
+      <span><i class="fas fa-calendar-alt"></i> December 2024</span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="hero-btns">
+      <a href="https://doi.org/10.1016/j.enbuild.2024.115177" target="_blank" class="btn btn-pub">
+        <i class="fas fa-file-alt"></i> Read Paper
+      </a>
+      <a href="#how-it-works" class="btn btn-anchor">
+        <i class="fas fa-cogs"></i> How It Works
+      </a>
+      <a href="#results" class="btn btn-anchor">
+        <i class="fas fa-chart-bar"></i> Results
+      </a>
+      <a href="/projects/index.html" class="btn btn-back">
+        <i class="fas fa-arrow-left"></i> All Projects
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-val">38%</div>
+      <div class="stat-label">Avg. Reduction in Explanation Variability</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">5</div>
+      <div class="stat-label">Building Types Tested</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">10</div>
+      <div class="stat-label">Deep Learning Models</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">5</div>
+      <div class="stat-label">XAI Techniques Evaluated</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">80%</div>
+      <div class="stat-label">Max. Variability Reduction Achieved</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+
+  <!-- ══════ CONTENT COLUMN ══════ -->
+  <div class="content-col">
+
+    <!-- ① THE PROBLEM -->
+    <div class="card fade-up">
+      <div class="sec-label sl-red">① The Problem</div>
+      <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Buildings Waste Energy — And Nobody Knows Why</div>
+      <p class="narrative">
+        Imagine a hospital where a freezer runs at the wrong temperature for weeks, or an office where the HVAC system
+        silently overconsumes electricity every night. These aren't dramatic failures — they're quiet anomalies that
+        bleed energy costs and cause equipment damage over time.
+        <strong>AI can detect these patterns, but until now, it couldn't explain them in a consistent, trustworthy way.</strong>
+      </p>
+      <div class="prob-grid">
+        <div class="prob-card pc-red">
+          <div class="big-num n-red">⅓</div>
+          <h3>Buildings Drive Global Energy Use</h3>
+          <p>Residential and commercial buildings account for one-third of global electricity consumption. Anomalies like equipment faults or user negligence quietly amplify this waste.</p>
+        </div>
+        <div class="prob-card pc-gold">
+          <div class="big-num n-gold">🔒</div>
+          <h3>AI Alarms Without Explanations</h3>
+          <p>Deep learning detects anomalies with high accuracy — but it's a black box. An energy manager gets an alert but no answer to the most important question: <em>what caused this?</em></p>
+        </div>
+        <div class="prob-card pc-blue">
+          <div class="big-num n-blue">⚠</div>
+          <h3>Existing Explanations Are Unreliable</h3>
+          <p>SHAP — the industry-standard tool for explaining AI decisions — produces different answers every time it runs on the same anomaly. That inconsistency kills expert trust and adoption.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② THE DATA -->
+    <div class="card fade-up">
+      <div class="sec-label sl-lime">② The Data</div>
+      <div class="card-title"><i class="fas fa-database"></i> Five Real Buildings, Thousands of Hours of Energy Data</div>
+      <p class="narrative">
+        To make results meaningful and generalizable, the study used <strong>five real-world energy consumption datasets</strong>
+        spanning entirely different building types — from a private home to a manufacturing plant. Each building has
+        a unique energy rhythm, making the same anomaly look very different depending on context.
+      </p>
+      <div class="building-grid">
+        <div class="bld-card">
+          <div class="bld-icon">🏠</div>
+          <div class="bld-name">Residence</div>
+          <div class="bld-detail">London, Ontario<br>2002–2004<br>Hourly readings</div>
+        </div>
+        <div class="bld-card">
+          <div class="bld-icon">🏭</div>
+          <div class="bld-name">Manufacturing</div>
+          <div class="bld-detail">Industrial facility<br>2016–2017<br>High consumption</div>
+        </div>
+        <div class="bld-card">
+          <div class="bld-icon">🏥</div>
+          <div class="bld-name">Medical Clinic</div>
+          <div class="bld-detail">24/7 operation<br>2016–2017<br>Irregular patterns</div>
+        </div>
+        <div class="bld-card">
+          <div class="bld-icon">🏪</div>
+          <div class="bld-name">Retail Store</div>
+          <div class="bld-detail">Commercial space<br>2016–2017<br>Weekly cycles</div>
+        </div>
+        <div class="bld-card">
+          <div class="bld-icon">🏢</div>
+          <div class="bld-name">Office Building</div>
+          <div class="bld-detail">Business hours<br>2016–2017<br>Regular patterns</div>
+        </div>
+      </div>
+      <div class="data-note">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          Each dataset was enriched with <strong>weather data</strong> (temperature, humidity, wind speed) and
+          <strong>calendar features</strong> (hour, day of week, month). Data was split 80/10/10 for training,
+          validation, and testing — keeping time order intact to avoid data leakage.
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ HOW IT WORKS -->
+    <div class="card fade-up" id="how-it-works">
+      <div class="sec-label sl-teal">③ How It Works</div>
+      <div class="card-title"><i class="fas fa-cogs"></i> From Raw Meter Data to Trustworthy Explanations</div>
+      <p class="narrative">
+        Think of this approach like a detective who not only identifies a crime but also explains their reasoning
+        by referencing the most relevant past cases — not random ones. The key innovation is choosing the right
+        <strong>comparison context</strong> for every anomaly before generating an explanation.
+      </p>
+
+      <div class="pipe-steps">
+        <div class="pipe-step">
+          <div class="pipe-circle pp1">⚡</div>
+          <h4>Detect</h4>
+          <p>Train a deep learning model to predict energy consumption. Flag data points where prediction error is unusually large.</p>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-circle pp2">🔍</div>
+          <h4>Find Context</h4>
+          <p>For each anomaly, find the most similar historical time windows — not random samples — using weighted similarity scoring.</p>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-circle pp3">🧠</div>
+          <h4>Explain</h4>
+          <p>Run SHAP using those context-matched samples as the reference baseline, so explanations reflect the anomaly's own environment.</p>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-circle pp4">📋</div>
+          <h4>Clarify</h4>
+          <p>Separate features that <em>caused</em> the anomaly from those that merely offset it, giving energy managers a clear action list.</p>
+        </div>
+      </div>
+
+      <div class="pipe-detail">
+        <div class="pd-card">
+          <div class="pd-title pd-t1">① Detect</div>
+          <ul>
+            <li>10 deep learning models</li>
+            <li>IQR-based thresholding</li>
+            <li>Sliding window (48h input)</li>
+            <li>Bayesian hyperparameter tuning</li>
+          </ul>
+        </div>
+        <div class="pd-card">
+          <div class="pd-title pd-t2">② Find Context</div>
+          <ul>
+            <li>Random Forest for feature importance</li>
+            <li>Exponential importance weighting</li>
+            <li>Weighted cosine similarity</li>
+            <li>Top 100 most similar neighbors</li>
+          </ul>
+        </div>
+        <div class="pd-card">
+          <div class="pd-title pd-t3">③ Explain</div>
+          <ul>
+            <li>Kernel SHAP, Partition SHAP</li>
+            <li>Sampling SHAP, LIME</li>
+            <li>Permutation importance</li>
+            <li>Context-matched baseline</li>
+          </ul>
+        </div>
+        <div class="pd-card">
+          <div class="pd-title pd-t4">④ Clarify</div>
+          <ul>
+            <li>Positive SHAP = offset features</li>
+            <li>Negative SHAP = anomaly drivers</li>
+            <li>SHAP heatmap visualization</li>
+            <li>Reduced noise from irrelevant features</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="insight-banner" style="margin-top:22px">
+        <div class="insight-icon">💡</div>
+        <div class="insight-body">
+          <h4>The Key Insight: Context Changes Everything</h4>
+          <p>
+            Using a random background dataset is like asking a random doctor to explain a patient's unusual lab
+            result — they might give an answer, but it won't be informed by the patient's history.
+            This method picks <strong>similar past patterns</strong> as the reference point, so explanations
+            reflect reality — and stay <strong>consistent across multiple runs</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ RESULTS -->
+    <div class="card fade-up" id="results">
+      <div class="sec-label sl-green">④ Results</div>
+      <div class="card-title"><i class="fas fa-chart-bar"></i> More Consistent Explanations, Across Every Building Type</div>
+      <p class="narrative">
+        The proposed method was evaluated across all five buildings, all ten deep learning models, and all five
+        XAI techniques. In every single case, the new approach produced <strong>less variable explanations</strong>
+        than the standard random baseline — often by a dramatic margin.
+      </p>
+
+      <!-- Key result numbers -->
+      <div class="results-top">
+        <div class="rcard">
+          <div class="rcard-val">38%</div>
+          <div class="rcard-lbl">Average reduction in explanation variability across all datasets &amp; methods</div>
+          <div class="rcard-sub">statistically significant in most cases</div>
+        </div>
+        <div class="rcard">
+          <div class="rcard-val">80.3%</div>
+          <div class="rcard-lbl">Maximum reduction achieved (manufacturing facility, Partition SHAP)</div>
+          <div class="rcard-sub">p &lt; 0.001</div>
+        </div>
+        <div class="rcard">
+          <div class="rcard-val">250+</div>
+          <div class="rcard-lbl">Individual model–dataset–XAI combinations evaluated</div>
+          <div class="rcard-sub">10 models × 5 datasets × 5 methods</div>
+        </div>
+      </div>
+
+      <!-- Chart: Variability reduction per building (Kernel SHAP) -->
+      <div class="chart-wrap">
+        <div class="chart-title">Explanation Variability Reduction per Building — Kernel SHAP</div>
+        <div class="chart-canvas-wrap">
+          <canvas id="reductionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Insight on what this means practically -->
+      <div class="insight-banner">
+        <div class="insight-icon">🏆</div>
+        <div class="insight-body">
+          <h4>What This Means in Practice</h4>
+          <p>
+            Before this work, running the same explanation tool on the same anomaly twice could yield completely
+            different feature rankings. An energy manager would have no idea which answer to trust. Now, with
+            context-matched baselines, the explanation is <strong>stable, interpretable, and actionable</strong> —
+            pointing to the right features (like a sudden spike in temperature or unusual overnight consumption)
+            rather than noise.
+          </p>
+        </div>
+      </div>
+
+      <!-- Model families -->
+      <p class="narrative" style="margin-top:20px;margin-bottom:10px">
+        Results were consistent across <strong>all 10 deep learning architectures</strong> tested:
+      </p>
+      <div class="model-row-grid">
+        <div class="m-chip">LSTM</div>
+        <div class="m-chip">GRU</div>
+        <div class="m-chip">BiLSTM</div>
+        <div class="m-chip">BiGRU</div>
+        <div class="m-chip">1D-CNN</div>
+        <div class="m-chip">TCN</div>
+        <div class="m-chip">DCNN</div>
+        <div class="m-chip">WaveNet</div>
+        <div class="m-chip">TFT</div>
+        <div class="m-chip">TST</div>
+      </div>
+    </div>
+
+    <!-- ⑤ TAKEAWAYS -->
+    <div class="card fade-up">
+      <div class="sec-label sl-gold">⑤ Takeaways</div>
+      <div class="card-title"><i class="fas fa-lightbulb"></i> What This Research Means Beyond the Numbers</div>
+      <div class="takeaway-grid">
+        <div class="take-card">
+          <div class="take-num">01</div>
+          <div class="take-title">Context-Aware AI Is More Trustworthy</div>
+          <div class="take-desc">Explanations grounded in relevant historical context are significantly more stable than those using random data. This principle applies far beyond energy — to any domain where AI accountability matters.</div>
+        </div>
+        <div class="take-card">
+          <div class="take-num">02</div>
+          <div class="take-title">Generalisable Across Buildings &amp; Models</div>
+          <div class="take-desc">The method worked for homes, factories, clinics, stores, and offices — and across 10 different model types. This breadth validates it as a practical, deployable tool rather than a narrow case study.</div>
+        </div>
+        <div class="take-card">
+          <div class="take-num">03</div>
+          <div class="take-title">Energy Managers Can Finally Act on AI Output</div>
+          <div class="take-desc">When explanations are consistent and point to the right features — temperature spikes, overnight loads, weekday patterns — facility teams can diagnose root causes and fix issues with confidence.</div>
+        </div>
+        <div class="take-card">
+          <div class="take-num">04</div>
+          <div class="take-title">A Path to Explainable Building Automation</div>
+          <div class="take-desc">As smart meters and IoT sensors proliferate, reliable XAI for energy systems becomes essential infrastructure. This work provides a validated, open methodology to build on.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-col -->
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <div class="sidebar">
+
+    <!-- TL;DR -->
+    <div class="sidebar-card fade-up">
+      <h3>TL;DR</h3>
+      <p class="tldr-text">
+        Buildings waste massive amounts of energy due to undetected anomalies.
+        AI can spot them — but its explanations were unreliable.
+        <strong>This paper fixes that</strong> by choosing smarter reference data
+        before generating explanations, cutting variability by an average of
+        <strong>38%</strong> across five building types, ten models, and five explanation methods.
+      </p>
+    </div>
+
+    <!-- Quick Facts -->
+    <div class="sidebar-card fade-up">
+      <h3>Quick Facts</h3>
+      <div class="info-row">
+        <span class="info-key">Journal</span>
+        <span class="info-val">Energy &amp; Buildings</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Year</span>
+        <span class="info-val">2025</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Domain</span>
+        <span class="info-val">Energy · XAI · Deep Learning</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Datasets</span>
+        <span class="info-val">5 building types</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Models</span>
+        <span class="info-val">10 DL architectures</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">XAI Methods</span>
+        <span class="info-val">5 (SHAP variants + LIME)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Key Result</span>
+        <span class="info-val">38% avg. variability reduction</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Funding</span>
+        <span class="info-val">NSERC · London Hydro</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Co-author</span>
+        <span class="info-val">K. Grolinger, Western University</span>
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="sidebar-card fade-up">
+      <h3>Tech &amp; Methods</h3>
+      <div class="tech-pills">
+        <span class="tech-pill">LSTM</span>
+        <span class="tech-pill">GRU</span>
+        <span class="tech-pill">TCN</span>
+        <span class="tech-pill">WaveNet</span>
+        <span class="tech-pill">TFT</span>
+        <span class="tech-pill">Kernel SHAP</span>
+        <span class="tech-pill">Partition SHAP</span>
+        <span class="tech-pill">LIME</span>
+        <span class="tech-pill">Random Forest</span>
+        <span class="tech-pill">Cosine Similarity</span>
+        <span class="tech-pill">IQR Thresholding</span>
+        <span class="tech-pill">Bayesian Opt.</span>
+        <span class="tech-pill">Min-Max Scaling</span>
+        <span class="tech-pill">Python</span>
+      </div>
+    </div>
+
+    <!-- Citation -->
+    <div class="sidebar-card fade-up">
+      <h3>Citation</h3>
+      <div class="citation-box">
+        <strong>Noorchenarboo, M.</strong>, &amp; Grolinger, K. (2025).
+        Explaining deep learning-based anomaly detection in energy consumption data by focusing on contextually relevant data.
+        <em>Energy &amp; Buildings</em>, 328, 115177.
+        doi: 10.1016/j.enbuild.2024.115177
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="sidebar-card fade-up">
+      <h3>Related Work</h3>
+      <div class="sidebar-links">
+        <a href="surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+        <a href="nlp-benchmark.html"     class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
+        <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+        <a href="/projects/index.html"             class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+</div><!-- /main-layout -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="sh-footer">
+  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
+  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
+  <div class="sh-footer-icons">
+    <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i></a>
+    <a href="/index.html"><i class="fas fa-globe"></i></a>
+    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i></a>
+    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+    <a href="/projects/index.html"><i class="fas fa-th-large"></i></a>
+  </div>
+  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo · Energy &amp; Buildings 328 (2025) 115177</div>
+</footer>
+
+<!-- ═══ PAGE-SPECIFIC JS ═══ -->
+<script>
+const html = document.documentElement;
+
+/* Chart data */
+const labels   = ['Residential', 'Manufacturing', 'Medical Clinic', 'Retail Store', 'Office Building'];
+const randVals = [0.050, 1.214, 0.126, 0.034, 0.219];   // mean variability — random baseline
+const propVals = [0.028, 0.360, 0.081, 0.023, 0.105];   // mean variability — proposed baseline
+
+let chart;
+
+function isDark() { return html.getAttribute('data-theme') !== 'light'; }
+function gc()     { return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc()     { return isDark() ? '#8892a4' : '#4b5675'; }
+function tt() {
+  return {
+    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
+    borderColor:     isDark() ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)',
+    borderWidth: 1,
+  };
+}
+
+function buildChart() {
+  if (chart) { chart.destroy(); }
+  const ctx = document.getElementById('reductionChart').getContext('2d');
+
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Random Baseline',
+          data: randVals,
+          backgroundColor: 'rgba(249,115,22,.55)',
+          borderColor:     'rgba(249,115,22,.9)',
+          borderWidth: 1, borderRadius: 5,
+        },
+        {
+          label: 'Proposed (Context-Aware)',
+          data: propVals,
+          backgroundColor: 'rgba(132,204,22,.55)',
+          borderColor:     'rgba(132,204,22,.9)',
+          borderWidth: 1, borderRadius: 5,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: tc(), font: { size: 12, family: 'inherit' }, boxWidth: 14 }
+        },
+        tooltip: {
+          ...tt(),
+          callbacks: {
+            afterLabel: (ctx) => {
+              if (ctx.datasetIndex === 1) {
+                const pct = Math.round((1 - propVals[ctx.dataIndex] / randVals[ctx.dataIndex]) * 100);
+                return `↓ ${pct}% reduction`;
+              }
+              return '';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: tc(), font: { size: 11, family: 'inherit' } },
+          grid: { color: gc() }
+        },
+        y: {
+          ticks: { color: tc(), font: { size: 11, family: 'inherit' } },
+          grid: { color: gc() },
+          title: {
+            display: true,
+            text: 'Mean SHAP Variability',
+            color: tc(), font: { size: 11, family: 'inherit' }
+          }
+        }
+      }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildChart();
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    setTimeout(buildChart, 50);
+  });
+});
+</script>
+</body>
+</html>
