@@ -47,55 +47,74 @@
 
 /* floating orbs */
 .hero-orb {
-  position: absolute; border-radius: 50%; pointer-events: none; filter: blur(72px);
-  will-change: transform;
+  position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px);
+  will-change: transform; z-index: 2;
 }
 .hero-orb-1 {
-  width: 420px; height: 420px;
-  background: radial-gradient(circle, rgba(79,142,247,.22), transparent 70%);
-  top: -100px; left: -80px;
-  animation: orbFloat1 14s ease-in-out infinite;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(79,142,247,.26), transparent 70%);
+  top: -140px; left: -120px;
+  animation: orbFloat1 16s ease-in-out infinite;
 }
 .hero-orb-2 {
-  width: 360px; height: 360px;
-  background: radial-gradient(circle, rgba(6,182,212,.18), transparent 70%);
-  top: -60px; right: -60px;
-  animation: orbFloat2 18s ease-in-out infinite;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(6,182,212,.2), transparent 70%);
+  top: -80px; right: -80px;
+  animation: orbFloat2 20s ease-in-out infinite;
 }
 .hero-orb-3 {
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(167,139,250,.16), transparent 70%);
-  bottom: 0; left: 40%;
-  animation: orbFloat3 22s ease-in-out infinite;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(167,139,250,.18), transparent 70%);
+  bottom: 20px; left: 38%;
+  animation: orbFloat3 24s ease-in-out infinite;
 }
-[data-theme="light"] .hero-orb-1 { background: radial-gradient(circle, rgba(37,99,235,.14), transparent 70%); }
-[data-theme="light"] .hero-orb-2 { background: radial-gradient(circle, rgba(6,182,212,.12), transparent 70%); }
-[data-theme="light"] .hero-orb-3 { background: radial-gradient(circle, rgba(124,58,237,.1),  transparent 70%); }
-
-.page-hero-grid {
-  animation: gridPulse 8s ease-in-out infinite;
-}
+[data-theme="light"] .hero-orb-1 { background: radial-gradient(circle, rgba(37,99,235,.16), transparent 70%); }
+[data-theme="light"] .hero-orb-2 { background: radial-gradient(circle, rgba(6,182,212,.14), transparent 70%); }
+[data-theme="light"] .hero-orb-3 { background: radial-gradient(circle, rgba(124,58,237,.12), transparent 70%); }
 
 /* ── PAGE HERO ── */
 .page-hero {
-  padding: 152px 32px 72px;
+  padding: 160px 32px 80px;
   text-align: center;
   position: relative; overflow: hidden;
-  background: var(--body-bg); transition: background .35s;
+  background: var(--hero-bg, #070d1f); transition: background .35s;
 }
+[data-theme="light"] .page-hero { --hero-bg: #f0f4ff; }
+[data-theme="dark"]  .page-hero { --hero-bg: #060b1a; }
+
+/* canvas neural network */
+#heroCanvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
 .page-hero-grid {
-  position: absolute; inset: 0; pointer-events: none;
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
   background-image:
-    linear-gradient(rgba(79,142,247,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79,142,247,.04) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(79,142,247,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridPulse 10s ease-in-out infinite;
 }
 .page-hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse 70% 55% at 50% -5%, rgba(79,142,247,.16), transparent 65%);
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,142,247,.28), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 80% 110%, rgba(6,182,212,.14), transparent 60%),
+    radial-gradient(ellipse 35% 30% at 15% 100%, rgba(167,139,250,.12), transparent 60%);
 }
 [data-theme="light"] .page-hero::before {
-  background: radial-gradient(ellipse 70% 55% at 50% -5%, rgba(37,99,235,.1), transparent 65%);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,.18), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 80% 110%, rgba(6,182,212,.1), transparent 60%),
+    radial-gradient(ellipse 35% 30% at 15% 100%, rgba(124,58,237,.08), transparent 60%);
+}
+/* bottom fade to blend hero into page */
+.page-hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
+  pointer-events: none; z-index: 3;
+  background: linear-gradient(to bottom, transparent, var(--body-bg));
+  transition: background .35s;
 }
 .hero-title {
   font-size: clamp(2.1rem,4.5vw,3.2rem); font-weight: 900;
@@ -116,7 +135,8 @@
   animation: heroFadeUp .75s .18s cubic-bezier(.22,1,.36,1) both;
 }
 
-/* hero stats (merged from stats bar) */
+/* hero content z-index stack */
+.hero-title, .page-hero > p, .hero-stats { position: relative; z-index: 5; }
 .hero-stats {
   display: flex; justify-content: center; gap: 0;
   flex-wrap: wrap; position: relative; z-index: 1;
@@ -139,6 +159,9 @@
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .sbar-label { font-size: .68em; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 4px; }
+
+/* hero content z-index — sits above canvas, orbs, and overlays */
+.hero-title, .page-hero > p, .hero-stats { position: relative; z-index: 5; }
 
 /* filter bar */
 .filter-section { padding: 36px 32px 0; max-width: 1200px; margin: 0 auto; }
@@ -242,6 +265,7 @@
 
 <!-- ═══ PAGE HERO (with merged stats) ═══ -->
 <div class="page-hero">
+  <canvas id="heroCanvas"></canvas>
   <div class="page-hero-grid"></div>
   <div class="hero-orb hero-orb-1"></div>
   <div class="hero-orb hero-orb-2"></div>
@@ -466,6 +490,111 @@ function applyFilters() {
   document.getElementById('noResults').style.display  = visible === 0 ? 'block' : 'none';
   document.getElementById('totalCount').textContent   = visible;
 }
+
+/* ═══ HERO NEURAL-NET CANVAS ═══ */
+(function () {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const COUNT = 72;
+  const LINK_DIST = 150;
+  let W, H, nodes, raf;
+
+  function isDark() {
+    return document.documentElement.getAttribute('data-theme') !== 'light';
+  }
+
+  function resize() {
+    const hero = canvas.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+
+  function makeNodes() {
+    nodes = Array.from({ length: COUNT }, () => ({
+      x:   Math.random() * W,
+      y:   Math.random() * H,
+      vx:  (Math.random() - .5) * .42,
+      vy:  (Math.random() - .5) * .42,
+      r:   Math.random() * 1.8 + .7,
+      hue: [210, 191, 265, 220][Math.floor(Math.random() * 4)]
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const dark = isDark();
+
+    // draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d  = Math.hypot(dx, dy);
+        if (d < LINK_DIST) {
+          const t = 1 - d / LINK_DIST;
+          const a = t * (dark ? .25 : .15);
+          const gr = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+          gr.addColorStop(0, `hsla(${nodes[i].hue},75%,68%,${a})`);
+          gr.addColorStop(1, `hsla(${nodes[j].hue},75%,68%,${a})`);
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = gr;
+          ctx.lineWidth   = t * 1.2;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // draw nodes
+    nodes.forEach(n => {
+      const a = dark ? .6 : .45;
+      // soft glow
+      const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+      glow.addColorStop(0, `hsla(${n.hue},80%,72%,${a * .6})`);
+      glow.addColorStop(1, `hsla(${n.hue},80%,72%,0)`);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+      // core dot
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${n.hue},85%,78%,${a})`;
+      ctx.fill();
+    });
+  }
+
+  function tick() {
+    nodes.forEach(n => {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0)  { n.x = 0;  n.vx = Math.abs(n.vx); }
+      if (n.x > W)  { n.x = W;  n.vx = -Math.abs(n.vx); }
+      if (n.y < 0)  { n.y = 0;  n.vy = Math.abs(n.vy); }
+      if (n.y > H)  { n.y = H;  n.vy = -Math.abs(n.vy); }
+    });
+    draw();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function init() {
+    cancelAnimationFrame(raf);
+    resize();
+    makeNodes();
+    tick();
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+
+  // re-draw immediately on theme switch so colours update in-flight
+  new MutationObserver(() => {}).observe(document.documentElement, {
+    attributes: true, attributeFilter: ['data-theme']
+  });
+
+  init();
+})();
 </script>
 
 </body>
