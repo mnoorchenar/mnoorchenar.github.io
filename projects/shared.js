@@ -42,6 +42,7 @@
     { title: 'Sarcopenia Genetics Explorer',         url: '/projects/Projects-Files/004-sarcopenia-genetics.html' },
     { title: 'ASCVD Metabolomics Risk Explorer',     url: '/projects/Projects-Files/005-ascvd-metabolomics.html' },
     { title: 'CABG Gamification Patient Engagement', url: '/projects/Projects-Files/006-cabg-gamification.html' },
+    { title: 'Drug Target AI Discovery',             url: '/projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html' },
   ];
 
 
