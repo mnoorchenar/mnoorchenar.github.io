@@ -31,11 +31,18 @@
 
 
   /* ─────────────────────────────────────────
-     0.  PROJECT REGISTRY
-     Keep this list in order — it drives the
-     ← / → nav strip on every project page.
+     0.  PROJECT AUTO-DISCOVERY
+     Reads project cards directly from
+     /projects/index.html so any new card
+     added there is immediately reflected in
+     every project page's nav strip — no
+     manual list to maintain.
+     Falls back to FALLBACK_PROJECTS if the
+     fetch fails (e.g. file:// mode).
   ───────────────────────────────────────────*/
-  const PROJECTS = [
+
+  // Fallback used when fetch is unavailable (local file:// open)
+  const FALLBACK_PROJECTS = [
     { title: 'Surgical Duration Predictor',          url: '/projects/Projects-Files/001-surgical-duration.html' },
     { title: 'Clinical Text Encoder Benchmark',      url: '/projects/Projects-Files/002-nlp-benchmark.html' },
     { title: 'Energy Anomaly Explainer',             url: '/projects/Projects-Files/003-energy-anomaly-xai.html' },
@@ -44,6 +51,32 @@
     { title: 'CABG Gamification Patient Engagement', url: '/projects/Projects-Files/006-cabg-gamification.html' },
     { title: 'Drug Target AI Discovery',             url: '/projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html' },
   ];
+
+  async function loadProjects(base) {
+    try {
+      // On the index page itself, just read the current DOM
+      const onIndex = /\/projects\/?(?:index\.html)?$/.test(window.location.pathname);
+      let doc;
+      if (onIndex) {
+        doc = document;
+      } else {
+        const res = await fetch(`${base}/index.html`);
+        if (!res.ok) throw new Error('index fetch failed');
+        doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+      }
+      const list = [];
+      doc.querySelectorAll('.proj-card').forEach(card => {
+        const title = card.querySelector('.proj-title')?.textContent?.trim();
+        const href  = card.querySelector('a.proj-btn-details')?.getAttribute('href');
+        if (title && href) {
+          list.push({ title, url: href.startsWith('/') ? href : `${base}/${href}` });
+        }
+      });
+      return list.length ? list : FALLBACK_PROJECTS;
+    } catch {
+      return FALLBACK_PROJECTS;
+    }
+  }
 
 
   /* ─────────────────────────────────────────
@@ -71,10 +104,10 @@
          Called once per page after we know
          which project index we're on.
   ───────────────────────────────────────────*/
-  function buildNavStrip(currentIndex) {
+  function buildNavStrip(currentIndex, projects) {
     // currentIndex === null  →  we're on the overview/index page
     const isOverview = currentIndex === null;
-    const total      = PROJECTS.length;
+    const total      = projects.length;
 
     let prevHref, prevName, prevDisabled;
     let nextHref, nextName, nextDisabled;
@@ -84,20 +117,20 @@
       prevHref     = '#';
       prevName     = '—';
       prevDisabled = 'pns-disabled';
-      nextHref     = PROJECTS[0].url;
-      nextName     = PROJECTS[0].title;
+      nextHref     = projects[0]?.url ?? '#';
+      nextName     = projects[0]?.title ?? '—';
       nextDisabled = '';
       counter      = `Overview · ${total} Projects`;
     } else {
       const hasPrev = currentIndex > 0;
       const hasNext = currentIndex < total - 1;
 
-      prevHref     = hasPrev ? PROJECTS[currentIndex - 1].url : '/projects/index.html';
-      prevName     = hasPrev ? PROJECTS[currentIndex - 1].title : 'Projects Overview';
+      prevHref     = hasPrev ? projects[currentIndex - 1].url : '/projects/index.html';
+      prevName     = hasPrev ? projects[currentIndex - 1].title : 'Projects Overview';
       prevDisabled = '';
 
-      nextHref     = hasNext ? PROJECTS[currentIndex + 1].url : '#';
-      nextName     = hasNext ? PROJECTS[currentIndex + 1].title : '—';
+      nextHref     = hasNext ? projects[currentIndex + 1].url : '#';
+      nextName     = hasNext ? projects[currentIndex + 1].title : '—';
       nextDisabled = hasNext ? '' : 'pns-disabled';
 
       counter = `${currentIndex + 1} of ${total}`;
@@ -214,7 +247,36 @@
 
 
   /* ─────────────────────────────────────────
-     8.  FOOTER NOTE  (per-page DOI / journal)
+     8.  KEYBOARD ← / → NAVIGATION
+         ArrowLeft = previous project
+         ArrowRight = next project
+         Skipped when focus is inside a form field.
+  ───────────────────────────────────────────*/
+  function initKeyboardNav(projectIndex, projects) {
+    if (projectIndex === null) return;  // overview page — no nav
+    document.addEventListener('keydown', e => {
+      // Don't hijack when typing in inputs
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const hasPrev = projectIndex > 0;
+        window.location.href = hasPrev
+          ? projects[projectIndex - 1].url
+          : '/projects/index.html';
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const hasNext = projectIndex < projects.length - 1;
+        if (hasNext) window.location.href = projects[projectIndex + 1].url;
+      }
+    });
+  }
+
+
+  /* ─────────────────────────────────────────
+     9.  FOOTER NOTE  (per-page DOI / journal)
          Add  data-footer-note="..."  to <body>
   ───────────────────────────────────────────*/
   function applyFooterNote() {
@@ -235,24 +297,25 @@
                            ? parseInt(document.body.dataset.projectIndex, 10)
                            : null;
 
-    try {
-      // ── fetch nav & footer in parallel ──
-      const [navHTML, footerHTML] = await Promise.all([
-        fetchFragment(`${base}/nav.html`),
-        fetchFragment(`${base}/footer.html`),
-      ]);
+    // ── load projects list + nav/footer fragments in parallel ──
+    const [navHTML, footerHTML, projects] = await Promise.all([
+      fetchFragment(`${base}/nav.html`).catch(() => ''),
+      fetchFragment(`${base}/footer.html`).catch(() => ''),
+      loadProjects(base),
+    ]);
 
+    try {
       // ── inject nav ──
-      document.body.insertAdjacentHTML('afterbegin', navHTML);
+      if (navHTML) document.body.insertAdjacentHTML('afterbegin', navHTML);
 
       // ── inject project nav strip (below main nav) ──
       const navEl = document.body.querySelector('.sh-nav');
       if (navEl) {
-        navEl.insertAdjacentHTML('afterend', buildNavStrip(projectIndex));
+        navEl.insertAdjacentHTML('afterend', buildNavStrip(projectIndex, projects));
       }
 
       // ── inject footer ──
-      document.body.insertAdjacentHTML('beforeend', footerHTML);
+      if (footerHTML) document.body.insertAdjacentHTML('beforeend', footerHTML);
 
       // ── now that DOM is ready, init everything ──
       initThemeToggle();
@@ -260,6 +323,7 @@
       initCopyrightModal();
       applyFooterNote();
       initFadeUp();
+      initKeyboardNav(projectIndex, projects);
 
     } catch (err) {
       // Fallback: fragments missing (e.g. opened as file://)
