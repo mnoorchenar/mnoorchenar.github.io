@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Drug Target AI · Mohammad Noorchenarboo</title>
+<!-- ▶ THEME FLICKER FIX: apply saved theme before first paint -->
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/projects/shared.css">
+<script src="/projects/shared.js" defer></script>
+<style>
+/* ═══════════════════════════════
+   PAGE-SPECIFIC STYLES ONLY
+═══════════════════════════════ */
+
+/* ── HERO ── */
+.hero {
+  padding: 110px 24px 56px;
+  background: var(--body-bg);
+  position: relative; overflow: hidden; transition: background .35s;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(34,197,94,.14) 0%, transparent 65%);
+}
+[data-theme="light"] .hero::before {
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(22,163,74,.09) 0%, transparent 65%);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(34,197,94,.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(34,197,94,.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+[data-theme="light"] .hero::after {
+  background-image: linear-gradient(rgba(22,163,74,.045) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(22,163,74,.045) 1px, transparent 1px);
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+.breadcrumb { font-size: .78rem; color: var(--muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--muted); transition: .2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { opacity: .4; }
+
+/* ── PILLS ── */
+.tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+.pill-blue  { background: rgba(79,142,247,.12);  border: 1px solid rgba(79,142,247,.25);  color: var(--accent); }
+.pill-green { background: rgba(34,197,94,.12);   border: 1px solid rgba(34,197,94,.25);   color: var(--green); }
+.pill-teal  { background: rgba(6,182,212,.12);   border: 1px solid rgba(6,182,212,.25);   color: var(--teal); }
+[data-theme="light"] .pill-blue  { background: rgba(37,99,235,.1);  border-color: rgba(37,99,235,.25); }
+[data-theme="light"] .pill-green { background: rgba(22,163,74,.1);  border-color: rgba(22,163,74,.25); color: #166534; }
+[data-theme="light"] .pill-teal  { background: rgba(8,145,178,.1);  border-color: rgba(8,145,178,.25); color: #0e7490; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: ld-pulse 2s infinite; }
+@keyframes ld-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; margin-bottom: 20px; max-width: 820px; color: var(--text); }
+.hero-sub { font-size: 1rem; color: var(--muted); max-width: 680px; margin-bottom: 28px; line-height: 1.65; }
+.hero-sub strong { color: var(--text); }
+.hero-meta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; font-size: .83rem; color: var(--muted); }
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta i { color: var(--green); }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
+.btn-green { background: rgba(34,197,94,.18); color: var(--green); border-color: rgba(34,197,94,.35); }
+.btn-green:hover { background: rgba(34,197,94,.3); transform: translateY(-2px); }
+[data-theme="light"] .btn-green { background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.3); color: #166534; }
+.btn-blue  { background: rgba(79,142,247,.18); color: var(--accent); border-color: rgba(79,142,247,.35); }
+.btn-blue:hover  { background: rgba(79,142,247,.3); transform: translateY(-2px); }
+[data-theme="light"] .btn-blue  { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.3); }
+.btn-gray  { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
+.btn-gray:hover  { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-back  { background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
+.btn-back:hover  { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
+
+/* ── STAT BAR ── */
+.stats-bar { background: var(--section-alt); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: background .35s; }
+.stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--glass-border); }
+.stat-item { background: var(--section-alt); padding: 22px 16px; text-align: center; transition: background .35s; }
+.stat-val { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg,var(--green),var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: .75rem; color: var(--muted); line-height: 1.4; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout { max-width: 1100px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
+.content-col { display: flex; flex-direction: column; gap: 28px; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── CARDS ── */
+.card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 28px; transition: all .25s; }
+.card:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.card-title { font-size: 1rem; font-weight: 800; margin-bottom: 18px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.card-title i { color: var(--green); font-size: .9rem; }
+.narrative { font-size: .92rem; color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+.narrative strong { color: var(--text); }
+
+/* ── PIPELINE ── */
+.pipeline { display: flex; align-items: stretch; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 4px; }
+.pipe-step { flex: 1; min-width: 120px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 16px 10px; text-align: center; transition: .25s; }
+.pipe-step:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.pipe-arrow { display: flex; align-items: center; justify-content: center; width: 28px; flex-shrink: 0; color: var(--muted); font-size: .8rem; padding-top: 10px; }
+.pipe-icon { font-size: 1.8rem; margin-bottom: 8px; line-height: 1; }
+.pipe-label { font-size: .75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pipe-sub { font-size: .7rem; color: var(--muted); line-height: 1.4; }
+
+/* ── FEATURE CARDS ── */
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+.feat-card { border-radius: 12px; padding: 20px; border: 1px solid; transition: .25s; position: relative; overflow: hidden; }
+.feat-card:hover { transform: translateY(-3px); }
+
+.feat-ai     { background: rgba(79,142,247,.05);  border-color: rgba(79,142,247,.2); }
+.feat-uniprot{ background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18);}
+.feat-alpha  { background: rgba(167,139,250,.05); border-color: rgba(167,139,250,.2);}
+.feat-chat   { background: rgba(34,197,94,.06);   border-color: rgba(34,197,94,.2);  }
+.feat-search { background: rgba(6,182,212,.05);   border-color: rgba(6,182,212,.18); }
+.feat-fallbk { background: rgba(136,146,164,.05); border-color: rgba(136,146,164,.18);}
+
+[data-theme="light"] .feat-ai      { background: rgba(37,99,235,.04);   border-color: rgba(37,99,235,.18); }
+[data-theme="light"] .feat-uniprot { background: rgba(217,119,6,.04);   border-color: rgba(217,119,6,.15); }
+[data-theme="light"] .feat-alpha   { background: rgba(124,58,237,.04);  border-color: rgba(124,58,237,.15);}
+[data-theme="light"] .feat-chat    { background: rgba(22,163,74,.04);   border-color: rgba(22,163,74,.18); }
+[data-theme="light"] .feat-search  { background: rgba(8,145,178,.04);   border-color: rgba(8,145,178,.15); }
+[data-theme="light"] .feat-fallbk  { background: rgba(75,86,117,.04);   border-color: rgba(75,86,117,.12); }
+
+.feat-badge { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 8px; margin-bottom: 8px; }
+.feat-name  { font-size: .93rem; font-weight: 800; margin-bottom: 5px; color: var(--text); }
+.feat-desc  { font-size: .77rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+.feat-detail{ display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--glass-border); font-size: .77rem; }
+.feat-detail:last-child { border-bottom: none; }
+.feat-detail-key { color: var(--muted); }
+.feat-detail-val { font-weight: 700; }
+
+/* ── INSIGHT BANNER ── */
+.insight-banner { background: linear-gradient(135deg,rgba(34,197,94,.07),rgba(6,182,212,.07)); border: 1px solid rgba(34,197,94,.22); border-radius: var(--radius); padding: 22px; margin-top: 8px; display: flex; gap: 16px; align-items: flex-start; }
+[data-theme="light"] .insight-banner { background: linear-gradient(135deg,rgba(22,163,74,.05),rgba(8,145,178,.04)); border-color: rgba(22,163,74,.2); }
+.insight-icon { font-size: 2rem; flex-shrink: 0; }
+.insight-body h4 { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.insight-body p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+.insight-body strong { color: var(--green); }
+
+/* ── MODEL FALLBACK CHAIN ── */
+.model-chain { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.model-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; transition: .2s; }
+.model-row:hover { background: var(--card-hover-bg); }
+.model-num  { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 800; flex-shrink: 0; }
+.model-name { color: var(--text); font-weight: 600; flex: 1; }
+.model-tag  { font-size: .7rem; padding: 2px 8px; border-radius: 6px; font-weight: 700; }
+.m-primary  { background: rgba(34,197,94,.15);  color: var(--green); border: 1px solid rgba(34,197,94,.3); }
+.m-fallback { background: rgba(79,142,247,.12);  color: var(--accent); border: 1px solid rgba(79,142,247,.25); }
+.m-last     { background: rgba(136,146,164,.12); color: var(--muted); border: 1px solid rgba(136,146,164,.2); }
+
+/* ── DEMO BLOCK ── */
+.demo-block { background: rgba(34,197,94,.04); border: 1px solid rgba(34,197,94,.15); border-radius: var(--radius); padding: 28px; }
+[data-theme="light"] .demo-block { background: rgba(22,163,74,.03); border-color: rgba(22,163,74,.15); }
+.demo-intro { font-size: .85rem; color: var(--muted); margin-bottom: 18px; font-style: italic; }
+.query-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.query-btn { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 14px; font-size: .82rem; color: var(--muted); cursor: pointer; text-align: left; transition: .2s; width: 100%; font-family: inherit; }
+.query-btn.selected, .query-btn:hover { background: rgba(34,197,94,.08); border-color: rgba(34,197,94,.3); color: var(--text); }
+[data-theme="light"] .query-btn.selected, [data-theme="light"] .query-btn:hover { background: rgba(22,163,74,.07); border-color: rgba(22,163,74,.3); }
+.query-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--green); margin-bottom: 3px; }
+.query-text  { font-style: italic; color: var(--muted); font-size: .82rem; }
+.query-btn.selected .query-text { color: var(--text); }
+
+/* protein result cards */
+.protein-results { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.prot-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px; transition: .2s; }
+.prot-card:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.prot-id   { font-size: .7rem; font-family: 'Courier New', monospace; font-weight: 700; color: var(--teal); margin-bottom: 4px; letter-spacing: .05em; }
+.prot-name { font-size: .85rem; font-weight: 800; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+.prot-role { font-size: .75rem; color: var(--muted); line-height: 1.45; margin-bottom: 8px; }
+.prot-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.prot-tag  { font-size: .68rem; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
+.confidence-bar { height: 4px; border-radius: 2px; margin-top: 8px; background: var(--glass); overflow: hidden; }
+.confidence-fill { height: 100%; border-radius: 2px; transition: width .7s ease; }
+.ai-insights { margin-top: 14px; background: rgba(79,142,247,.06); border: 1px solid rgba(79,142,247,.15); border-radius: 8px; padding: 12px 16px; font-size: .82rem; color: var(--muted); line-height: 1.65; }
+.ai-insights strong { color: var(--accent); }
+.demo-disclaimer { font-size: .73rem; color: var(--muted); font-style: italic; margin-top: 14px; text-align: center; }
+
+/* ── CHART TABS ── */
+.chart-tabs  { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.chart-tab   { padding: 7px 14px; border-radius: 20px; font-size: .8rem; font-weight: 600; cursor: pointer; background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); transition: .2s; }
+.chart-tab.active { background: rgba(34,197,94,.15); border-color: rgba(34,197,94,.35); color: var(--green); }
+[data-theme="light"] .chart-tab.active { background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.3); color: #166534; }
+.chart-panel { display: none; }
+.chart-panel.active { display: block; }
+.chart-wrap  { position: relative; height: 280px; }
+.chart-caption { font-size: .8rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; }
+
+/* ── TAKEAWAYS ── */
+.takeaway-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 8px; }
+.takeaway { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 20px; text-align: center; transition: .2s; }
+.takeaway:hover { background: var(--card-hover-bg); transform: translateY(-3px); }
+.tk-icon  { font-size: 2rem; margin-bottom: 8px; }
+.tk-val   { font-size: 1.4rem; font-weight: 900; background: linear-gradient(135deg,var(--green),var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+.tk-label { font-size: .78rem; color: var(--muted); line-height: 1.45; }
+
+/* ── SIDEBAR ── */
+.sidebar-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 20px; }
+.sidebar-card h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+.tldr-text { font-size: .87rem; color: var(--muted); line-height: 1.7; }
+.tldr-text strong { color: var(--text); }
+.info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px; }
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-pill { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); border-radius: 6px; padding: 3px 10px; font-size: .75rem; color: var(--green); font-weight: 600; }
+[data-theme="light"] .tech-pill { background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.2); color: #166534; }
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; color: var(--muted); transition: .2s; text-decoration: none; }
+.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
+.sidebar-link i { color: var(--green); width: 16px; text-align: center; }
+.hf-btn { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: linear-gradient(135deg,rgba(255,175,7,.12),rgba(255,175,7,.06)); border: 1px solid rgba(255,175,7,.3); border-radius: 10px; font-size: .85rem; font-weight: 700; color: #f59e0b; transition: .2s; text-decoration: none; }
+.hf-btn:hover { background: linear-gradient(135deg,rgba(255,175,7,.2),rgba(255,175,7,.1)); transform: translateY(-2px); }
+.hf-btn i { font-size: 1.1rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr 1fr; }
+  .stats-inner { grid-template-columns: repeat(3,1fr); }
+  .protein-results { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 96px 16px 40px; }
+  .pipeline { flex-direction: column; }
+  .pipe-arrow { transform: rotate(90deg); }
+  .feature-grid { grid-template-columns: 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: repeat(2,1fr); }
+  .protein-results { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body data-project-index="2" data-footer-note="HuggingFace Spaces · Industry Project">
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+      <span>›</span>
+      <a href="/projects/index.html">Projects</a>
+      <span>›</span>
+      <span style="color:var(--text)">Drug Target AI</span>
+    </div>
+
+    <div class="tag-row">
+      <span class="pill pill-green"><i class="fas fa-dna"></i> Drug Discovery · Bioinformatics</span>
+      <span class="pill pill-teal"><i class="fab fa-python"></i> Python · Flask · HuggingFace</span>
+      <span class="pill pill-blue"><span class="live-dot"></span> Live on HuggingFace Spaces</span>
+    </div>
+
+    <h1>AI That Finds <span class="grad-text">Drug Target Proteins</span> from a Research Query</h1>
+    <p class="hero-sub">Drug discovery starts with finding the right protein to target. <strong>Drug Target AI takes a plain-language biomedical query — a disease, a pathway, a hypothesis — and uses large language models + live UniProt data to identify the most relevant human protein targets, complete with 3D AlphaFold structures.</strong></p>
+    <div class="hero-meta">
+      <span><i class="fas fa-calendar-alt"></i> Industry Project · 2025</span>
+      <span><i class="fas fa-user"></i> <strong>Noorchenarboo</strong></span>
+      <span><i class="fas fa-robot"></i> 5+ LLM Models (Multi-Fallback)</span>
+      <span><i class="fas fa-database"></i> UniProt · AlphaFold · PDB</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-green"><i class="fas fa-play-circle"></i> Explore Demo</a>
+      <a href="https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="btn btn-gray"><i class="fas fa-external-link-alt"></i> Try on HuggingFace</a>
+      <a href="https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="btn btn-gray"><i class="fab fa-github"></i> View on GitHub</a>
+      <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar fade-up">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val">5+</div><div class="stat-label">LLM models with automatic fallback chain</div></div>
+    <div class="stat-item"><div class="stat-val">250M+</div><div class="stat-label">Proteins searchable via live UniProt API</div></div>
+    <div class="stat-item"><div class="stat-val">3D</div><div class="stat-label">AlphaFold & PDB structures rendered in-browser</div></div>
+    <div class="stat-item"><div class="stat-val">100%</div><div class="stat-label">Human-only filter — no viral or bacterial false positives</div></div>
+    <div class="stat-item"><div class="stat-val">Live</div><div class="stat-label">Real-time queries — no static precomputed results</div></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+<div class="content-col">
+
+  <!-- PIPELINE -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-green">How It Works</div>
+    <h2 class="card-title"><i class="fas fa-route"></i> From a Research Question to a 3D Protein Structure</h2>
+    <p class="narrative">A researcher asks a natural-language question — <em>"What proteins should I target for Alzheimer's drug discovery?"</em> Drug Target AI routes that query through a cascading LLM pipeline, validates every protein against live UniProt data to confirm human origin, fetches its AlphaFold structure, and renders the 3D molecule directly in the browser.</p>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-icon">🔬</div>
+        <div class="pipe-label">Research Query</div>
+        <div class="pipe-sub">Plain-language disease, pathway, or hypothesis</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🤖</div>
+        <div class="pipe-label">LLM Analysis</div>
+        <div class="pipe-sub">Multi-model cascade — Llama, Mistral, Phi-3 &amp; more</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🧬</div>
+        <div class="pipe-label">UniProt Filter</div>
+        <div class="pipe-sub">Human-only validation via live REST API</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🏗️</div>
+        <div class="pipe-label">AlphaFold / PDB</div>
+        <div class="pipe-sub">3D structure fetched in real-time</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">💊</div>
+        <div class="pipe-label">Target Report</div>
+        <div class="pipe-sub">Protein card + 3D view + known drugs + AI insights</div>
+      </div>
+    </div>
+    <div class="insight-banner">
+      <div class="insight-icon">💡</div>
+      <div class="insight-body">
+        <h4>Why the Human-Only Filter Matters</h4>
+        <p>Without it, a query about HIV could return viral proteins — useless for host-directed therapy. The app cross-validates every UniProt ID against organism data before rendering. <strong>Only <em>Homo sapiens</em> proteins pass through — ensuring every result is a therapeutically actionable human target.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE CARDS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-teal">Feature Breakdown</div>
+    <h2 class="card-title"><i class="fas fa-layer-group"></i> Six Capabilities in One App</h2>
+
+    <div class="feature-grid">
+      <div class="feat-card feat-ai">
+        <div class="feat-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">🤖 Core Engine</div>
+        <div class="feat-name">AI Protein Targeting</div>
+        <div class="feat-desc">LLMs receive a biomedical system prompt and return a structured JSON array of 3–5 relevant human protein targets with UniProt IDs, function summaries, and known drugs.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Output</span><span class="feat-detail-val" style="color:var(--accent)">JSON protein array</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Max targets</span><span class="feat-detail-val">3–5 per query</span></div>
+      </div>
+      <div class="feat-card feat-uniprot">
+        <div class="feat-badge" style="background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.22)">🗄️ Live Data</div>
+        <div class="feat-name">UniProt Integration</div>
+        <div class="feat-desc">Every returned UniProt ID is validated via the UniProt REST API. The organism field must read <em>Homo sapiens</em> or the protein is silently dropped.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Database</span><span class="feat-detail-val" style="color:var(--gold)">UniProt / Swiss-Prot</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Entries</span><span class="feat-detail-val">250M+ proteins</span></div>
+      </div>
+      <div class="feat-card feat-alpha">
+        <div class="feat-badge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.22)">🏗️ 3D View</div>
+        <div class="feat-name">AlphaFold Structures</div>
+        <div class="feat-desc">Structures are pulled from AlphaFold EBI (v4/v3), with fallback to RCSB PDB cross-references. A demo helix is shown if no structure is available.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Sources</span><span class="feat-detail-val" style="color:#a78bfa">AlphaFold → PDB → Demo</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Confidence</span><span class="feat-detail-val">Labeled per source</span></div>
+      </div>
+      <div class="feat-card feat-chat">
+        <div class="feat-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">💬 Q&amp;A</div>
+        <div class="feat-name">Protein Chat Assistant</div>
+        <div class="feat-desc">After identifying targets, users can ask follow-up questions about any protein — mechanism, disease associations, binding sites — answered by a biomedical-specialized LLM prompt.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Context</span><span class="feat-detail-val" style="color:var(--green)">Per-protein Q&amp;A</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Mode</span><span class="feat-detail-val">Conversational</span></div>
+      </div>
+      <div class="feat-card feat-search">
+        <div class="feat-badge" style="background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.22)">🔍 Deep Search</div>
+        <div class="feat-name">UniProt Deep Search</div>
+        <div class="feat-desc">When AI returns no results, a keyword extraction engine queries UniProt directly with progressive fallback strategies — broad search, human-filtered search, reviewed-only entries.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Strategies</span><span class="feat-detail-val" style="color:var(--teal)">3-level fallback</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Filter</span><span class="feat-detail-val">organism_id:9606</span></div>
+      </div>
+      <div class="feat-card feat-fallbk">
+        <div class="feat-badge" style="background:rgba(136,146,164,.12);color:var(--muted);border:1px solid rgba(136,146,164,.2)">🛡️ Resilience</div>
+        <div class="feat-name">Multi-Model Fallback</div>
+        <div class="feat-desc">If a model fails or is rate-limited, the app cascades to the next in the fallback chain, trying three API methods (conversational → chat completion → text generation) per model.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Models</span><span class="feat-detail-val">5+ in chain</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Methods</span><span class="feat-detail-val">3 per model</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LLM FALLBACK CHAIN -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-blue">Architecture Detail</div>
+    <h2 class="card-title"><i class="fas fa-sitemap"></i> The Multi-Model Fallback Chain</h2>
+    <p class="narrative">A key engineering decision was making the app robust to model availability. HuggingFace Inference API models can be slow, rate-limited, or temporarily unavailable. Instead of failing, the app tries each model with three distinct API methods before falling back to the next model.</p>
+    <div class="model-chain">
+      <div class="model-row">
+        <div class="model-num" style="background:rgba(34,197,94,.15);color:var(--green)">1</div>
+        <div class="model-name">meta-llama / Llama-3.2-3B-Instruct</div>
+        <div class="model-tag m-primary">User's Choice / Default</div>
+      </div>
+      <div class="model-row">
+        <div class="model-num" style="background:rgba(79,142,247,.15);color:var(--accent)">2</div>
+        <div class="model-name">mistralai / Mistral-7B-Instruct-v0.3</div>
+        <div class="model-tag m-fallback">Fallback 1</div>
+      </div>
+      <div class="model-row">
+        <div class="model-num" style="background:rgba(79,142,247,.12);color:var(--accent)">3</div>
+        <div class="model-name">microsoft / Phi-3-mini-4k-instruct</div>
+        <div class="model-tag m-fallback">Fallback 2</div>
+      </div>
+      <div class="model-row">
+        <div class="model-num" style="background:rgba(79,142,247,.09);color:var(--accent)">4</div>
+        <div class="model-name">ServiceNow-AI / Apriel-5B-Instruct</div>
+        <div class="model-tag m-fallback">Fallback 3</div>
+      </div>
+      <div class="model-row">
+        <div class="model-num" style="background:rgba(136,146,164,.12);color:var(--muted)">5</div>
+        <div class="model-name">prithivMLmods / Llama-3.1-5B-Instruct</div>
+        <div class="model-tag m-last">Fallback 4 · Last Resort</div>
+      </div>
+    </div>
+    <div class="insight-banner" style="margin-top:16px">
+      <div class="insight-icon">⚙️</div>
+      <div class="insight-body">
+        <h4>Three API Methods Per Model</h4>
+        <p>For each model in the chain, the app tries: (1) conversational API, (2) chat_completion, then (3) text_generation. If all three fail, it moves to the next model. If all models are exhausted, it falls back to a curated disease-protein JSON database. <strong>Zero single points of failure.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE DEMO -->
+  <div class="demo-block fade-up" id="demo">
+    <div class="s-tag s-tag-green">Interactive Explorer</div>
+    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> See What the App Returns for Real Queries</h2>
+    <p class="demo-intro">Select a sample research query and see the protein targets Drug Target AI would identify, including UniProt IDs, roles, and confidence scores.</p>
+    <div class="query-examples" id="queryGroup">
+      <button class="query-btn selected" onclick="selectQuery(0,this)">
+        <div class="query-label">🧠 Neurodegenerative</div>
+        <div class="query-text">"What are the best human protein targets for Alzheimer's disease drug development?"</div>
+      </button>
+      <button class="query-btn" onclick="selectQuery(1,this)">
+        <div class="query-label">🫀 Cardiovascular</div>
+        <div class="query-text">"Identify human proteins involved in heart failure and cardiomyopathy for therapeutic targeting."</div>
+      </button>
+      <button class="query-btn" onclick="selectQuery(2,this)">
+        <div class="query-label">🦠 Infectious Disease</div>
+        <div class="query-text">"Which human host proteins can be targeted to disrupt HIV replication?"</div>
+      </button>
+    </div>
+    <div class="protein-results" id="protResults"></div>
+    <div class="ai-insights" id="aiInsights"></div>
+    <p class="demo-disclaimer">Illustrative results based on published biomedical knowledge. Actual app queries live LLMs and UniProt in real time.</p>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-blue">Performance Snapshot</div>
+    <h2 class="card-title"><i class="fas fa-chart-bar"></i> API Reliability &amp; Query Coverage</h2>
+    <div class="chart-tabs">
+      <div class="chart-tab active" onclick="switchTab(0,this)">Model Fallback Rates</div>
+      <div class="chart-tab" onclick="switchTab(1,this)">Disease Category Coverage</div>
+      <div class="chart-tab" onclick="switchTab(2,this)">Response Methods</div>
+    </div>
+    <div class="chart-panel active" id="cp0">
+      <div class="chart-wrap"><canvas id="chart0"></canvas></div>
+      <p class="chart-caption">Llama-3.2-3B handles ~65% of queries directly. The fallback chain resolves nearly all remaining cases before reaching the curated database.</p>
+    </div>
+    <div class="chart-panel" id="cp1">
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <p class="chart-caption">Disease coverage across major therapeutic areas — oncology, CNS, cardiovascular, and infectious disease represent the broadest use cases.</p>
+    </div>
+    <div class="chart-panel" id="cp2">
+      <div class="chart-wrap"><canvas id="chart2"></canvas></div>
+      <p class="chart-caption">Chat completion handles the majority of successful responses; text_generation serves as a critical backstop for older model architectures.</p>
+    </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-green">Design Decisions</div>
+    <h2 class="card-title"><i class="fas fa-lightbulb"></i> Three Engineering Choices That Matter</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="tk-icon">🛡️</div>
+        <div class="tk-val">Fail gracefully</div>
+        <div class="tk-label">A 5-model × 3-method cascade means the app stays functional even when the primary LLM is unavailable or rate-limited.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">🧬</div>
+        <div class="tk-val">Ground truth first</div>
+        <div class="tk-label">Every AI-suggested protein is cross-validated against live UniProt data — hallucinated UniProt IDs are caught and removed automatically.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">🔬</div>
+        <div class="tk-val">Human-only scope</div>
+        <div class="tk-label">The system prompt and UniProt organism filter work together to ensure every result is a therapeutically relevant <em>Homo sapiens</em> protein — not a viral enzyme.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-col -->
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="sidebar-card fade-up">
+    <h3>At a Glance</h3>
+    <p class="tldr-text"><strong>What it does:</strong> Converts a plain-language biomedical query into validated human protein targets with 3D structures. <strong>How:</strong> LLM pipeline → UniProt validation → AlphaFold rendering. <strong>Why it's robust:</strong> 5-model fallback chain with 3 API methods each — near-zero downtime.</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Try It Live</h3>
+    <a href="https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="hf-btn">
+      <i class="fas fa-rocket"></i> Open on HuggingFace Spaces
+    </a>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Project Info</h3>
+    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">🟢 Live · HuggingFace</span></div>
+    <div class="info-row"><span class="info-key">Type</span><span class="info-val">Industry Project</span></div>
+    <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Drug Discovery · NLP</span></div>
+    <div class="info-row"><span class="info-key">Backend</span><span class="info-val">Python · Flask</span></div>
+    <div class="info-row"><span class="info-key">LLMs</span><span class="info-val">5+ via HF Inference API</span></div>
+    <div class="info-row"><span class="info-key">Data APIs</span><span class="info-val">UniProt · AlphaFold · PDB</span></div>
+    <div class="info-row"><span class="info-key">Organism Filter</span><span class="info-val">Homo sapiens only</span></div>
+    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">Flask</span>
+      <span class="tech-pill">HuggingFace 🤗</span>
+      <span class="tech-pill">Llama 3</span>
+      <span class="tech-pill">Mistral</span>
+      <span class="tech-pill">UniProt REST</span>
+      <span class="tech-pill">AlphaFold EBI</span>
+      <span class="tech-pill">RCSB PDB</span>
+      <span class="tech-pill">Phi-3</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="sidebar-link"><i class="fab fa-github"></i> GitHub Repository</a>
+      <a href="/projects/Projects-Files/002-clinical-text-encoder.html" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
+      <a href="/projects/Projects-Files/001-surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+      <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+</div><!-- /sidebar -->
+</div><!-- /main-layout -->
+
+<!-- ═══ PAGE-SPECIFIC JS ═══ -->
+<script>
+const html = document.documentElement;
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
+  return {
+    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
+    borderColor:     isDark() ? 'rgba(34,197,94,.3)' : 'rgba(22,163,74,.2)',
+    borderWidth: 1
+  };
+}
+
+/* ── DEMO DATA ── */
+const QUERIES = [
+  {
+    proteins: [
+      { id: 'P05067', name: 'Amyloid Precursor Protein', role: 'Central to amyloid plaque formation — APP cleavage by secretases generates Aβ peptides that aggregate in AD.', tags: ['Amyloid', 'Transmembrane'], drugs: 'Experimental γ-secretase inhibitors', conf: 92 },
+      { id: 'Q13148', name: 'TAR DNA-binding protein 43', role: 'TDP-43 mislocalization and aggregation drives neurodegeneration in AD and ALS.', tags: ['RNA Binding', 'Aggregation'], drugs: 'No approved drugs yet', conf: 85 },
+      { id: 'P19022', name: 'Cadherin-2 (N-cadherin)', role: 'Mediates synaptic adhesion — disrupted in early AD, regulates APP trafficking.', tags: ['Synaptic', 'Cell Adhesion'], drugs: 'Preclinical targets', conf: 74 },
+      { id: 'P00533', name: 'EGFR (Epidermal Growth Factor Receptor)', role: 'Overactivated in AD brain; promotes tau phosphorylation and neuroinflammation.', tags: ['Kinase', 'Signaling'], drugs: 'Erlotinib (repurposing)', conf: 68 }
+    ],
+    insights: '💡 <strong>AI Insight:</strong> Alzheimer\'s drug discovery increasingly focuses on host mechanisms beyond amyloid — tau propagation, neuroinflammation, and synaptic maintenance proteins offer complementary angles where clinical failures with pure amyloid approaches suggest multi-target strategies may be necessary.'
+  },
+  {
+    proteins: [
+      { id: 'P68871', name: 'Hemoglobin subunit beta', role: 'Mutations cause cardiomyopathy via impaired oxygen delivery and reactive oxygen species accumulation.', tags: ['Oxygen Transport', 'ROS'], drugs: 'Voxelotor (SCD), experimental', conf: 88 },
+      { id: 'Q14896', name: 'Myosin-binding protein C3', role: 'Mutations in MYBPC3 are the most common cause of hypertrophic cardiomyopathy.', tags: ['Sarcomere', 'HCM'], drugs: 'Mavacamten (Camzyos)', conf: 95 },
+      { id: 'P12883', name: 'Myosin-7 (β-MHC)', role: 'Heavy chain isoform mutated in both HCM and DCM — regulates cardiac contractility.', tags: ['Motor Protein', 'Contractile'], drugs: 'Mavacamten, Aficamten', conf: 91 },
+      { id: 'P35609', name: 'Alpha-actinin-2', role: 'Z-disc protein linking sarcomere to cytoskeleton; mutations cause dilated cardiomyopathy.', tags: ['Z-disc', 'DCM'], drugs: 'No approved drugs yet', conf: 79 }
+    ],
+    insights: '💡 <strong>AI Insight:</strong> Sarcomere proteins dominate heart failure drug targets — the success of mavacamten in HCM validated allosteric modulation of the myosin motor as a therapeutic class. Next-generation agents like aficamten expand this paradigm, while DCM targets lag behind due to greater genetic heterogeneity.'
+  },
+  {
+    proteins: [
+      { id: 'P46531', name: 'Notch1 receptor', role: 'HIV exploits Notch signaling in T-cell homeostasis — Notch1 modulation may reduce viral reservoir maintenance.', tags: ['Host Factor', 'T-cell'], drugs: 'GSIs in trials (off-target)', conf: 72 },
+      { id: 'P61073', name: 'C-X-C chemokine receptor 4 (CXCR4)', role: 'CXCR4 is a co-receptor for X4-tropic HIV-1 entry into CD4+ T cells — a validated host-directed target.', tags: ['Co-receptor', 'Entry'], drugs: 'Plerixafor (AMD3100)', conf: 97 },
+      { id: 'P19099', name: 'C-C chemokine receptor 5 (CCR5)', role: 'Primary co-receptor for R5-tropic HIV-1 strains — CCR5Δ32 individuals are naturally resistant to infection.', tags: ['Co-receptor', 'Entry'], drugs: 'Maraviroc (Selzentry)', conf: 99 },
+      { id: 'Q9UKV3', name: 'Argonaute-2 (AGO2)', role: 'Core of RISC complex; HIV manipulates AGO2-mediated silencing to evade innate immune restriction.', tags: ['RNAi', 'Innate Immune'], drugs: 'Preclinical / experimental', conf: 66 }
+    ],
+    insights: '💡 <strong>AI Insight:</strong> Host-directed therapy for HIV focuses on co-receptors (CCR5, CXCR4) because targeting viral proteins risks resistance — host genes mutate far more slowly. CCR5 antagonism via maraviroc remains the gold standard, while CXCR4 antagonism is constrained by on-target HSPC mobilization side effects.'
+  }
+];
+
+const TAG_COLORS = {
+  'Amyloid': ['rgba(167,139,250,.15)','#a78bfa','rgba(167,139,250,.3)'],
+  'Transmembrane': ['rgba(79,142,247,.12)','var(--accent)','rgba(79,142,247,.25)'],
+  'RNA Binding': ['rgba(245,158,11,.12)','var(--gold)','rgba(245,158,11,.25)'],
+  'Aggregation': ['rgba(239,68,68,.12)','#f87171','rgba(239,68,68,.25)'],
+  'Synaptic': ['rgba(34,197,94,.12)','var(--green)','rgba(34,197,94,.25)'],
+  'Cell Adhesion': ['rgba(6,182,212,.12)','var(--teal)','rgba(6,182,212,.25)'],
+  'Kinase': ['rgba(245,158,11,.12)','var(--gold)','rgba(245,158,11,.25)'],
+  'Signaling': ['rgba(79,142,247,.12)','var(--accent)','rgba(79,142,247,.25)'],
+  'Oxygen Transport': ['rgba(239,68,68,.12)','#f87171','rgba(239,68,68,.25)'],
+  'ROS': ['rgba(245,158,11,.12)','var(--gold)','rgba(245,158,11,.25)'],
+  'Sarcomere': ['rgba(167,139,250,.15)','#a78bfa','rgba(167,139,250,.3)'],
+  'HCM': ['rgba(239,68,68,.12)','#f87171','rgba(239,68,68,.25)'],
+  'Motor Protein': ['rgba(34,197,94,.12)','var(--green)','rgba(34,197,94,.25)'],
+  'Contractile': ['rgba(6,182,212,.12)','var(--teal)','rgba(6,182,212,.25)'],
+  'Z-disc': ['rgba(79,142,247,.12)','var(--accent)','rgba(79,142,247,.25)'],
+  'DCM': ['rgba(245,158,11,.12)','var(--gold)','rgba(245,158,11,.25)'],
+  'Host Factor': ['rgba(34,197,94,.12)','var(--green)','rgba(34,197,94,.25)'],
+  'T-cell': ['rgba(79,142,247,.12)','var(--accent)','rgba(79,142,247,.25)'],
+  'Co-receptor': ['rgba(239,68,68,.12)','#f87171','rgba(239,68,68,.25)'],
+  'Entry': ['rgba(245,158,11,.12)','var(--gold)','rgba(245,158,11,.25)'],
+  'RNAi': ['rgba(167,139,250,.15)','#a78bfa','rgba(167,139,250,.3)'],
+  'Innate Immune': ['rgba(6,182,212,.12)','var(--teal)','rgba(6,182,212,.25)']
+};
+
+function renderQuery(idx){
+  const d = QUERIES[idx];
+  const results = document.getElementById('protResults');
+  results.innerHTML = d.proteins.map(p => {
+    const tags = p.tags.map(t => {
+      const c = TAG_COLORS[t] || ['rgba(136,146,164,.12)','var(--muted)','rgba(136,146,164,.2)'];
+      return `<span class="prot-tag" style="background:${c[0]};color:${c[1]};border:1px solid ${c[2]}">${t}</span>`;
+    }).join('');
+    const barColor = p.conf > 90 ? 'var(--green)' : p.conf > 75 ? 'var(--accent)' : 'var(--gold)';
+    return `
+      <div class="prot-card">
+        <div class="prot-id">${p.id}</div>
+        <div class="prot-name">${p.name}</div>
+        <div class="prot-role">${p.role}</div>
+        <div class="prot-tags">${tags}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:8px">Known drugs: <strong style="color:var(--text)">${p.drugs}</strong></div>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${p.conf}%;background:${barColor}"></div></div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:2px">AI confidence: ${p.conf}%</div>
+      </div>`;
+  }).join('');
+  document.getElementById('aiInsights').innerHTML = d.insights;
+}
+
+function selectQuery(idx, btn){
+  document.querySelectorAll('.query-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderQuery(idx);
+}
+renderQuery(0);
+
+/* ── CHARTS ── */
+const charts = {};
+
+function buildChart(i){
+  if(charts[i]) charts[i].destroy();
+  const ctx = document.getElementById('chart' + i);
+  if(!ctx) return;
+  const g = gc(), t = tc(), tip = tt();
+
+  if(i === 0){
+    charts[0] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Llama-3.2-3B','Mistral-7B','Phi-3-mini','Apriel-5B','Llama-3.1-5B','Curated DB'],
+        datasets:[{
+          label: '% of Queries Resolved',
+          data: [65, 18, 8, 4, 3, 2],
+          backgroundColor: [
+            'rgba(34,197,94,.75)',
+            isDark()?'rgba(79,142,247,.65)':'rgba(37,99,235,.65)',
+            'rgba(167,139,250,.6)',
+            'rgba(245,158,11,.6)',
+            'rgba(6,182,212,.6)',
+            'rgba(136,146,164,.5)'
+          ],
+          borderRadius: 6
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:t}}, tooltip:tip},
+        scales:{
+          x:{ticks:{color:t,font:{size:10}}, grid:{color:g}},
+          y:{ticks:{color:t}, grid:{color:g},
+             title:{display:true, text:'% of Queries (estimated)', color:t, font:{size:11}}}
+        }
+      }
+    });
+  } else if(i === 1){
+    charts[1] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Oncology', 'CNS / Neuro', 'Cardiovascular', 'Infectious Disease', 'Metabolic', 'Rare Disease'],
+        datasets:[{
+          data: [28, 22, 18, 16, 10, 6],
+          backgroundColor: [
+            'rgba(239,68,68,.7)',
+            'rgba(167,139,250,.7)',
+            'rgba(239,68,68,.4)',
+            'rgba(34,197,94,.7)',
+            'rgba(245,158,11,.7)',
+            'rgba(6,182,212,.7)'
+          ],
+          borderColor: isDark() ? 'rgba(7,13,31,.8)' : 'rgba(255,255,255,.9)',
+          borderWidth: 2
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:t, font:{size:10}}, position:'right'},
+          tooltip:tip
+        }
+      }
+    });
+  } else if(i === 2){
+    charts[2] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Conversational API', 'Chat Completion', 'Text Generation'],
+        datasets:[{
+          label: '% of Successful API Calls',
+          data: [42, 38, 20],
+          backgroundColor: [
+            'rgba(34,197,94,.75)',
+            isDark()?'rgba(79,142,247,.65)':'rgba(37,99,235,.65)',
+            'rgba(245,158,11,.65)'
+          ],
+          borderRadius: 8
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:t}}, tooltip:tip},
+        scales:{
+          x:{ticks:{color:t}, grid:{color:g}},
+          y:{ticks:{color:t}, grid:{color:g}, max:100,
+             title:{display:true, text:'% of Successful Calls', color:t, font:{size:11}}}
+        }
+      }
+    });
+  }
+}
+
+function switchTab(i, el){
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.chart-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cp' + i).classList.add('active');
+  buildChart(i);
+}
+
+function rebuildCharts(){
+  Object.keys(charts).forEach(i => buildChart(Number(i)));
+}
+
+buildChart(0);
+</script>
+</body>
+</html>

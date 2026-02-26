@@ -44,6 +44,10 @@
           {
             "name": "006-cabg-gamification",
             "html": "projects/Projects-Files/006-cabg-gamification.html"
+          },
+          {
+            "name": "007-Protein-Sequencing-AI-Discovery",
+            "html": "projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html"
           }
         ]
       }
