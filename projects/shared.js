@@ -308,10 +308,12 @@
       // ── inject nav ──
       if (navHTML) document.body.insertAdjacentHTML('afterbegin', navHTML);
 
-      // ── inject project nav strip (below main nav) ──
-      const navEl = document.body.querySelector('.sh-nav');
-      if (navEl) {
-        navEl.insertAdjacentHTML('afterend', buildNavStrip(projectIndex, projects));
+      // ── inject project nav strip (below main nav) — skip on overview page ──
+      if (projectIndex !== null) {
+        const navEl = document.body.querySelector('.sh-nav');
+        if (navEl) {
+          navEl.insertAdjacentHTML('afterend', buildNavStrip(projectIndex, projects));
+        }
       }
 
       // ── inject footer ──
