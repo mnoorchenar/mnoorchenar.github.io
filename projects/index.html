@@ -491,108 +491,234 @@ function applyFilters() {
   document.getElementById('totalCount').textContent   = visible;
 }
 
-/* ═══ HERO NEURAL-NET CANVAS ═══ */
+/* ═══ HERO DATA-SCIENCE SCATTER CANVAS ═══ */
 (function () {
   const canvas = document.getElementById('heroCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const COUNT = 72;
-  const LINK_DIST = 150;
-  let W, H, nodes, raf;
+  let W, H, points, centroids, raf, lineT = 0;
+
+  // 3 clusters: Healthcare (blue), NLP (teal), Energy/Stats (purple)
+  const CLUSTERS = [
+    { hue: 210, label: 'Healthcare' },
+    { hue: 182, label: 'NLP'        },
+    { hue: 265, label: 'Energy'     }
+  ];
+  const PER_CLUSTER = 22;
+  const OUTLIERS    = 9;
 
   function isDark() {
     return document.documentElement.getAttribute('data-theme') !== 'light';
   }
 
   function resize() {
-    const hero = canvas.parentElement;
-    W = canvas.width  = hero.offsetWidth;
-    H = canvas.height = hero.offsetHeight;
+    W = canvas.width  = canvas.parentElement.offsetWidth;
+    H = canvas.height = canvas.parentElement.offsetHeight;
+    placeCentroids();
   }
 
-  function makeNodes() {
-    nodes = Array.from({ length: COUNT }, () => ({
-      x:   Math.random() * W,
-      y:   Math.random() * H,
-      vx:  (Math.random() - .5) * .42,
-      vy:  (Math.random() - .5) * .42,
-      r:   Math.random() * 1.8 + .7,
-      hue: [210, 191, 265, 220][Math.floor(Math.random() * 4)]
-    }));
+  function placeCentroids() {
+    centroids = [
+      { x: W * 0.20, y: H * 0.38 },
+      { x: W * 0.62, y: H * 0.26 },
+      { x: W * 0.80, y: H * 0.68 }
+    ];
   }
 
+  function makePoints() {
+    points = [];
+    CLUSTERS.forEach((cl, ci) => {
+      const c = centroids[ci];
+      for (let i = 0; i < PER_CLUSTER; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const rad = Math.sqrt(Math.random()) * W * 0.14;
+        points.push({
+          x: c.x + Math.cos(ang) * rad,   y: c.y + Math.sin(ang) * rad,
+          vx: (Math.random() - .5) * .3,  vy: (Math.random() - .5) * .3,
+          cx: c.x, cy: c.y,
+          cluster: ci, hue: cl.hue,
+          r: Math.random() * 2.0 + 1.0,
+          shape: Math.random() < .28 ? 'diamond' : 'circle',
+          pull: 0.007 + Math.random() * 0.007
+        });
+      }
+    });
+    // outliers — desaturated, wander freely
+    for (let i = 0; i < OUTLIERS; i++) {
+      points.push({
+        x: Math.random() * W,  y: Math.random() * H,
+        vx: (Math.random() - .5) * .28, vy: (Math.random() - .5) * .28,
+        cx: W * .5, cy: H * .5,
+        cluster: -1, hue: 220,
+        r: Math.random() * 1.4 + .7,
+        shape: 'circle', pull: 0.0008
+      });
+    }
+  }
+
+  // ── helpers ──────────────────────────────────────────
+  function diamond(x, y, r) {
+    ctx.beginPath();
+    ctx.moveTo(x, y - r * 1.6);
+    ctx.lineTo(x + r, y);
+    ctx.lineTo(x, y + r * 1.6);
+    ctx.lineTo(x - r, y);
+    ctx.closePath();
+  }
+
+  function clusterEllipse(cx, cy, rx, ry, hue, dark) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = `hsla(${hue},55%,65%,${dark ? .09 : .07})`;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 9]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  // animated regression line + 95% CI band
+  function regressionLine(dark) {
+    lineT += 0.0022;
+    const slope     = Math.sin(lineT * 0.65) * 0.38 + 0.14;
+    const intercept = H * 0.54 + Math.sin(lineT * 0.38) * H * 0.09;
+    const y0 = intercept, y1 = intercept + slope * W;
+
+    // CI band fill
+    const band = 26;
+    const perp = Math.sqrt(1 + slope * slope);
+    const bx = -slope / perp * band, by = 1 / perp * band;
+    ctx.beginPath();
+    ctx.moveTo(0 + bx, y0 + by); ctx.lineTo(W + bx, y1 + by);
+    ctx.lineTo(W - bx, y1 - by); ctx.lineTo(0 - bx, y0 - by);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(79,142,247,${dark ? .035 : .025})`;
+    ctx.fill();
+
+    // CI boundary dashes
+    [1, -1].forEach(s => {
+      ctx.beginPath();
+      ctx.moveTo(0 + s * bx, y0 + s * by);
+      ctx.lineTo(W + s * bx, y1 + s * by);
+      ctx.strokeStyle = `rgba(79,142,247,${dark ? .1 : .07})`;
+      ctx.lineWidth = .8;
+      ctx.setLineDash([3, 11]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // main regression line
+    const gr = ctx.createLinearGradient(0, y0, W, y1);
+    gr.addColorStop(0,   `rgba(79,142,247,0)`);
+    gr.addColorStop(.2,  `rgba(79,142,247,${dark ? .22 : .14})`);
+    gr.addColorStop(.8,  `rgba(6,182,212,${dark ? .22 : .14})`);
+    gr.addColorStop(1,   `rgba(6,182,212,0)`);
+    ctx.beginPath();
+    ctx.moveTo(0, y0); ctx.lineTo(W, y1);
+    ctx.strokeStyle = gr; ctx.lineWidth = 1.6;
+    ctx.setLineDash([7, 10]); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // faint axis tick marks at edges (chart-like)
+  function axisTicks(dark) {
+    const a = dark ? .07 : .05;
+    ctx.strokeStyle = `rgba(120,160,255,${a})`;
+    ctx.lineWidth = .8;
+    for (let x = 70; x < W - 40; x += 85) {
+      ctx.beginPath(); ctx.moveTo(x, H - 22); ctx.lineTo(x, H - 12); ctx.stroke();
+    }
+    for (let y = 50; y < H - 20; y += 65) {
+      ctx.beginPath(); ctx.moveTo(18, y); ctx.lineTo(28, y); ctx.stroke();
+    }
+  }
+
+  // ── main draw ────────────────────────────────────────
   function draw() {
     ctx.clearRect(0, 0, W, H);
     const dark = isDark();
 
-    // draw connections
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const d  = Math.hypot(dx, dy);
-        if (d < LINK_DIST) {
-          const t = 1 - d / LINK_DIST;
-          const a = t * (dark ? .25 : .15);
-          const gr = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
-          gr.addColorStop(0, `hsla(${nodes[i].hue},75%,68%,${a})`);
-          gr.addColorStop(1, `hsla(${nodes[j].hue},75%,68%,${a})`);
+    axisTicks(dark);
+    regressionLine(dark);
+
+    // dashed cluster ellipses
+    CLUSTERS.forEach((cl, ci) => {
+      clusterEllipse(centroids[ci].x, centroids[ci].y, W * .13, H * .21, cl.hue, dark);
+    });
+
+    // correlation lines between nearby same-cluster points
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].cluster === -1) continue;
+      for (let j = i + 1; j < points.length; j++) {
+        if (points[j].cluster !== points[i].cluster) continue;
+        const d = Math.hypot(points[i].x - points[j].x, points[i].y - points[j].y);
+        if (d < 68) {
+          const a = (1 - d / 68) * (dark ? .13 : .07);
           ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = gr;
-          ctx.lineWidth   = t * 1.2;
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[j].x, points[j].y);
+          ctx.strokeStyle = `hsla(${points[i].hue},65%,65%,${a})`;
+          ctx.lineWidth = .55;
           ctx.stroke();
         }
       }
     }
 
-    // draw nodes
-    nodes.forEach(n => {
-      const a = dark ? .6 : .45;
-      // soft glow
-      const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
-      glow.addColorStop(0, `hsla(${n.hue},80%,72%,${a * .6})`);
-      glow.addColorStop(1, `hsla(${n.hue},80%,72%,0)`);
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
-      ctx.fillStyle = glow;
-      ctx.fill();
+    // centroid cross-hair + pulsing rings
+    const pulse = .5 + .5 * Math.sin(Date.now() * 0.0022);
+    CLUSTERS.forEach((cl, ci) => {
+      const c  = centroids[ci];
+      const ab = (dark ? .4 : .3) + pulse * (dark ? .2 : .12);
+      // outer pulsing ring
+      ctx.beginPath(); ctx.arc(c.x, c.y, 7 + pulse * 4, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${cl.hue},75%,68%,${ab * .55})`; ctx.lineWidth = 1.2; ctx.stroke();
       // core dot
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${n.hue},85%,78%,${a})`;
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(c.x, c.y, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle   = `hsla(${cl.hue},80%,74%,${ab})`; ctx.fill();
+      // cross-hair
+      ctx.strokeStyle = `hsla(${cl.hue},65%,68%,${ab * .45})`; ctx.lineWidth = .8;
+      ctx.beginPath(); ctx.moveTo(c.x - 11, c.y); ctx.lineTo(c.x + 11, c.y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(c.x, c.y - 11); ctx.lineTo(c.x, c.y + 11); ctx.stroke();
+    });
+
+    // data points (circles + diamonds)
+    points.forEach(p => {
+      const outlier = p.cluster === -1;
+      const a = outlier ? (dark ? .22 : .15) : (dark ? .58 : .44);
+      ctx.fillStyle = `hsla(${p.hue},${outlier ? 18 : 72}%,${outlier ? 52 : 74}%,${a})`;
+      if (p.shape === 'diamond') { diamond(p.x, p.y, p.r); ctx.fill(); }
+      else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); }
     });
   }
 
   function tick() {
-    nodes.forEach(n => {
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < 0)  { n.x = 0;  n.vx = Math.abs(n.vx); }
-      if (n.x > W)  { n.x = W;  n.vx = -Math.abs(n.vx); }
-      if (n.y < 0)  { n.y = 0;  n.vy = Math.abs(n.vy); }
-      if (n.y > H)  { n.y = H;  n.vy = -Math.abs(n.vy); }
+    points.forEach(p => {
+      // pull toward home cluster + tiny random jitter
+      p.vx += (p.cx - p.x) * p.pull + (Math.random() - .5) * .035;
+      p.vy += (p.cy - p.y) * p.pull + (Math.random() - .5) * .035;
+      // damping & speed cap
+      p.vx *= .972; p.vy *= .972;
+      const spd = Math.hypot(p.vx, p.vy);
+      if (spd > 1.1) { p.vx = p.vx / spd * 1.1; p.vy = p.vy / spd * 1.1; }
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) { p.x = 0; p.vx =  Math.abs(p.vx); }
+      if (p.x > W) { p.x = W; p.vx = -Math.abs(p.vx); }
+      if (p.y < 0) { p.y = 0; p.vy =  Math.abs(p.vy); }
+      if (p.y > H) { p.y = H; p.vy = -Math.abs(p.vy); }
     });
     draw();
     raf = requestAnimationFrame(tick);
   }
 
   function init() {
-    cancelAnimationFrame(raf);
-    resize();
-    makeNodes();
-    tick();
+    cancelAnimationFrame(raf); resize(); makePoints(); tick();
   }
 
-  window.addEventListener('resize', () => { resize(); });
-
-  // re-draw immediately on theme switch so colours update in-flight
+  window.addEventListener('resize', () => { resize(); makePoints(); });
   new MutationObserver(() => {}).observe(document.documentElement, {
     attributes: true, attributeFilter: ['data-theme']
   });
-
   init();
 })();
 </script>
