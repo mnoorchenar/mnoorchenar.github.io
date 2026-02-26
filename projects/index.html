@@ -12,9 +12,23 @@
 <script src="shared.js" defer></script>
 <style>
 
+/* ── HERO ANIMATIONS ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gradShift {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+@keyframes statsPop {
+  from { opacity: 0; transform: translateY(20px) scale(.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ── PAGE HERO ── */
 .page-hero {
-  padding: 110px 32px 56px;
+  padding: 100px 32px 64px;
   text-align: center;
   position: relative; overflow: hidden;
   background: var(--body-bg); transition: background .35s;
@@ -33,37 +47,48 @@
 [data-theme="light"] .page-hero::before {
   background: radial-gradient(ellipse 70% 55% at 50% -5%, rgba(37,99,235,.1), transparent 65%);
 }
-.page-hero h1 {
-  font-size: clamp(2rem,4vw,3rem); font-weight: 900;
-  letter-spacing: -.5px; margin: 14px 0 10px;
-  position: relative; z-index: 1;
+.hero-title {
+  font-size: clamp(2.1rem,4.5vw,3.2rem); font-weight: 900;
+  letter-spacing: -.5px; margin: 0 0 14px;
+  position: relative; z-index: 1; line-height: 1.15;
+  animation: heroFadeUp .75s cubic-bezier(.22,1,.36,1) both;
+}
+.hero-title .grad-text {
+  background: linear-gradient(135deg, var(--accent), var(--teal), var(--accent));
+  background-size: 200% 200%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradShift 5s ease infinite;
 }
 .page-hero p {
   color: var(--muted); font-size: .95em;
-  max-width: 540px; margin: 0 auto 28px;
+  max-width: 540px; margin: 0 auto 36px;
   position: relative; z-index: 1;
+  animation: heroFadeUp .75s .18s cubic-bezier(.22,1,.36,1) both;
 }
-.page-hero .s-tag { position: relative; z-index: 1; }
 
-/* stats bar */
-.stats-bar {
-  background: var(--section-alt);
-  border-top: 1px solid var(--glass-border);
-  border-bottom: 1px solid var(--glass-border);
-  transition: background .35s;
+/* hero stats (merged from stats bar) */
+.hero-stats {
+  display: flex; justify-content: center; gap: 0;
+  flex-wrap: wrap; position: relative; z-index: 1;
+  max-width: 520px; margin: 0 auto;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 18px; overflow: hidden;
+  animation: statsPop .7s .36s cubic-bezier(.22,1,.36,1) both;
 }
-.stats-inner {
-  max-width: 1200px; margin: 0 auto;
-  padding: 20px 32px;
-  display: flex; justify-content: center; gap: 36px; flex-wrap: wrap;
+.hero-stats .sbar-stat {
+  flex: 1; min-width: 90px; text-align: center;
+  padding: 18px 12px;
+  border-right: 1px solid var(--glass-border);
+  transition: background .2s;
 }
-.sbar-stat { text-align: center; }
+.hero-stats .sbar-stat:last-child { border-right: none; }
+.hero-stats .sbar-stat:hover { background: var(--card-hover-bg); }
 .sbar-num {
-  font-size: 1.8em; font-weight: 900; line-height: 1;
+  font-size: 1.6em; font-weight: 900; line-height: 1;
   background: linear-gradient(135deg, var(--accent), var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.sbar-label { font-size: .72em; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 3px; }
+.sbar-label { font-size: .68em; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 4px; }
 
 /* filter bar */
 .filter-section { padding: 36px 32px 0; max-width: 1200px; margin: 0 auto; }
@@ -156,6 +181,8 @@
   .projects-grid { grid-template-columns: 1fr; }
   .filter-row { flex-direction: column; align-items: flex-start; }
   #searchInput, .search-wrap { width: 100%; }
+  .hero-stats { max-width: 100%; border-radius: 14px; }
+  .hero-stats .sbar-stat { min-width: 80px; padding: 14px 8px; }
 }
 </style>
 </head>
@@ -163,17 +190,12 @@
 <!-- No data-project-index = overview page (prev arrow disabled, counter shows "Overview") -->
 <body>
 
-<!-- ═══ PAGE HERO ═══ -->
+<!-- ═══ PAGE HERO (with merged stats) ═══ -->
 <div class="page-hero">
   <div class="page-hero-grid"></div>
-  <div class="s-tag s-tag-blue"><i class="fas fa-rocket"></i> Portfolio</div>
-  <h1>Data Science <span class="grad-text">Projects</span></h1>
+  <h1 class="hero-title">Data Science <span class="grad-text">Projects</span></h1>
   <p>Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.</p>
-</div>
-
-<!-- ═══ STATS BAR ═══ -->
-<div class="stats-bar">
-  <div class="stats-inner">
+  <div class="hero-stats">
     <div class="sbar-stat"><div class="sbar-num" id="totalCount">7</div><div class="sbar-label">Projects</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Domains</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Publications</div></div>
