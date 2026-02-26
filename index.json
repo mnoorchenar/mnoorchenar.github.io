@@ -48,6 +48,14 @@
           {
             "name": "007-Protein-Sequencing-AI-Discovery",
             "html": "projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html"
+          },
+          {
+            "name": "008-risksight-pro",
+            "html": "projects/Projects-Files/008-risksight-pro.html"
+          },
+          {
+            "name": "009-vae-project-page",
+            "html": "projects/Projects-Files/009-vae-project-page.html"
           }
         ]
       }

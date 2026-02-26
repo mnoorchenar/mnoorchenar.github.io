@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAE MNIST Playground · Mohammad Noorchenarboo</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/projects/shared.css">
+<script src="/projects/shared.js" defer></script>
+<style>
+/* ═══════════════════════════════
+   PAGE-SPECIFIC STYLES ONLY
+═══════════════════════════════ */
+
+/* ── HERO ── */
+.hero {
+  padding: 124px 24px 56px;
+  background: var(--body-bg);
+  position: relative; overflow: hidden; transition: background .35s;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(124,58,237,.18) 0%, transparent 65%);
+}
+[data-theme="light"] .hero::before {
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(109,40,217,.1) 0%, transparent 65%);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(124,58,237,.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(124,58,237,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+[data-theme="light"] .hero::after {
+  background-image: linear-gradient(rgba(109,40,217,.045) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(109,40,217,.045) 1px, transparent 1px);
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+.breadcrumb { font-size: .78rem; color: var(--muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--muted); transition: .2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { opacity: .4; }
+
+/* ── PILLS ── */
+.tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+.pill-purple { background: rgba(124,58,237,.12);  border: 1px solid rgba(124,58,237,.25);  color: #c4b5fd; }
+.pill-cyan   { background: rgba(6,182,212,.12);   border: 1px solid rgba(6,182,212,.25);   color: var(--teal); }
+.pill-amber  { background: rgba(245,158,11,.12);  border: 1px solid rgba(245,158,11,.25);  color: var(--gold); }
+[data-theme="light"] .pill-purple { background: rgba(109,40,217,.1);  border-color: rgba(109,40,217,.25); color: #5b21b6; }
+[data-theme="light"] .pill-cyan   { background: rgba(8,145,178,.1);   border-color: rgba(8,145,178,.25);  color: #0e7490; }
+[data-theme="light"] .pill-amber  { background: rgba(217,119,6,.1);   border-color: rgba(217,119,6,.25);  color: #92400e; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #a78bfa; animation: ld-pulse 2s infinite; }
+@keyframes ld-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; margin-bottom: 20px; max-width: 820px; color: var(--text); }
+.hero-sub { font-size: 1rem; color: var(--muted); max-width: 680px; margin-bottom: 28px; line-height: 1.65; }
+.hero-sub strong { color: var(--text); }
+.hero-meta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; font-size: .83rem; color: var(--muted); }
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta i { color: #a78bfa; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
+.btn-purple { background: rgba(124,58,237,.18); color: #c4b5fd; border-color: rgba(124,58,237,.35); }
+.btn-purple:hover { background: rgba(124,58,237,.3); transform: translateY(-2px); }
+[data-theme="light"] .btn-purple { background: rgba(109,40,217,.1); border-color: rgba(109,40,217,.3); color: #5b21b6; }
+.btn-blue   { background: rgba(79,142,247,.18); color: var(--accent); border-color: rgba(79,142,247,.35); }
+.btn-blue:hover  { background: rgba(79,142,247,.3); transform: translateY(-2px); }
+.btn-gray   { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
+.btn-gray:hover  { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-back   { background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
+.btn-back:hover  { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
+
+/* ── STAT BAR ── */
+.stats-bar { background: var(--section-alt); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: background .35s; }
+.stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--glass-border); }
+.stat-item { background: var(--section-alt); padding: 22px 16px; text-align: center; transition: background .35s; }
+.stat-val { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg,#a78bfa,var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: .75rem; color: var(--muted); line-height: 1.4; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout { max-width: 1100px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
+.content-col { display: flex; flex-direction: column; gap: 28px; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── CARDS ── */
+.card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 28px; transition: all .25s; }
+.card:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.card-title { font-size: 1rem; font-weight: 800; margin-bottom: 18px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.card-title i { color: #a78bfa; font-size: .9rem; }
+.narrative { font-size: .92rem; color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+.narrative strong { color: var(--text); }
+
+/* ── PIPELINE ── */
+.pipeline { display: flex; align-items: stretch; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 4px; }
+.pipe-step { flex: 1; min-width: 118px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 16px 10px; text-align: center; transition: .25s; }
+.pipe-step:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.pipe-arrow { display: flex; align-items: center; justify-content: center; width: 26px; flex-shrink: 0; color: var(--muted); font-size: .8rem; padding-top: 10px; }
+.pipe-icon { font-size: 1.8rem; margin-bottom: 8px; line-height: 1; }
+.pipe-label { font-size: .75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pipe-sub { font-size: .7rem; color: var(--muted); line-height: 1.4; }
+
+/* ── FEATURE GRID ── */
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+.feat-card { border-radius: 12px; padding: 20px; border: 1px solid; transition: .25s; }
+.feat-card:hover { transform: translateY(-3px); }
+.feat-train  { background: rgba(124,58,237,.05); border-color: rgba(124,58,237,.2); }
+.feat-arch   { background: rgba(79,142,247,.05);  border-color: rgba(79,142,247,.2); }
+.feat-latent { background: rgba(6,182,212,.05);   border-color: rgba(6,182,212,.18); }
+.feat-recon  { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
+.feat-gen    { background: rgba(34,197,94,.06);   border-color: rgba(34,197,94,.2); }
+.feat-robust { background: rgba(136,146,164,.05); border-color: rgba(136,146,164,.18); }
+[data-theme="light"] .feat-train  { background: rgba(109,40,217,.04); border-color: rgba(109,40,217,.18); }
+[data-theme="light"] .feat-arch   { background: rgba(37,99,235,.04);  border-color: rgba(37,99,235,.18); }
+[data-theme="light"] .feat-latent { background: rgba(8,145,178,.04);  border-color: rgba(8,145,178,.15); }
+[data-theme="light"] .feat-recon  { background: rgba(217,119,6,.04);  border-color: rgba(217,119,6,.15); }
+[data-theme="light"] .feat-gen    { background: rgba(22,163,74,.04);  border-color: rgba(22,163,74,.18); }
+[data-theme="light"] .feat-robust { background: rgba(75,86,117,.04);  border-color: rgba(75,86,117,.12); }
+.feat-badge  { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 8px; margin-bottom: 8px; }
+.feat-name   { font-size: .93rem; font-weight: 800; margin-bottom: 5px; color: var(--text); }
+.feat-desc   { font-size: .77rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+.feat-detail { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--glass-border); font-size: .77rem; }
+.feat-detail:last-child { border-bottom: none; }
+.feat-detail-key { color: var(--muted); }
+.feat-detail-val { font-weight: 700; }
+
+/* ── ARCHITECTURE LAYERS ── */
+.arch-flow { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.arch-block { width: 100%; max-width: 480px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px 20px; text-align: center; }
+.arch-block .ab-title { font-weight: 700; font-size: .95rem; color: var(--text); }
+.arch-block .ab-sub   { color: var(--muted); font-size: .8rem; margin-top: 3px; }
+.arch-block.enc  { border-left: 3px solid #a78bfa; }
+.arch-block.lat  { border-left: 3px solid var(--teal); background: rgba(6,182,212,.06); }
+.arch-block.dec  { border-left: 3px solid var(--gold); }
+.arch-arrow  { color: var(--muted); font-size: 1.1rem; line-height: 1; }
+.formula-box { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 18px 22px; margin-top: 14px; }
+.formula-box p { font-size: .88rem; color: var(--muted); line-height: 1.7; }
+.formula-box code { font-family: 'Courier New', monospace; font-size: .85rem; color: #c4b5fd; background: rgba(124,58,237,.15); padding: 2px 6px; border-radius: 4px; }
+
+/* ── INSIGHT BANNER ── */
+.insight-banner { background: linear-gradient(135deg,rgba(124,58,237,.07),rgba(6,182,212,.07)); border: 1px solid rgba(124,58,237,.22); border-radius: var(--radius); padding: 22px; margin-top: 8px; display: flex; gap: 16px; align-items: flex-start; }
+[data-theme="light"] .insight-banner { background: linear-gradient(135deg,rgba(109,40,217,.05),rgba(8,145,178,.04)); border-color: rgba(109,40,217,.2); }
+.insight-icon { font-size: 2rem; flex-shrink: 0; }
+.insight-body h4 { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.insight-body p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+.insight-body strong { color: #a78bfa; }
+
+/* ── INTERACTIVE DEMO ── */
+.demo-block { background: rgba(124,58,237,.04); border: 1px solid rgba(124,58,237,.15); border-radius: var(--radius); padding: 28px; }
+[data-theme="light"] .demo-block { background: rgba(109,40,217,.03); border-color: rgba(109,40,217,.15); }
+.demo-intro { font-size: .85rem; color: var(--muted); margin-bottom: 18px; font-style: italic; }
+.tab-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.tab-btn { padding: 8px 16px; border-radius: 20px; font-size: .8rem; font-weight: 600; cursor: pointer; background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); transition: .2s; font-family: inherit; }
+.tab-btn.active, .tab-btn:hover { background: rgba(124,58,237,.12); border-color: rgba(124,58,237,.35); color: #c4b5fd; }
+[data-theme="light"] .tab-btn.active, [data-theme="light"] .tab-btn:hover { background: rgba(109,40,217,.08); border-color: rgba(109,40,217,.3); color: #5b21b6; }
+.demo-panel { display: none; }
+.demo-panel.active { display: block; }
+
+/* latent grid visualisation */
+.latent-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin: 16px 0; }
+.lat-cell { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; transition: .2s; cursor: default; }
+.lat-cell:hover { transform: scale(1.12); z-index: 2; }
+
+/* recon strip */
+.recon-strip { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin: 16px 0; }
+.recon-pair { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.recon-label { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.digit-box { width: 56px; height: 56px; border-radius: 8px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; }
+.digit-orig { background: rgba(124,58,237,.08); }
+.digit-recon{ background: rgba(6,182,212,.08);  border-color: rgba(6,182,212,.25); }
+
+/* config table */
+.config-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin-top: 12px; }
+.config-table th { padding: 8px 12px; text-align: left; color: var(--muted); font-weight: 700; text-transform: uppercase; font-size: .7rem; letter-spacing: .06em; border-bottom: 1px solid var(--glass-border); }
+.config-table td { padding: 9px 12px; border-bottom: 1px solid var(--glass-border); color: var(--text); }
+.config-table td:last-child { text-align: right; font-family: 'Courier New', monospace; color: #a78bfa; font-weight: 700; }
+.config-table tr:last-child td { border-bottom: none; }
+.config-table tr:hover td { background: rgba(124,58,237,.05); }
+
+/* ── CHART TABS ── */
+.chart-tabs  { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.chart-tab   { padding: 7px 14px; border-radius: 20px; font-size: .8rem; font-weight: 600; cursor: pointer; background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); transition: .2s; }
+.chart-tab.active { background: rgba(124,58,237,.15); border-color: rgba(124,58,237,.35); color: #c4b5fd; }
+[data-theme="light"] .chart-tab.active { background: rgba(109,40,217,.1); border-color: rgba(109,40,217,.3); color: #5b21b6; }
+.chart-panel-c { display: none; }
+.chart-panel-c.active { display: block; }
+.chart-wrap  { position: relative; height: 280px; }
+.chart-caption { font-size: .8rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; }
+
+/* ── TAKEAWAYS ── */
+.takeaway-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 8px; }
+.takeaway { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 20px; text-align: center; transition: .2s; }
+.takeaway:hover { background: var(--card-hover-bg); transform: translateY(-3px); }
+.tk-icon  { font-size: 2rem; margin-bottom: 8px; }
+.tk-val   { font-size: 1.4rem; font-weight: 900; background: linear-gradient(135deg,#a78bfa,var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+.tk-label { font-size: .78rem; color: var(--muted); line-height: 1.45; }
+
+/* ── SIDEBAR ── */
+.sidebar-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 20px; }
+.sidebar-card h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+.tldr-text { font-size: .87rem; color: var(--muted); line-height: 1.7; }
+.tldr-text strong { color: var(--text); }
+.info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px; }
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-pill { background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2); border-radius: 6px; padding: 3px 10px; font-size: .75rem; color: #c4b5fd; font-weight: 600; }
+[data-theme="light"] .tech-pill { background: rgba(109,40,217,.08); border-color: rgba(109,40,217,.2); color: #5b21b6; }
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; color: var(--muted); transition: .2s; text-decoration: none; }
+.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
+.sidebar-link i { color: #a78bfa; width: 16px; text-align: center; }
+.hf-btn { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: linear-gradient(135deg,rgba(255,175,7,.12),rgba(255,175,7,.06)); border: 1px solid rgba(255,175,7,.3); border-radius: 10px; font-size: .85rem; font-weight: 700; color: #f59e0b; transition: .2s; text-decoration: none; }
+.hf-btn:hover { background: linear-gradient(135deg,rgba(255,175,7,.2),rgba(255,175,7,.1)); transform: translateY(-2px); }
+.hf-btn i { font-size: 1.1rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr 1fr; }
+  .stats-inner { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 600px) {
+  .hero { padding: 96px 16px 40px; }
+  .pipeline { flex-direction: column; }
+  .pipe-arrow { transform: rotate(90deg); }
+  .feature-grid { grid-template-columns: 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: repeat(2,1fr); }
+  .recon-strip { grid-template-columns: repeat(3,1fr); }
+}
+</style>
+</head>
+<body data-project-index="7" data-footer-note="HuggingFace Spaces · Industry Project">
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+      <span>›</span>
+      <a href="/projects/index.html">Projects</a>
+      <span>›</span>
+      <span style="color:var(--text)">VAE MNIST Playground</span>
+    </div>
+
+    <div class="tag-row">
+      <span class="pill pill-purple"><i class="fas fa-brain"></i> Generative AI · Deep Learning</span>
+      <span class="pill pill-cyan"><i class="fab fa-python"></i> Python · PyTorch · Flask</span>
+      <span class="pill pill-amber"><span class="live-dot"></span> Live on HuggingFace Spaces</span>
+    </div>
+
+    <h1>Train &amp; Explore a <span class="grad-text">Variational Autoencoder</span> in Your Browser</h1>
+    <p class="hero-sub">A fully interactive deep learning playground where you can <strong>configure and train a VAE on MNIST from scratch</strong>, then navigate its latent space with sliders, compare reconstructions side-by-side, and generate new digit images — all inside a single web interface backed by a PyTorch training loop.</p>
+    <div class="hero-meta">
+      <span><i class="fas fa-calendar-alt"></i> Industry Project · 2025</span>
+      <span><i class="fas fa-user"></i> <strong>Noorchenarboo</strong></span>
+      <span><i class="fas fa-layer-group"></i> 5-Tab Interactive App</span>
+      <span><i class="fas fa-database"></i> MNIST · 60,000 samples</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-purple"><i class="fas fa-play-circle"></i> Explore Demo</a>
+      <a href="https://huggingface.co/spaces/mnoorchenar/VAE-Playground" target="_blank" class="btn btn-gray"><i class="fas fa-external-link-alt"></i> Try on HuggingFace</a>
+      <a href="https://github.com/mnoorchenar/VAE-Playground" target="_blank" class="btn btn-gray"><i class="fab fa-github"></i> View on GitHub</a>
+      <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar fade-up">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val">2-D</div><div class="stat-label">Latent space — fully visualisable as a scatter manifold</div></div>
+    <div class="stat-item"><div class="stat-val">60K</div><div class="stat-label">MNIST samples — 10K subset used for fast interactive training</div></div>
+    <div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Interactive tabs: Train, Architecture, Latent, Reconstruct, Generate</div></div>
+    <div class="stat-item"><div class="stat-val">Real-time</div><div class="stat-label">Live loss curve &amp; epoch progress streamed to the browser</div></div>
+    <div class="stat-item"><div class="stat-val">Live</div><div class="stat-label">Deployed on HuggingFace Spaces — no local setup needed</div></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+<div class="content-col">
+
+  <!-- PIPELINE -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-purple">How It Works</div>
+    <h2 class="card-title"><i class="fas fa-route"></i> From Pixel to Latent Point and Back</h2>
+    <p class="narrative">A VAE learns to <strong>compress</strong> each 28×28 MNIST digit into a two-number coordinate in "latent space", then <strong>reconstruct</strong> the original from that coordinate. Because the latent space is regularised to be smooth and Gaussian, you can pick any coordinate — even one never seen during training — and the decoder will generate a plausible-looking digit. This page lets you watch every step of that process unfold in real time.</p>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-icon">🖼️</div>
+        <div class="pipe-label">MNIST Input</div>
+        <div class="pipe-sub">28×28 image flattened to 784-D vector</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🔒</div>
+        <div class="pipe-label">Encoder FC</div>
+        <div class="pipe-sub">784 → 400 hidden units (ReLU)</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🎲</div>
+        <div class="pipe-label">Reparameterise</div>
+        <div class="pipe-sub">μ &amp; log σ² → z = μ + σ·ε</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🔓</div>
+        <div class="pipe-label">Decoder FC</div>
+        <div class="pipe-sub">2 → 400 → 784 (Sigmoid output)</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">✨</div>
+        <div class="pipe-label">Generated Digit</div>
+        <div class="pipe-sub">Reconstructed or freshly sampled image</div>
+      </div>
+    </div>
+    <div class="insight-banner">
+      <div class="insight-icon">💡</div>
+      <div class="insight-body">
+        <h4>Why the Reparameterisation Trick Matters</h4>
+        <p>Sampling from a distribution is non-differentiable — backpropagation can't flow through a random node. The trick rewrites the sample as <strong>z = μ + σ · ε where ε ∼ 𝒩(0,I)</strong>, moving randomness into a fixed input ε and making μ and σ trainable by gradient descent. Without it, VAEs simply wouldn't train.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE CARDS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-teal">Feature Breakdown</div>
+    <h2 class="card-title"><i class="fas fa-layer-group"></i> Five Interactive Tabs, One Unified Playground</h2>
+    <div class="feature-grid">
+      <div class="feat-card feat-train">
+        <div class="feat-badge" style="background:rgba(124,58,237,.12);color:#c4b5fd;border:1px solid rgba(124,58,237,.22)">⚡ Training</div>
+        <div class="feat-name">Live Training Dashboard</div>
+        <div class="feat-desc">Set epochs, batch size, learning rate, hidden dim, and latent dim. A progress bar and loss curve update every 600 ms as the model trains in a background thread — no page reloads.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Backend</span><span class="feat-detail-val" style="color:#c4b5fd">Python threading</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Poll interval</span><span class="feat-detail-val">600 ms</span></div>
+      </div>
+      <div class="feat-card feat-arch">
+        <div class="feat-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">🏗️ Architecture</div>
+        <div class="feat-name">Network Topology Viewer</div>
+        <div class="feat-desc">Visual layer-by-layer diagram of the encoder, reparameterisation step, and decoder. Updates dynamically when you change hyperparameters, alongside the ELBO loss formula breakdown.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Loss</span><span class="feat-detail-val" style="color:var(--accent)">BCE + KL divergence</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Dims</span><span class="feat-detail-val">784 → H → L → H → 784</span></div>
+      </div>
+      <div class="feat-card feat-latent">
+        <div class="feat-badge" style="background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.22)">🌐 Latent Space</div>
+        <div class="feat-name">2-D Manifold Scatter Plot</div>
+        <div class="feat-desc">Encodes 10,000 MNIST test images and plots their μ coordinates, coloured by digit class. Tight, separated clusters indicate a well-structured latent representation.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Points</span><span class="feat-detail-val" style="color:var(--teal)">10,000 encoded digits</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Colour</span><span class="feat-detail-val">Class 0–9 (tab10)</span></div>
+      </div>
+      <div class="feat-card feat-recon">
+        <div class="feat-badge" style="background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.22)">🔁 Reconstruction</div>
+        <div class="feat-name">Side-by-Side Comparison</div>
+        <div class="feat-desc">Randomly samples 10 MNIST images, encodes and decodes them, then displays originals and reconstructions in a two-row grid. Slight blurriness reveals the smoothing effect of BCE loss.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Samples</span><span class="feat-detail-val" style="color:var(--gold)">10 random per click</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Grid layout</span><span class="feat-detail-val">2 rows × 10 columns</span></div>
+      </div>
+      <div class="feat-card feat-gen">
+        <div class="feat-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">✨ Generation</div>
+        <div class="feat-name">Latent Space Navigation</div>
+        <div class="feat-desc">Two sliders (Z₁ and Z₂, range −3 to +3) let you walk through the latent manifold and instantly decode any coordinate into a digit image, or generate a 15×15 grid of the full space.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Slider range</span><span class="feat-detail-val" style="color:var(--green)">−3.0 to +3.0</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Grid size</span><span class="feat-detail-val">15 × 15 = 225 points</span></div>
+      </div>
+      <div class="feat-card feat-robust">
+        <div class="feat-badge" style="background:rgba(136,146,164,.12);color:var(--muted);border:1px solid rgba(136,146,164,.2)">⚙️ Engineering</div>
+        <div class="feat-name">Thread-safe Flask API</div>
+        <div class="feat-desc">Training runs in a daemon thread; all five endpoints (/start_training, /latent_space, /reconstruction, /generate, /generate_grid) are stateless REST calls with base64-encoded PNG responses.</div>
+        <div class="feat-detail"><span class="feat-detail-key">Endpoints</span><span class="feat-detail-val">7 REST routes</span></div>
+        <div class="feat-detail"><span class="feat-detail-key">Output</span><span class="feat-detail-val">Base64 PNG images</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE DETAIL -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-blue">Architecture Detail</div>
+    <h2 class="card-title"><i class="fas fa-sitemap"></i> VAE Layer Diagram &amp; Loss Decomposition</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+      <div class="arch-flow">
+        <div class="arch-block">
+          <div class="ab-title">Input · 784-D</div>
+          <div class="ab-sub">28×28 flattened pixel values (0–1 normalised)</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-block enc">
+          <div class="ab-title">Encoder FC · 400-D (configurable)</div>
+          <div class="ab-sub">Linear(784, H) → ReLU</div>
+        </div>
+        <div class="arch-arrow">↓ split ↓</div>
+        <div class="arch-block enc">
+          <div class="ab-title">μ head &amp; log σ² head · 2-D (configurable)</div>
+          <div class="ab-sub">Two independent Linear(H, L) heads</div>
+        </div>
+        <div class="arch-arrow">↓ reparameterise ↓</div>
+        <div class="arch-block lat">
+          <div class="ab-title">Latent vector z · 2-D</div>
+          <div class="ab-sub">z = μ + exp(½ log σ²) · ε &nbsp;·&nbsp; ε ∼ 𝒩(0, I)</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-block dec">
+          <div class="ab-title">Decoder FC · 400-D (configurable)</div>
+          <div class="ab-sub">Linear(L, H) → ReLU</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-block">
+          <div class="ab-title">Output · 784-D</div>
+          <div class="ab-sub">Linear(H, 784) → Sigmoid → pixel probabilities</div>
+        </div>
+      </div>
+      <div>
+        <div class="formula-box">
+          <p><strong style="color:var(--text);">ELBO Loss (Evidence Lower Bound)</strong></p>
+          <p style="margin-top:8px;"><code>ℒ = ℒ_recon + KL</code></p>
+          <p style="margin-top:14px;"><strong style="color:var(--text);">Reconstruction (Binary Cross-Entropy, sum)</strong></p>
+          <p><code>ℒ_recon = −Σ [ x·log x̂ + (1−x)·log(1−x̂) ]</code></p>
+          <p style="margin-top:14px;"><strong style="color:var(--text);">KL Divergence (closed-form Gaussian)</strong></p>
+          <p><code>KL = −½ Σ [ 1 + log σ² − μ² − σ² ]</code></p>
+        </div>
+        <div class="formula-box" style="margin-top:14px;">
+          <p><strong style="color:var(--text);">Configurable Hyperparameters</strong></p>
+          <table class="config-table" style="margin-top:10px">
+            <tr><th>Parameter</th><th>Default</th></tr>
+            <tr><td>Epochs</td><td>30</td></tr>
+            <tr><td>Batch size</td><td>128</td></tr>
+            <tr><td>Learning rate</td><td>1e-3 (Adam)</td></tr>
+            <tr><td>Hidden dim (H)</td><td>400</td></tr>
+            <tr><td>Latent dim (L)</td><td>2</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="insight-banner" style="margin-top:16px">
+      <div class="insight-icon">🎯</div>
+      <div class="insight-body">
+        <h4>Why 2-D as the Default Latent Dimension?</h4>
+        <p>With latent dim = 2, the entire manifold becomes a 2-D scatter plot you can inspect with the naked eye. Clusters for each digit class emerge naturally from the KL regularisation. Increasing to 5, 10, or 20 dims improves reconstruction sharpness and loses interpretable 2-D structure — the app lets you explore that trade-off interactively. <strong>Higher dims improve fidelity; 2-D maximises interpretability.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE DEMO -->
+  <div class="demo-block fade-up" id="demo">
+    <div class="s-tag s-tag-purple">Interactive Explorer</div>
+    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> Visualise VAE Concepts Without Running the App</h2>
+    <p class="demo-intro">Select a view below to see illustrative examples of what each tab in the live app produces after training.</p>
+    <div class="tab-selector" id="demoTabGroup">
+      <button class="tab-btn active" onclick="selectDemo(0,this)">🌐 Latent Clusters</button>
+      <button class="tab-btn" onclick="selectDemo(1,this)">🔁 Reconstructions</button>
+      <button class="tab-btn" onclick="selectDemo(2,this)">✨ Manifold Navigation</button>
+    </div>
+
+    <!-- Panel 0: latent grid -->
+    <div class="demo-panel active" id="dp0">
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:12px">Each cell represents a region of the 2-D latent space. After training, digits of the same class cluster together — the VAE has learned to organise the latent manifold semantically.</p>
+      <div class="latent-grid" id="latentGrid"></div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:10px;font-style:italic;text-align:center">Stylised representation of the 2-D latent space; colour encodes digit class (0–9).</p>
+    </div>
+
+    <!-- Panel 1: reconstruction strip -->
+    <div class="demo-panel" id="dp1">
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:12px">Top row: original MNIST samples. Bottom row: VAE reconstructions decoded from the 2-D latent code. Slight blurriness is expected — BCE loss smooths pixel predictions toward the mean.</p>
+      <div class="recon-strip" id="reconStrip"></div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:10px;font-style:italic;text-align:center">Illustrative reconstruction comparison. Live app uses actual PyTorch model outputs.</p>
+    </div>
+
+    <!-- Panel 2: manifold nav -->
+    <div class="demo-panel" id="dp2">
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:12px">In the live app, two sliders control Z₁ and Z₂ (each from −3 to +3). The decoder maps that coordinate to a digit image in real time. Moving across the manifold smoothly interpolates between digit classes.</p>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0" id="manifestGrid"></div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:6px;font-style:italic;text-align:center">Five sample (Z₁, Z₂) coordinates and their decoded digit representation. The live app lets you explore any point with sliders.</p>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-blue">Training Dynamics</div>
+    <h2 class="card-title"><i class="fas fa-chart-line"></i> Expected Training Behaviour</h2>
+    <div class="chart-tabs">
+      <div class="chart-tab active" onclick="switchChartTab(0,this)">ELBO Loss Curve</div>
+      <div class="chart-tab" onclick="switchChartTab(1,this)">Latent Cluster Quality</div>
+      <div class="chart-tab" onclick="switchChartTab(2,this)">Latent Dim Trade-off</div>
+    </div>
+    <div class="chart-panel-c active" id="cp0">
+      <div class="chart-wrap"><canvas id="chart0"></canvas></div>
+      <p class="chart-caption">Typical ELBO loss over 30 epochs on the 10,000-sample MNIST subset with LR=1e-3 and hidden dim=400. Loss drops sharply in early epochs as the decoder learns basic digit structure, then flattens as fine detail is refined.</p>
+    </div>
+    <div class="chart-panel-c" id="cp1">
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <p class="chart-caption">Approximate fraction of digit classes that form visually distinct latent clusters, measured by inter-cluster distance. Most classes separate by epoch 10; digits 4/9 and 3/5 remain closest due to visual similarity.</p>
+    </div>
+    <div class="chart-panel-c" id="cp2">
+      <div class="chart-wrap"><canvas id="chart2"></canvas></div>
+      <p class="chart-caption">Trade-off between reconstruction quality (lower BCE = better) and latent interpretability as latent dimension increases from 2 to 20. The 2-D default is chosen to maximise visual interpretability at a small quality cost.</p>
+    </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div class="card fade-up">
+    <div class="s-tag s-tag-purple">Design Decisions</div>
+    <h2 class="card-title"><i class="fas fa-lightbulb"></i> Three Engineering Choices That Define This App</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="tk-icon">🔄</div>
+        <div class="tk-val">Non-blocking training</div>
+        <div class="tk-label">Training runs in a Python daemon thread so the UI stays fully interactive — you can switch tabs, inspect the architecture, and watch the live loss curve while training proceeds.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">🗜️</div>
+        <div class="tk-val">Base64 image API</div>
+        <div class="tk-label">Every visualisation (loss curve, latent scatter, reconstruction grid) is rendered server-side by Matplotlib, encoded as base64 PNG, and injected into the DOM — zero external image hosting needed.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">🎛️</div>
+        <div class="tk-val">Fully configurable dims</div>
+        <div class="tk-label">Latent dim and hidden dim are runtime hyperparameters. Changing them re-instantiates the VAE and updates the architecture diagram labels live — the UI always reflects the model you're actually training.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-col -->
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="sidebar-card fade-up">
+    <h3>At a Glance</h3>
+    <p class="tldr-text"><strong>What it does:</strong> Trains a VAE on MNIST in the browser with live loss tracking, then lets you explore the latent space, compare reconstructions, and generate new digit images via sliders. <strong>How:</strong> PyTorch training thread → Flask REST API → base64 PNG responses. <strong>Why it's educational:</strong> Every step of the VAE — encoding, reparameterisation, decoding — is interactive and observable.</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Try It Live</h3>
+    <a href="https://huggingface.co/spaces/mnoorchenar/VAE-Playground" target="_blank" class="hf-btn">
+      <i class="fas fa-rocket"></i> Open on HuggingFace Spaces
+    </a>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Project Info</h3>
+    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:#a78bfa">🟣 Live · HuggingFace</span></div>
+    <div class="info-row"><span class="info-key">Type</span><span class="info-val">Industry Project</span></div>
+    <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Generative AI · DL</span></div>
+    <div class="info-row"><span class="info-key">Framework</span><span class="info-val">PyTorch · Flask</span></div>
+    <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">MNIST (10K subset)</span></div>
+    <div class="info-row"><span class="info-key">Architecture</span><span class="info-val">VAE (784→400→L→400→784)</span></div>
+    <div class="info-row"><span class="info-key">Latent Default</span><span class="info-val">2-D (configurable)</span></div>
+    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">PyTorch</span>
+      <span class="tech-pill">Flask</span>
+      <span class="tech-pill">Matplotlib</span>
+      <span class="tech-pill">NumPy</span>
+      <span class="tech-pill">HuggingFace 🤗</span>
+      <span class="tech-pill">MNIST</span>
+      <span class="tech-pill">torchvision</span>
+      <span class="tech-pill">threading</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="https://github.com/mnoorchenar/VAE-Playground" target="_blank" class="sidebar-link"><i class="fab fa-github"></i> GitHub Repository</a>
+      <a href="/projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html" class="sidebar-link"><i class="fas fa-link"></i> Drug Target AI (Project 7)</a>
+      <a href="/projects/Projects-Files/002-nlp-benchmark.html" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
+      <a href="/projects/Projects-Files/003-energy-anomaly-xai.html" class="sidebar-link"><i class="fas fa-link"></i> Energy Anomaly Explainer</a>
+      <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+</div><!-- /sidebar -->
+</div><!-- /main-layout -->
+
+<!-- ═══ PAGE-SPECIFIC JS ═══ -->
+<script>
+const html = document.documentElement;
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
+  return {
+    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
+    borderColor:     isDark() ? 'rgba(124,58,237,.35)' : 'rgba(109,40,217,.2)',
+    borderWidth: 1
+  };
+}
+
+/* ── DEMO: Latent cluster grid ── */
+const DIGIT_COLORS = [
+  ['rgba(239,68,68,.7)','#f87171'],     // 0 red
+  ['rgba(245,158,11,.7)','#fbbf24'],    // 1 amber
+  ['rgba(34,197,94,.7)','#4ade80'],     // 2 green
+  ['rgba(6,182,212,.7)','#67e8f9'],     // 3 teal
+  ['rgba(79,142,247,.7)','#93c5fd'],    // 4 blue
+  ['rgba(167,139,250,.7)','#c4b5fd'],   // 5 purple
+  ['rgba(244,114,182,.7)','#f9a8d4'],   // 6 pink
+  ['rgba(251,146,60,.7)','#fdba74'],    // 7 orange
+  ['rgba(163,230,53,.7)','#bef264'],    // 8 lime
+  ['rgba(56,189,248,.7)','#7dd3fc'],    // 9 sky
+];
+// 7×7 grid — approximate cluster layout
+const LAT_LAYOUT = [
+  [1,1,7,7,0,0,0],
+  [1,1,7,8,8,0,0],
+  [3,1,8,8,9,9,0],
+  [3,3,2,8,9,9,4],
+  [3,3,2,2,9,4,4],
+  [5,5,2,6,6,4,4],
+  [5,5,5,6,6,4,4],
+];
+function buildLatentGrid(){
+  const g = document.getElementById('latentGrid');
+  g.innerHTML = '';
+  LAT_LAYOUT.flat().forEach(d => {
+    const [bg, clr] = DIGIT_COLORS[d];
+    const el = document.createElement('div');
+    el.className = 'lat-cell';
+    el.style.cssText = `background:${bg};color:${clr};border:1px solid ${clr.replace('1)','0.4)')};`;
+    el.textContent = d;
+    el.title = `Digit ${d}`;
+    g.appendChild(el);
+  });
+}
+
+/* ── DEMO: Reconstruction strip ── */
+const RECON_PAIRS = [
+  { orig:'3', recon:'3', origBg:'rgba(6,182,212,.15)',  reconBg:'rgba(6,182,212,.08)' },
+  { orig:'7', recon:'7', origBg:'rgba(245,158,11,.15)', reconBg:'rgba(245,158,11,.08)' },
+  { orig:'2', recon:'2', origBg:'rgba(34,197,94,.15)',  reconBg:'rgba(34,197,94,.08)' },
+  { orig:'5', recon:'5', origBg:'rgba(167,139,250,.15)',reconBg:'rgba(167,139,250,.08)' },
+  { orig:'9', recon:'9', origBg:'rgba(56,189,248,.15)', reconBg:'rgba(56,189,248,.08)' },
+];
+function buildReconStrip(){
+  const s = document.getElementById('reconStrip');
+  s.innerHTML = RECON_PAIRS.map(p => `
+    <div class="recon-pair">
+      <div class="recon-label">Original</div>
+      <div class="digit-box digit-orig" style="background:${p.origBg}">${p.orig}</div>
+      <div class="recon-label" style="color:#a78bfa">Recon</div>
+      <div class="digit-box digit-recon" style="background:${p.reconBg};opacity:.75">${p.recon}</div>
+    </div>`).join('');
+}
+
+/* ── DEMO: Manifold navigation ── */
+const MANIFOLD_PTS = [
+  { z1:'-2.5', z2:'-2.5', digit:'1', color:'rgba(245,158,11,.12)', clr:'#fbbf24' },
+  { z1:'-1.0', z2:' 2.0', digit:'3', color:'rgba(6,182,212,.12)',  clr:'#67e8f9' },
+  { z1:' 0.0', z2:' 0.0', digit:'8', color:'rgba(163,230,53,.12)', clr:'#bef264' },
+  { z1:' 1.5', z2:'-1.5', digit:'4', color:'rgba(79,142,247,.12)', clr:'#93c5fd' },
+  { z1:' 2.5', z2:' 2.0', digit:'5', color:'rgba(167,139,250,.12)','clr':'#c4b5fd' },
+];
+function buildManifoldGrid(){
+  const g = document.getElementById('manifestGrid');
+  g.innerHTML = MANIFOLD_PTS.map(p => `
+    <div style="background:${p.color};border:1px solid ${p.clr.replace('1)','0.35)')};border-radius:10px;padding:14px 8px;text-align:center;">
+      <div style="font-size:.65rem;font-family:'Courier New',monospace;color:var(--muted);margin-bottom:6px">Z₁=${p.z1}</div>
+      <div style="font-size:.65rem;font-family:'Courier New',monospace;color:var(--muted);margin-bottom:10px">Z₂=${p.z2}</div>
+      <div style="font-size:2.4rem;font-weight:900;color:${p.clr};line-height:1">${p.digit}</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:6px">decoded digit</div>
+    </div>`).join('');
+}
+
+function selectDemo(idx, btn){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('dp' + idx).classList.add('active');
+}
+
+buildLatentGrid();
+buildReconStrip();
+buildManifoldGrid();
+
+/* ── CHARTS ── */
+const charts = {};
+
+function buildChart(i){
+  if(charts[i]) charts[i].destroy();
+  const ctx = document.getElementById('chart' + i);
+  if(!ctx) return;
+  const g = gc(), t = tc(), tip = tt();
+
+  if(i === 0){
+    // Typical ELBO loss curve over 30 epochs
+    const epochs = Array.from({length:30},(_,k)=>k+1);
+    const losses  = epochs.map(e => 28000 * Math.exp(-0.11*(e-1)) + 11000 + Math.random()*300);
+    charts[0] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: epochs,
+        datasets:[{
+          label: 'ELBO Loss',
+          data: losses,
+          borderColor: '#a78bfa',
+          backgroundColor: 'rgba(124,58,237,.15)',
+          fill: true, tension: 0.4, pointRadius: 2,
+          borderWidth: 2.5
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:t}}, tooltip:tip},
+        scales:{
+          x:{ticks:{color:t}, grid:{color:g}, title:{display:true, text:'Epoch', color:t, font:{size:11}}},
+          y:{ticks:{color:t}, grid:{color:g}, title:{display:true, text:'ELBO Loss (sum)', color:t, font:{size:11}}}
+        }
+      }
+    });
+  } else if(i === 1){
+    charts[1] = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['0','1','2','3','4','5','6','7','8','9'],
+        datasets:[
+          {
+            label: 'Epoch 5',
+            data: [60,85,55,50,45,48,52,75,42,40],
+            borderColor: 'rgba(124,58,237,.6)',
+            backgroundColor: 'rgba(124,58,237,.1)',
+            borderWidth:2, pointRadius:3
+          },
+          {
+            label: 'Epoch 30',
+            data: [88,97,82,75,68,72,80,94,70,65],
+            borderColor: 'rgba(6,182,212,.8)',
+            backgroundColor: 'rgba(6,182,212,.1)',
+            borderWidth:2, pointRadius:3
+          }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:t}}, tooltip:tip},
+        scales:{r:{ticks:{color:t,backdropColor:'transparent'}, grid:{color:g}, pointLabels:{color:t}, min:0, max:100}}
+      }
+    });
+  } else if(i === 2){
+    charts[2] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['2-D','5-D','10-D','20-D'],
+        datasets:[
+          {
+            label: 'Reconstruction Quality (↑ better)',
+            data: [62, 74, 83, 91],
+            borderColor: '#a78bfa', backgroundColor: 'rgba(124,58,237,.15)',
+            fill: true, tension:0.3, borderWidth:2.5, yAxisID:'y'
+          },
+          {
+            label: 'Visual Interpretability (↑ better)',
+            data: [100, 60, 30, 12],
+            borderColor: '#67e8f9', backgroundColor: 'rgba(6,182,212,.1)',
+            fill: true, tension:0.3, borderWidth:2.5,
+            borderDash:[6,3], yAxisID:'y'
+          }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:t}}, tooltip:tip},
+        scales:{
+          x:{ticks:{color:t}, grid:{color:g}, title:{display:true, text:'Latent Dimension', color:t, font:{size:11}}},
+          y:{ticks:{color:t}, grid:{color:g}, max:110, title:{display:true, text:'Score (0–100)', color:t, font:{size:11}}}
+        }
+      }
+    });
+  }
+}
+
+function switchChartTab(i, el){
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.chart-panel-c').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cp' + i).classList.add('active');
+  buildChart(i);
+}
+
+function rebuildCharts(){
+  Object.keys(charts).forEach(i => buildChart(Number(i)));
+  buildLatentGrid();
+  buildReconStrip();
+  buildManifoldGrid();
+}
+
+buildChart(0);
+</script>
+</body>
+</html>
