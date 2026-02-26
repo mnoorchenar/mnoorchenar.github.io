@@ -87,7 +87,8 @@ canvas{display:block}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:.74rem;font-weight:700;letter-spacing:.03em}
 .pill-orange{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);color:var(--orange)}
 .pill-gold{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--gold)}
-.pub-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;box-shadow:0 0 6px rgba(245,158,11,.6)}
+.pub-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pub-pulse 2s infinite}
+@keyframes pub-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1.15;margin-bottom:14px;color:var(--text)}
 .grad-text{background:linear-gradient(135deg,var(--orange),var(--crimson));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--muted);max-width:680px;line-height:1.72;margin-bottom:26px}
