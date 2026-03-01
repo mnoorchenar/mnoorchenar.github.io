@@ -17,17 +17,150 @@
 
 <!-- ── FOOTER ── -->
 <footer class="sh-footer">
-  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
-  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
-  <div class="sh-footer-icons">
-    <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-    <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+  <div class="sh-footer-inner">
+
+    <!-- Name + role -->
+    <div class="sh-footer-brand">
+      <span class="sh-footer-name">Mohammad Noorchenarboo</span>
+      <span class="sh-footer-sep">·</span>
+      <span class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</span>
+    </div>
+
+    <!-- Single icon row with labels -->
+    <div class="sh-footer-links">
+      <a href="mailto:mohammadnoorchenarboo@gmail.com" class="sh-link sh-email">
+        <i class="fas fa-envelope"></i><span>Email</span>
+      </a>
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" class="sh-link sh-linkedin">
+        <i class="fab fa-linkedin-in"></i><span>LinkedIn</span>
+      </a>
+      <a href="https://github.com/mnoorchenar" target="_blank" class="sh-link sh-github">
+        <i class="fab fa-github"></i><span>GitHub</span>
+      </a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" class="sh-link sh-hf">
+        <i class="fas fa-robot"></i><span>HuggingFace</span>
+      </a>
+      <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" class="sh-link sh-scholar">
+        <i class="fas fa-graduation-cap"></i><span>Scholar</span>
+      </a>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="sh-footer-bottom">
+      <span class="sh-footer-copy">© 2025 Mohammad Noorchenarboo</span>
+      <span class="sh-footer-dot"></span>
+      <button class="sh-license-btn" id="openCopyrightModal">
+        <i class="fas fa-shield-alt"></i> Copyright License
+      </button>
+    </div>
+
   </div>
-  <div class="sh-footer-copy" id="footerCopy">© 2025 Mohammad Noorchenarboo</div>
-  <button class="footer-license-btn" id="openCopyrightModal">
-    <i class="fas fa-shield-alt"></i> Copyright License
-  </button>
 </footer>
+
+<style>
+/* ── SHARED FOOTER STYLES ── */
+.sh-footer{
+  background:var(--footer-bg, #0d1530);
+  border-top:1px solid var(--glass-border, rgba(255,255,255,.08));
+  padding:28px 32px 20px;
+  text-align:center;
+}
+.sh-footer-inner{
+  max-width:900px;margin:0 auto;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+
+/* brand line */
+.sh-footer-brand{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  font-size:.82em;
+}
+.sh-footer-name{
+  font-weight:700;
+  background:linear-gradient(135deg,var(--accent,#4f8ef7),var(--teal,#06b6d4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sh-footer-sep{color:var(--glass-border,rgba(255,255,255,.2))}
+.sh-footer-role{color:var(--muted,#8892a4)}
+
+/* icon row */
+.sh-footer-links{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+}
+.sh-link{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:20px;
+  font-size:.81em;font-weight:600;
+  text-decoration:none;
+  border:1px solid transparent;
+  transition:.22s cubic-bezier(.22,1,.36,1);
+  white-space:nowrap;
+}
+.sh-link span{line-height:1}
+.sh-link i{font-size:.88em;transition:.22s}
+.sh-link:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+
+/* per-icon colours */
+.sh-email   { color:#f87171; background:rgba(248,113,113,.10); border-color:rgba(248,113,113,.22) }
+.sh-email:hover { background:rgba(248,113,113,.20); border-color:rgba(248,113,113,.45) }
+
+.sh-linkedin{ color:#60a5fa; background:rgba(96,165,250,.10); border-color:rgba(96,165,250,.22) }
+.sh-linkedin:hover { background:rgba(96,165,250,.20); border-color:rgba(96,165,250,.45) }
+
+.sh-github  { color:#a78bfa; background:rgba(167,139,250,.10); border-color:rgba(167,139,250,.22) }
+.sh-github:hover { background:rgba(167,139,250,.20); border-color:rgba(167,139,250,.45) }
+
+.sh-hf      { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.22) }
+.sh-hf:hover { background:rgba(251,191,36,.20); border-color:rgba(251,191,36,.45) }
+
+.sh-scholar { color:#34d399; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.22) }
+.sh-scholar:hover { background:rgba(52,211,153,.20); border-color:rgba(52,211,153,.45) }
+
+/* light theme overrides */
+[data-theme="light"] .sh-email   { color:#dc2626; background:rgba(220,38,38,.08);   border-color:rgba(220,38,38,.2) }
+[data-theme="light"] .sh-linkedin{ color:#1d4ed8; background:rgba(29,78,216,.08);   border-color:rgba(29,78,216,.2) }
+[data-theme="light"] .sh-github  { color:#6d28d9; background:rgba(109,40,217,.08);  border-color:rgba(109,40,217,.2) }
+[data-theme="light"] .sh-hf      { color:#b45309; background:rgba(180,83,9,.08);    border-color:rgba(180,83,9,.2) }
+[data-theme="light"] .sh-scholar { color:#065f46; background:rgba(6,95,70,.08);     border-color:rgba(6,95,70,.2) }
+
+/* bottom bar */
+.sh-footer-bottom{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
+  padding-top:12px;
+  border-top:1px solid var(--glass-border,rgba(255,255,255,.08));
+  width:100%;
+}
+.sh-footer-copy{color:var(--muted,#8892a4);font-size:.74em}
+.sh-footer-dot{width:3px;height:3px;border-radius:50%;background:var(--glass-border,rgba(255,255,255,.15));flex-shrink:0}
+.sh-license-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:none;border:none;cursor:pointer;padding:0;
+  font-size:.74em;font-weight:700;
+  background:linear-gradient(135deg,var(--accent,#4f8ef7),var(--teal,#06b6d4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  transition:opacity .2s,transform .2s;
+}
+.sh-license-btn i{
+  background:linear-gradient(135deg,var(--accent,#4f8ef7),var(--teal,#06b6d4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sh-license-btn:hover{opacity:.7;transform:translateY(-1px)}
+
+@media(max-width:600px){
+  .sh-footer{padding:22px 16px 16px}
+  .sh-footer-brand{flex-direction:column;gap:3px}
+  .sh-footer-sep{display:none}
+  .sh-link{padding:5px 10px;font-size:.77em}
+}
+</style>
+
+<script>
+/* copyright modal */
+const _modal   = document.getElementById('copyrightModal');
+const _openBtn = document.getElementById('openCopyrightModal');
+const _closeBtn= document.getElementById('closeCopyrightModal');
+if(_openBtn)  _openBtn.addEventListener('click',  () => _modal.classList.add('active'));
+if(_closeBtn) _closeBtn.addEventListener('click', () => _modal.classList.remove('active'));
+if(_modal)    _modal.addEventListener('click', e => { if(e.target===_modal) _modal.classList.remove('active'); });
+document.addEventListener('keydown', e => { if(e.key==='Escape' && _modal) _modal.classList.remove('active'); });
+</script>
