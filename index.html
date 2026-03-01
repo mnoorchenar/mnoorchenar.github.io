@@ -151,8 +151,58 @@ body{
 [data-theme="light"] .theme-toggle { color: var(--toggle-clr); }
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:.3s}
-nav.scrolled{background:var(--nav-scrolled-bg);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border)}
+/* ── SHARED NAV BASE ── */
+.site-nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:64px;padding:0 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .35s, border-color .35s, opacity .3s, transform .3s;
+}
+.site-nav .nav-logo{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.site-nav .nav-links{display:flex;gap:4px}
+.site-nav .nav-links a{color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:500;transition:.25s;border:1px solid transparent}
+.site-nav .nav-links a:hover,.site-nav .nav-links a.active{color:var(--text);border-color:var(--glass-border);background:var(--glass)}
+.site-nav .nav-right{display:flex;align-items:center;gap:14px}
+.site-nav .nav-social{display:flex;gap:14px}
+.site-nav .nav-social a{color:var(--muted);font-size:1.05em;transition:.2s}
+.site-nav .nav-social a:hover{color:var(--accent)}
+
+/* ── TOP NAV (hero view) ── */
+#nav-top{
+  background:transparent;
+  border-bottom:1px solid transparent;
+}
+/* ── SECTION NAV (scrolled view) ── */
+#nav-section{
+  background:var(--nav-scrolled-bg);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--glass-border);
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+}
+
+/* remove any box/highlight from specific nav links */
+.site-nav .nav-links a[href*="projects"],
+.site-nav .nav-links a[href*="certifications"],
+.site-nav .nav-links a[href*="classroom"],
+.site-nav .nav-links a[href*="Hands-On"]{
+  color:var(--muted);font-weight:500;
+  background:none;border-color:transparent;
+}
+.site-nav .nav-links a[href*="projects"]:hover,
+.site-nav .nav-links a[href*="certifications"]:hover,
+.site-nav .nav-links a[href*="classroom"]:hover,
+.site-nav .nav-links a[href*="Hands-On"]:hover{
+  color:var(--text);background:var(--glass);border-color:var(--glass-border);
+}
+
+/* scrolled state — swap which nav shows */
+body.nav-scrolled #nav-top{opacity:0;pointer-events:none;transform:translateY(-8px)}
+body.nav-scrolled #nav-section{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+@media(max-width:768px){
+  .site-nav{padding:0 16px}
+  .site-nav .nav-links{display:none}
+}
 .nav-logo{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
 .nav-links{display:flex;gap:4px}
 .nav-links a{color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:500;transition:.25s;border:1px solid transparent}
@@ -188,33 +238,90 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 #typed-text{color:var(--accent);font-weight:700}
 .typed-cursor{color:var(--accent);animation:blink .7s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.hero-location{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-size:.9em;margin-bottom:36px;position:relative;z-index:2}
+.hero-location{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:.9em;margin-bottom:36px;position:relative;z-index:2;flex-wrap:wrap}
 .hero-location i{color:var(--teal)}
+.location-sep{color:var(--glass-border)}
+.hero-email{color:var(--muted);text-decoration:none;transition:.2s;display:flex;align-items:center;gap:5px}
+.hero-email:hover{color:var(--accent)}
 
-/* CTA Buttons */
-.hero-cta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2;margin-bottom:48px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:.865em;font-weight:600;text-decoration:none;transition:.25s;border:1px solid transparent}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 20px rgba(79,142,247,.3)}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(79,142,247,.45)}
-.btn-linkedin{background:rgba(10,102,194,.14);border-color:rgba(10,102,194,.38);color:#2a78d9}
-.btn-linkedin:hover{background:rgba(10,102,194,.26);transform:translateY(-3px);border-color:rgba(10,102,194,.65)}
-.btn-hf{background:rgba(252,211,77,.1);border-color:rgba(252,211,77,.32);color:#c9820a}
-.btn-hf:hover{background:rgba(252,211,77,.2);transform:translateY(-3px);border-color:rgba(252,211,77,.6)}
-.btn-gh{background:rgba(80,80,100,.09);border-color:rgba(80,80,100,.28);color:var(--muted)}
-.btn-gh:hover{background:rgba(80,80,100,.18);transform:translateY(-3px);border-color:rgba(80,80,100,.5)}
-.btn-portfolio{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.32);color:#0e7490}
-.btn-portfolio:hover{background:rgba(6,182,212,.22);transform:translateY(-3px);border-color:rgba(6,182,212,.6)}
-.btn-handsonai{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.32);color:#6d28d9}
-.btn-handsonai:hover{background:rgba(124,58,237,.22);transform:translateY(-3px);border-color:rgba(124,58,237,.6)}
-.btn-landing{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.38);color:#16a34a}
-.btn-landing:hover{background:rgba(34,197,94,.26);transform:translateY(-3px);border-color:rgba(34,197,94,.65)}
-.btn-ghost{background:var(--glass);border-color:var(--glass-border);color:var(--text)}
-.btn-ghost:hover{background:var(--card-hover-bg);transform:translateY(-3px);border-color:rgba(79,142,247,.35)}
-[data-theme="dark"] .btn-linkedin{color:#7eb8f5}
-[data-theme="dark"] .btn-hf{color:#fcd34d}
-[data-theme="dark"] .btn-gh{color:#b0b8cc}
-[data-theme="dark"] .btn-portfolio{color:#67e8f9}
-[data-theme="dark"] .btn-handsonai{color:#c4b5fd}
+/* ── CTA GRID (4 cards) ── */
+.hero-cta{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  max-width:720px;
+  width:100%;
+  position:relative;
+  z-index:2;
+  margin-bottom:48px;
+}
+.cta-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:20px 14px 18px;
+  border-radius:var(--radius);
+  text-decoration:none;
+  border:1px solid var(--glass-border);
+  background:var(--glass);
+  color:var(--text);
+  transition:.28s cubic-bezier(.22,1,.36,1);
+  position:relative;
+  overflow:hidden;
+}
+.cta-card::before{
+  content:'';position:absolute;inset:0;
+  opacity:0;transition:.28s;
+  border-radius:var(--radius);
+}
+.cta-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.25)}
+.cta-card:hover::before{opacity:1}
+
+/* individual accent colours */
+.cta-card.projects  {border-color:rgba(79,142,247,.28)}
+.cta-card.projects::before{background:rgba(79,142,247,.06)}
+.cta-card.projects:hover{border-color:rgba(79,142,247,.55)}
+
+.cta-card.certs     {border-color:rgba(6,182,212,.28)}
+.cta-card.certs::before{background:rgba(6,182,212,.06)}
+.cta-card.certs:hover{border-color:rgba(6,182,212,.55)}
+
+.cta-card.classroom {border-color:rgba(34,197,94,.28)}
+.cta-card.classroom::before{background:rgba(34,197,94,.06)}
+.cta-card.classroom:hover{border-color:rgba(34,197,94,.55)}
+
+.cta-card.handsonai {border-color:rgba(124,58,237,.28)}
+.cta-card.handsonai::before{background:rgba(124,58,237,.06)}
+.cta-card.handsonai:hover{border-color:rgba(124,58,237,.55)}
+
+.cta-icon{
+  width:46px;height:46px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2em;
+  transition:.28s;
+}
+.cta-card.projects  .cta-icon{background:rgba(79,142,247,.14); color:var(--accent)}
+.cta-card.certs     .cta-icon{background:rgba(6,182,212,.14);  color:var(--teal)}
+.cta-card.classroom .cta-icon{background:rgba(34,197,94,.14);  color:var(--green)}
+.cta-card.handsonai .cta-icon{background:rgba(124,58,237,.14); color:var(--accent2)}
+
+[data-theme="light"] .cta-card.handsonai .cta-icon{color:#6d28d9}
+[data-theme="light"] .cta-card.projects  .cta-icon{color:#2563eb}
+
+.cta-card:hover .cta-icon{transform:scale(1.1) rotate(6deg)}
+
+.cta-label{font-size:.82em;font-weight:700;letter-spacing:.3px}
+.cta-sub  {font-size:.72em;color:var(--muted);line-height:1.35;text-align:center}
+
+/* 2-col on tablet, 1-col on very small phones */
+@media(max-width:640px){
+  .hero-cta{grid-template-columns:repeat(2,1fr);max-width:340px}
+}
+@media(max-width:340px){
+  .hero-cta{grid-template-columns:1fr;max-width:220px}
+}
 
 /* Hero stats */
 .hero-stats{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
@@ -370,47 +477,24 @@ section{padding:90px 0}
 
 /* ── COPYRIGHT MODAL ── */
 .copyright-modal-overlay{
-  display:none;
-  position:fixed;top:0;left:0;width:100vw;height:100vh;
-  background:rgba(0,0,0,.55);
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  backdrop-filter:blur(4px);
-  animation:fadeIn .2s ease;
+  display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;
+  background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);animation:fadeIn .2s ease;
 }
 .copyright-modal-overlay.active{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .copyright-modal-box{
-  background:var(--navy2);
-  border:1px solid var(--glass-border);
-  border-radius:16px;
-  padding:36px 32px 28px;
-  max-width:480px;
-  width:90%;
-  box-shadow:0 24px 64px rgba(0,0,0,.45);
-  position:relative;
+  background:var(--navy2);border:1px solid var(--glass-border);border-radius:16px;
+  padding:36px 32px 28px;max-width:480px;width:90%;
+  box-shadow:0 24px 64px rgba(0,0,0,.45);position:relative;
   animation:slideUp .25s cubic-bezier(.22,1,.36,1);
 }
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 [data-theme="light"] .copyright-modal-box{background:#f5f7ff}
-.copyright-modal-box h3{
-  font-size:1.1em;font-weight:700;
-  background:linear-gradient(135deg,var(--accent),var(--teal));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:14px;
-}
-.copyright-modal-box p{
-  font-size:.9em;color:var(--muted);line-height:1.7;margin-bottom:22px;
-}
+.copyright-modal-box h3{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px}
+.copyright-modal-box p{font-size:.9em;color:var(--muted);line-height:1.7;margin-bottom:22px}
 .copyright-modal-box p strong{color:var(--text)}
-.copyright-modal-close{
-  display:inline-flex;align-items:center;gap:7px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;border:none;border-radius:8px;
-  padding:9px 22px;font-size:.86em;font-weight:600;
-  cursor:pointer;transition:.2s;
-}
+.copyright-modal-close{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:.86em;font-weight:600;cursor:pointer;transition:.2s}
 .copyright-modal-close:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,142,247,.35)}
 
 /* ── FOOTER ── */
@@ -422,22 +506,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 .footer-links a{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);text-decoration:none;padding:8px 16px;border-radius:20px;font-size:.83em;transition:.2s}
 .footer-links a:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
 .footer-copy{color:var(--muted);font-size:.78em;margin-bottom:10px}
-.footer-license-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  background:none;border:none;
-  font-size:.78em;font-weight:600;
-  cursor:pointer;text-decoration:none;
-  padding:0;
-  background:linear-gradient(135deg,var(--accent),var(--teal));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-  transition:opacity .2s, transform .2s;
-}
-.footer-license-btn i{
-  background:linear-gradient(135deg,var(--accent),var(--teal));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
+.footer-license-btn{display:inline-flex;align-items:center;gap:7px;background:none;border:none;font-size:.78em;font-weight:600;cursor:pointer;text-decoration:none;padding:0;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:opacity .2s,transform .2s}
+.footer-license-btn i{background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .footer-license-btn:hover{opacity:.75;transform:translateY(-1px)}
 
 /* ── ANIMATIONS ── */
@@ -455,51 +525,46 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
   .hcard-img{width:100%;height:200px;min-height:unset}
   .awards-grid{grid-template-columns:1fr}
   .nav-links{display:none}
-  .hero-stats{gap:18px}.stat-divider{display:none}
-  .hero-cta{gap:6px}
-  .btn{padding:9px 14px;font-size:.8em}
+  .hero-stats{gap:18px}
+  .stat-divider{display:none}
   nav{padding:0 16px}
+  /* hero stats: wrap to 3+3 on small screens */
+  .hero-stats .stat{min-width:80px}
+  section{padding:64px 0}
+  .container{padding:0 18px}
+}
+@media(max-width:480px){
+  .pub-body-inner{padding-left:22px}
+  .pub-year-badge{display:none}
+  footer{padding:40px 18px 28px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── COPYRIGHT MODAL (hidden by default, opens on footer link click) ── -->
+<!-- COPYRIGHT MODAL -->
 <div class="copyright-modal-overlay" id="copyrightModal" role="dialog" aria-modal="true" aria-labelledby="copyrightModalTitle">
   <div class="copyright-modal-box">
     <h3 id="copyrightModalTitle"><i class="fas fa-shield-alt"></i> Copyright Notice</h3>
-    <p>
-      <strong>Strict Limitation:</strong> All content on this website — including text, images, code,
-      design, and all other materials — is protected by copyright.<br><br>
-      Any use, reproduction, distribution, or modification for any reason is
-      <strong>strictly prohibited</strong> and not allowed under any circumstances without
-      prior written consent from the author.
-    </p>
-    <button class="copyright-modal-close" id="closeCopyrightModal">
-      <i class="fas fa-check"></i> I Understand
-    </button>
+    <p><strong>Strict Limitation:</strong> All content on this website — including text, images, code, design, and all other materials — is protected by copyright.<br><br>Any use, reproduction, distribution, or modification for any reason is <strong>strictly prohibited</strong> and not allowed under any circumstances without prior written consent from the author.</p>
+    <button class="copyright-modal-close" id="closeCopyrightModal"><i class="fas fa-check"></i> I Understand</button>
   </div>
 </div>
 
-<!-- NAV -->
-<nav id="navbar">
-  <a href="#hero" class="nav-logo">MN</a>
+<!-- NAV TOP (visible on hero) -->
+<nav id="nav-top" class="site-nav">
+  <a href="/index.html" class="nav-logo">MN</a>
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#experience">Experience</a>
-    <a href="#education">Education</a>
-    <a href="#publications">Publications</a>
-    <a href="#skills">Skills</a>
-    <a href="#awards">Honors</a>
-    <a href="projects/index.html">Projects</a>
+    <a href="/">Home</a>
+    <a href="/projects/">Projects</a>
+    <a href="/certifications/">Certifications</a>
+    <a href="/classroom-stories/">Classrooms</a>
+    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank">Hands-On AI</a>
   </div>
   <div class="nav-right">
     <div class="nav-social">
-      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
       <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-      <a href="https://mnoorchenar.github.io/" target="_blank" title="Portfolio Site"><i class="fas fa-globe"></i></a>
-      <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" title="Hands-On AI Course"><i class="fas fa-chalkboard-teacher"></i></a>
-      <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
       <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
     </div>
@@ -507,6 +572,34 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
       <span class="toggle-sun">☀️</span>
       <span class="toggle-moon">🌙</span>
       <span id="toggleLabel">Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- NAV SECTION (appears after scrolling past hero) -->
+<nav id="nav-section" class="site-nav">
+  <a href="/index.html" class="nav-logo">MN</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#education">Education</a>
+    <a href="#publications">Publications</a>
+    <a href="#skills">Skills</a>
+    <a href="#awards">Honors</a>
+    <a href="/projects/">Projects</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
+      <a href="mailto:mohammadnoorchenarboo@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+    <button class="theme-toggle" id="themeToggle2" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
+      <span class="toggle-sun">☀️</span>
+      <span class="toggle-moon">🌙</span>
+      <span id="toggleLabel2">Light</span>
     </button>
   </div>
 </nav>
@@ -528,18 +621,36 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
     <span style="color:var(--muted)">I am a&nbsp;</span>
     <span id="typed-text"></span><span class="typed-cursor">|</span>
   </div>
-  <div class="hero-location"><i class="fas fa-map-marker-alt"></i> Ontario, Canada</div>
+  <div class="hero-location">
+    <i class="fas fa-map-marker-alt"></i> Ontario, Canada
+    <span class="location-sep">·</span>
+    <a href="mailto:mohammadnoorchenarboo@gmail.com" class="hero-email">
+      <i class="fas fa-envelope"></i> mohammadnoorchenarboo@gmail.com
+    </a>
+  </div>
 
+  <!-- ── 4-card CTA grid ── -->
   <div class="hero-cta">
-    <a href="mailto:mohammadnoorchenarboo@gmail.com" class="btn btn-primary"><i class="fas fa-envelope"></i> Get in Touch</a>
-    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" class="btn btn-linkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
-    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" class="btn btn-ghost"><i class="fas fa-graduation-cap"></i> Scholar</a>
-    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" class="btn btn-hf"><i class="fas fa-robot"></i> HuggingFace</a>
-    <a href="https://github.com/mnoorchenar" target="_blank" class="btn btn-gh"><i class="fab fa-github"></i> GitHub</a>
-    <!-- <a href="https://mnoorchenar.github.io/" target="_blank" class="btn btn-portfolio"><i class="fas fa-globe"></i> Portfolio</a> -->
-    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" class="btn btn-handsonai"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
-    <a href="certifications/index.html" class="btn btn-portfolio"><i class="fas fa-certificate"></i> Certification</a>
-    <a href="classroom-stories/index.html" class="btn btn-landing"><i class="fas fa-book-open"></i> Classroom Stories</a>
+    <a href="projects/index.html" class="cta-card projects">
+      <div class="cta-icon"><i class="fas fa-layer-group"></i></div>
+      <span class="cta-label">Projects</span>
+      <span class="cta-sub">Research &amp; applied AI work</span>
+    </a>
+    <a href="certifications/index.html" class="cta-card certs">
+      <div class="cta-icon"><i class="fas fa-certificate"></i></div>
+      <span class="cta-label">Certifications</span>
+      <span class="cta-sub">Professional credentials</span>
+    </a>
+    <a href="classroom-stories/index.html" class="cta-card classroom">
+      <div class="cta-icon"><i class="fas fa-book-open"></i></div>
+      <span class="cta-label">Classroom Stories</span>
+      <span class="cta-sub">Teaching moments &amp; insights</span>
+    </a>
+    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" class="cta-card handsonai">
+      <div class="cta-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <span class="cta-label">Hands-On AI</span>
+      <span class="cta-sub">Interactive AI course</span>
+    </a>
   </div>
 
   <div class="hero-stats">
@@ -1019,8 +1130,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
       <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i> Email</a>
       <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
       <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-      <a href="https://mnoorchenar.github.io/" target="_blank"><i class="fas fa-globe"></i> Portfolio</a>
-      <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
+      <!-- <a href="https://mnoorchenar.github.io/" target="_blank"><i class="fas fa-globe"></i> Portfolio</a> -->
+      <!-- <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a> -->
       <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i> Scholar</a>
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i> HuggingFace</a>
     </div>
@@ -1033,31 +1144,25 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 
 <script>
 /* ─── THEME TOGGLE ─── */
-const html = document.documentElement;
-const toggleBtn = document.getElementById('themeToggle');
-const toggleLabel = document.getElementById('toggleLabel');
-const savedTheme = localStorage.getItem('mn-theme') || 'dark';
-html.setAttribute('data-theme', savedTheme);
+const html=document.documentElement,toggleBtn=document.getElementById('themeToggle'),toggleLabel=document.getElementById('toggleLabel');
+const savedTheme=localStorage.getItem('mn-theme')||'dark';
+html.setAttribute('data-theme',savedTheme);
 updateToggleLabel(savedTheme);
-toggleBtn.addEventListener('click', () => {
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('mn-theme', next);
+toggleBtn.addEventListener('click',()=>{
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('mn-theme',next);
   updateToggleLabel(next);
   initPts();
 });
-function updateToggleLabel(theme) {
-  toggleLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
-}
+function updateToggleLabel(t){toggleLabel.textContent=t==='dark'?'Light':'Dark';}
 
 /* ─── COPYRIGHT MODAL ─── */
-const modal   = document.getElementById('copyrightModal');
-const openBtn = document.getElementById('openCopyrightModal');
-const closeBtn= document.getElementById('closeCopyrightModal');
-openBtn.addEventListener('click', () => modal.classList.add('active'));
-closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('active'); });
+const modal=document.getElementById('copyrightModal'),openBtn=document.getElementById('openCopyrightModal'),closeBtn=document.getElementById('closeCopyrightModal');
+openBtn.addEventListener('click',()=>modal.classList.add('active'));
+closeBtn.addEventListener('click',()=>modal.classList.remove('active'));
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('active');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('active');});
 
 /* ─── TYPING ANIMATION ─── */
 const phrases=["Data Scientist","AI Researcher","Biostatistician","College Professor","Deep Learning Expert"];
@@ -1072,15 +1177,13 @@ function type(){
 type();
 
 /* ─── PARTICLES ─── */
-const cvs=document.getElementById('particles-canvas');
-const ctx=cvs.getContext('2d');
-const heroSec=document.getElementById('hero');
+const cvs=document.getElementById('particles-canvas'),ctx=cvs.getContext('2d'),heroSec=document.getElementById('hero');
 let W,H,pts=[];
-function getParticleRGB(){return html.getAttribute('data-theme')==='light'?'37,99,235':'79,142,247';}
+function getPtRGB(){return html.getAttribute('data-theme')==='light'?'37,99,235':'79,142,247';}
 function getLineRGB(){return html.getAttribute('data-theme')==='light'?'37,99,235':'100,160,255';}
 function resize(){W=cvs.width=heroSec.offsetWidth;H=cvs.height=heroSec.offsetHeight;}
 function mkPt(){
-  const big=Math.random()<0.18;
+  const big=Math.random()<.18;
   return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,
     r:big?Math.random()*3.5+2.5:Math.random()*1.6+.6,
     a:big?Math.random()*.25+.42:Math.random()*.2+.28,big};
@@ -1088,24 +1191,16 @@ function mkPt(){
 function initPts(){resize();pts=[];for(let i=0;i<110;i++)pts.push(mkPt());}
 function draw(){
   ctx.clearRect(0,0,W,H);
-  const lineRGB=getLineRGB(),ptRGB=getParticleRGB();
+  const lr=getLineRGB(),pr=getPtRGB();
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<130){
-      ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-      ctx.strokeStyle=`rgba(${lineRGB},${.20*(1-d/130)})`;
-      ctx.lineWidth=pts[i].big||pts[j].big?0.9:0.55;ctx.stroke();
-    }
+    if(d<130){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(${lr},${.20*(1-d/130)})`;ctx.lineWidth=pts[i].big||pts[j].big?.9:.55;ctx.stroke();}
   }
   pts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(${ptRGB},${p.a})`;ctx.fill();
-    if(p.big){
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(${ptRGB},${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();
-    }
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${pr},${p.a})`;ctx.fill();
+    if(p.big){ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);ctx.strokeStyle=`rgba(${pr},${p.a*.35})`;ctx.lineWidth=1;ctx.stroke();}
   });
   requestAnimationFrame(draw);
 }
@@ -1136,15 +1231,9 @@ document.querySelectorAll('.awards-grid,.skills-grid').forEach(grid=>{
 /* ─── ANIMATED COUNTERS ─── */
 function animCount(el){
   const t=+el.dataset.target,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',s=performance.now();
-  (function step(ts){
-    const p=Math.min((ts-s)/5000,1),e=1-Math.pow(1-p,4);
-    el.textContent=pre+Math.round(e*t)+suf;
-    if(p<1)requestAnimationFrame(step);
-  })(s);
+  (function step(ts){const p=Math.min((ts-s)/5000,1),e=1-Math.pow(1-p,4);el.textContent=pre+Math.round(e*t)+suf;if(p<1)requestAnimationFrame(step);})(s);
 }
-const co=new IntersectionObserver(e=>{
-  e.forEach(x=>{if(x.isIntersecting&&x.target.dataset.target){animCount(x.target);co.unobserve(x.target);}});
-},{threshold:.5});
+const co=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting&&x.target.dataset.target){animCount(x.target);co.unobserve(x.target);}});},{threshold:.5});
 document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
 
 /* ─── PUBLICATION ACCORDION ─── */
