@@ -10,7 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/projects/shared.js" defer></script>
 <style>
-.content-wrap{max-width:1100px;margin:0 auto;padding:0 28px 80px}
+.content-wrap{max-width:1100px;margin:0 auto;padding:0 28px 80px;display:flex;flex-direction:column}
+#sec-voices{order:-1}
 
 /* ── HERO ── */
 .proj-hero{padding:110px 32px 60px;text-align:center;position:relative;overflow:hidden;background:var(--body-bg);transition:background .35s}
@@ -135,10 +136,10 @@
 .course-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:.76em;font-weight:700;border:1px solid;margin:3px}
 
 /* ── GALLERY ── */
-.gal-stage{position:relative;border-radius:12px;overflow:hidden;height:300px;background:var(--navy3);border:1px solid var(--glass-border)}
+.gal-stage{position:relative;border-radius:12px;overflow:hidden;height:420px;background:var(--navy3);border:1px solid var(--glass-border)}
 .gal-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;pointer-events:none}
 .gal-slide.active{opacity:1;pointer-events:auto}
-.gal-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.gal-slide img{width:100%;height:100%;object-fit:contain;display:block}
 .gal-slide-fallback{width:100%;height:100%;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:2.8em;color:var(--muted)}
 .gal-overlay{position:absolute;bottom:0;left:0;right:0;padding:18px 18px 14px;background:linear-gradient(to top,rgba(4,8,20,.85),transparent);display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none}
 .gal-caption{color:#e2e8f0;min-width:0}
@@ -213,7 +214,7 @@
 [data-theme="light"] .badge-6145{color:#166534}
 </style>
 </head>
-<body data-project-index="6">
+<body>
 
 <!-- ═══ HERO ═══ -->
 <div class="proj-hero">
@@ -400,7 +401,7 @@
     </div>
   </div>
 
-  <!-- ══ SECTION 3: VOICES & MOMENTS ══ -->
+  <div id="sec-voices"><!-- ══ SECTION 3: VOICES & MOMENTS ══ -->
   <div class="sec-head fade-up">
     <div class="s-tag s-tag-teal"><i class="fas fa-users"></i> Voices &amp; Moments</div>
     <h2>Students &amp; Classroom Stories</h2>
@@ -497,6 +498,8 @@
       <div class="cmt-counter-badge" id="cmtCounter">1 / 44</div>
     </div>
   </div>
+
+  </div><!-- /#sec-voices -->
 
 </div><!-- /content-wrap -->
 
