@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Certifications · Mohammad Noorchenarboo</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/projects/shared.css">
+<script src="/projects/shared.js" defer></script>
+
+<style>
+/* ══════════════════════════════════════
+   ISSUER COLOR TOKENS
+   Each card carries a --ic (issuer color)
+   custom property set inline. All glow,
+   border, tag, and shimmer effects derive
+   from it automatically.
+══════════════════════════════════════ */
+:root {
+  --ic: var(--accent); /* fallback */
+}
+
+/* ══════════════════════════════════════
+   PAGE HERO — animated grid + orb
+══════════════════════════════════════ */
+.page-hero {
+  padding: 118px 32px 64px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  background: var(--body-bg); transition: background .35s;
+}
+.page-hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(79,142,247,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: grid-drift 20s linear infinite;
+}
+@keyframes grid-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 48px 48px; }
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 75% 60% at 50% -5%, rgba(79,142,247,.22), transparent 65%);
+  animation: orb-pulse 6s ease-in-out infinite alternate;
+}
+@keyframes orb-pulse {
+  from { opacity: .7; transform: scaleX(1); }
+  to   { opacity: 1;  transform: scaleX(1.08); }
+}
+[data-theme="light"] .page-hero::before {
+  background: radial-gradient(ellipse 75% 60% at 50% -5%, rgba(37,99,235,.12), transparent 65%);
+}
+
+/* floating particles */
+.hero-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.hero-particles span {
+  position: absolute; border-radius: 50%;
+  background: var(--accent); opacity: 0;
+  animation: float-up var(--dur,8s) var(--delay,0s) ease-in infinite;
+}
+@keyframes float-up {
+  0%   { opacity: 0; transform: translateY(0) scale(1); }
+  10%  { opacity: .35; }
+  90%  { opacity: .1; }
+  100% { opacity: 0; transform: translateY(-320px) scale(.4); }
+}
+
+.page-hero h1 {
+  font-size: clamp(2.2rem,4.5vw,3.4rem); font-weight: 900;
+  letter-spacing: -.5px; margin: 14px 0 10px;
+  position: relative; z-index: 1;
+}
+.page-hero p {
+  color: var(--muted); font-size: .95em;
+  max-width: 540px; margin: 0 auto 28px;
+  position: relative; z-index: 1;
+}
+.page-hero .s-tag { position: relative; z-index: 1; }
+
+/* ══════════════════════════════════════
+   STATS BAR — animated counters
+══════════════════════════════════════ */
+.stats-bar {
+  background: var(--section-alt);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background .35s;
+}
+.stats-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 22px 32px;
+  display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+}
+.sbar-stat { text-align: center; }
+.sbar-num {
+  font-size: 2em; font-weight: 900; line-height: 1;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  display: inline-block;
+}
+.sbar-label { font-size: .72em; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 4px; }
+
+/* ══════════════════════════════════════
+   FILTER + SORT BAR
+══════════════════════════════════════ */
+.filter-section { padding: 36px 32px 0; max-width: 1200px; margin: 0 auto; }
+.filter-row {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap; justify-content: space-between; margin-bottom: 28px;
+}
+.filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 7px 16px; border-radius: 20px; font-size: .8em; font-weight: 600;
+  border: 1px solid var(--glass-border); background: var(--glass);
+  color: var(--muted); cursor: pointer; transition: .2s; font-family: inherit;
+}
+.filter-btn:hover { color: var(--text); border-color: var(--card-hover-border); }
+.filter-btn.active {
+  background: rgba(79,142,247,.15); border-color: rgba(79,142,247,.45); color: var(--accent);
+}
+[data-theme="light"] .filter-btn.active {
+  background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.4);
+}
+
+/* right controls: sort + search */
+.controls-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* sort dropdown */
+.sort-wrap { position: relative; }
+.sort-wrap i.sort-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: .82em; pointer-events: none;
+}
+#sortSelect {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  color: var(--text); padding: 8px 14px 8px 32px;
+  border-radius: 20px; font-size: .83em; outline: none;
+  cursor: pointer; transition: .2s; font-family: inherit;
+  appearance: none; -webkit-appearance: none;
+  padding-right: 28px;
+}
+#sortSelect:focus { border-color: var(--card-hover-border); background: var(--card-hover-bg); }
+.sort-caret {
+  position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: .72em; pointer-events: none;
+}
+
+/* search */
+.search-wrap { position: relative; }
+.search-wrap i.search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: .85em; pointer-events: none;
+}
+#searchInput {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  color: var(--text); padding: 8px 14px 8px 34px;
+  border-radius: 20px; font-size: .83em; outline: none;
+  width: 210px; transition: .2s; font-family: inherit;
+}
+#searchInput:focus { border-color: var(--card-hover-border); background: var(--card-hover-bg); }
+#searchInput::placeholder { color: var(--muted); }
+
+/* ══════════════════════════════════════
+   CERT GRID
+══════════════════════════════════════ */
+.certs-section { padding: 8px 32px 90px; max-width: 1200px; margin: 0 auto; }
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 24px;
+}
+
+/* ══════════════════════════════════════
+   CERT CARD — issuer-colored glow system
+══════════════════════════════════════ */
+.cert-card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .35s, box-shadow .35s, border-color .35s, background .35s;
+  position: relative;
+  /* subtle ambient glow from issuer color — always visible, intensifies on hover */
+  box-shadow: 0 0 0 0 transparent;
+}
+
+/* animated top accent bar — issuer colored */
+.cert-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ic), color-mix(in srgb, var(--ic) 60%, #06b6d4));
+  transform: scaleX(0); transition: transform .4s cubic-bezier(.22,1,.36,1);
+  transform-origin: left; z-index: 2;
+}
+
+/* issuer-colored bottom glow line on hover */
+.cert-card::after {
+  content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ic), transparent);
+  opacity: 0; transition: opacity .4s;
+}
+
+.cert-card:hover {
+  background: var(--card-hover-bg);
+  border-color: color-mix(in srgb, var(--ic) 45%, transparent);
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.3),
+    0 0 32px color-mix(in srgb, var(--ic) 20%, transparent);
+}
+.cert-card:hover::before { transform: scaleX(1); }
+.cert-card:hover::after  { opacity: 1; }
+.cert-card[data-hidden="true"] { display: none; }
+
+/* ── THUMBNAIL ── */
+.cert-thumb {
+  width: 100%; height: 170px;
+  background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; position: relative;
+}
+.cert-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .45s;
+}
+.cert-card:hover .cert-thumb img { transform: scale(1.06); }
+
+/* holographic shimmer sweep on hover */
+.cert-thumb::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in srgb, var(--ic) 18%, transparent) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform .6s ease;
+  pointer-events: none; z-index: 1;
+}
+.cert-card:hover .cert-thumb::after { transform: translateX(100%); }
+
+/* fallback emoji */
+.cert-thumb-fallback {
+  display: none; align-items: center; justify-content: center;
+  width: 100%; height: 100%; font-size: 3.4em;
+  background: linear-gradient(135deg, var(--navy3), color-mix(in srgb, var(--ic) 20%, transparent));
+}
+
+/* issuer badge pill */
+.cert-issuer-badge {
+  position: absolute; bottom: 10px; left: 12px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(7,13,31,.8); backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--ic) 30%, transparent);
+  border-radius: 20px; padding: 4px 11px;
+  font-size: .7em; font-weight: 700; color: var(--text); letter-spacing: .3px;
+  transition: border-color .3s;
+}
+[data-theme="light"] .cert-issuer-badge { background: rgba(240,244,255,.9); }
+.cert-issuer-badge i { color: var(--ic); font-size: .95em; }
+.cert-card:hover .cert-issuer-badge {
+  border-color: color-mix(in srgb, var(--ic) 55%, transparent);
+}
+
+/* ── CARD BODY ── */
+.cert-body { padding: 18px 20px 12px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+
+.cert-domain {
+  font-size: .7em; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .9px; color: var(--ic);
+  opacity: .85;
+}
+.cert-title { font-size: .97em; font-weight: 800; color: var(--text); line-height: 1.35; }
+
+.cert-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
+.cert-date {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .73em; color: var(--muted);
+}
+.cert-date i { color: var(--ic); opacity: .75; font-size: .9em; }
+.cert-expiry {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .73em; color: var(--muted);
+}
+.cert-expiry i         { color: var(--gold);  opacity: .8;  font-size: .9em; }
+.cert-expiry.no-expiry i { color: var(--green); opacity: .9; }
+
+/* skill tags — tinted with issuer color */
+.cert-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.cert-tag {
+  padding: 3px 10px; border-radius: 12px; font-size: .7em; font-weight: 600;
+  background: color-mix(in srgb, var(--ic) 12%, transparent);
+  border:     1px solid color-mix(in srgb, var(--ic) 25%, transparent);
+  color: var(--ic);
+  transition: background .2s, border-color .2s;
+}
+.cert-card:hover .cert-tag {
+  background: color-mix(in srgb, var(--ic) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ic) 40%, transparent);
+}
+
+/* ── VERIFY BUTTON ── */
+.cert-actions { padding: 0 20px 18px; margin-top: auto; }
+.cert-btn-verify {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 10px 14px; border-radius: 10px;
+  font-size: .8em; font-weight: 700; text-decoration: none;
+  background: color-mix(in srgb, var(--ic) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ic) 30%, transparent);
+  color: var(--ic); transition: background .2s, transform .2s, box-shadow .2s;
+  font-family: inherit; cursor: pointer;
+}
+.cert-btn-verify:hover {
+  background: color-mix(in srgb, var(--ic) 22%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ic) 25%, transparent);
+}
+.cert-btn-verify.disabled { opacity: .35; pointer-events: none; }
+
+/* ── NO RESULTS ── */
+#noResults { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
+#noResults i { font-size: 2.5em; margin-bottom: 14px; display: block; color: var(--accent); opacity: .4; }
+
+/* ══════════════════════════════════════
+   CARD ENTER ANIMATION
+══════════════════════════════════════ */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(28px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+.cert-card.animate-in {
+  animation: card-in .45s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .certs-grid { grid-template-columns: 1fr; }
+  .filter-row { flex-direction: column; align-items: flex-start; }
+  .controls-right { width: 100%; }
+  #searchInput, .search-wrap, #sortSelect, .sort-wrap { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══ PAGE HERO ══ -->
+<div class="page-hero">
+  <div class="page-hero-grid"></div>
+  <!-- floating particles injected by JS below -->
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="s-tag s-tag-gold" style="position:relative;z-index:1"><i class="fas fa-certificate"></i> Credentials</div>
+  <h1 style="position:relative;z-index:1">Professional <span class="grad-text">Certifications</span></h1>
+  <p style="position:relative;z-index:1">Verified credentials from LinkedIn Learning, Coursera, and beyond — spanning AI, data science, and biostatistics.</p>
+</div>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="sbar-stat"><div class="sbar-num" id="totalCount">0</div><div class="sbar-label">Certifications</div></div>
+    <div class="sbar-stat"><div class="sbar-num" id="domainCount">0</div><div class="sbar-label">Domains</div></div>
+    <div class="sbar-stat"><div class="sbar-num" id="issuerCount">0</div><div class="sbar-label">Issuers</div></div>
+    <div class="sbar-stat"><div class="sbar-num" id="yearCount">0</div><div class="sbar-label">Years Active</div></div>
+  </div>
+</div>
+
+<!-- ══ FILTER + SORT BAR ══ -->
+<div class="filter-section">
+  <div class="filter-row">
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ml-ai">ML / AI</button>
+      <button class="filter-btn" data-filter="statistics">Statistics</button>
+      <button class="filter-btn" data-filter="data-engineering">Data Engineering</button>
+      <button class="filter-btn" data-filter="cloud">Cloud</button>
+      <button class="filter-btn" data-filter="programming">Programming</button>
+    </div>
+    <div class="controls-right">
+      <!-- Sort -->
+      <div class="sort-wrap">
+        <i class="fas fa-arrow-up-wide-short sort-icon"></i>
+        <select id="sortSelect">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="az">A → Z</option>
+          <option value="za">Z → A</option>
+          <option value="issuer">By Issuer</option>
+        </select>
+        <i class="fas fa-chevron-down sort-caret"></i>
+      </div>
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search certifications…">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CERTIFICATIONS GRID ══ -->
+<div class="certs-section">
+  <div class="certs-grid" id="certsGrid">
+
+    <!-- ═══════════════════════════════════════════════════════
+         HOW TO ADD A CERT CARD
+         ─────────────────────────────────────────────────────
+         1. Copy one card block below.
+         2. Set style="--ic: #XXXXXX" on .cert-card to the
+            issuer's brand colour. Everything (top bar, glow,
+            tags, button) derives from it automatically.
+
+            Issuer colour quick-reference:
+              LinkedIn Learning → #0077B5
+              Coursera          → #0056D3
+              AWS               → #FF9900
+              Google / GCP      → #4285F4
+              Microsoft / Azure → #00A4EF
+              IBM               → #1F70C1
+              DataCamp          → #03EF62
+              deeplearning.ai   → #E8484A
+              Udemy             → #A435F0
+              edX               → #02262B  (use teal: #06b6d4)
+
+         3. data-domain   → must match a filter-btn data-filter
+            data-tags     → search keywords
+            data-issuer   → counted in stats bar
+            data-year     → counted in stats bar
+            data-sort-date→ YYYY-MM (drives Newest/Oldest sort)
+    ════════════════════════════════════════════════════════ -->
+
+    <!-- ─── EXAMPLE CARD 1 · LinkedIn Learning ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="ml-ai"
+         data-tags="machine learning python supervised learning neural networks"
+         data-issuer="LinkedIn Learning"
+         data-year="2024"
+         data-sort-date="2024-03">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-ml-linkedin.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="Machine Learning with Python">
+        <div class="cert-thumb-fallback">🤖</div>
+        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">ML / AI</div>
+        <div class="cert-title">Machine Learning with Python</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Mar 2024</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">Python</span>
+          <span class="cert-tag">Supervised Learning</span>
+          <span class="cert-tag">scikit-learn</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXAMPLE CARD 2 · Coursera ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0056D3"
+         data-domain="ml-ai"
+         data-tags="deep learning neural networks cnn rnn tensorflow keras"
+         data-issuer="Coursera"
+         data-year="2023"
+         data-sort-date="2023-09"
+         data-delay="80">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-deep-learning.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="Deep Learning Specialization">
+        <div class="cert-thumb-fallback">🧠</div>
+        <div class="cert-issuer-badge"><i class="fas fa-graduation-cap"></i> Coursera</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">ML / AI</div>
+        <div class="cert-title">Deep Learning Specialization</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Sep 2023</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">TensorFlow</span>
+          <span class="cert-tag">CNN / RNN</span>
+          <span class="cert-tag">Keras</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.coursera.org/account/accomplishments/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXAMPLE CARD 3 · AWS ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#FF9900"
+         data-domain="cloud"
+         data-tags="aws cloud s3 sagemaker ec2 storage computing"
+         data-issuer="AWS"
+         data-year="2024"
+         data-sort-date="2024-06"
+         data-delay="160">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-aws.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="AWS Cloud Practitioner">
+        <div class="cert-thumb-fallback">☁️</div>
+        <div class="cert-issuer-badge"><i class="fab fa-aws"></i> AWS</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Cloud</div>
+        <div class="cert-title">AWS Cloud Practitioner Essentials</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Jun 2024</span>
+          <span class="cert-expiry"><i class="fas fa-clock"></i> Expires: Jun 2027</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">AWS</span>
+          <span class="cert-tag">SageMaker</span>
+          <span class="cert-tag">Cloud Infra</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://aws.amazon.com/verification/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXAMPLE CARD 4 · Statistics / LinkedIn ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="statistics"
+         data-tags="biostatistics r clinical trials survival analysis regression"
+         data-issuer="LinkedIn Learning"
+         data-year="2023"
+         data-sort-date="2023-04"
+         data-delay="240">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-biostatistics.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="Applied Biostatistics">
+        <div class="cert-thumb-fallback">📊</div>
+        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Statistics</div>
+        <div class="cert-title">Applied Biostatistics</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Apr 2023</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">R</span>
+          <span class="cert-tag">Clinical Trials</span>
+          <span class="cert-tag">Survival Analysis</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXAMPLE CARD 5 · deeplearning.ai ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#E8484A"
+         data-domain="ml-ai"
+         data-tags="nlp natural language processing transformers bert attention"
+         data-issuer="deeplearning.ai"
+         data-year="2024"
+         data-sort-date="2024-01"
+         data-delay="320">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-nlp.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="NLP Specialization">
+        <div class="cert-thumb-fallback">💬</div>
+        <div class="cert-issuer-badge"><i class="fas fa-robot"></i> deeplearning.ai</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">ML / AI</div>
+        <div class="cert-title">Natural Language Processing Specialization</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Jan 2024</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">Transformers</span>
+          <span class="cert-tag">BERT</span>
+          <span class="cert-tag">Attention</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.coursera.org/account/accomplishments/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXAMPLE CARD 6 · IBM ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#1F70C1"
+         data-domain="data-engineering"
+         data-tags="sql databases data engineering etl pipelines ibm"
+         data-issuer="IBM"
+         data-year="2022"
+         data-sort-date="2022-11"
+         data-delay="400">
+      <div class="cert-thumb">
+        <img src="../images/certs/cert-ibm-de.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="IBM Data Engineering">
+        <div class="cert-thumb-fallback">⚙️</div>
+        <div class="cert-issuer-badge"><i class="fas fa-database"></i> IBM</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Data Engineering</div>
+        <div class="cert-title">IBM Data Engineering Professional Certificate</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Nov 2022</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">SQL</span>
+          <span class="cert-tag">ETL Pipelines</span>
+          <span class="cert-tag">Spark</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.credly.com/badges/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══ ADD YOUR REAL CERT CARDS BELOW THIS LINE ═══ -->
+
+    <!-- ─── NEW CERT · LinkedIn Learning ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="data-engineering"
+         data-tags="pyspark data engineering pipelines linkedin"
+         data-issuer="LinkedIn Learning"
+         data-year="2025"
+         data-sort-date="2025-12">
+      <div class="cert-thumb">
+        <img src="images/CertificateOfCompletion_PySpark%20Essential%20Training%20Introduction%20to%20Building%20Data%20Pipelines.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="PySpark Essential Training: Introduction to Building Data Pipelines">
+        <div class="cert-thumb-fallback">🔥</div>
+        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Data Engineering</div>
+        <div class="cert-title">PySpark Essential Training: Introduction to Building Data Pipelines</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Dec 2025</span>
+          <span class="cert-expiry no-expiry"><i class="fas fa-infinity"></i> No Expiry</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">PySpark</span>
+          <span class="cert-tag">Data Engineering</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="noResults">
+    <i class="fas fa-search"></i>
+    <div>No certifications match your search.</div>
+    <div style="font-size:.8em;margin-top:6px">Try a different keyword or filter.</div>
+  </div>
+</div>
+
+<script>
+/* ──────────────────────────────────────────────
+   HERO PARTICLES
+──────────────────────────────────────────────── */
+(function spawnParticles() {
+  const container = document.getElementById('heroParticles');
+  if (!container) return;
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 5 + 2;
+    s.style.cssText = [
+      `width:${size}px`, `height:${size}px`,
+      `left:${Math.random()*100}%`,
+      `bottom:${Math.random()*30}%`,
+      `--dur:${6 + Math.random()*10}s`,
+      `--delay:${Math.random()*8}s`,
+      `opacity:0`
+    ].join(';');
+    container.appendChild(s);
+  }
+})();
+
+/* ──────────────────────────────────────────────
+   ANIMATED STAT COUNTERS
+──────────────────────────────────────────────── */
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  const from  = +el.textContent || 0;
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(from + (target - from) * ease);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ──────────────────────────────────────────────
+   STATS — auto-compute from card data attrs
+──────────────────────────────────────────────── */
+function computeStats() {
+  const cards   = document.querySelectorAll('.cert-card');
+  const issuers = new Set();
+  const years   = new Set();
+  const domains = new Set();
+  cards.forEach(c => {
+    if (c.dataset.issuer) issuers.add(c.dataset.issuer);
+    if (c.dataset.year)   years.add(c.dataset.year);
+    if (c.dataset.domain) domains.add(c.dataset.domain);
+  });
+  const targets = {
+    totalCount:  cards.length,
+    domainCount: domains.size,
+    issuerCount: issuers.size,
+    yearCount:   years.size,
+  };
+  // Observe stats bar so counters fire when visible
+  const bar = document.querySelector('.stats-bar');
+  const io = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    Object.entries(targets).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) animateCounter(el, val, 900);
+    });
+  }, { threshold: .4 });
+  if (bar) io.observe(bar);
+}
+
+/* ──────────────────────────────────────────────
+   FILTER + SORT + SEARCH
+──────────────────────────────────────────────── */
+let activeFilter = 'all';
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyAll();
+  });
+});
+document.getElementById('searchInput').addEventListener('input', applyAll);
+document.getElementById('sortSelect').addEventListener('change', applyAll);
+
+function applyAll() {
+  const q    = document.getElementById('searchInput').value.toLowerCase().trim();
+  const sort = document.getElementById('sortSelect').value;
+  const grid = document.getElementById('certsGrid');
+  const cards = [...document.querySelectorAll('.cert-card')];
+
+  // 1. Filter visibility
+  let visible = 0;
+  cards.forEach(c => {
+    const domainOk  = activeFilter === 'all' || c.dataset.domain === activeFilter;
+    const searchOk  = !q || ((c.dataset.tags || '') + ' ' + c.querySelector('.cert-title').textContent.toLowerCase()).includes(q);
+    const show = domainOk && searchOk;
+    c.dataset.hidden = show ? 'false' : 'true';
+    if (show) visible++;
+  });
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+
+  // 2. Sort visible cards
+  const visible_cards = cards.filter(c => c.dataset.hidden !== 'true');
+  visible_cards.sort((a, b) => {
+    if (sort === 'newest') return (b.dataset.sortDate || '').localeCompare(a.dataset.sortDate || '');
+    if (sort === 'oldest') return (a.dataset.sortDate || '').localeCompare(b.dataset.sortDate || '');
+    if (sort === 'az')     return a.querySelector('.cert-title').textContent.localeCompare(b.querySelector('.cert-title').textContent);
+    if (sort === 'za')     return b.querySelector('.cert-title').textContent.localeCompare(a.querySelector('.cert-title').textContent);
+    if (sort === 'issuer') return (a.dataset.issuer || '').localeCompare(b.dataset.issuer || '');
+    return 0;
+  });
+
+  // 3. Re-append in sorted order with staggered animation
+  visible_cards.forEach((c, i) => {
+    c.classList.remove('animate-in');
+    void c.offsetWidth; // force reflow
+    c.style.animationDelay = `${i * 45}ms`;
+    c.classList.add('animate-in');
+    grid.appendChild(c);
+  });
+
+  // update total counter live
+  document.getElementById('totalCount').textContent = visible;
+}
+
+/* ──────────────────────────────────────────────
+   BOOT
+──────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  computeStats();
+  applyAll(); // initial sort (Newest First)
+});
+</script>
+
+</body>
+</html>
