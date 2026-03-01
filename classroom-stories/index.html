@@ -108,6 +108,44 @@
 /* ── RANK CARDS ── */
 .rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:640px){.rank-grid{grid-template-columns:1fr}}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:1024px){
+  .content-wrap{padding:0 20px 70px}
+  .proj-hero{padding:90px 22px 50px}
+}
+@media(max-width:768px){
+  .content-wrap{padding:0 14px 60px}
+  .proj-hero{padding:78px 16px 40px}
+  .kpi-row{gap:8px}
+  .kpi-card{min-width:90px;padding:12px 12px}
+  .kpi-val{font-size:1.6em}
+  .sec-head{margin:48px 0 20px}
+  .chart-card{padding:18px 14px}
+  .gal-stage{height:280px}
+  .gal-thumbs{display:none}
+  .improvement-banner{padding:16px 16px;gap:12px}
+  .imp-badge{margin-left:0;width:100%;text-align:center}
+  .dive-panel{padding:18px 14px}
+  .score-table{font-size:.74em}
+  .score-table th,.score-table td{padding:7px 8px}
+  .imp-text h3{font-size:.88em}
+  .tb-grid{grid-template-columns:1fr}
+  .improvement-banner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .proj-hero{padding:68px 12px 32px}
+  .content-wrap{padding:0 10px 50px}
+  .kpi-card{min-width:calc(50% - 6px);flex:1 1 calc(50% - 6px)}
+  .gal-stage{height:220px}
+  .dive-tab-row{padding:12px 12px;gap:5px}
+  .dive-btn{font-size:.74em;padding:5px 10px}
+  .cmt-tab-row{padding:10px 12px;gap:5px}
+  .cmt-tab-btn{font-size:.74em;padding:5px 10px}
+  .proj-hero h1{font-size:clamp(1.6rem,5.5vw,2.4rem)}
+  .chart-card{padding:14px 10px}
+}
+
 .rank-card{background:rgba(255,255,255,.02);border:1px solid var(--glass-border);border-radius:12px;padding:20px}
 .rank-card-title{font-size:.76em;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:7px}
 .rank-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}

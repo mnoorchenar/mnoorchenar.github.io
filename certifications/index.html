@@ -339,11 +339,33 @@
 /* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .page-hero { padding: 130px 24px 54px; }
+  .filter-section { padding: 28px 24px 0; }
+  .certs-section { padding: 8px 24px 70px; }
+  .stats-inner { padding: 18px 24px; gap: 28px; }
+}
 @media (max-width: 768px) {
+  .page-hero { padding: 100px 18px 44px; }
+  .page-hero h1 { font-size: clamp(1.8rem,6vw,2.8rem); }
+  .stats-inner { padding: 14px 18px; gap: 18px; }
+  .sbar-num { font-size: 1.6em; }
+  .filter-section { padding: 22px 18px 0; }
+  .certs-section { padding: 8px 18px 60px; }
   .certs-grid { grid-template-columns: 1fr; }
   .filter-row { flex-direction: column; align-items: flex-start; }
+  .filter-group { gap: 6px; }
   .controls-right { width: 100%; }
   #searchInput, .search-wrap, #sortSelect, .sort-wrap { width: 100%; }
+}
+@media (max-width: 480px) {
+  .page-hero { padding: 88px 14px 36px; }
+  .stats-inner { gap: 12px; justify-content: space-around; }
+  .sbar-num { font-size: 1.45em; }
+  .sbar-label { font-size: .65em; }
+  .cert-thumb { height: 148px; }
+  .cert-body { padding: 14px 16px 10px; }
+  .cert-actions { padding: 0 16px 14px; }
 }
 </style>
 </head>
