@@ -215,30 +215,30 @@ body.nav-scrolled #nav-section{opacity:1;pointer-events:auto;transform:translate
 .nav-social a:hover{color:var(--accent)}
 
 /* ── HERO ── */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:80px 20px 60px;overflow:hidden}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:70px 20px 20px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:var(--hero-gradient);pointer-events:none;transition:.5s}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--hero-grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--hero-grid-color) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;transition:.5s}
 #particles-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block}
-.hero-avatar-wrap{position:relative;z-index:2;margin-bottom:28px}
-.hero-avatar{width:130px;height:130px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;display:block;animation:avatarFloat 4s ease-in-out infinite}
+.hero-avatar-wrap{position:relative;z-index:2;margin-bottom:16px}
+.hero-avatar{width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;display:block;animation:avatarFloat 4s ease-in-out infinite}
 .avatar-ring{position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(79,142,247,.25);animation:ringPulse 3s ease-in-out infinite}
 .avatar-ring2{position:absolute;inset:-24px;border-radius:50%;border:1px solid rgba(6,182,212,.12);animation:ringPulse 3s ease-in-out infinite .7s}
 @keyframes avatarFloat{0%,100%{transform:translateY(0);box-shadow:0 20px 60px rgba(0,0,0,.2),0 0 30px rgba(79,142,247,.2)}50%{transform:translateY(-10px);box-shadow:0 30px 80px rgba(0,0,0,.25),0 0 50px rgba(79,142,247,.3)}}
 @keyframes ringPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
 
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.38);color:var(--green);padding:6px 18px;border-radius:20px;font-size:.78em;font-weight:700;letter-spacing:.8px;margin-bottom:20px;text-transform:uppercase;position:relative;z-index:2;overflow:hidden}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.38);color:var(--green);padding:4px 14px;border-radius:20px;font-size:.74em;font-weight:700;letter-spacing:.8px;margin-bottom:12px;text-transform:uppercase;position:relative;z-index:2;overflow:hidden}
 .hero-badge::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimmer 3.5s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
 .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
-h1{font-size:clamp(2.4em,5.5vw,4.2em);font-weight:900;letter-spacing:-1.5px;position:relative;z-index:2;margin-bottom:16px;line-height:1.05}
+h1{font-size:clamp(1.9em,4vw,3.2em);font-weight:900;letter-spacing:-1.5px;position:relative;z-index:2;margin-bottom:8px;line-height:1.05}
 h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-typing-wrap{font-size:clamp(1em,2vw,1.3em);color:var(--muted);position:relative;z-index:2;margin-bottom:10px;min-height:2em;display:flex;align-items:center;justify-content:center;gap:6px}
+.hero-typing-wrap{font-size:clamp(.9em,1.6vw,1.1em);color:var(--muted);position:relative;z-index:2;margin-bottom:6px;min-height:1.8em;display:flex;align-items:center;justify-content:center;gap:6px}
 #typed-text{color:var(--accent);font-weight:700}
 .typed-cursor{color:var(--accent);animation:blink .7s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.hero-location{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:.9em;margin-bottom:36px;position:relative;z-index:2;flex-wrap:wrap}
+.hero-location{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:.82em;margin-bottom:18px;position:relative;z-index:2;flex-wrap:wrap}
 .hero-location i{color:var(--teal)}
 .location-sep{color:var(--glass-border)}
 .hero-email{color:var(--muted);text-decoration:none;transition:.2s;display:flex;align-items:center;gap:5px}
@@ -248,19 +248,19 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
 .hero-cta{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  max-width:720px;
+  gap:10px;
+  max-width:600px;
   width:100%;
   position:relative;
   z-index:2;
-  margin-bottom:48px;
+  margin-bottom:22px;
 }
 .cta-card{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:10px;
-  padding:20px 14px 18px;
+  gap:7px;
+  padding:14px 10px 12px;
   border-radius:var(--radius);
   text-decoration:none;
   border:1px solid var(--glass-border);
@@ -270,64 +270,39 @@ h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--teal) 100%);-w
   position:relative;
   overflow:hidden;
 }
-.cta-card::before{
-  content:'';position:absolute;inset:0;
-  opacity:0;transition:.28s;
-  border-radius:var(--radius);
-}
-.cta-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.25)}
+.cta-card::before{content:'';position:absolute;inset:0;opacity:0;transition:.28s;border-radius:var(--radius)}
+.cta-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .cta-card:hover::before{opacity:1}
-
-/* individual accent colours */
 .cta-card.projects  {border-color:rgba(79,142,247,.28)}
 .cta-card.projects::before{background:rgba(79,142,247,.06)}
 .cta-card.projects:hover{border-color:rgba(79,142,247,.55)}
-
 .cta-card.certs     {border-color:rgba(6,182,212,.28)}
 .cta-card.certs::before{background:rgba(6,182,212,.06)}
 .cta-card.certs:hover{border-color:rgba(6,182,212,.55)}
-
 .cta-card.classroom {border-color:rgba(34,197,94,.28)}
 .cta-card.classroom::before{background:rgba(34,197,94,.06)}
 .cta-card.classroom:hover{border-color:rgba(34,197,94,.55)}
-
 .cta-card.handsonai {border-color:rgba(124,58,237,.28)}
 .cta-card.handsonai::before{background:rgba(124,58,237,.06)}
 .cta-card.handsonai:hover{border-color:rgba(124,58,237,.55)}
-
-.cta-icon{
-  width:46px;height:46px;
-  border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2em;
-  transition:.28s;
-}
-.cta-card.projects  .cta-icon{background:rgba(79,142,247,.14); color:var(--accent)}
-.cta-card.certs     .cta-icon{background:rgba(6,182,212,.14);  color:var(--teal)}
-.cta-card.classroom .cta-icon{background:rgba(34,197,94,.14);  color:var(--green)}
-.cta-card.handsonai .cta-icon{background:rgba(124,58,237,.14); color:var(--accent2)}
-
+.cta-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.05em;transition:.28s}
+.cta-card.projects  .cta-icon{background:rgba(79,142,247,.14);color:var(--accent)}
+.cta-card.certs     .cta-icon{background:rgba(6,182,212,.14); color:var(--teal)}
+.cta-card.classroom .cta-icon{background:rgba(34,197,94,.14); color:var(--green)}
+.cta-card.handsonai .cta-icon{background:rgba(124,58,237,.14);color:var(--accent2)}
 [data-theme="light"] .cta-card.handsonai .cta-icon{color:#6d28d9}
 [data-theme="light"] .cta-card.projects  .cta-icon{color:#2563eb}
-
 .cta-card:hover .cta-icon{transform:scale(1.1) rotate(6deg)}
-
-.cta-label{font-size:.82em;font-weight:700;letter-spacing:.3px}
-.cta-sub  {font-size:.72em;color:var(--muted);line-height:1.35;text-align:center}
-
+.cta-label{font-size:.78em;font-weight:700;letter-spacing:.3px}
 /* 2-col on tablet, 1-col on very small phones */
-@media(max-width:640px){
-  .hero-cta{grid-template-columns:repeat(2,1fr);max-width:340px}
-}
-@media(max-width:340px){
-  .hero-cta{grid-template-columns:1fr;max-width:220px}
-}
+@media(max-width:640px){.hero-cta{grid-template-columns:repeat(2,1fr);max-width:300px}}
+@media(max-width:340px){.hero-cta{grid-template-columns:1fr;max-width:200px}}
 
 /* Hero stats */
-.hero-stats{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
 .stat{text-align:center}
-.stat-num{font-size:2.1em;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.stat-label{font-size:.75em;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
+.stat-num{font-size:1.7em;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.stat-label{font-size:.68em;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.6px}
 .stat-divider{width:1px;background:var(--glass-border);align-self:stretch}
 .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;color:var(--muted);font-size:.75em;text-transform:uppercase;letter-spacing:.8px;animation:scrollBounce 2s ease-in-out infinite}
 .scroll-hint i{color:var(--accent)}
@@ -629,27 +604,22 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
     </a>
   </div>
 
-  <!-- ── 4-card CTA grid ── -->
   <div class="hero-cta">
-    <a href="projects/index.html" class="cta-card projects">
+    <a href="/projects/" class="cta-card projects">
       <div class="cta-icon"><i class="fas fa-layer-group"></i></div>
       <span class="cta-label">Projects</span>
-      <span class="cta-sub">Research &amp; applied AI work</span>
     </a>
-    <a href="certifications/index.html" class="cta-card certs">
+    <a href="/certifications/" class="cta-card certs">
       <div class="cta-icon"><i class="fas fa-certificate"></i></div>
       <span class="cta-label">Certifications</span>
-      <span class="cta-sub">Professional credentials</span>
     </a>
-    <a href="classroom-stories/index.html" class="cta-card classroom">
+    <a href="/classroom-stories/" class="cta-card classroom">
       <div class="cta-icon"><i class="fas fa-book-open"></i></div>
-      <span class="cta-label">Classroom Stories</span>
-      <span class="cta-sub">Teaching moments &amp; insights</span>
+      <span class="cta-label">Classrooms</span>
     </a>
     <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" class="cta-card handsonai">
       <div class="cta-icon"><i class="fas fa-chalkboard-teacher"></i></div>
       <span class="cta-label">Hands-On AI</span>
-      <span class="cta-sub">Interactive AI course</span>
     </a>
   </div>
 
@@ -1130,8 +1100,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
       <a href="mailto:mohammadnoorchenarboo@gmail.com"><i class="fas fa-envelope"></i> Email</a>
       <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
       <a href="https://github.com/mnoorchenar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-      <!-- <a href="https://mnoorchenar.github.io/" target="_blank"><i class="fas fa-globe"></i> Portfolio</a> -->
-      <!-- <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a> -->
+      <a href="https://mnoorchenar.github.io/" target="_blank"><i class="fas fa-globe"></i> Portfolio</a>
+      <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
       <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i> Scholar</a>
       <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank"><i class="fas fa-robot"></i> HuggingFace</a>
     </div>
