@@ -489,6 +489,24 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
 .fade-up{opacity:0;transform:translateY(26px);transition:.65s cubic-bezier(.22,1,.36,1)}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 
+/* ── MONITOR (≥1440px) — scale back up toward original ── */
+@media(min-width:1440px){
+  .hero-avatar{width:130px;height:130px}
+  .hero-avatar-wrap{margin-bottom:28px}
+  .hero-badge{padding:6px 18px;font-size:.78em;margin-bottom:20px}
+  h1{font-size:clamp(3em,4.5vw,4.2em);margin-bottom:16px}
+  .hero-typing-wrap{font-size:clamp(1.1em,1.8vw,1.3em);margin-bottom:10px;min-height:2em}
+  .hero-location{font-size:.9em;margin-bottom:28px}
+  .hero-cta{max-width:700px;gap:14px;margin-bottom:36px}
+  .cta-card{padding:18px 14px 16px;gap:9px}
+  .cta-icon{width:44px;height:44px;font-size:1.15em}
+  .cta-label{font-size:.82em}
+  .hero-stats{gap:32px}
+  .stat-num{font-size:2em}
+  .stat-label{font-size:.74em;margin-top:4px}
+  #hero{padding:80px 20px 40px}
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
   .hcard{grid-template-columns:200px 1fr}
