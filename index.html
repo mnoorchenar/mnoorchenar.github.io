@@ -157,6 +157,8 @@ nav.scrolled{background:var(--nav-scrolled-bg);backdrop-filter:blur(24px);border
 .nav-links{display:flex;gap:4px}
 .nav-links a{color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;font-size:.85em;font-weight:500;transition:.25s;border:1px solid transparent}
 .nav-links a:hover,.nav-links a.active{color:var(--text);border-color:var(--glass-border);background:var(--glass)}
+.nav-links a[href*="projects"],.nav-links a[href*="Certificates"],.nav-links a[href*="classroom"]{color:var(--accent);font-weight:600;background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.25)}
+.nav-links a[href*="projects"]:hover,.nav-links a[href*="Certificates"]:hover,.nav-links a[href*="classroom"]:hover{color:var(--accent);background:rgba(79,142,247,.22);border-color:rgba(79,142,247,.4)}
 .nav-right{display:flex;align-items:center;gap:14px}
 .nav-social{display:flex;gap:14px}
 .nav-social a{color:var(--muted);font-size:1.05em;transition:.2s}
@@ -488,8 +490,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
     <a href="#skills">Skills</a>
     <a href="#awards">Honors</a>
     <a href="projects/index.html">Projects</a>
-      <a href="Certificates/index.html">Certification</a>
-      <a href="classroom-stories/index.html">Classroom Stories</a>
+    <a href="Certificates/index.html">Certification</a>
+    <a href="classroom-stories/index.html">Classroom Stories</a>
   </div>
   <div class="nav-right">
     <div class="nav-social">
@@ -536,8 +538,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--glass-border);padd
     <a href="https://github.com/mnoorchenar" target="_blank" class="btn btn-gh"><i class="fab fa-github"></i> GitHub</a>
     <!-- <a href="https://mnoorchenar.github.io/" target="_blank" class="btn btn-portfolio"><i class="fas fa-globe"></i> Portfolio</a> -->
     <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank" class="btn btn-handsonai"><i class="fas fa-chalkboard-teacher"></i> Hands-On AI</a>
-    <a href="Certificates/index.html" class="btn btn-ghost"><i class="fas fa-certificate"></i> Certification</a>
-    <a href="ClassroomStories/index.html" class="btn btn-ghost"><i class="fas fa-book-open"></i> Classroom Stories</a>
+    <a href="Certificates/index.html" class="btn btn-portfolio"><i class="fas fa-certificate"></i> Certification</a>
+    <a href="ClassroomStories/index.html" class="btn btn-landing"><i class="fas fa-book-open"></i> Classroom Stories</a>
   </div>
 
   <div class="hero-stats">
