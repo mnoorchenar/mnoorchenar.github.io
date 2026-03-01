@@ -1196,9 +1196,8 @@ window.addEventListener('load',()=>{initPts();draw();});
 window.addEventListener('resize',initPts);
 
 /* ─── NAVBAR SCROLL ─── */
-const nb=document.getElementById('navbar');
 window.addEventListener('scroll',()=>{
-  nb.classList.toggle('scrolled',window.scrollY>20);
+  document.body.classList.toggle('nav-scrolled',window.scrollY>40);
   const secs=document.querySelectorAll('section[id]'),lks=document.querySelectorAll('.nav-links a');
   let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});
   lks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
