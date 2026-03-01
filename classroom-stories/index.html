@@ -11,7 +11,6 @@
 <script src="/projects/shared.js" defer></script>
 <style>
 .content-wrap{max-width:1100px;margin:0 auto;padding:0 28px 80px;display:flex;flex-direction:column}
-#sec-voices{order:-1}
 
 /* ── HERO ── */
 .proj-hero{padding:110px 32px 60px;text-align:center;position:relative;overflow:hidden;background:var(--body-bg);transition:background .35s}
@@ -140,7 +139,10 @@
 .gal-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;pointer-events:none}
 .gal-slide.active{opacity:1;pointer-events:auto}
 .gal-slide img{width:100%;height:100%;object-fit:contain;display:block}
-.gal-slide-fallback{width:100%;height:100%;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:2.8em;color:var(--muted)}
+/* Font Awesome fallback — replaces broken emojis */
+.gal-slide-fallback{width:100%;height:100%;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted)}
+.gal-slide-fallback i{font-size:3em;opacity:.4}
+.gal-slide-fallback span{font-size:.72em;opacity:.5;text-align:center;max-width:220px}
 .gal-overlay{position:absolute;bottom:0;left:0;right:0;padding:18px 18px 14px;background:linear-gradient(to top,rgba(4,8,20,.85),transparent);display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none}
 .gal-caption{color:#e2e8f0;min-width:0}
 .gal-cap-badge{display:inline-flex;align-items:center;gap:5px;font-size:.67em;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:3px 9px;border-radius:8px;margin-bottom:5px}
@@ -158,14 +160,14 @@
 .gal-thumbs{display:flex;gap:6px;overflow-x:auto;flex:4;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
 .gal-thumbs::-webkit-scrollbar{height:3px}
 .gal-thumbs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
-.gal-thumb{flex-shrink:0;width:62px;height:44px;border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:.22s;background:var(--navy3);opacity:.45}
+.gal-thumb{flex-shrink:0;width:62px;height:44px;border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:.22s;background:var(--navy3);opacity:.45;display:flex;align-items:center;justify-content:center}
 .gal-thumb:hover{opacity:.8;transform:translateY(-2px)}
 .gal-thumb.active{border-color:var(--accent);opacity:1;transform:translateY(-2px)}
 .gal-thumb img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-.gal-thumb-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.2em}
+.gal-thumb-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.1em;color:var(--muted)}
 .gal-empty-msg{text-align:center;padding:60px 20px;color:var(--muted);font-size:.85em;font-style:italic}
 
-/* ── VOICES FILTER ── */
+/* ── GALLERY FILTER ── */
 .vf-bar{display:flex;gap:8px;flex-wrap:wrap}
 .vf-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:20px;font-size:.8em;font-weight:600;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);cursor:pointer;transition:.2s;font-family:inherit}
 .vf-btn:hover{color:var(--text)}
@@ -175,38 +177,42 @@
 
 /* ── COMMENT CAROUSEL ── */
 .cmt-carousel-wrap{position:relative;min-height:220px}
-/* Big decorative quote */
 .cmt-big-quote{position:absolute;top:-10px;left:0;font-size:8em;line-height:1;color:var(--accent);opacity:.07;font-family:Georgia,serif;pointer-events:none;z-index:0;user-select:none}
-/* Slide */
 .cmt-slide{display:none;animation:cmtIn .45s cubic-bezier(.22,1,.36,1);position:relative;z-index:1}
 .cmt-slide.active{display:flex;flex-direction:column;gap:18px}
 @keyframes cmtIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-/* Text */
 .cmt-text{font-size:1em;color:var(--text);line-height:1.85;font-style:italic;padding:0 12px}
-/* Footer row */
 .cmt-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:0 12px}
 .cmt-course-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:4px 12px;border-radius:10px}
 .cmt-stars{color:#fbbf24;font-size:.85em;letter-spacing:3px}
-/* Progress bar */
 .cmt-progress-track{height:3px;background:var(--glass);border-radius:2px;margin:18px 0 14px;overflow:hidden;border:1px solid var(--glass-border)}
 .cmt-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));width:0;transition:width linear;border-radius:2px}
-/* Nav row */
 .cmt-nav-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
 .cmt-nav-btns{display:flex;align-items:center;gap:8px}
 .cmt-nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82em;transition:.2s;font-family:inherit}
 .cmt-nav-btn:hover{color:var(--accent);border-color:rgba(79,142,247,.4);background:rgba(79,142,247,.1)}
 .cmt-counter-badge{font-size:.75em;color:var(--muted);font-weight:600;font-family:monospace;padding:4px 12px;border-radius:10px;background:var(--glass);border:1px solid var(--glass-border)}
-/* Dots */
 .cmt-dots{display:flex;gap:6px;flex-wrap:wrap;flex:1;justify-content:center}
 .cmt-dot{width:7px;height:7px;border-radius:4px;background:var(--muted);opacity:.3;cursor:pointer;border:none;padding:0;transition:.3s;flex-shrink:0}
 .cmt-dot.active{width:22px;background:var(--accent);opacity:1}
-/* Empty state */
 .cmt-empty{text-align:center;padding:40px 20px;color:var(--muted);font-style:italic;font-size:.88em}
-/* Connected cards */
+
+/* ── COMMENT TABS (per-course) ── */
+.cmt-tab-row{display:flex;gap:7px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--glass-border);background:var(--navy2);transition:background .35s}
+.cmt-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:20px;font-size:.79em;font-weight:600;border:1px solid var(--glass-border);background:transparent;color:var(--muted);cursor:pointer;transition:.2s;font-family:inherit}
+.cmt-tab-btn:hover{color:var(--text);border-color:var(--card-hover-border);background:var(--glass)}
+.cmt-tab-btn.active{color:var(--accent);border-color:rgba(79,142,247,.4);background:rgba(79,142,247,.12)}
+[data-theme="light"] .cmt-tab-btn.active{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.35)}
+.cmt-tab-count{padding:1px 7px;border-radius:8px;font-size:.72em;font-weight:700;background:rgba(79,142,247,.15);color:var(--accent)}
+
+/* ── CARD CONNECTORS ── */
 .card-top{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:none;margin-bottom:0}
 .card-mid{border-radius:0;border-top:none;border-bottom:none;margin-bottom:0}
 .card-bot{border-top-left-radius:0;border-top-right-radius:0;border-top:none}
-/* Badge colours */
+/* no padding-top on connected card content below tabs */
+.card-bot-inner{padding:24px}
+
+/* ── BADGE COLOURS ── */
 .badge-6146{background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.25)}
 .badge-6152{background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.25)}
 .badge-6154{background:rgba(124,58,237,.12);color:#c4b5fd;border:1px solid rgba(124,58,237,.25)}
@@ -244,7 +250,7 @@
     <p>From 3.69 to 4.90 — five semesters of documented, unbroken improvement across all 20 competencies.</p>
   </div>
   <div class="improvement-banner fade-up">
-    <div class="imp-icon">🏆</div>
+    <div class="imp-icon"><i class="fas fa-trophy" style="color:#fbbf24"></i></div>
     <div class="imp-text">
       <h3>From 3.69 → 4.90 · A remarkable teaching journey</h3>
       <p>Over 5 consecutive semesters, satisfaction improved by <strong>+1.21 points (+32.8%)</strong>. INFO-6154 achieved 6 perfect 5.00/5.00 scores in Fall 2025.</p>
@@ -401,21 +407,20 @@
     </div>
   </div>
 
-  <div id="sec-voices"><!-- ══ SECTION 3: VOICES & MOMENTS ══ -->
+  <!-- ══ SECTION 3: VOICES & MOMENTS ══ -->
   <div class="sec-head fade-up">
     <div class="s-tag s-tag-teal"><i class="fas fa-users"></i> Voices &amp; Moments</div>
     <h2>Students &amp; Classroom Stories</h2>
-    <p>One shared filter — explore classroom photos and student comments together by course.</p>
+    <p>Classroom moments from INFO-6152 &amp; INFO-6154 — use the filter below to explore by course.</p>
   </div>
 
-  <!-- Shared filter -->
+  <!-- Gallery filter (controls gallery only) -->
   <div class="chart-card card-top fade-up" style="padding:18px 24px">
-    <div class="vf-bar" id="voicesFilter">
-      <button class="vf-btn active" data-vf="all"><i class="fas fa-layer-group"></i> All Courses <span class="vf-count" id="vfCountAll">44</span></button>
-      <button class="vf-btn" data-vf="6146"><i class="fas fa-brain"></i> INFO-6146 · TF &amp; Keras <span class="vf-count">11</span></button>
-      <button class="vf-btn" data-vf="6152"><i class="fas fa-network-wired"></i> INFO-6152 · Deep Learning 2 <span class="vf-count">16</span></button>
-      <button class="vf-btn" data-vf="6154"><i class="fas fa-sliders"></i> INFO-6154 · ML Optimization <span class="vf-count">17</span></button>
-      <button class="vf-btn" data-vf="6145"><i class="fas fa-database"></i> INFO-6145 · Data Science &amp; ML</button>
+    <p style="font-size:.75em;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:700"><i class="fas fa-images"></i>&nbsp; Filter photos by course</p>
+    <div class="vf-bar" id="galFilter">
+      <button class="vf-btn active" data-vf="all"><i class="fas fa-layer-group"></i> All Photos <span class="vf-count">8</span></button>
+      <button class="vf-btn" data-vf="6152"><i class="fas fa-network-wired"></i> INFO-6152 · Deep Learning 2 <span class="vf-count">4</span></button>
+      <button class="vf-btn" data-vf="6154"><i class="fas fa-sliders"></i> INFO-6154 · ML Optimization <span class="vf-count">4</span></button>
     </div>
   </div>
 
@@ -424,45 +429,145 @@
     <h3 style="margin-bottom:14px"><i class="fas fa-images" style="color:var(--teal)"></i>&nbsp; Classroom Moments <span id="galVisible" style="font-size:.72em;font-weight:400;color:var(--muted);margin-left:6px"></span></h3>
     <div class="gal-stage" id="galStage">
       <div class="gal-progress" id="galProgress"></div>
-      <div class="gal-slide active" data-course="6152" data-caption="Deep Learning 2 — working through neural architecture review" data-date="Fall 2025" data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9" data-badge-border="rgba(6,182,212,.3)" data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
-        <img src="images/001-classroom.png" alt="Classroom 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.22))">🎓<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/001-classroom.png</span></div>
+
+      <!-- Slide 1: Last session — INFO-6154 ML Optimization -->
+      <div class="gal-slide active"
+           data-course="6154"
+           data-caption="Last session of ML Optimization — a semester worth celebrating"
+           data-date="Fall 2025"
+           data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd"
+           data-badge-border="rgba(124,58,237,.3)"
+           data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
+        <img src="images/001-classroom.png" alt="Last session ML Optimization"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.22))">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span>Add image: images/001-classroom.png</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6146" data-caption="TensorFlow & Keras — hands-on lab session with real datasets" data-date="Fall 2025" data-badge-color="rgba(79,142,247,.18)" data-badge-text="#93c5fd" data-badge-border="rgba(79,142,247,.3)" data-badge-icon="fa-brain" data-badge-label="INFO-6146 · TF & Keras">
-        <img src="images/002-classroom.jpg" alt="Classroom 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(79,142,247,.22))">💻<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/002-classroom.jpg</span></div>
+
+      <!-- Slide 2: Mandarin Restaurant — INFO-6152 -->
+      <div class="gal-slide"
+           data-course="6152"
+           data-caption="End-of-semester dinner with Deep Learning 2 students — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9"
+           data-badge-border="rgba(6,182,212,.3)"
+           data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
+        <img src="images/002-classroom.jpg" alt="Mandarin dinner Deep Learning 2"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.22))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/002-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6154" data-caption="ML Optimization — group problem-solving exercise" data-date="Fall 2025" data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd" data-badge-border="rgba(124,58,237,.3)" data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
-        <img src="images/003-classroom.jpg" alt="Classroom 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.22))">⚙️<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/003-classroom.jpg</span></div>
+
+      <!-- Slide 3: Mandarin Restaurant — INFO-6154 -->
+      <div class="gal-slide"
+           data-course="6154"
+           data-caption="Celebrating the semester with ML Optimization students — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd"
+           data-badge-border="rgba(124,58,237,.3)"
+           data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
+        <img src="images/003-classroom.jpg" alt="Mandarin dinner ML Optimization"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.22))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/003-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6145" data-caption="Data Science & ML — end-of-semester project presentations" data-date="Summer 2025" data-badge-color="rgba(34,197,94,.15)" data-badge-text="#4ade80" data-badge-border="rgba(34,197,94,.28)" data-badge-icon="fa-database" data-badge-label="INFO-6145 · Data Science & ML">
-        <img src="images/004-classroom.jpg" alt="Classroom 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(34,197,94,.18))">📊<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/004-classroom.jpg</span></div>
+
+      <!-- Slide 4: Mandarin Restaurant — INFO-6152 -->
+      <div class="gal-slide"
+           data-course="6152"
+           data-caption="Group dinner after a great semester — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9"
+           data-badge-border="rgba(6,182,212,.3)"
+           data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
+        <img src="images/004-classroom.jpg" alt="Mandarin group dinner"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.18))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/004-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6152" data-caption="Deep Learning 2 — the memorable Transformer game lesson" data-date="Fall 2025" data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9" data-badge-border="rgba(6,182,212,.3)" data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
-        <img src="images/005-classroom.jpg" alt="Classroom 5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.2))">🤖<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/005-classroom.jpg</span></div>
+
+      <!-- Slide 5: Mandarin Restaurant — INFO-6154 -->
+      <div class="gal-slide"
+           data-course="6154"
+           data-caption="Shared meal, shared memories — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd"
+           data-badge-border="rgba(124,58,237,.3)"
+           data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
+        <img src="images/005-classroom.jpg" alt="Mandarin dinner ML Optimization 2"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.2))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/005-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6146" data-caption="TF & Keras — students completing their first CNN model from scratch" data-date="Fall 2025" data-badge-color="rgba(79,142,247,.18)" data-badge-text="#93c5fd" data-badge-border="rgba(79,142,247,.3)" data-badge-icon="fa-brain" data-badge-label="INFO-6146 · TF & Keras">
-        <img src="images/006-classroom.jpg" alt="Classroom 6" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(79,142,247,.18))">🧠<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/006-classroom.jpg</span></div>
+
+      <!-- Slide 6: Mandarin Restaurant — INFO-6152 -->
+      <div class="gal-slide"
+           data-course="6152"
+           data-caption="Deep Learning 2 students enjoying a well-deserved meal — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9"
+           data-badge-border="rgba(6,182,212,.3)"
+           data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
+        <img src="images/006-classroom.jpg" alt="Mandarin Deep Learning 2 students"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.18))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/006-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6154" data-caption="ML Optimization — midterm review, six perfect 5.00 scores!" data-date="Fall 2025" data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd" data-badge-border="rgba(124,58,237,.3)" data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
-        <img src="images/007-classroom.jpg" alt="Classroom 7" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.18))">📝<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/007-classroom.jpg</span></div>
+
+      <!-- Slide 7: Mandarin Restaurant — INFO-6154 -->
+      <div class="gal-slide"
+           data-course="6154"
+           data-caption="ML Optimization team dinner — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(124,58,237,.18)" data-badge-text="#c4b5fd"
+           data-badge-border="rgba(124,58,237,.3)"
+           data-badge-icon="fa-sliders" data-badge-label="INFO-6154 · ML Optimization">
+        <img src="images/007-classroom.jpg" alt="Mandarin ML Optimization team"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(124,58,237,.18))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/007-classroom.jpg</span>
+        </div>
       </div>
-      <div class="gal-slide" data-course="6145" data-caption="Data Science & ML — data visualization workshop" data-date="Summer 2025" data-badge-color="rgba(34,197,94,.15)" data-badge-text="#4ade80" data-badge-border="rgba(34,197,94,.28)" data-badge-icon="fa-database" data-badge-label="INFO-6145 · Data Science & ML">
-        <img src="images/008-classroom.jpg" alt="Classroom 8" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(34,197,94,.15))">📈<span style="font-size:.28em;color:#8892a4;margin-top:8px">Add: images/008-classroom.jpg</span></div>
+
+      <!-- Slide 8: Mandarin Restaurant — INFO-6152 -->
+      <div class="gal-slide"
+           data-course="6152"
+           data-caption="A great semester deserves a great meal — Mandarin Restaurant, London, ON"
+           data-date="Fall 2025"
+           data-badge-color="rgba(6,182,212,.18)" data-badge-text="#67e8f9"
+           data-badge-border="rgba(6,182,212,.3)"
+           data-badge-icon="fa-network-wired" data-badge-label="INFO-6152 · Deep Learning 2">
+        <img src="images/008-classroom.jpg" alt="Mandarin final dinner Deep Learning 2"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="gal-slide-fallback" style="background:linear-gradient(135deg,#070d1f,rgba(6,182,212,.15))">
+          <i class="fas fa-utensils"></i>
+          <span>Add image: images/008-classroom.jpg</span>
+        </div>
       </div>
+
       <div class="gal-overlay" id="galOverlay">
         <div class="gal-caption" id="galCaption"></div>
         <div class="gal-counter" id="galCounter">1 / 8</div>
       </div>
       <button class="gal-btn gal-prev" id="galPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
       <button class="gal-btn gal-next" id="galNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
-      <div id="galEmptyMsg" class="gal-empty-msg" style="display:none"><i class="fas fa-camera" style="font-size:2em;display:block;margin-bottom:12px;opacity:.3"></i>No photos for this course yet.</div>
+      <div id="galEmptyMsg" class="gal-empty-msg" style="display:none">
+        <i class="fas fa-camera" style="font-size:2em;display:block;margin-bottom:12px;opacity:.3"></i>
+        No photos for this course yet.
+      </div>
     </div>
     <div class="gal-footer">
       <div class="gal-dots" id="galDots"></div>
@@ -470,36 +575,52 @@
     </div>
   </div>
 
-  <!-- Comment Carousel -->
-  <div class="chart-card card-bot fade-up">
-    <h3 style="margin-bottom:4px">
-      <i class="fas fa-quote-left" style="color:var(--teal)"></i>&nbsp; What Students Say
-      <span id="cmtCountBadge" style="font-size:.72em;font-weight:400;color:var(--muted);margin-left:6px">44 comments</span>
-    </h3>
-    <p style="font-size:.8em;color:var(--muted);margin-bottom:0">Use arrow keys ← → or swipe to browse · auto-advances every 8 seconds · pauses on hover</p>
-
-    <!-- progress -->
-    <div class="cmt-progress-track"><div class="cmt-progress-bar" id="cmtProgress"></div></div>
-
-    <!-- stage -->
-    <div class="cmt-carousel-wrap" id="cmtWrap">
-      <div class="cmt-big-quote">&ldquo;</div>
-      <!-- slides injected by JS from data array below -->
-      <div class="cmt-empty" id="cmtEmpty" style="display:none"><i class="fas fa-comment-slash" style="font-size:2em;display:block;margin-bottom:10px;opacity:.3"></i>No comments for this course yet.</div>
+  <!-- Comment Carousel — own course tabs -->
+  <div style="border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px" class="fade-up">
+    <!-- Comment course tabs -->
+    <div class="cmt-tab-row" id="cmtTabs">
+      <button class="cmt-tab-btn active" data-cf="all">
+        <i class="fas fa-layer-group"></i> All Courses
+        <span class="cmt-tab-count">44</span>
+      </button>
+      <button class="cmt-tab-btn" data-cf="6152">
+        <i class="fas fa-network-wired"></i> INFO-6152 · Deep Learning 2
+        <span class="cmt-tab-count">16</span>
+      </button>
+      <button class="cmt-tab-btn" data-cf="6154">
+        <i class="fas fa-sliders"></i> INFO-6154 · ML Optimization
+        <span class="cmt-tab-count">17</span>
+      </button>
+      <button class="cmt-tab-btn" data-cf="6146">
+        <i class="fas fa-brain"></i> INFO-6146 · TF &amp; Keras
+        <span class="cmt-tab-count">11</span>
+      </button>
     </div>
-
-    <!-- nav row -->
-    <div class="cmt-nav-row">
-      <div class="cmt-nav-btns">
-        <button class="cmt-nav-btn" id="cmtPrev" aria-label="Previous comment"><i class="fas fa-chevron-left"></i></button>
-        <button class="cmt-nav-btn" id="cmtNext" aria-label="Next comment"><i class="fas fa-chevron-right"></i></button>
+    <!-- Comment card body -->
+    <div style="background:var(--glass);padding:24px">
+      <h3 style="margin-bottom:4px">
+        <i class="fas fa-quote-left" style="color:var(--teal)"></i>&nbsp; What Students Say
+        <span id="cmtCountBadge" style="font-size:.72em;font-weight:400;color:var(--muted);margin-left:6px">44 comments</span>
+      </h3>
+      <p style="font-size:.8em;color:var(--muted);margin-bottom:0">Use arrow keys ← → or swipe to browse · auto-advances every 8 seconds · pauses on hover</p>
+      <div class="cmt-progress-track"><div class="cmt-progress-bar" id="cmtProgress"></div></div>
+      <div class="cmt-carousel-wrap" id="cmtWrap">
+        <div class="cmt-big-quote">&ldquo;</div>
+        <div class="cmt-empty" id="cmtEmpty" style="display:none">
+          <i class="fas fa-comment-slash" style="font-size:2em;display:block;margin-bottom:10px;opacity:.3"></i>
+          No comments for this course yet.
+        </div>
       </div>
-      <div class="cmt-dots" id="cmtDots"></div>
-      <div class="cmt-counter-badge" id="cmtCounter">1 / 44</div>
+      <div class="cmt-nav-row">
+        <div class="cmt-nav-btns">
+          <button class="cmt-nav-btn" id="cmtPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+          <button class="cmt-nav-btn" id="cmtNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="cmt-dots" id="cmtDots"></div>
+        <div class="cmt-counter-badge" id="cmtCounter">1 / 44</div>
+      </div>
     </div>
   </div>
-
-  </div><!-- /#sec-voices -->
 
 </div><!-- /content-wrap -->
 
@@ -523,17 +644,17 @@ const COMMENTS=[
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'He has deep expertise and extensive experience in the area he teaches. He\'s worked a lot with medical data, so he has strong experience with healthcare data specifically. He\'s great at figuring out exactly what students are asking and always gives clear, accurate answers.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'I really enjoyed your teaching style this term. The quizzes encouraged me to stay consistent with studying the lecture materials. I also appreciated the use of external references during lectures. In particular, I found the layman-term examples at the bottom of the slides extremely useful for reinforcing complex ideas. I would love to see even more of these examples included in future lectures. Thank you for a great learning experience!'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★☆',text:'Mohammad was clear, supportive, and truly made sure we understood the material. He explained concepts well, was approachable, and fair with grading. Adding more hands-on practice would make the course even stronger.'},
-  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'He did an amazing job this term. In addition to his lecture presentations, he went above and beyond to create visualizations to better understand the topics. He referred to other leading scholars and personalities in the domain and shared those resources with us. Overall, he made a significant impact on our learning. He was able to pay individual + group-level attention to us, which is rare, and I appreciate him for that. He has also improved his communication skills a lot.'},
+  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'He did an amazing job this term. In addition to his lecture presentations, he went above and beyond to create visualizations to better understand the topics. He referred to other leading scholars and personalities in the domain and shared those resources with us. Overall, he made a significant impact on our learning. He was able to pay individual + group-level attention to us, which is rare, and I appreciate him for that.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'I had a great opportunity to learn from you over the last three semesters. Even though I was not able to review the lessons, whenever I attended your class I gained a clear understanding of the concepts. Among these three semesters, your teaching in the last semester was the best and especially easy to understand. The Transformer lesson you taught using a game method was so clear and engaging that I still remember it very well. Thank you very much for your excellent teaching and support.'},
-  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'Starting this course, I was very tense about how I would learn Artificial Intelligence and Machine Learning. However, the professor made things so easy and understandable that I wanted to delve deeper into every topic he taught. He taught us with full honesty and patience. Throughout my learning journey I have many teachers and they all were great but professor Mohammad is the G.O.A.T — he was so nice throughout our course and he never judged anyone even if he taught a whole topic and someone asked a basic question from the start, he would teach it again no matter how many times.'},
+  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'Starting this course, I was very tense about how I would learn Artificial Intelligence and Machine Learning. However, the professor made things so easy and understandable that I wanted to delve deeper into every topic he taught. He taught us with full honesty and patience. Professor Mohammad is the G.O.A.T — he was so nice throughout our course and he never judged anyone even if he taught a whole topic and someone asked a basic question from the start, he would teach it again no matter how many times.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'The professor has a deep knowledge of TensorFlow and was able to answer almost every question asked by any student in the class.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'The assignments and projects helped build hands-on experience. Overall, the course was well-structured and valuable for developing applied deep learning skills.'},
-  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★☆',text:'Professor Mohammad has a strong passion for teaching and is also quite compassionate towards his students. While I think he can make some improvements on certain organizational aspects like providing updates on FOL and making assessment dates more clear, he is extremely flexible and very accommodating. Engaging with him in class has been very productive and he always tries his best to reframe concepts in a way that is more easily received by students. Overall he was a very good professor and I felt like I gained a lot from my experiences with him.'},
+  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★☆',text:'Professor Mohammad has a strong passion for teaching and is also quite compassionate towards his students. While I think he can make some improvements on certain organizational aspects, he is extremely flexible and very accommodating. Engaging with him in class has been very productive and he always tries his best to reframe concepts in a way that is more easily received by students. Overall he was a very good professor and I felt like I gained a lot from my experiences with him.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'His way of teaching is excellent. I have never met with a professor who takes so seriously the doubts of students. He is very creative in terms of creating content for courses and always engages the entire class in the learning process. His classes are very interactive and interesting to attend.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'Professor Mohammad is one of the best in our term.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★☆',text:'I think he is a great professor. He explains the material in a simple way and repeats it until students understand. I would include more questions in the quiz sessions and also administer quizzes before classes start, so that we can measure the students\' evolution.'},
   {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'His class notes were always very well put together. He has analogies in his slides and links to external interactive tools that helped understand complex concepts.'},
-  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'Professor Noorchenarboo is an excellent professor who cares a lot about his students. He has clearly taught and covered the concepts of the course, which has helped my learning tremendously. I particularly appreciated how he explained complex topics in an accessible way and was always willing to answer questions during and after class. The resources he provides are very organized and engaging, with lots of helpful examples to visualize the concepts. He is very responsive and approachable for clarification and support. I am grateful for everything I learned in the class.'},
+  {course:'6152',badge:'badge-6152',icon:'fa-network-wired',label:'INFO-6152 · Deep Learning 2',stars:'★★★★★',text:'Professor Noorchenarboo is an excellent professor who cares a lot about his students. He has clearly taught and covered the concepts of the course, which has helped my learning tremendously. I particularly appreciated how he explained complex topics in an accessible way and was always willing to answer questions during and after class. The resources he provides are very organized and engaging, with lots of helpful examples to visualize the concepts.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'Professor Noorchenarboo is an excellent professor who cares a lot about his students. He provides clear and organized slides which helps make the topic a lot more manageable and understandable. He covers the topic of the course well and creates an active learning environment where students can ask questions. He is very approachable.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★☆',text:'You can tell that optimization strategies is one of Mohammad\'s areas of expertise — he is able to explain all the concepts clearly with useful real examples. I would have liked more prompt communication of changes made to class times and due dates, but he responds to emails quickly so that makes up for it.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'Very good and helpful professor.'},
@@ -544,8 +665,8 @@ const COMMENTS=[
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★☆',text:'Mohammad was clear, supportive, and truly made sure we understood the material. He explained concepts well, was approachable, and fair with grading. Adding more hands-on practice would make the course even stronger.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'Professor Mohammad is G.O.A.T professor.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'Professor is giving his 100% every time.'},
-  {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'The layman-term examples at the bottom of the slides were very helpful for simplifying complex ideas, and I would love to see more of these included in future lectures. The use of external references during lectures provided better context and made the concepts easier to relate to real applications.'},
-  {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★☆',text:'One small challenge for me is the in-class question-and-answer sessions. Even when I understand the answer, I sometimes struggle to explain it clearly and feel shy speaking in front of the class. This makes it harder for me to participate, even though I am engaged with the material. Overall, I really enjoyed the course, but I feel that some topics could benefit from a bit more explanation. Thank you for the effort and support you put into teaching this course.'},
+  {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'The layman-term examples at the bottom of the slides were very helpful for simplifying complex ideas. The use of external references during lectures provided better context and made the concepts easier to relate to real applications.'},
+  {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★☆',text:'One small challenge for me is the in-class question-and-answer sessions. Even when I understand the answer, I sometimes struggle to explain it clearly and feel shy speaking in front of the class. Overall, I really enjoyed the course, but I feel that some topics could benefit from a bit more explanation. Thank you for the effort and support you put into teaching this course.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'He is a really nice instructor. He explains everything and clears all the doubts. He always tries to engage students in class activities. And the course helped build a solid understanding of optimization techniques that was designed by the Professor.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'Mohammad really makes sure students get the concepts before moving on. He encourages everyone to participate, making the class a two-way conversation. His focus on each student helps them feel motivated to join in the lessons. He tries to be approachable and treats students like real people, not just students.'},
   {course:'6154',badge:'badge-6154',icon:'fa-sliders',label:'INFO-6154 · ML Optimization',stars:'★★★★★',text:'He has deep expertise and extensive experience in the area he teaches. He\'s worked a lot with medical data, so he has strong experience with healthcare data specifically. He\'s great at figuring out exactly what students are asking and always gives clear, accurate answers.'},
@@ -564,26 +685,26 @@ const gc=()=>isDark()?'rgba(255,255,255,.06)':'rgba(0,0,0,.07)';
 const tc=()=>isDark()?'#8892a4':'#4b5675';
 
 const comps=[
-  {l:'Starts classes on time',           s:[3.60,4.64,4.73,4.38,4.96],c6146:4.95,c6152:4.92,c6154:5.00,school:4.74,college:4.80,d46:{a:95,m:5,h:0,n:0},d52:{a:92,m:8,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
-  {l:'Results of tests promptly',         s:[3.60,4.43,4.27,4.50,4.77],c6146:4.75,c6152:4.76,c6154:4.79,school:4.45,college:4.56,d46:{a:75,m:25,h:0,n:0},d52:{a:84,m:12,h:0,n:4},d54:{a:87.5,m:8.3,h:0,n:4.2}},
-  {l:'Maintains control of class',        s:[3.80,4.43,4.53,4.75,4.96],c6146:4.95,c6152:4.96,c6154:4.96,school:4.67,college:4.71,d46:{a:95,m:5,h:0,n:0},d52:{a:96,m:4,h:0,n:0},d54:{a:95.8,m:4.2,h:0,n:0}},
-  {l:'Manages class time productively',   s:[3.00,4.64,4.67,5.00,4.91],c6146:4.90,c6152:4.88,c6154:4.96,school:4.55,college:4.64,d46:{a:90,m:10,h:0,n:0},d52:{a:92,m:4,h:4,n:0},d54:{a:95.8,m:4.2,h:0,n:0}},
-  {l:'Answers questions clearly',         s:[3.20,4.36,4.47,4.50,4.90],c6146:4.85,c6152:4.92,c6154:4.92,school:4.53,college:4.55,d46:{a:85,m:15,h:0,n:0},d52:{a:92,m:8,h:0,n:0},d54:{a:91.7,m:8.3,h:0,n:0}},
-  {l:'Uses FanshaweOnline effectively',   s:[4.00,4.43,4.67,4.75,4.78],c6146:4.90,c6152:4.68,c6154:4.79,school:4.61,college:4.67,d46:{a:90,m:10,h:0,n:0},d52:{a:84,m:8,h:4,n:4},d54:{a:87.5,m:8.3,h:0,n:4.2}},
-  {l:'Sets clear evaluation expectations',s:[3.40,4.43,4.60,4.75,4.83],c6146:4.70,c6152:4.84,c6154:4.92,school:4.56,college:4.61,d46:{a:70,m:30,h:0,n:0},d52:{a:92,m:0,h:8,n:0},d54:{a:91.7,m:8.3,h:0,n:0}},
-  {l:'Provides fair evaluations',         s:[4.20,4.43,4.47,4.63,4.94],c6146:4.90,c6152:4.96,c6154:4.96,school:4.65,college:4.66,d46:{a:90,m:10,h:0,n:0},d52:{a:96,m:4,h:0,n:0},d54:{a:95.8,m:4.2,h:0,n:0}},
-  {l:'Well prepared for each class',      s:[4.00,4.50,4.67,4.75,4.97],c6146:5.00,c6152:4.92,c6154:5.00,school:4.63,college:4.74,d46:{a:100,m:0,h:0,n:0},d52:{a:92,m:8,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
-  {l:'Communicates clearly & effectively',s:[3.00,4.50,4.40,4.38,4.83],c6146:4.95,c6152:4.80,c6154:4.75,school:4.54,college:4.60,d46:{a:95,m:5,h:0,n:0},d52:{a:80,m:20,h:0,n:0},d54:{a:83.3,m:12.5,h:0,n:4.2}},
-  {l:'Variety of learning activities',    s:[3.80,4.21,4.60,4.88,4.88],c6146:4.90,c6152:4.84,c6154:4.92,school:4.35,college:4.55,d46:{a:90,m:10,h:0,n:0},d52:{a:88,m:8,h:4,n:0},d54:{a:95.8,m:0,h:4.2,n:0}},
-  {l:'Helps apply learning',              s:[3.80,4.50,4.47,4.38,4.94],c6146:4.95,c6152:4.92,c6154:4.96,school:4.49,college:4.58,d46:{a:95,m:5,h:0,n:0},d52:{a:96,m:0,h:4,n:0},d54:{a:95.8,m:4.2,h:0,n:0}},
-  {l:'Available outside classroom',       s:[4.00,4.33,4.40,4.67,4.82],c6146:4.63,c6152:4.88,c6154:4.92,school:4.55,college:4.57,d46:{a:68.4,m:26.3,h:5.3,n:0},d52:{a:92,m:4,h:4,n:0},d54:{a:95.8,m:0,h:4.2,n:0}},
-  {l:'Helpful when confused',             s:[3.40,4.36,4.60,4.50,4.93],c6146:4.90,c6152:4.92,c6154:4.96,school:4.52,college:4.57,d46:{a:90,m:10,h:0,n:0},d52:{a:92,m:8,h:0,n:0},d54:{a:95.8,m:4.2,h:0,n:0}},
-  {l:'Helpful comments & feedback',       s:[3.60,4.57,4.40,4.75,4.84],c6146:4.85,c6152:4.76,c6154:4.92,school:4.48,college:4.55,d46:{a:85,m:15,h:0,n:0},d52:{a:88,m:4,h:4,n:4},d54:{a:91.7,m:8.3,h:0,n:0}},
-  {l:'Engages me in learning',            s:[3.20,4.64,4.27,4.38,4.88],c6146:4.85,c6152:4.80,c6154:5.00,school:4.38,college:4.49,d46:{a:85,m:15,h:0,n:0},d52:{a:84,m:12,h:4,n:0},d54:{a:100,m:0,h:0,n:0}},
-  {l:'Displays enthusiasm for teaching',  s:[3.80,4.57,4.20,4.63,4.96],c6146:4.90,c6152:4.96,c6154:5.00,school:4.56,college:4.64,d46:{a:90,m:10,h:0,n:0},d52:{a:96,m:4,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
-  {l:'Inspires & challenges me',          s:[3.80,4.64,4.20,4.63,4.88],c6146:4.90,c6152:4.84,c6154:4.92,school:4.46,college:4.53,d46:{a:90,m:10,h:0,n:0},d52:{a:88,m:8,h:4,n:0},d54:{a:91.7,m:8.3,h:0,n:0}},
-  {l:'Respectful of everyone',            s:[4.20,4.71,4.67,5.00,4.99],c6146:5.00,c6152:4.96,c6154:5.00,school:4.77,college:4.79,d46:{a:100,m:0,h:0,n:0},d52:{a:96,m:4,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
-  {l:'Respects diverse ways of learning', s:[4.20,4.57,4.73,4.88,4.97],c6146:5.00,c6152:4.92,c6154:5.00,school:4.70,college:4.74,d46:{a:100,m:0,h:0,n:0},d52:{a:91.7,m:8.3,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
+  {l:'Starts classes on time',            s:[3.60,4.64,4.73,4.38,4.96],c6146:4.95,c6152:4.92,c6154:5.00,school:4.74,college:4.80,d46:{a:95,m:5,h:0,n:0},  d52:{a:92,m:8,h:0,n:0},    d54:{a:100,m:0,h:0,n:0}},
+  {l:'Results of tests promptly',          s:[3.60,4.43,4.27,4.50,4.77],c6146:4.75,c6152:4.76,c6154:4.79,school:4.45,college:4.56,d46:{a:75,m:25,h:0,n:0}, d52:{a:84,m:12,h:0,n:4},   d54:{a:87.5,m:8.3,h:0,n:4.2}},
+  {l:'Maintains control of class',         s:[3.80,4.43,4.53,4.75,4.96],c6146:4.95,c6152:4.96,c6154:4.96,school:4.67,college:4.71,d46:{a:95,m:5,h:0,n:0},  d52:{a:96,m:4,h:0,n:0},    d54:{a:95.8,m:4.2,h:0,n:0}},
+  {l:'Manages class time productively',    s:[3.00,4.64,4.67,5.00,4.91],c6146:4.90,c6152:4.88,c6154:4.96,school:4.55,college:4.64,d46:{a:90,m:10,h:0,n:0}, d52:{a:92,m:4,h:4,n:0},    d54:{a:95.8,m:4.2,h:0,n:0}},
+  {l:'Answers questions clearly',          s:[3.20,4.36,4.47,4.50,4.90],c6146:4.85,c6152:4.92,c6154:4.92,school:4.53,college:4.55,d46:{a:85,m:15,h:0,n:0}, d52:{a:92,m:8,h:0,n:0},    d54:{a:91.7,m:8.3,h:0,n:0}},
+  {l:'Uses FanshaweOnline effectively',    s:[4.00,4.43,4.67,4.75,4.78],c6146:4.90,c6152:4.68,c6154:4.79,school:4.61,college:4.67,d46:{a:90,m:10,h:0,n:0}, d52:{a:84,m:8,h:4,n:4},    d54:{a:87.5,m:8.3,h:0,n:4.2}},
+  {l:'Sets clear evaluation expectations', s:[3.40,4.43,4.60,4.75,4.83],c6146:4.70,c6152:4.84,c6154:4.92,school:4.56,college:4.61,d46:{a:70,m:30,h:0,n:0}, d52:{a:92,m:0,h:8,n:0},    d54:{a:91.7,m:8.3,h:0,n:0}},
+  {l:'Provides fair evaluations',          s:[4.20,4.43,4.47,4.63,4.94],c6146:4.90,c6152:4.96,c6154:4.96,school:4.65,college:4.66,d46:{a:90,m:10,h:0,n:0}, d52:{a:96,m:4,h:0,n:0},    d54:{a:95.8,m:4.2,h:0,n:0}},
+  {l:'Well prepared for each class',       s:[4.00,4.50,4.67,4.75,4.97],c6146:5.00,c6152:4.92,c6154:5.00,school:4.63,college:4.74,d46:{a:100,m:0,h:0,n:0}, d52:{a:92,m:8,h:0,n:0},    d54:{a:100,m:0,h:0,n:0}},
+  {l:'Communicates clearly & effectively', s:[3.00,4.50,4.40,4.38,4.83],c6146:4.95,c6152:4.80,c6154:4.75,school:4.54,college:4.60,d46:{a:95,m:5,h:0,n:0},  d52:{a:80,m:20,h:0,n:0},   d54:{a:83.3,m:12.5,h:0,n:4.2}},
+  {l:'Variety of learning activities',     s:[3.80,4.21,4.60,4.88,4.88],c6146:4.90,c6152:4.84,c6154:4.92,school:4.35,college:4.55,d46:{a:90,m:10,h:0,n:0}, d52:{a:88,m:8,h:4,n:0},    d54:{a:95.8,m:0,h:4.2,n:0}},
+  {l:'Helps apply learning',               s:[3.80,4.50,4.47,4.38,4.94],c6146:4.95,c6152:4.92,c6154:4.96,school:4.49,college:4.58,d46:{a:95,m:5,h:0,n:0},  d52:{a:96,m:0,h:4,n:0},    d54:{a:95.8,m:4.2,h:0,n:0}},
+  {l:'Available outside classroom',        s:[4.00,4.33,4.40,4.67,4.82],c6146:4.63,c6152:4.88,c6154:4.92,school:4.55,college:4.57,d46:{a:68.4,m:26.3,h:5.3,n:0},d52:{a:92,m:4,h:4,n:0},d54:{a:95.8,m:0,h:4.2,n:0}},
+  {l:'Helpful when confused',              s:[3.40,4.36,4.60,4.50,4.93],c6146:4.90,c6152:4.92,c6154:4.96,school:4.52,college:4.57,d46:{a:90,m:10,h:0,n:0}, d52:{a:92,m:8,h:0,n:0},    d54:{a:95.8,m:4.2,h:0,n:0}},
+  {l:'Helpful comments & feedback',        s:[3.60,4.57,4.40,4.75,4.84],c6146:4.85,c6152:4.76,c6154:4.92,school:4.48,college:4.55,d46:{a:85,m:15,h:0,n:0}, d52:{a:88,m:4,h:4,n:4},    d54:{a:91.7,m:8.3,h:0,n:0}},
+  {l:'Engages me in learning',             s:[3.20,4.64,4.27,4.38,4.88],c6146:4.85,c6152:4.80,c6154:5.00,school:4.38,college:4.49,d46:{a:85,m:15,h:0,n:0}, d52:{a:84,m:12,h:4,n:0},   d54:{a:100,m:0,h:0,n:0}},
+  {l:'Displays enthusiasm for teaching',   s:[3.80,4.57,4.20,4.63,4.96],c6146:4.90,c6152:4.96,c6154:5.00,school:4.56,college:4.64,d46:{a:90,m:10,h:0,n:0}, d52:{a:96,m:4,h:0,n:0},    d54:{a:100,m:0,h:0,n:0}},
+  {l:'Inspires & challenges me',           s:[3.80,4.64,4.20,4.63,4.88],c6146:4.90,c6152:4.84,c6154:4.92,school:4.46,college:4.53,d46:{a:90,m:10,h:0,n:0}, d52:{a:88,m:8,h:4,n:0},    d54:{a:91.7,m:8.3,h:0,n:0}},
+  {l:'Respectful of everyone',             s:[4.20,4.71,4.67,5.00,4.99],c6146:5.00,c6152:4.96,c6154:5.00,school:4.77,college:4.79,d46:{a:100,m:0,h:0,n:0}, d52:{a:96,m:4,h:0,n:0},    d54:{a:100,m:0,h:0,n:0}},
+  {l:'Respects diverse ways of learning',  s:[4.20,4.57,4.73,4.88,4.97],c6146:5.00,c6152:4.92,c6154:5.00,school:4.70,college:4.74,d46:{a:100,m:0,h:0,n:0}, d52:{a:91.7,m:8.3,h:0,n:0},d54:{a:100,m:0,h:0,n:0}},
 ];
 
 /* ══════════════════════════════════════
@@ -593,12 +714,10 @@ const comps=[
   const DELAY=8000;
   const wrap=document.getElementById('cmtWrap');
   const emptyEl=document.getElementById('cmtEmpty');
-  let pool=COMMENTS.slice(); // currently filtered
+  let pool=COMMENTS.slice();
   let cur=0,timer=null;
 
-  /* render slides */
   function renderSlides(){
-    // remove old slides
     wrap.querySelectorAll('.cmt-slide').forEach(el=>el.remove());
     emptyEl.style.display='none';
     if(!pool.length){emptyEl.style.display='block';syncMeta();return}
@@ -606,8 +725,7 @@ const comps=[
       const el=document.createElement('div');
       el.className='cmt-slide'+(i===0?' active':'');
       el.dataset.idx=i;
-      el.innerHTML=`
-        <div class="cmt-text">${c.text}</div>
+      el.innerHTML=`<div class="cmt-text">${c.text}</div>
         <div class="cmt-footer">
           <span class="cmt-course-badge ${c.badge}"><i class="fas ${c.icon}"></i> ${c.label}</span>
           <span class="cmt-stars">${c.stars}</span>
@@ -620,7 +738,6 @@ const comps=[
   function buildDots(){
     const dotsEl=document.getElementById('cmtDots');
     dotsEl.innerHTML='';
-    // show max 15 dots to avoid overflow
     const max=Math.min(pool.length,15);
     for(let i=0;i<max;i++){
       const d=document.createElement('button');
@@ -639,10 +756,8 @@ const comps=[
   }
 
   function syncMeta(){
-    document.getElementById('cmtCounter').textContent=
-      pool.length?`${cur+1} / ${pool.length}`:'0 comments';
-    document.getElementById('cmtCountBadge').textContent=
-      `${pool.length} comment${pool.length!==1?'s':''}`;
+    document.getElementById('cmtCounter').textContent=pool.length?`${cur+1} / ${pool.length}`:'0 comments';
+    document.getElementById('cmtCountBadge').textContent=`${pool.length} comment${pool.length!==1?'s':''}`;
     document.querySelectorAll('.cmt-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
   }
 
@@ -668,31 +783,30 @@ const comps=[
 
   document.getElementById('cmtPrev')?.addEventListener('click',()=>goTo(cur-1));
   document.getElementById('cmtNext')?.addEventListener('click',()=>goTo(cur+1));
-
-  // keyboard
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowLeft')goTo(cur-1);
-    if(e.key==='ArrowRight')goTo(cur+1);
-  });
-  // swipe
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')goTo(cur-1);if(e.key==='ArrowRight')goTo(cur+1)});
   let tx=0;
   wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
   wrap.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)goTo(cur+(dx<0?1:-1))},{passive:true});
-  // pause on hover
   wrap.addEventListener('mouseenter',stopAuto);
   wrap.addEventListener('mouseleave',startAuto);
 
-  // expose filter
-  window.cmtFilter=function(course){
-    pool=course==='all'?COMMENTS.slice():COMMENTS.filter(c=>c.course===course);
-    renderSlides();startAuto();
-  };
+  /* Comment tabs — independent of gallery */
+  document.querySelectorAll('#cmtTabs .cmt-tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#cmtTabs .cmt-tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.cf;
+      pool=f==='all'?COMMENTS.slice():COMMENTS.filter(c=>c.course===f);
+      renderSlides();startAuto();
+    });
+  });
 
   renderSlides();startAuto();
 })();
 
 /* ══════════════════════════════════════
-   GALLERY
+   GALLERY  — NO scrollIntoView anywhere,
+   init deferred to after first paint.
 ══════════════════════════════════════ */
 (function(){
   const DELAY=5000;
@@ -705,21 +819,28 @@ const comps=[
     visible.forEach((sl,i)=>{
       const dot=document.createElement('button');
       dot.className='gal-dot'+(i===cur?' active':'');
-      dot.addEventListener('click',()=>goTo(i));dots.appendChild(dot);
+      dot.addEventListener('click',()=>goTo(i));
+      dots.appendChild(dot);
+
       const th=document.createElement('div');
       th.className='gal-thumb'+(i===cur?' active':'');
       const img=sl.querySelector('img');
-      if(img&&img.complete&&img.naturalWidth){const ti=document.createElement('img');ti.src=img.src;ti.alt='';th.appendChild(ti);}
-      else{const fb=document.createElement('div');fb.className='gal-thumb-fb';fb.textContent=sl.querySelector('.gal-slide-fallback')?.textContent?.trim().charAt(0)||'📷';th.appendChild(fb);}
-      th.addEventListener('click',()=>goTo(i));thumbs.appendChild(th);
+      if(img&&img.complete&&img.naturalWidth){
+        const ti=document.createElement('img');ti.src=img.src;ti.alt='';th.appendChild(ti);
+      } else {
+        const fb=document.createElement('div');fb.className='gal-thumb-fb';
+        fb.innerHTML=`<i class="fas ${sl.dataset.badgeIcon||'fa-image'}"></i>`;
+        th.appendChild(fb);
+      }
+      th.addEventListener('click',()=>goTo(i));
+      thumbs.appendChild(th);
     });
     updateMeta();
   }
 
   function syncCaption(sl){
-    const cap=document.getElementById('galCaption');
-    if(!cap)return;
-    cap.innerHTML=`<div class="gal-cap-badge" style="background:${sl.dataset.badgeColor};color:${sl.dataset.badgeText};border:1px solid ${sl.dataset.badgeBorder}"><i class="fas ${sl.dataset.badgeIcon}"></i>${sl.dataset.badgeLabel}</div>
+    const cap=document.getElementById('galCaption');if(!cap)return;
+    cap.innerHTML=`<div class="gal-cap-badge" style="background:${sl.dataset.badgeColor};color:${sl.dataset.badgeText};border:1px solid ${sl.dataset.badgeBorder}"><i class="fas ${sl.dataset.badgeIcon}"></i> ${sl.dataset.badgeLabel}</div>
       <div class="gal-cap-text">${sl.dataset.caption}</div>
       <div class="gal-cap-date">${sl.dataset.date}</div>`;
   }
@@ -733,47 +854,57 @@ const comps=[
   function sync(){
     slides.forEach(sl=>sl.classList.remove('active'));
     const em=document.getElementById('galEmptyMsg'),ov=document.getElementById('galOverlay'),gc=document.getElementById('galCounter');
-    if(!visible.length){em.style.display='flex';if(ov)ov.style.display='none';if(gc)gc.style.display='none';updateMeta();return}
+    if(!visible.length){
+      em.style.display='flex';if(ov)ov.style.display='none';if(gc)gc.style.display='none';
+      updateMeta();return;
+    }
     em.style.display='none';if(ov)ov.style.display='flex';if(gc)gc.style.display='block';
-    visible[cur].classList.add('active');syncCaption(visible[cur]);
+    visible[cur].classList.add('active');
+    syncCaption(visible[cur]);
+    /* update dots — NO scrollIntoView anywhere */
     document.querySelectorAll('.gal-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
-    document.querySelectorAll('.gal-thumb').forEach((t,i)=>{t.classList.toggle('active',i===cur);if(i===cur)t.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})});
-    updateMeta();resetProgress();
+    document.querySelectorAll('.gal-thumb').forEach((t,i)=>t.classList.toggle('active',i===cur));
+    updateMeta();
   }
 
-  function goTo(i){cur=(i+visible.length)%visible.length;sync()}
-  function resetProgress(){const bar=document.getElementById('galProgress');if(!bar)return;bar.style.transition='none';bar.style.width='0%';requestAnimationFrame(()=>requestAnimationFrame(()=>{bar.style.transition=`width ${DELAY}ms linear`;bar.style.width='100%'}))}
-  function startAuto(){stopAuto();if(visible.length>1){resetProgress();timer=setInterval(()=>goTo(cur+1),DELAY)}}
+  function goTo(i){cur=(i+visible.length)%visible.length;sync();resetProgress()}
+  function resetProgress(){
+    const bar=document.getElementById('galProgress');if(!bar)return;
+    bar.style.transition='none';bar.style.width='0%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      bar.style.transition=`width ${DELAY}ms linear`;bar.style.width='100%';
+    }));
+  }
+  function startAuto(){stopAuto();if(visible.length>1){timer=setInterval(()=>goTo(cur+1),DELAY)}}
   function stopAuto(){clearInterval(timer);timer=null;const b=document.getElementById('galProgress');if(b){b.style.transition='none';b.style.width='0%'}}
 
   const stage=document.getElementById('galStage');
-  stage?.addEventListener('mouseenter',stopAuto);stage?.addEventListener('mouseleave',startAuto);
+  stage?.addEventListener('mouseenter',stopAuto);
+  stage?.addEventListener('mouseleave',()=>{startAuto();resetProgress()});
   document.getElementById('galPrev')?.addEventListener('click',()=>goTo(cur-1));
   document.getElementById('galNext')?.addEventListener('click',()=>goTo(cur+1));
   let tx=0;
   stage?.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
   stage?.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)goTo(cur+(dx<0?1:-1))},{passive:true});
 
-  window.galFilter=function(course){
-    visible=slides.filter(sl=>course==='all'||sl.dataset.course===course);
-    cur=0;buildNav();sync();startAuto();
-  };
-
-  buildNav();sync();startAuto();
-})();
-
-/* ══════════════════════════════════════
-   SHARED VOICES FILTER
-══════════════════════════════════════ */
-document.querySelectorAll('#voicesFilter .vf-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('#voicesFilter .vf-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const f=btn.dataset.vf;
-    if(window.galFilter)window.galFilter(f);
-    if(window.cmtFilter)window.cmtFilter(f);
+  document.querySelectorAll('#galFilter .vf-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#galFilter .vf-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.vf;
+      visible=slides.filter(sl=>f==='all'||sl.dataset.course===f);
+      cur=0;buildNav();sync();startAuto();resetProgress();
+    });
   });
-});
+
+  /* Defer init to after first paint — prevents any layout-triggered scroll */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    buildNav();
+    sync();
+    startAuto();
+    resetProgress();
+  }));
+})();
 
 /* ══════════════════════════════════════
    CHARTS
@@ -802,27 +933,16 @@ function buildRadar(){
 }
 function buildBench(){
   const ctx=document.getElementById('benchChart').getContext('2d');
-  // Estimated historical school & college composites (Fall 2025 actuals: 4.56 / 4.63)
   const schoolHist=[4.42,4.47,4.50,4.53,4.56];
   const collegeHist=[4.54,4.56,4.59,4.61,4.63];
   const g1=ctx.createLinearGradient(0,0,0,300);g1.addColorStop(0,C(ACC,.28));g1.addColorStop(1,C(ACC,0));
   const g2=ctx.createLinearGradient(0,0,0,300);g2.addColorStop(0,C(TEAL,.18));g2.addColorStop(1,C(TEAL,0));
   const g3=ctx.createLinearGradient(0,0,0,300);g3.addColorStop(0,C(GLD,.14));g3.addColorStop(1,C(GLD,0));
   return new Chart(ctx,{type:'line',data:{labels:sems,datasets:[
-    {label:'Your Score',       data:overall,      borderColor:ACC, backgroundColor:g1,pointBackgroundColor:ACC, pointRadius:6,pointHoverRadius:8,fill:true,tension:.4,borderWidth:2.5},
-    {label:'School of IT Avg', data:schoolHist,   borderColor:TEAL,backgroundColor:g2,pointBackgroundColor:TEAL,pointRadius:5,pointHoverRadius:7,fill:true,tension:.4,borderWidth:2,borderDash:[6,4]},
-    {label:'College Avg',      data:collegeHist,  borderColor:GLD, backgroundColor:g3,pointBackgroundColor:GLD, pointRadius:5,pointHoverRadius:7,fill:true,tension:.4,borderWidth:2,borderDash:[3,4]},
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{labels:{color:tc(),font:{size:11}}},
-      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(2)} / 5.00`}},
-      annotation:{annotations:{}}
-    },
-    scales:{
-      x:{ticks:{color:tc(),font:{size:10}},grid:{color:gc()}},
-      y:{min:3,max:5.1,ticks:{color:tc(),font:{size:10},callback:v=>v.toFixed(1)},grid:{color:gc()}}
-    }
-  }});
+    {label:'Your Score',      data:overall,     borderColor:ACC, backgroundColor:g1,pointBackgroundColor:ACC, pointRadius:6,pointHoverRadius:8,fill:true,tension:.4,borderWidth:2.5},
+    {label:'School of IT Avg',data:schoolHist,  borderColor:TEAL,backgroundColor:g2,pointBackgroundColor:TEAL,pointRadius:5,pointHoverRadius:7,fill:true,tension:.4,borderWidth:2,borderDash:[6,4]},
+    {label:'College Avg',     data:collegeHist, borderColor:GLD, backgroundColor:g3,pointBackgroundColor:GLD, pointRadius:5,pointHoverRadius:7,fill:true,tension:.4,borderWidth:2,borderDash:[3,4]},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(2)} / 5.00`}}},scales:{x:{ticks:{color:tc(),font:{size:10}},grid:{color:gc()}},y:{min:3,max:5.1,ticks:{color:tc(),font:{size:10},callback:v=>v.toFixed(1)},grid:{color:gc()}}}}});
 }
 function buildCourseChart(mode){
   if(courseInst){courseInst.destroy();courseInst=null}
@@ -843,7 +963,7 @@ function buildDist(course){
   const dk=`d${course.slice(2)}`;
   const lbl=comps.map((c,i)=>`${String(i+1).padStart(2,'0')}. ${c.l.substring(0,28)}`);
   distInst=new Chart(ctx,{type:'bar',data:{labels:lbl,datasets:[
-    {label:'Always (5)',      data:comps.map(c=>c[dk].a),backgroundColor:C(GRN,.75),borderColor:GRN,borderWidth:.5},
+    {label:'Always (5)',       data:comps.map(c=>c[dk].a),backgroundColor:C(GRN,.75),borderColor:GRN,borderWidth:.5},
     {label:'Most of Time (4)',data:comps.map(c=>c[dk].m),backgroundColor:C(ACC,.65),borderColor:ACC,borderWidth:.5},
     {label:'Half (3)',        data:comps.map(c=>c[dk].h),backgroundColor:C(GLD,.6), borderColor:GLD,borderWidth:.5},
     {label:'Rarely/Never',   data:comps.map(c=>c[dk].n),backgroundColor:C(RED,.55),borderColor:RED,borderWidth:.5},
