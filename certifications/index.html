@@ -339,14 +339,16 @@
 /* ══════════════════════════════════════
    SLIDESHOW WITHIN CERT-THUMB
 ══════════════════════════════════════ */
-.cert-slideshow { position: relative; }
+.cert-slideshow { position: relative; background: var(--navy3); }
 .cert-slideshow .slide-img {
   position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%; height: 100%; object-fit: contain;
   opacity: 0; transition: opacity .5s ease;
   display: block;
 }
 .cert-slideshow .slide-img.slide-active { opacity: 1; }
+/* override the generic hover-scale so contained images don't overflow */
+.cert-card:hover .cert-thumb.cert-slideshow .slide-img { transform: none; }
 .slide-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
   z-index: 10; background: rgba(7,13,31,.72); backdrop-filter: blur(8px);
@@ -360,7 +362,7 @@
 .slide-btn.prev { left: 8px; }
 .slide-btn.next { right: 8px; }
 .slide-dots {
-  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
   z-index: 10; display: flex; gap: 5px;
 }
 .slide-dot {
@@ -370,6 +372,16 @@
 }
 .slide-dot.active { background: var(--ic); transform: scale(1.35); }
 [data-theme="light"] .slide-btn { background: rgba(240,244,255,.82); color: var(--navy3); }
+/* slide counter pill — top-right */
+.slide-counter {
+  position: absolute; top: 9px; right: 9px; z-index: 10;
+  background: rgba(7,13,31,.75); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 12px; padding: 3px 9px;
+  font-size: .68em; font-weight: 700; color: var(--text);
+  letter-spacing: .4px; pointer-events: none;
+}
+[data-theme="light"] .slide-counter { background: rgba(240,244,255,.88); color: #1a2340; }
 
 /* multi-verify buttons */
 .cert-actions-multi {
@@ -720,12 +732,13 @@
              alt="Project Management: Healthcare Projects — Certificate 3">
         <button class="slide-btn prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
         <button class="slide-btn next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+        <span class="slide-counter">1 / 3</span>
         <div class="slide-dots">
           <span class="slide-dot active" data-index="0"></span>
           <span class="slide-dot" data-index="1"></span>
           <span class="slide-dot" data-index="2"></span>
         </div>
-        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
       </div>
       <div class="cert-body">
         <div class="cert-domain">Management</div>
@@ -1026,8 +1039,9 @@ function applyAll() {
 ──────────────────────────────────────────────── */
 function initSlideshows() {
   document.querySelectorAll('.cert-slideshow').forEach(function(ss) {
-    const imgs = Array.from(ss.querySelectorAll('.slide-img'));
-    const dots = Array.from(ss.querySelectorAll('.slide-dot'));
+    const imgs    = Array.from(ss.querySelectorAll('.slide-img'));
+    const dots    = Array.from(ss.querySelectorAll('.slide-dot'));
+    const counter = ss.querySelector('.slide-counter');
     if (!imgs.length) return;
     let current = 0;
 
@@ -1037,6 +1051,7 @@ function initSlideshows() {
       current = ((n % imgs.length) + imgs.length) % imgs.length;
       imgs[current].classList.add('slide-active');
       if (dots[current]) dots[current].classList.add('active');
+      if (counter) counter.textContent = `${current + 1} / ${imgs.length}`;
     }
 
     const prev = ss.querySelector('.slide-btn.prev');
