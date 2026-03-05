@@ -339,16 +339,25 @@
 /* ══════════════════════════════════════
    SLIDESHOW WITHIN CERT-THUMB
 ══════════════════════════════════════ */
-.cert-slideshow { position: relative; background: var(--navy3); }
+.cert-slideshow { position: relative; background: var(--navy3); cursor: zoom-in; }
 .cert-slideshow .slide-img {
   position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: contain;
+  width: 100%; height: 100%; object-fit: cover;
   opacity: 0; transition: opacity .5s ease;
-  display: block;
+  display: block; pointer-events: none;
 }
 .cert-slideshow .slide-img.slide-active { opacity: 1; }
-/* override the generic hover-scale so contained images don't overflow */
-.cert-card:hover .cert-thumb.cert-slideshow .slide-img { transform: none; }
+/* expand hint overlay */
+.slide-expand-hint {
+  position: absolute; top: 9px; left: 9px; z-index: 10;
+  background: rgba(7,13,31,.72); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.13); border-radius: 8px;
+  padding: 4px 8px; font-size: .65em; color: rgba(255,255,255,.7);
+  display: flex; align-items: center; gap: 5px;
+  pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.cert-slideshow:hover .slide-expand-hint { opacity: 1; }
+[data-theme="light"] .slide-expand-hint { background: rgba(240,244,255,.88); color: #1a2340; }
 .slide-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
   z-index: 10; background: rgba(7,13,31,.72); backdrop-filter: blur(8px);
@@ -389,6 +398,60 @@
   display: flex; flex-direction: column; gap: 6px;
 }
 .cert-actions-multi .cert-btn-verify { font-size: .75em; padding: 8px 10px; }
+
+/* ══════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════ */
+#certLightbox {
+  display: none;
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,.88); backdrop-filter: blur(12px);
+  align-items: center; justify-content: center;
+}
+#certLightbox.lb-open { display: flex; }
+.lb-wrap {
+  position: relative;
+  max-width: min(92vw, 860px);
+  max-height: 90vh;
+  display: flex; align-items: center; justify-content: center;
+  animation: lb-in .22s cubic-bezier(.22,1,.36,1);
+}
+@keyframes lb-in {
+  from { opacity: 0; transform: scale(.93); }
+  to   { opacity: 1; transform: none; }
+}
+#lbImg {
+  max-width: 100%; max-height: 88vh;
+  border-radius: 10px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  object-fit: contain; display: block;
+  background: var(--navy3);
+}
+.lb-close {
+  position: fixed; top: 18px; right: 20px;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  color: #fff; font-size: 1em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; z-index: 9001;
+}
+.lb-close:hover { background: rgba(255,255,255,.22); }
+.lb-nav {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  color: #fff; font-size: 1em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; z-index: 9001;
+}
+.lb-nav:hover { background: rgba(255,255,255,.22); }
+.lb-nav.lb-prev { left: 18px; }
+.lb-nav.lb-next { right: 18px; }
+.lb-counter {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,.65); font-size: .8em; letter-spacing: .5px;
+  pointer-events: none; z-index: 9001;
+}
 
 /* ══════════════════════════════════════
    RESPONSIVE
@@ -733,6 +796,7 @@
         <button class="slide-btn prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
         <button class="slide-btn next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
         <span class="slide-counter">1 / 3</span>
+        <span class="slide-expand-hint"><i class="fas fa-expand-alt"></i> click to expand</span>
         <div class="slide-dots">
           <span class="slide-dot active" data-index="0"></span>
           <span class="slide-dot" data-index="1"></span>
@@ -768,36 +832,59 @@
       </div>
     </div>
 
-    <!-- ─── NEW CERT · LinkedIn Learning ─── -->
+    <!-- ─── Introduction to Large Language Models · LinkedIn Learning ─── -->
       <div class="cert-card fade-up"
            style="--ic:#0077B5"
            data-domain="ml-ai"
-           data-tags="large language models llm ai linkedin"
+           data-tags="large language models llm ai jonathan fernandes linkedin"
            data-issuer="LinkedIn Learning"
            data-year="2025"
-           data-sort-date="2025-03">
-        <div class="cert-thumb">
-          <img src="images/CertificateOfCompletion_Introduction%20to%20Large%20Language%20Models.png"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-               alt="Introduction to Large Language Models">
-          <div class="cert-thumb-fallback">🧠</div>
-          <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+           data-sort-date="2025-11">
+        <div class="cert-thumb cert-slideshow" id="slideshow-llm">
+          <img class="slide-img slide-active"
+               src="images/02.%20Introduction%20to%20Large%20Language%20Models/01.CertificateOfCompletion_Introduction%20to%20Large%20Language%20Models.svg"
+               alt="Introduction to Large Language Models — Certificate 1">
+          <img class="slide-img"
+               src="images/02.%20Introduction%20to%20Large%20Language%20Models/02.CertificateOfCompletion_Introduction%20to%20Large%20Language%20Models.svg"
+               alt="Introduction to Large Language Models — Certificate 2">
+          <img class="slide-img"
+               src="images/02.%20Introduction%20to%20Large%20Language%20Models/03.CertificateOfCompletion_Introduction%20to%20Large%20Language%20Models.svg"
+               alt="Introduction to Large Language Models — Certificate 3">
+          <button class="slide-btn prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+          <button class="slide-btn next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+          <span class="slide-counter">1 / 3</span>
+          <span class="slide-expand-hint"><i class="fas fa-expand-alt"></i> click to expand</span>
+          <div class="slide-dots">
+            <span class="slide-dot active" data-index="0"></span>
+            <span class="slide-dot" data-index="1"></span>
+            <span class="slide-dot" data-index="2"></span>
+          </div>
+          <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
         </div>
         <div class="cert-body">
           <div class="cert-domain">ML / AI</div>
           <div class="cert-title">Introduction to Large Language Models</div>
           <div class="cert-meta">
-            <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Mar 2025</span>
+            <span class="cert-date"><i class="fas fa-calendar-check"></i> Completed: Nov 2025</span>
           </div>
           <div class="cert-tags">
             <span class="cert-tag">LLM</span>
             <span class="cert-tag">AI</span>
+            <span class="cert-tag">1h 17m</span>
           </div>
         </div>
-        <div class="cert-actions">
+        <div class="cert-actions-multi">
+          <a href="https://www.linkedin.com/learning/certificates/500bf47909d2402822a22daf459b2e93257aef84a0a88a7aba1394b72e5193e4?trk=share_certificate"
+             target="_blank" class="cert-btn-verify">
+            <i class="fas fa-circle-check"></i> Verify Certificate 1
+          </a>
+          <a href="https://www.linkedin.com/learning/certificates/fac64e7879949f78f06857ee37ae460ba7f658745847e804888ac944b749a598?trk=share_certificate"
+             target="_blank" class="cert-btn-verify">
+            <i class="fas fa-circle-check"></i> Verify Certificate 2
+          </a>
           <a href="https://www.linkedin.com/learning/certificates/5b72f65c762d65e0a74b9ecb93fc3e8eb9ee9568f775faf8984967a6065e70a5?trk=share_certificate"
              target="_blank" class="cert-btn-verify">
-            <i class="fas fa-circle-check"></i> Verify Credential
+            <i class="fas fa-circle-check"></i> Verify Certificate 3
           </a>
         </div>
       </div>
@@ -906,6 +993,17 @@
     <div>No certifications match your search.</div>
     <div style="font-size:.8em;margin-top:6px">Try a different keyword or filter.</div>
   </div>
+</div>
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="certLightbox" role="dialog" aria-modal="true" aria-label="Certificate viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close"><i class="fas fa-times"></i></button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous" style="display:none"><i class="fas fa-chevron-left"></i></button>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next" style="display:none"><i class="fas fa-chevron-right"></i></button>
+  <div class="lb-wrap">
+    <img id="lbImg" src="" alt="">
+  </div>
+  <div class="lb-counter" id="lbCounter"></div>
 </div>
 
 <script>
@@ -1035,6 +1133,53 @@ function applyAll() {
 }
 
 /* ──────────────────────────────────────────────
+   LIGHTBOX
+──────────────────────────────────────────────── */
+(function() {
+  const lb      = document.getElementById('certLightbox');
+  const lbImg   = document.getElementById('lbImg');
+  const lbClose = document.getElementById('lbClose');
+  const lbPrev  = document.getElementById('lbPrev');
+  const lbNext  = document.getElementById('lbNext');
+  const lbCnt   = document.getElementById('lbCounter');
+  let lbSrcs = [], lbIdx = 0;
+
+  window.openLightbox = function(srcs, idx) {
+    lbSrcs = srcs; lbIdx = idx;
+    lbImg.src = lbSrcs[lbIdx];
+    lbImg.alt = '';
+    update();
+    lb.classList.add('lb-open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function update() {
+    lbImg.src = lbSrcs[lbIdx];
+    const multi = lbSrcs.length > 1;
+    lbPrev.style.display = multi ? 'flex' : 'none';
+    lbNext.style.display = multi ? 'flex' : 'none';
+    lbCnt.textContent    = multi ? `${lbIdx + 1} / ${lbSrcs.length}` : '';
+  }
+
+  function close() {
+    lb.classList.remove('lb-open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click', () => { lbIdx = (lbIdx - 1 + lbSrcs.length) % lbSrcs.length; update(); });
+  lbNext.addEventListener('click', () => { lbIdx = (lbIdx + 1) % lbSrcs.length; update(); });
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('lb-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft')  { lbIdx = (lbIdx - 1 + lbSrcs.length) % lbSrcs.length; update(); }
+    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbSrcs.length; update(); }
+  });
+})();
+
+/* ──────────────────────────────────────────────
    SLIDESHOW LOGIC
 ──────────────────────────────────────────────── */
 function initSlideshows() {
@@ -1059,6 +1204,13 @@ function initSlideshows() {
     if (prev) prev.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
     if (next) next.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
     dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+
+    // click on thumbnail area → open lightbox
+    ss.addEventListener('click', function(e) {
+      if (e.target.closest('.slide-btn') || e.target.closest('.slide-dots') || e.target.closest('.cert-issuer-badge')) return;
+      const srcs = imgs.map(img => img.src);
+      window.openLightbox(srcs, current);
+    });
   });
 }
 
