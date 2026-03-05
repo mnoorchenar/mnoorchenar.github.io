@@ -339,6 +339,7 @@
 /* ══════════════════════════════════════
    SLIDESHOW WITHIN CERT-THUMB
 ══════════════════════════════════════ */
+.cert-thumb:not(.cert-slideshow) { cursor: zoom-in; }
 .cert-slideshow { position: relative; background: var(--navy3); cursor: zoom-in; }
 .cert-slideshow .slide-img {
   position: absolute; inset: 0;
@@ -900,7 +901,7 @@
                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                alt="SAS® 9.4 Cert Prep: Part 01 SAS Programming Essentials">
           <div class="cert-thumb-fallback">📊</div>
-          <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+          <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
         </div>
         <div class="cert-body">
           <div class="cert-domain">Statistics</div>
@@ -933,7 +934,7 @@
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
              alt="R for Data Science: Analysis and Visualization">
         <div class="cert-thumb-fallback">📈</div>
-        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
       </div>
       <div class="cert-body">
         <div class="cert-domain">Statistics</div>
@@ -967,7 +968,7 @@
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
              alt="PySpark Essential Training: Introduction to Building Data Pipelines">
         <div class="cert-thumb-fallback">🔥</div>
-        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
       </div>
       <div class="cert-body">
         <div class="cert-domain">Data Engineering</div>
@@ -1182,6 +1183,19 @@ function applyAll() {
 })();
 
 /* ──────────────────────────────────────────────
+   SINGLE-IMAGE LIGHTBOX
+──────────────────────────────────────────────── */
+function initSingleThumbs() {
+  document.querySelectorAll('.cert-thumb:not(.cert-slideshow)').forEach(function(thumb) {
+    const img = thumb.querySelector('img');
+    if (!img) return;
+    thumb.addEventListener('click', function() {
+      if (img.complete && img.naturalWidth > 0) window.openLightbox([img.src], 0);
+    });
+  });
+}
+
+/* ──────────────────────────────────────────────
    SLIDESHOW LOGIC
 ──────────────────────────────────────────────── */
 function initSlideshows() {
@@ -1223,6 +1237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   computeStats();
   applyAll(); // initial sort (Newest First)
   initSlideshows();
+  initSingleThumbs();
 });
 </script>
 
