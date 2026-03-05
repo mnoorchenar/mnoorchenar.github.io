@@ -526,256 +526,6 @@
 <div class="certs-section">
   <div class="certs-grid" id="certsGrid">
 
-    <!-- ═══════════════════════════════════════════════════════
-         HOW TO ADD A CERT CARD
-         ─────────────────────────────────────────────────────
-         1. Copy one card block below.
-         2. Set style="--ic: #XXXXXX" on .cert-card to the
-            issuer's brand colour. Everything (top bar, glow,
-            tags, button) derives from it automatically.
-
-            Issuer colour quick-reference:
-              LinkedIn Learning → #0077B5
-              Coursera          → #0056D3
-              AWS               → #FF9900
-              Google / GCP      → #4285F4
-              Microsoft / Azure → #00A4EF
-              IBM               → #1F70C1
-              DataCamp          → #03EF62
-              deeplearning.ai   → #E8484A
-              Udemy             → #A435F0
-              edX               → #02262B  (use teal: #06b6d4)
-
-         3. data-domain   → must match a filter-btn data-filter
-            data-tags     → search keywords
-            data-issuer   → counted in stats bar
-            data-year     → counted in stats bar
-            data-sort-date→ YYYY-MM (drives Newest/Oldest sort)
-    ════════════════════════════════════════════════════════ -->
-
-    <!-- ─── EXAMPLE CARD 1 · LinkedIn Learning ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#0077B5"
-         data-domain="ml-ai"
-         data-tags="machine learning python supervised learning neural networks"
-         data-issuer="LinkedIn Learning"
-         data-year="2024"
-         data-sort-date="2024-03">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-ml-linkedin.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Machine Learning with Python">
-        <div class="cert-thumb-fallback">🤖</div>
-        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">ML / AI</div>
-        <div class="cert-title">Machine Learning with Python</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Mar 2024</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">Python</span>
-          <span class="cert-tag">Supervised Learning</span>
-          <span class="cert-tag">scikit-learn</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ─── EXAMPLE CARD 2 · Coursera ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#0056D3"
-         data-domain="ml-ai"
-         data-tags="deep learning neural networks cnn rnn tensorflow keras"
-         data-issuer="Coursera"
-         data-year="2023"
-         data-sort-date="2023-09"
-         data-delay="80">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-deep-learning.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Deep Learning Specialization">
-        <div class="cert-thumb-fallback">🧠</div>
-        <div class="cert-issuer-badge"><i class="fas fa-graduation-cap"></i> Coursera</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">ML / AI</div>
-        <div class="cert-title">Deep Learning Specialization</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Sep 2023</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">TensorFlow</span>
-          <span class="cert-tag">CNN / RNN</span>
-          <span class="cert-tag">Keras</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.coursera.org/account/accomplishments/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ─── EXAMPLE CARD 3 · AWS ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#FF9900"
-         data-domain="cloud"
-         data-tags="aws cloud s3 sagemaker ec2 storage computing"
-         data-issuer="AWS"
-         data-year="2024"
-         data-sort-date="2024-06"
-         data-delay="160">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-aws.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="AWS Cloud Practitioner">
-        <div class="cert-thumb-fallback">☁️</div>
-        <div class="cert-issuer-badge"><i class="fab fa-aws"></i> AWS</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">Cloud</div>
-        <div class="cert-title">AWS Cloud Practitioner Essentials</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Jun 2024</span>
-          <span class="cert-expiry"><i class="fas fa-clock"></i> Expires: Jun 2027</span>
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">AWS</span>
-          <span class="cert-tag">SageMaker</span>
-          <span class="cert-tag">Cloud Infra</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://aws.amazon.com/verification/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ─── EXAMPLE CARD 4 · Statistics / LinkedIn ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#0077B5"
-         data-domain="statistics"
-         data-tags="biostatistics r clinical trials survival analysis regression"
-         data-issuer="LinkedIn Learning"
-         data-year="2023"
-         data-sort-date="2023-04"
-         data-delay="240">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-biostatistics.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="Applied Biostatistics">
-        <div class="cert-thumb-fallback">📊</div>
-        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">Statistics</div>
-        <div class="cert-title">Applied Biostatistics</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Apr 2023</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">R</span>
-          <span class="cert-tag">Clinical Trials</span>
-          <span class="cert-tag">Survival Analysis</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ─── EXAMPLE CARD 5 · deeplearning.ai ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#E8484A"
-         data-domain="ml-ai"
-         data-tags="nlp natural language processing transformers bert attention"
-         data-issuer="deeplearning.ai"
-         data-year="2024"
-         data-sort-date="2024-01"
-         data-delay="320">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-nlp.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="NLP Specialization">
-        <div class="cert-thumb-fallback">💬</div>
-        <div class="cert-issuer-badge"><i class="fas fa-robot"></i> deeplearning.ai</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">ML / AI</div>
-        <div class="cert-title">Natural Language Processing Specialization</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Jan 2024</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">Transformers</span>
-          <span class="cert-tag">BERT</span>
-          <span class="cert-tag">Attention</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.coursera.org/account/accomplishments/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ─── EXAMPLE CARD 6 · IBM ─── -->
-    <div class="cert-card fade-up"
-         style="--ic:#1F70C1"
-         data-domain="data-engineering"
-         data-tags="sql databases data engineering etl pipelines ibm"
-         data-issuer="IBM"
-         data-year="2022"
-         data-sort-date="2022-11"
-         data-delay="400">
-      <div class="cert-thumb">
-        <img src="../images/certs/cert-ibm-de.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="IBM Data Engineering">
-        <div class="cert-thumb-fallback">⚙️</div>
-        <div class="cert-issuer-badge"><i class="fas fa-database"></i> IBM</div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">Data Engineering</div>
-        <div class="cert-title">IBM Data Engineering Professional Certificate</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Nov 2022</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">SQL</span>
-          <span class="cert-tag">ETL Pipelines</span>
-          <span class="cert-tag">Spark</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.credly.com/badges/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-
-    <!-- ═══ ADD YOUR REAL CERT CARDS BELOW THIS LINE ═══ -->
-
     <!-- ─── Project Management: Healthcare Projects · LinkedIn Learning ─── -->
     <div class="cert-card fade-up"
          style="--ic:#0077B5"
@@ -924,40 +674,6 @@
       </div>
     <div class="cert-card fade-up"
          style="--ic:#0077B5"
-         data-domain="statistics"
-         data-tags="r data science visualization barton poulson analysis linkedin"
-         data-issuer="LinkedIn Learning"
-         data-year="2025"
-         data-sort-date="2025-11">
-      <div class="cert-thumb">
-        <img src="images/CertificateOfCompletion_R%20for%20Data%20Science%20Analysis%20and%20Visualization.png"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             alt="R for Data Science: Analysis and Visualization">
-        <div class="cert-thumb-fallback">📈</div>
-        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
-      </div>
-      <div class="cert-body">
-        <div class="cert-domain">Statistics</div>
-        <div class="cert-title">R for Data Science: Analysis and Visualization</div>
-        <div class="cert-meta">
-          <span class="cert-date"><i class="fas fa-calendar-check"></i> Issued: Nov 2025</span>
-          
-        </div>
-        <div class="cert-tags">
-          <span class="cert-tag">R</span>
-          <span class="cert-tag">Data Science</span>
-          <span class="cert-tag">Visualization</span>
-        </div>
-      </div>
-      <div class="cert-actions">
-        <a href="https://www.linkedin.com/learning/certificates/REPLACE"
-           target="_blank" class="cert-btn-verify">
-          <i class="fas fa-circle-check"></i> Verify Credential
-        </a>
-      </div>
-    </div>
-    <div class="cert-card fade-up"
-         style="--ic:#0077B5"
          data-domain="data-engineering"
          data-tags="pyspark data engineering pipelines sam bail linkedin"
          data-issuer="LinkedIn Learning"
@@ -984,6 +700,77 @@
       </div>
       <div class="cert-actions">
         <a href="https://www.linkedin.com/learning/certificates/6f44a82753eaa798bcbd734c48c2f493514a051b8878d473249faecd8e1eb97e?trk=share_certificate"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── R for Data Science: Analysis and Visualization · LinkedIn Learning ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="statistics"
+         data-tags="r data science visualization barton poulson analysis linkedin"
+         data-issuer="LinkedIn Learning"
+         data-year="2025"
+         data-sort-date="2025-11">
+      <div class="cert-thumb">
+        <img src="images/05.%20CertificateOfCompletion_R%20for%20Data%20Science%20Analysis%20and%20Visualization.svg"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="R for Data Science: Analysis and Visualization">
+        <div class="cert-thumb-fallback">📈</div>
+        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Statistics</div>
+        <div class="cert-title">R for Data Science: Analysis and Visualization</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Completed: Nov 2025</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">R</span>
+          <span class="cert-tag">Data Science</span>
+          <span class="cert-tag">Visualization</span>
+          <span class="cert-tag">2h 56m</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.linkedin.com/learning/certificates/b9ad8f009f09133c96f055e0c61ab9bbac2379b5f726df66e82c0e3ba00f0cbc?trk=share_certificate"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Credential
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── Practical A/B Testing · LinkedIn Learning ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="statistics"
+         data-tags="ab testing a/b testing oluchukwu okpala statistics experiments linkedin"
+         data-issuer="LinkedIn Learning"
+         data-year="2026"
+         data-sort-date="2026-03">
+      <div class="cert-thumb">
+        <img src="images/06.%20CertificateOfCompletion_Practical%20AB%20Testing.svg"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="Practical A/B Testing">
+        <div class="cert-thumb-fallback">🧪</div>
+        <div class="cert-issuer-badge" title="LinkedIn Learning"><i class="fab fa-linkedin"></i></div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Statistics</div>
+        <div class="cert-title">Practical A/B Testing</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Completed: Mar 2026</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">A/B Testing</span>
+          <span class="cert-tag">Statistics</span>
+          <span class="cert-tag">47m</span>
+        </div>
+      </div>
+      <div class="cert-actions">
+        <a href="https://www.linkedin.com/learning/certificates/dc87045ba1d701bee7f492a9c2bce8a3d020a3551e8441062457622afca6258d?trk=share_certificate"
            target="_blank" class="cert-btn-verify">
           <i class="fas fa-circle-check"></i> Verify Credential
         </a>
