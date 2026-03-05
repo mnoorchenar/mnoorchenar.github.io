@@ -337,6 +337,48 @@
 }
 
 /* ══════════════════════════════════════
+   SLIDESHOW WITHIN CERT-THUMB
+══════════════════════════════════════ */
+.cert-slideshow { position: relative; }
+.cert-slideshow .slide-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .5s ease;
+  display: block;
+}
+.cert-slideshow .slide-img.slide-active { opacity: 1; }
+.slide-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 10; background: rgba(7,13,31,.72); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.13); color: var(--text);
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .72em; transition: background .2s;
+  padding: 0; line-height: 1;
+}
+.slide-btn:hover { background: rgba(7,13,31,.96); }
+.slide-btn.prev { left: 8px; }
+.slide-btn.next { right: 8px; }
+.slide-dots {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  z-index: 10; display: flex; gap: 5px;
+}
+.slide-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.35); transition: background .2s, transform .2s;
+  cursor: pointer;
+}
+.slide-dot.active { background: var(--ic); transform: scale(1.35); }
+[data-theme="light"] .slide-btn { background: rgba(240,244,255,.82); color: var(--navy3); }
+
+/* multi-verify buttons */
+.cert-actions-multi {
+  padding: 0 20px 18px; margin-top: auto;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cert-actions-multi .cert-btn-verify { font-size: .75em; padding: 8px 10px; }
+
+/* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */
 @media (max-width: 768px) {
@@ -380,6 +422,7 @@
       <button class="filter-btn" data-filter="data-engineering">Data Engineering</button>
       <button class="filter-btn" data-filter="cloud">Cloud</button>
       <button class="filter-btn" data-filter="programming">Programming</button>
+      <button class="filter-btn" data-filter="management">Management</button>
     </div>
     <div class="controls-right">
       <!-- Sort -->
@@ -657,6 +700,61 @@
 
     <!-- ═══ ADD YOUR REAL CERT CARDS BELOW THIS LINE ═══ -->
 
+    <!-- ─── Project Management: Healthcare Projects · LinkedIn Learning ─── -->
+    <div class="cert-card fade-up"
+         style="--ic:#0077B5"
+         data-domain="management"
+         data-tags="project management healthcare bob mcgannon linkedin learning"
+         data-issuer="LinkedIn Learning"
+         data-year="2025"
+         data-sort-date="2025-11">
+      <div class="cert-thumb cert-slideshow" id="slideshow-pmhp">
+        <img class="slide-img slide-active"
+             src="images/01.%20Project%20Management%20Healthcare%20Projects/01.CertificateOfCompletion_Project%20Management%20Healthcare%20Projects.svg"
+             alt="Project Management: Healthcare Projects — Certificate 1">
+        <img class="slide-img"
+             src="images/01.%20Project%20Management%20Healthcare%20Projects/02.CertificateOfCompletion_Project%20Management%20Healthcare%20Projects.svg"
+             alt="Project Management: Healthcare Projects — Certificate 2">
+        <img class="slide-img"
+             src="images/01.%20Project%20Management%20Healthcare%20Projects/03.CertificateOfCompletion_Project%20Management%20Healthcare%20Projects.svg"
+             alt="Project Management: Healthcare Projects — Certificate 3">
+        <button class="slide-btn prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+        <button class="slide-btn next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+        <div class="slide-dots">
+          <span class="slide-dot active" data-index="0"></span>
+          <span class="slide-dot" data-index="1"></span>
+          <span class="slide-dot" data-index="2"></span>
+        </div>
+        <div class="cert-issuer-badge"><i class="fab fa-linkedin"></i> LinkedIn Learning</div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-domain">Management</div>
+        <div class="cert-title">Project Management: Healthcare Projects</div>
+        <div class="cert-meta">
+          <span class="cert-date"><i class="fas fa-calendar-check"></i> Completed: Nov 2025</span>
+        </div>
+        <div class="cert-tags">
+          <span class="cert-tag">Project Management</span>
+          <span class="cert-tag">Healthcare</span>
+          <span class="cert-tag">1h 11m</span>
+        </div>
+      </div>
+      <div class="cert-actions-multi">
+        <a href="https://www.linkedin.com/learning/certificates/00fcbc274e50d3920e1ccc1ed5fdfbb9316807c3189125e6a20c8b4484cce0e3?trk=share_certificate"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Certificate 1
+        </a>
+        <a href="https://www.linkedin.com/learning/certificates/e0c990ebaa138e3102687386f980e067aff62167511f8431ccf7d35fd686e831?trk=share_certificate"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Certificate 2
+        </a>
+        <a href="https://www.linkedin.com/learning/certificates/54fb7f31fdea847f64b6a6ef46b965cc42288961ca5a86b5d3a6d0b209f1d478?trk=share_certificate"
+           target="_blank" class="cert-btn-verify">
+          <i class="fas fa-circle-check"></i> Verify Certificate 3
+        </a>
+      </div>
+    </div>
+
     <!-- ─── NEW CERT · LinkedIn Learning ─── -->
       <div class="cert-card fade-up"
            style="--ic:#0077B5"
@@ -924,11 +1022,38 @@ function applyAll() {
 }
 
 /* ──────────────────────────────────────────────
+   SLIDESHOW LOGIC
+──────────────────────────────────────────────── */
+function initSlideshows() {
+  document.querySelectorAll('.cert-slideshow').forEach(function(ss) {
+    const imgs = Array.from(ss.querySelectorAll('.slide-img'));
+    const dots = Array.from(ss.querySelectorAll('.slide-dot'));
+    if (!imgs.length) return;
+    let current = 0;
+
+    function goTo(n) {
+      imgs[current].classList.remove('slide-active');
+      if (dots[current]) dots[current].classList.remove('active');
+      current = ((n % imgs.length) + imgs.length) % imgs.length;
+      imgs[current].classList.add('slide-active');
+      if (dots[current]) dots[current].classList.add('active');
+    }
+
+    const prev = ss.querySelector('.slide-btn.prev');
+    const next = ss.querySelector('.slide-btn.next');
+    if (prev) prev.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
+    if (next) next.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
+    dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+  });
+}
+
+/* ──────────────────────────────────────────────
    BOOT
 ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   computeStats();
   applyAll(); // initial sort (Newest First)
+  initSlideshows();
 });
 </script>
 
