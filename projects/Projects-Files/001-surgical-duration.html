@@ -66,6 +66,28 @@ h1.page-title { font-size: clamp(1.9rem, 3.8vw, 2.9rem); font-weight: 900; line-
 .hero-meta strong { color: var(--text); }
 .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; padding-bottom: 60px; }
 
+/* ── STAT BAR ── */
+.stats-bar { background: var(--section-alt); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: background .35s; }
+.stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--glass-border); }
+.stat-item { background: var(--section-alt); padding: 22px 16px; text-align: center; transition: background .35s; }
+.stat-val { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg,var(--accent),var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: .75rem; color: var(--muted); line-height: 1.4; }
+
+/* Reduce main content font sizes for better fit */
+.stat-val { font-size: 1.35rem; }
+.stat-label { font-size: .68rem; }
+.sec-title { font-size: clamp(1.05rem, 2vw, 1.35rem); }
+.big-num { font-size: 1.7rem; }
+.prob-card h3 { font-size: .92rem; }
+.data-stat-big .num { font-size: 2.2rem; }
+.data-mini .n { font-size: 1.1rem; }
+.rm-val { font-size: 1.1rem; }
+.rh-big { font-size: 1.7rem; }
+.pipe-step h4 { font-size: .78rem; }
+.wrap { padding: 40px 24px; }
+.main-layout { padding: 0 24px 40px; }
+.content-col { gap: 18px; }
+
 /* ── BUTTONS ── */
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: .83rem; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
 .btn-pub { background: rgba(34,197,94,.15); color: var(--green); border-color: rgba(34,197,94,.3); }
@@ -292,6 +314,17 @@ h1.page-title { font-size: clamp(1.9rem, 3.8vw, 2.9rem); font-weight: 900; line-
     </div>
   </div>
 </section>
+
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar fade-up">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val">17,246</div><div class="stat-label">Real surgical records across 3 tertiary hospitals</div></div>
+    <div class="stat-item"><div class="stat-val">6</div><div class="stat-label">ML models + surgeon baseline compared head-to-head</div></div>
+    <div class="stat-item"><div class="stat-val">31.8</div><div class="stat-label">Best MAE in minutes — Neural Network (ANN)</div></div>
+    <div class="stat-item"><div class="stat-val">18+ min</div><div class="stat-label">Average surgeon underestimation eliminated by AI</div></div>
+    <div class="stat-item"><div class="stat-val">−0.37</div><div class="stat-label">Bias achieved by ANN — statistically zero (p = 0.34)</div></div>
+  </div>
+</div>
 
 <!-- ═══ MAIN LAYOUT ═══ -->
 <div class="main-layout">
