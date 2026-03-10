@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Clinical Text Encoder Benchmark · Mohammad Noorchenarboo</title>
-<!-- ▶ THEME FLICKER FIX: apply saved theme before first paint -->
 <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,51 +10,27 @@
 <link rel="stylesheet" href="/projects/shared.css">
 <script src="/projects/shared.js" defer></script>
 <style>
-/* ═══════════════════════════════
-   PAGE-SPECIFIC STYLES ONLY
-═══════════════════════════════ */
-
 /* ── HERO ── */
-.hero {
-  padding: 124px 24px 56px;
-  background: var(--body-bg);
-  position: relative; overflow: hidden; transition: background .35s;
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(79,142,247,.16) 0%, transparent 65%);
-}
-[data-theme="light"] .hero::before {
-  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(37,99,235,.1) 0%, transparent 65%);
-}
-.hero::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background-image: linear-gradient(rgba(79,142,247,.035) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(79,142,247,.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-[data-theme="light"] .hero::after {
-  background-image: linear-gradient(rgba(37,99,235,.05) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(37,99,235,.05) 1px, transparent 1px);
-}
+.hero { padding: 124px 24px 56px; background: var(--body-bg); position: relative; overflow: hidden; transition: background .35s; }
+.hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(79,142,247,.16) 0%, transparent 65%); }
+[data-theme="light"] .hero::before { background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(37,99,235,.1) 0%, transparent 65%); }
+.hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(79,142,247,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(79,142,247,.035) 1px, transparent 1px); background-size: 48px 48px; }
+[data-theme="light"] .hero::after { background-image: linear-gradient(rgba(37,99,235,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,.05) 1px, transparent 1px); }
 .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-
 .breadcrumb { font-size: .78rem; color: var(--muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .breadcrumb a { color: var(--muted); transition: .2s; }
 .breadcrumb a:hover { color: var(--accent); }
 .breadcrumb span { opacity: .4; }
-
-/* ── PILLS — match surgical-duration.html exactly ── */
 .tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
-.pill-blue  { background: rgba(79,142,247,.12);  border: 1px solid rgba(79,142,247,.25);  color: var(--accent); }
-.pill-gold  { background: rgba(245,158,11,.12);  border: 1px solid rgba(245,158,11,.25);  color: var(--gold); }
-[data-theme="light"] .pill-blue { background: rgba(37,99,235,.1);  border-color: rgba(37,99,235,.25); }
-[data-theme="light"] .pill-gold { background: rgba(217,119,6,.1);  border-color: rgba(217,119,6,.25); color: #92400e; }
+.pill-blue { background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.25); color: var(--accent); }
+.pill-gold { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.25); color: var(--gold); }
+[data-theme="light"] .pill-blue { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.25); }
+[data-theme="light"] .pill-gold { background: rgba(217,119,6,.1); border-color: rgba(217,119,6,.25); color: #92400e; }
 .pub-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pb-pulse 2s infinite; }
 @keyframes pb-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
 
-h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; margin-bottom: 20px; max-width: 780px; color: var(--text); }
+h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; margin-bottom: 20px; max-width: 780px; color: var(--text); }
 .hero-sub { font-size: 1rem; color: var(--muted); max-width: 680px; margin-bottom: 28px; line-height: 1.65; }
 .hero-sub strong { color: var(--text); }
 .hero-meta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; font-size: .83rem; color: var(--muted); }
@@ -65,14 +40,13 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 
 /* ── BUTTONS ── */
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
-.btn-blue { background: rgba(79,142,247,.18); color: var(--accent); border-color: rgba(79,142,247,.35); }
-.btn-blue:hover { background: rgba(79,142,247,.3); transform: translateY(-2px); }
-[data-theme="light"] .btn-blue { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.3); }
-.btn-gray { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
-.btn-gray:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-pub { background: rgba(34,197,94,.15); color: var(--green); border-color: rgba(34,197,94,.3); }
+.btn-pub:hover { background: rgba(34,197,94,.25); transform: translateY(-2px); }
+[data-theme="light"] .btn-pub { background: rgba(22,163,74,.1); color: #15803d; border-color: rgba(22,163,74,.3); }
+.btn-anchor { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
+.btn-anchor:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
 .btn-back { background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
 .btn-back:hover { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
-.btn-disabled { opacity: .35; pointer-events: none; cursor: not-allowed; background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
 
 /* ── STAT BAR ── */
 .stats-bar { background: var(--section-alt); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: background .35s; }
@@ -103,21 +77,21 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 .pipe-label { font-size: .75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
 .pipe-sub { font-size: .7rem; color: var(--muted); line-height: 1.4; }
 
-/* ── ENCODER CARDS — 5 encoders in 3+2 layout ── */
+/* ── ENCODER CARDS ── */
 .encoder-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
 .enc-card { border-radius: 12px; padding: 18px; border: 1px solid; position: relative; overflow: hidden; transition: .25s; }
 .enc-card:hover { transform: translateY(-3px); }
 .enc-card.winner::before { content: '👑 Best'; position: absolute; top: 10px; right: 10px; background: rgba(34,197,94,.18); border: 1px solid rgba(34,197,94,.35); color: var(--green); font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
-.enc-label  { background: rgba(136,146,164,.06); border-color: rgba(136,146,164,.2); }
-.enc-count  { background: rgba(167,139,250,.05); border-color: rgba(167,139,250,.18); }
-.enc-tfidf  { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
-.enc-clinical{ background: rgba(79,142,247,.06); border-color: rgba(79,142,247,.2); }
-.enc-sbert  { background: rgba(34,197,94,.06);   border-color: rgba(34,197,94,.2); box-shadow: 0 0 24px rgba(34,197,94,.06); }
-[data-theme="light"] .enc-label  { background: rgba(75,86,117,.04);   border-color: rgba(75,86,117,.15); }
-[data-theme="light"] .enc-count  { background: rgba(124,58,237,.04);  border-color: rgba(124,58,237,.15); }
-[data-theme="light"] .enc-tfidf  { background: rgba(217,119,6,.04);   border-color: rgba(217,119,6,.18); }
+.enc-label   { background: rgba(136,146,164,.06); border-color: rgba(136,146,164,.2); }
+.enc-count   { background: rgba(167,139,250,.05); border-color: rgba(167,139,250,.18); }
+.enc-tfidf   { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
+.enc-clinical{ background: rgba(79,142,247,.06);  border-color: rgba(79,142,247,.2); }
+.enc-sbert   { background: rgba(34,197,94,.06);   border-color: rgba(34,197,94,.2); box-shadow: 0 0 24px rgba(34,197,94,.06); }
+[data-theme="light"] .enc-label   { background: rgba(75,86,117,.04);  border-color: rgba(75,86,117,.15); }
+[data-theme="light"] .enc-count   { background: rgba(124,58,237,.04); border-color: rgba(124,58,237,.15); }
+[data-theme="light"] .enc-tfidf   { background: rgba(217,119,6,.04);  border-color: rgba(217,119,6,.18); }
 [data-theme="light"] .enc-clinical{ background: rgba(37,99,235,.04);  border-color: rgba(37,99,235,.18); }
-[data-theme="light"] .enc-sbert  { background: rgba(22,163,74,.04);   border-color: rgba(22,163,74,.2); }
+[data-theme="light"] .enc-sbert   { background: rgba(22,163,74,.04);  border-color: rgba(22,163,74,.2); }
 .enc-wide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .enc-badge { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 8px; margin-bottom: 8px; }
 .enc-name { font-size: .93rem; font-weight: 800; margin-bottom: 5px; color: var(--text); }
@@ -138,7 +112,7 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 .insight-body p { font-size: .85rem; color: var(--muted); line-height: 1.6; }
 .insight-body strong { color: var(--accent); }
 
-/* ── INTERACTIVE DEMO ── */
+/* ── DEMO BLOCK ── */
 .demo-block { background: rgba(79,142,247,.04); border: 1px solid rgba(79,142,247,.15); border-radius: var(--radius); padding: 28px; }
 [data-theme="light"] .demo-block { background: rgba(37,99,235,.03); border-color: rgba(37,99,235,.15); }
 .demo-intro { font-size: .85rem; color: var(--muted); margin-bottom: 18px; font-style: italic; }
@@ -194,6 +168,10 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 /* ── SIDEBAR ── */
 .sidebar-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 20px; }
 .sidebar-card h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+.ataglance-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.ataglance-header h3 { margin-bottom: 0; }
+.ataglance-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.28); border-radius: 20px; padding: 3px 10px; font-size: .68rem; font-weight: 700; color: var(--accent); }
+[data-theme="light"] .ataglance-badge { background: rgba(37,99,235,.09); border-color: rgba(37,99,235,.3); }
 .tldr-text { font-size: .87rem; color: var(--muted); line-height: 1.7; }
 .tldr-text strong { color: var(--text); }
 .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px; }
@@ -232,7 +210,6 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 }
 </style>
 </head>
-<!-- ▶ REMOVED: hardcoded <nav> block — shared.js injects nav.html automatically -->
 <body data-project-index="1" data-footer-note="SSRN · DOI 10.2139/ssrn.5489578">
 
 <!-- ═══ HERO ═══ -->
@@ -245,14 +222,14 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
       <span>›</span>
       <span style="color:var(--text)">Clinical Text Encoder Benchmark</span>
     </div>
-
     <div class="tag-row">
       <span class="pill pill-blue"><i class="fas fa-comments-medical"></i> NLP · Clinical AI</span>
       <span class="pill pill-gold"><span class="pub-dot"></span> Preprint · SSRN 5489578</span>
     </div>
 
-    <h1>Which AI Can Best <span class="grad-text">Read a Doctor's Notes?</span></h1>
-    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study asks: which text-encoding strategy — from simple label encoding to large clinical language models — best converts those notes into predictions?</strong> We benchmarked five approaches head-to-head on 180,366 real surgical cases across 3 hospitals.</p>
+    <h1 class="page-title">Do Clinical Transformer Embeddings<br><span class="grad-text">Actually Outpredict Traditional Encodings by 16%?</span></h1>
+
+    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study benchmarks five text-encoding strategies — from simple label encoding to clinical transformer embeddings — to find out which best converts those notes into accurate surgical duration predictions.</strong> Tested on 180,366 real cases across 3 hospitals, the gap between methods is larger than you'd expect.</p>
     <div class="hero-meta">
       <span><i class="fas fa-paper-plane"></i> SSRN Preprint · 2025</span>
       <span><i class="fas fa-users"></i> <strong>Noorchenarboo</strong> et al.</span>
@@ -260,11 +237,11 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
       <span><i class="fas fa-hospital"></i> 3 Tertiary Hospitals · London, Canada</span>
     </div>
     <div class="hero-actions">
-      <a href="#demo" class="btn btn-blue"><i class="fas fa-play-circle"></i> Try the Demo</a>
-      <a href="https://ssrn.com/abstract=5489578" target="_blank" class="btn btn-gray"><i class="fas fa-file-alt"></i> Read Preprint</a>
+      <a href="https://ssrn.com/abstract=5489578" target="_blank" class="btn btn-pub"><i class="fas fa-file-alt"></i> Read Preprint</a>
+      <a href="#encoders" class="btn btn-anchor"><i class="fas fa-brain"></i> The Encoders</a>
+      <a href="#demo" class="btn btn-anchor"><i class="fas fa-flask"></i> Interactive Demo</a>
+      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
       <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
-      <span class="btn btn-disabled"><i class="fas fa-robot"></i> Live App — Coming Soon</span>
-      <span class="btn btn-disabled"><i class="fab fa-github"></i> Code — Coming Soon</span>
     </div>
   </div>
 </section>
@@ -274,8 +251,8 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
   <div class="stats-inner">
     <div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Encoding strategies benchmarked head-to-head</div></div>
     <div class="stat-item"><div class="stat-val">180K+</div><div class="stat-label">Real elective surgical cases from 3 tertiary hospitals</div></div>
-    <div class="stat-item"><div class="stat-val">27.6</div><div class="stat-label">Best MAE in minutes — Sentence-BERT model</div></div>
-    <div class="stat-item"><div class="stat-val">16%</div><div class="stat-label">Max reduction in prediction error over structured-only baseline</div></div>
+    <div class="stat-item"><div class="stat-val">27.6</div><div class="stat-label">Best MAE in minutes — Sentence-BERT embeddings</div></div>
+    <div class="stat-item"><div class="stat-val">16%</div><div class="stat-label">Max reduction in prediction error over traditional encodings</div></div>
     <div class="stat-item"><div class="stat-val">0.77</div><div class="stat-label">Best R² achieved — Sentence-BERT (SMAPE 23.0%)</div></div>
   </div>
 </div>
@@ -288,52 +265,31 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
   <div class="card fade-up">
     <div class="s-tag s-tag-blue">The Core Idea</div>
     <h2 class="card-title"><i class="fas fa-route"></i> From a Surgeon's Words to a Prediction</h2>
-    <p class="narrative">After every surgery, the surgeon writes a narrative note describing what happened. This project is about one question: <strong>what's the smartest way to turn that text into numbers a prediction model can learn from?</strong> We tested five strategies — from simple label counts to state-of-the-art clinical language models.</p>
+    <p class="narrative">After every surgery, the surgeon writes a narrative note describing what happened. This project is about one question: <strong>what's the smartest way to turn that text into numbers a prediction model can learn from?</strong> We tested five strategies — from simple label counts to state-of-the-art clinical transformer embeddings.</p>
     <div class="pipeline">
-      <div class="pipe-step">
-        <div class="pipe-icon">📋</div>
-        <div class="pipe-label">Operative Notes</div>
-        <div class="pipe-sub">Procedure descriptions &amp; diagnoses (free text)</div>
-      </div>
+      <div class="pipe-step"><div class="pipe-icon">📋</div><div class="pipe-label">Operative Notes</div><div class="pipe-sub">Procedure descriptions &amp; diagnoses (free text)</div></div>
       <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🔤</div>
-        <div class="pipe-label">Text Encoding</div>
-        <div class="pipe-sub">5 strategies — from label encoding to Sentence-BERT</div>
-      </div>
+      <div class="pipe-step"><div class="pipe-icon">🔤</div><div class="pipe-label">Text Encoding</div><div class="pipe-sub">5 strategies — from label encoding to Sentence-BERT</div></div>
       <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🧬</div>
-        <div class="pipe-label">Feature Fusion</div>
-        <div class="pipe-sub">Merged with structured variables (age, BMI, ASA, sex…)</div>
-      </div>
+      <div class="pipe-step"><div class="pipe-icon">🧬</div><div class="pipe-label">Feature Fusion</div><div class="pipe-sub">Merged with structured variables (age, BMI, ASA, sex…)</div></div>
       <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🤖</div>
-        <div class="pipe-label">ML Models</div>
-        <div class="pipe-sub">Linear, tree-based ensembles &amp; neural networks</div>
-      </div>
+      <div class="pipe-step"><div class="pipe-icon">🤖</div><div class="pipe-label">ML Models</div><div class="pipe-sub">Linear, tree-based ensembles &amp; neural networks</div></div>
       <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
-      <div class="pipe-step">
-        <div class="pipe-icon">⏱️</div>
-        <div class="pipe-label">Surgery Duration</div>
-        <div class="pipe-sub">Predicted minutes from incision to close</div>
-      </div>
+      <div class="pipe-step"><div class="pipe-icon">⏱️</div><div class="pipe-label">Surgery Duration</div><div class="pipe-sub">Predicted minutes from incision to close</div></div>
     </div>
     <div class="insight-banner">
       <div class="insight-icon">💡</div>
       <div class="insight-body">
-        <h4>Why Does Text Encoding Matter So Much?</h4>
-        <p>A label encoder sees <em>"laparoscopic cholecystectomy"</em> as an arbitrary integer. A clinical language model understands it as a minimally invasive gallbladder removal with a predictable time profile. <strong>The encoding method determines how much medical meaning the model can extract — and our results show the gap is up to 16% in prediction accuracy.</strong></p>
+        <h4>Why Do Embeddings Matter So Much?</h4>
+        <p>A label encoder sees <em>"laparoscopic cholecystectomy"</em> as an arbitrary integer. A clinical transformer embedding understands it as a minimally invasive gallbladder removal with a predictable time profile. <strong>The encoding method determines how much medical meaning the model can extract — and our results show the gap is up to 16% in prediction accuracy.</strong></p>
       </div>
     </div>
   </div>
 
   <!-- ENCODER COMPARISON -->
-  <div class="card fade-up">
+  <div class="card fade-up" id="encoders">
     <div class="s-tag s-tag-teal">Head-to-Head</div>
-    <h2 class="card-title"><i class="fas fa-brain"></i> Five Ways to Read Clinical Text</h2>
-
+    <h2 class="card-title"><i class="fas fa-brain"></i> Five Encoding Strategies Compared</h2>
     <div class="encoder-grid">
       <div class="enc-card enc-label">
         <div class="enc-badge" style="background:rgba(136,146,164,.12);color:var(--muted);border:1px solid rgba(136,146,164,.2)">🔢 Baseline</div>
@@ -363,21 +319,20 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
         <div class="enc-metric"><span class="enc-metric-label">Medical knowledge</span><span class="enc-metric-val" style="color:var(--gold)">None</span></div>
       </div>
     </div>
-
     <div class="enc-wide-row" style="margin-top:14px">
       <div class="enc-card enc-clinical">
-        <div class="enc-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">🏥 Clinical LLM</div>
+        <div class="enc-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">🏥 Clinical Transformer</div>
         <div class="enc-name">ClinicalBERT</div>
         <div class="enc-tagline">BERT fine-tuned on real clinical notes (MIMIC-III). Speaks the language of the OR — abbreviations, surgical slang, and clinical shorthand. Showed statistically significant gains over structured-only baseline (p &lt; 0.01).</div>
         <div class="enc-bar-wrap"><div class="enc-bar" style="width:82%;background:rgba(79,142,247,.65)"></div></div>
         <div class="enc-caption">Relative performance</div>
         <div class="enc-metric"><span class="enc-metric-label">MAE improvement</span><span class="enc-metric-val" style="color:var(--accent)">Significant (p &lt; 0.01)</span></div>
-        <div class="enc-metric"><span class="enc-metric-label">Medical knowledge</span><span class="enc-metric-val" style="color:var(--accent)">Clinical notes (MIMIC-III)</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">Embedding type</span><span class="enc-metric-val" style="color:var(--accent)">Token-level (MIMIC-III)</span></div>
       </div>
       <div class="enc-card enc-sbert winner">
         <div class="enc-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">🚀 Best Encoder</div>
         <div class="enc-name">Sentence-BERT</div>
-        <div class="enc-tagline">Optimized for sentence-level semantic similarity — captures the full meaning of a surgical narrative, not just individual words. Best MAE of 27.6 min, SMAPE 23.0%, R² 0.77. Up to 16% reduction over structured-only models.</div>
+        <div class="enc-tagline">Sentence-level transformer embeddings optimised for semantic similarity — captures the full meaning of a surgical narrative, not just individual tokens. Best MAE of 27.6 min, SMAPE 23.0%, R² 0.77. Up to 16% reduction over traditional encodings.</div>
         <div class="enc-bar-wrap"><div class="enc-bar" style="width:100%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>
         <div class="enc-caption">Best performing encoder overall</div>
         <div class="enc-metric"><span class="enc-metric-label">MAE</span><span class="enc-metric-val" style="color:var(--green)">27.6 min (best)</span></div>
@@ -391,7 +346,7 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
   <!-- INTERACTIVE DEMO -->
   <div class="demo-block fade-up" id="demo">
     <div class="s-tag s-tag-purple">Interactive Explorer</div>
-    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> See How Each Encoder Reads a Surgical Note</h2>
+    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> See How Each Encoding Strategy Reads a Surgical Note</h2>
     <p class="demo-intro">Pick a real-world operative note type and watch how each encoding strategy extracts meaning — and how prediction accuracy differs.</p>
     <div class="note-examples" id="noteGroup">
       <button class="note-btn selected" onclick="selectNote(0,this)">
@@ -413,7 +368,7 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
         <div class="token-cloud" id="tfidf-tokens"></div>
       </div>
       <div class="vis-box">
-        <h4>Sentence-BERT sees: Sentence-level meaning</h4>
+        <h4>Sentence-BERT sees: Sentence-level embedding</h4>
         <div class="embed-vis" id="embed-cells"></div>
       </div>
     </div>
@@ -424,7 +379,7 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
         <div class="pred-enc" id="pred-enc">minutes</div>
       </div>
       <div class="pred-bars">
-        <div style="font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:8px">MAE by encoder (lower = better)</div>
+        <div style="font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:8px">MAE by encoding strategy (lower = better)</div>
         <div class="pred-bar-row">
           <div class="pred-bar-name">Label / Count</div>
           <div class="pred-bar-track"><div class="pred-bar-fill" id="bar-label" style="background:rgba(136,146,164,.55)"></div></div>
@@ -451,9 +406,9 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
   </div>
 
   <!-- CHARTS -->
-  <div class="card fade-up">
+  <div class="card fade-up" id="results">
     <div class="s-tag s-tag-blue">Results Deep Dive</div>
-    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Performance by Encoder &amp; Procedure</h2>
+    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Performance by Encoding Strategy &amp; Procedure</h2>
     <div class="chart-tabs">
       <div class="chart-tab active" onclick="switchTab(0,this)">MAE by Encoder</div>
       <div class="chart-tab" onclick="switchTab(1,this)">R² by Procedure Type</div>
@@ -461,11 +416,11 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
     </div>
     <div class="chart-panel active" id="cp0">
       <div class="chart-wrap"><canvas id="chart0"></canvas></div>
-      <p class="chart-caption">Sentence-BERT achieves the lowest MAE (27.6 min) across all models — outperforming traditional encodings by up to 16%. ClinicalBERT also shows significant gains (p &lt; 0.01).</p>
+      <p class="chart-caption">Sentence-BERT achieves the lowest MAE (27.6 min) — outperforming traditional encodings by up to 16%. ClinicalBERT also shows significant gains (p &lt; 0.01).</p>
     </div>
     <div class="chart-panel" id="cp1">
       <div class="chart-wrap"><canvas id="chart1"></canvas></div>
-      <p class="chart-caption">Contextual embedding gains are largest for complex, variable-length procedures (Whipple, Colectomy) where operative narratives are richest.</p>
+      <p class="chart-caption">Embedding gains are largest for complex, variable-length procedures (Whipple, Colectomy) where operative narratives are richest in semantic content.</p>
     </div>
     <div class="chart-panel" id="cp2">
       <div class="chart-wrap"><canvas id="chart2"></canvas></div>
@@ -480,18 +435,18 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
     <div class="takeaway-grid">
       <div class="takeaway">
         <div class="tk-icon">🏥</div>
-        <div class="tk-val">Text adds real value</div>
-        <div class="tk-label">Adding unstructured clinical text to structured perioperative variables improved prediction accuracy across <em>all</em> models tested — not just some.</div>
+        <div class="tk-val">Embeddings add real value</div>
+        <div class="tk-label">Adding transformer embeddings from clinical text improved prediction accuracy across <em>all</em> models tested — not just some.</div>
       </div>
       <div class="takeaway">
         <div class="tk-icon">🧠</div>
         <div class="tk-val">Sentence context wins</div>
-        <div class="tk-label">Sentence-BERT — which encodes full sentence meaning — outperforms all other strategies including word-level models like ClinicalBERT.</div>
+        <div class="tk-label">Sentence-BERT — which encodes full sentence meaning — outperforms all other strategies including token-level models like ClinicalBERT.</div>
       </div>
       <div class="takeaway">
         <div class="tk-icon">🔬</div>
-        <div class="tk-val">Simple encoders fall short</div>
-        <div class="tk-label">Label encoding, count vectorization, and TF-IDF provided only limited benefit. Hospitals investing in simple text encoding are leaving most accuracy gains on the table.</div>
+        <div class="tk-val">Traditional encodings fall short</div>
+        <div class="tk-label">Label encoding, count vectorization, and TF-IDF provided only limited benefit. Hospitals using simple encodings are leaving most accuracy gains on the table.</div>
       </div>
     </div>
   </div>
@@ -501,15 +456,18 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 <!-- ═══ SIDEBAR ═══ -->
 <div class="sidebar">
   <div class="sidebar-card fade-up">
-    <h3>At a Glance</h3>
-    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,366 real cases. <strong>The answer:</strong> Sentence-BERT reduces MAE to 27.6 min and cuts prediction error by up to 16% over structured-only models.</p>
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-bolt"></i> Quick read</span>
+    </div>
+    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,366 real cases. <strong>The answer:</strong> Sentence-BERT transformer embeddings reduce MAE to 27.6 min and cut prediction error by up to 16% over traditional encodings.</p>
   </div>
 
   <div class="sidebar-card fade-up">
     <h3>Project Info</h3>
     <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--gold)">📄 SSRN Preprint</span></div>
     <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Clinical NLP</span></div>
-    <div class="info-row"><span class="info-key">ML Task</span><span class="info-val">Regression + NLP</span></div>
+    <div class="info-row"><span class="info-key">ML Task</span><span class="info-val">Regression + Embeddings</span></div>
     <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">180,366 cases</span></div>
     <div class="info-row"><span class="info-key">Hospitals</span><span class="info-val">3 tertiary · 2015–2020</span></div>
     <div class="info-row"><span class="info-key">Best Encoder</span><span class="info-val">Sentence-BERT</span></div>
@@ -535,15 +493,14 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 
   <div class="sidebar-card fade-up">
     <h3>Citation</h3>
-    <div class="citation-box">
-      <strong>Noorchenarboo M</strong> et al. (2025). Benchmarking Text Encoding Strategies in Multimodal Clinical Data for Surgical Case Duration Prediction. <em>SSRN</em>. doi: 10.2139/ssrn.5489578
-    </div>
+    <div class="citation-box"><strong>Noorchenarboo M</strong> et al. (2025). Benchmarking Text Encoding Strategies in Multimodal Clinical Data for Surgical Case Duration Prediction. <em>SSRN</em>. doi: 10.2139/ssrn.5489578</div>
   </div>
 
   <div class="sidebar-card fade-up">
     <h3>Related Work</h3>
     <div class="sidebar-links">
       <a href="/projects/Projects-Files/001-surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
+      <a href="/projects/Projects-Files/003-energy-anomaly-xai.html" class="sidebar-link"><i class="fas fa-link"></i> Energy Anomaly XAI</a>
       <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
       <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
     </div>
@@ -551,56 +508,24 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 </div><!-- /sidebar -->
 </div><!-- /main-layout -->
 
-<!-- ═══ PAGE-SPECIFIC JS ═══ -->
-<!-- ▶ REMOVED: redundant themeToggle DOMContentLoaded listener — shared.js handles this and calls rebuildCharts() automatically -->
 <script>
 const html = document.documentElement;
-
 function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
 function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
 function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
 function tt(){
-  return {
-    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
-    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
-    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
-    borderColor:     isDark() ? 'rgba(79,142,247,.3)' : 'rgba(37,99,235,.2)',
-    borderWidth: 1
-  };
+  return { backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)', titleColor: isDark() ? '#e2e8f0' : '#0f172a', bodyColor: isDark() ? '#8892a4' : '#4b5675', borderColor: isDark() ? 'rgba(79,142,247,.3)' : 'rgba(37,99,235,.2)', borderWidth: 1 };
 }
 
-/* ── NOTE DATA ── */
 const NOTES = [
-  {
-    tokens:[
-      {t:'laparoscopic',w:'hi'},{t:'cholecystectomy',w:'hi'},{t:'4-port',w:'hi'},
-      {t:'clips',w:'hi'},{t:'cystic duct',w:'hi'},{t:'minimal',w:'mid'},
-      {t:'blood loss',w:'mid'},{t:'no complications',w:'mid'},{t:'standard',w:'lo'},{t:'artery',w:'lo'}
-    ],
-    pred:72, errs:[38,34,32,24,19], actual:72
-  },
-  {
-    tokens:[
-      {t:'open',w:'hi'},{t:'right hemicolectomy',w:'hi'},{t:'adhesions',w:'hi'},
-      {t:'intraoperative bleeding',w:'hi'},{t:'anastomosis',w:'hi'},{t:'drain placed',w:'mid'},
-      {t:'controlled',w:'mid'},{t:'prior surgery',w:'mid'},{t:'dense',w:'lo'}
-    ],
-    pred:168, errs:[62,56,50,36,28], actual:168
-  },
-  {
-    tokens:[
-      {t:'Whipple',w:'hi'},{t:'pancreaticoduodenectomy',w:'hi'},{t:'portal vein reconstruction',w:'hi'},
-      {t:'extensive dissection',w:'hi'},{t:'ICU transfer',w:'hi'},{t:'prolonged hemostasis',w:'hi'},
-      {t:'post-op',w:'mid'},{t:'required',w:'mid'},{t:'procedure',w:'lo'}
-    ],
-    pred:374, errs:[105,95,88,60,42], actual:374
-  }
+  { tokens:[{t:'laparoscopic',w:'hi'},{t:'cholecystectomy',w:'hi'},{t:'4-port',w:'hi'},{t:'clips',w:'hi'},{t:'cystic duct',w:'hi'},{t:'minimal',w:'mid'},{t:'blood loss',w:'mid'},{t:'no complications',w:'mid'},{t:'standard',w:'lo'},{t:'artery',w:'lo'}], pred:72, errs:[38,34,32,24,19], actual:72 },
+  { tokens:[{t:'open',w:'hi'},{t:'right hemicolectomy',w:'hi'},{t:'adhesions',w:'hi'},{t:'intraoperative bleeding',w:'hi'},{t:'anastomosis',w:'hi'},{t:'drain placed',w:'mid'},{t:'controlled',w:'mid'},{t:'prior surgery',w:'mid'},{t:'dense',w:'lo'}], pred:168, errs:[62,56,50,36,28], actual:168 },
+  { tokens:[{t:'Whipple',w:'hi'},{t:'pancreaticoduodenectomy',w:'hi'},{t:'portal vein reconstruction',w:'hi'},{t:'extensive dissection',w:'hi'},{t:'ICU transfer',w:'hi'},{t:'prolonged hemostasis',w:'hi'},{t:'post-op',w:'mid'},{t:'required',w:'mid'},{t:'procedure',w:'lo'}], pred:374, errs:[105,95,88,60,42], actual:374 }
 ];
 
 function renderTokens(idx){
   const d = NOTES[idx];
-  document.getElementById('tfidf-tokens').innerHTML =
-    d.tokens.map(t => `<span class="token ${t.w}">${t.t}</span>`).join('');
+  document.getElementById('tfidf-tokens').innerHTML = d.tokens.map(t => `<span class="token ${t.w}">${t.t}</span>`).join('');
   const cells = document.getElementById('embed-cells');
   cells.innerHTML = '';
   for(let i = 0; i < 140; i++){
@@ -630,85 +555,18 @@ function selectNote(idx, btn){
 }
 renderTokens(0);
 
-/* ── CHARTS ── */
 const charts = {};
-
 function buildChart(i){
   if(charts[i]) charts[i].destroy();
   const ctx = document.getElementById('chart' + i);
   if(!ctx) return;
   const g = gc(), t = tc(), tip = tt();
-
   if(i === 0){
-    charts[0] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Label\nEncoding','Count\nVectorizer','TF-IDF','ClinicalBERT','Sentence-BERT'],
-        datasets:[{
-          label: 'Mean Absolute Error (minutes)',
-          data: [32.9, 32.4, 31.8, 29.2, 27.6],
-          backgroundColor: [
-            'rgba(136,146,164,.55)',
-            'rgba(167,139,250,.55)',
-            'rgba(245,158,11,.6)',
-            isDark() ? 'rgba(79,142,247,.65)' : 'rgba(37,99,235,.65)',
-            'rgba(34,197,94,.75)'
-          ],
-          borderRadius: 6
-        }]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:t}}, tooltip:tip},
-        scales:{
-          x:{ticks:{color:t}, grid:{color:g}},
-          y:{ticks:{color:t}, grid:{color:g}, min:24,
-             title:{display:true, text:'MAE (minutes) — lower is better', color:t, font:{size:11}}}
-        }
-      }
-    });
+    charts[0] = new Chart(ctx, { type:'bar', data:{ labels:['Label\nEncoding','Count\nVectorizer','TF-IDF','ClinicalBERT','Sentence-BERT'], datasets:[{ label:'Mean Absolute Error (minutes)', data:[32.9,32.4,31.8,29.2,27.6], backgroundColor:['rgba(136,146,164,.55)','rgba(167,139,250,.55)','rgba(245,158,11,.6)',isDark()?'rgba(79,142,247,.65)':'rgba(37,99,235,.65)','rgba(34,197,94,.75)'], borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g}}, y:{ticks:{color:t},grid:{color:g},min:24,title:{display:true,text:'MAE (minutes) — lower is better',color:t,font:{size:11}}} } } });
   } else if(i === 1){
-    charts[1] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Cholecystectomy','Appendectomy','Colectomy','Hernia Repair','Whipple'],
-        datasets:[
-          {label:'TF-IDF',        data:[.31,.34,.20,.35,.14], backgroundColor:'rgba(245,158,11,.5)',   borderRadius:3},
-          {label:'ClinicalBERT',  data:[.44,.47,.38,.46,.31], backgroundColor:isDark()?'rgba(79,142,247,.6)':'rgba(37,99,235,.6)', borderRadius:3},
-          {label:'Sentence-BERT', data:[.52,.54,.47,.53,.41], backgroundColor:'rgba(34,197,94,.75)',   borderRadius:3}
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:t, font:{size:10}}}, tooltip:tip},
-        scales:{
-          x:{ticks:{color:t}, grid:{color:g}},
-          y:{ticks:{color:t}, grid:{color:g}, min:0, max:.7,
-             title:{display:true, text:'R² Score — higher is better', color:t, font:{size:11}}}
-        }
-      }
-    });
+    charts[1] = new Chart(ctx, { type:'bar', data:{ labels:['Cholecystectomy','Appendectomy','Colectomy','Hernia Repair','Whipple'], datasets:[ {label:'TF-IDF',data:[.31,.34,.20,.35,.14],backgroundColor:'rgba(245,158,11,.5)',borderRadius:3}, {label:'ClinicalBERT',data:[.44,.47,.38,.46,.31],backgroundColor:isDark()?'rgba(79,142,247,.6)':'rgba(37,99,235,.6)',borderRadius:3}, {label:'Sentence-BERT',data:[.52,.54,.47,.53,.41],backgroundColor:'rgba(34,197,94,.75)',borderRadius:3} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t,font:{size:10}}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g}}, y:{ticks:{color:t},grid:{color:g},min:0,max:.7,title:{display:true,text:'R² Score — higher is better',color:t,font:{size:11}}} } } });
   } else if(i === 2){
-    charts[2] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Label Enc.','Count Vect.','TF-IDF','ClinicalBERT','Sentence-BERT'],
-        datasets:[
-          {label:'Within ±30 min (Excellent)',    data:[29,31,34,44,52], backgroundColor:'rgba(34,197,94,.7)',  borderRadius:4},
-          {label:'Within ±60 min (Acceptable)',   data:[27,26,25,23,21], backgroundColor:'rgba(245,158,11,.6)',borderRadius:4},
-          {label:'> ±60 min (Needs improvement)', data:[44,43,41,33,27], backgroundColor:'rgba(239,68,68,.5)', borderRadius:4}
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:t, font:{size:10}}}, tooltip:tip},
-        scales:{
-          x:{ticks:{color:t}, grid:{color:g}, stacked:true},
-          y:{ticks:{color:t}, grid:{color:g}, stacked:true, max:100,
-             title:{display:true, text:'% of Predictions', color:t, font:{size:11}}}
-        }
-      }
-    });
+    charts[2] = new Chart(ctx, { type:'bar', data:{ labels:['Label Enc.','Count Vect.','TF-IDF','ClinicalBERT','Sentence-BERT'], datasets:[ {label:'Within ±30 min (Excellent)',data:[29,31,34,44,52],backgroundColor:'rgba(34,197,94,.7)',borderRadius:4}, {label:'Within ±60 min (Acceptable)',data:[27,26,25,23,21],backgroundColor:'rgba(245,158,11,.6)',borderRadius:4}, {label:'> ±60 min (Needs improvement)',data:[44,43,41,33,27],backgroundColor:'rgba(239,68,68,.5)',borderRadius:4} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t,font:{size:10}}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g},stacked:true}, y:{ticks:{color:t},grid:{color:g},stacked:true,max:100,title:{display:true,text:'% of Predictions',color:t,font:{size:11}}} } } });
   }
 }
 
@@ -720,11 +578,7 @@ function switchTab(i, el){
   buildChart(i);
 }
 
-/* ── Called by shared.js on theme toggle ── */
-function rebuildCharts(){
-  Object.keys(charts).forEach(i => buildChart(Number(i)));
-}
-
+function rebuildCharts(){ Object.keys(charts).forEach(i => buildChart(Number(i))); }
 buildChart(0);
 </script>
 </body>

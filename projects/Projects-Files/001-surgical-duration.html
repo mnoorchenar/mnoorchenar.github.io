@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Surgical Duration Prediction · Mohammad Noorchenarboo</title>
-<!-- ▶ THEME FLICKER FIX: apply saved theme before first paint -->
 <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,213 +10,257 @@
 <link rel="stylesheet" href="/projects/shared.css">
 <script src="/projects/shared.js" defer></script>
 <style>
+/* ═══ GRAD TEXT (matches 003) ═══ */
+.grad-text { background: linear-gradient(135deg, var(--accent), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
 /* ═══ PAGE-SPECIFIC VARS ═══ */
-:root,[data-theme="dark"] {
-  --purple:       #a78bfa;
-  --hero-grad:    radial-gradient(ellipse 70% 50% at 50% -5%, rgba(79,142,247,.18), transparent 65%);
-  --grid-col:     rgba(79,142,247,.035);
-  --proc-bar-bg:  rgba(255,255,255,.05);
-  --center-line:  rgba(255,255,255,.15);
-  --takeaway-bg:  rgba(79,142,247,.06);
+:root, [data-theme="dark"] {
+  --purple: #a78bfa;
+  --hero-grad: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(79,142,247,.18), transparent 65%);
+  --grid-col: rgba(79,142,247,.035);
+  --proc-bar-bg: rgba(255,255,255,.05);
+  --center-line: rgba(255,255,255,.15);
+  --takeaway-bg: rgba(79,142,247,.06);
   --takeaway-bdr: rgba(79,142,247,.2);
-  --table-head:   rgba(79,142,247,.1);
-  --table-hl:     rgba(79,142,247,.07);
-  --table-human:  rgba(239,68,68,.05);
+  --table-head: rgba(79,142,247,.1);
+  --table-hl: rgba(79,142,247,.07);
+  --table-human: rgba(239,68,68,.05);
 }
 [data-theme="light"] {
-  --purple:       #7c3aed;
-  --hero-grad:    radial-gradient(ellipse 70% 50% at 50% -5%, rgba(37,99,235,.12), transparent 65%);
-  --grid-col:     rgba(37,99,235,.05);
-  --proc-bar-bg:  rgba(37,99,235,.07);
-  --center-line:  rgba(0,0,0,.12);
-  --takeaway-bg:  rgba(37,99,235,.05);
+  --purple: #7c3aed;
+  --hero-grad: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(37,99,235,.12), transparent 65%);
+  --grid-col: rgba(37,99,235,.05);
+  --proc-bar-bg: rgba(37,99,235,.07);
+  --center-line: rgba(0,0,0,.12);
+  --takeaway-bg: rgba(37,99,235,.05);
   --takeaway-bdr: rgba(37,99,235,.18);
-  --table-head:   rgba(37,99,235,.07);
-  --table-hl:     rgba(37,99,235,.05);
-  --table-human:  rgba(220,38,38,.04);
+  --table-head: rgba(37,99,235,.07);
+  --table-hl: rgba(37,99,235,.05);
+  --table-human: rgba(220,38,38,.04);
 }
 
-@keyframes pg-shimmer{0%{left:-100%}100%{left:200%}}
+@keyframes pg-shimmer { 0%{left:-100%} 100%{left:200%} }
 
 /* ── HERO ── */
-.hero{padding:124px 32px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:.35s}
-.hero::before{content:'';position:absolute;inset:0;background:var(--hero-grad);pointer-events:none}
-.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--grid-col) 1px,transparent 1px),linear-gradient(90deg,var(--grid-col) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
-.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
-.breadcrumb{display:flex;align-items:center;gap:8px;font-size:.78em;color:var(--muted);margin-bottom:20px;flex-wrap:wrap}
-.breadcrumb a{color:var(--muted);transition:.2s}.breadcrumb a:hover{color:var(--accent)}
-.breadcrumb i{font-size:.7em}
-.tag-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.04em}
-.pill-blue{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.25);color:var(--accent)}
-[data-theme="light"] .pill-blue{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.25)}
-.pill-green{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green)}
-[data-theme="light"] .pill-green{color:#15803d;background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.25)}
-.pub-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pub-pulse 2s infinite}
-@keyframes pub-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-h1{font-size:clamp(1.9rem,3.8vw,2.9rem);font-weight:900;line-height:1.12;margin-bottom:14px;max-width:820px;color:var(--text)}
-.grad{background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:.95rem;color:var(--muted);max-width:700px;margin-bottom:22px;line-height:1.7}
-.hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:28px}
-.hero-meta span{display:flex;align-items:center;gap:6px}
-.hero-meta i{color:var(--accent)}
-.hero-meta strong{color:var(--text)}
-.hero-btns{display:flex;gap:10px;flex-wrap:wrap;padding-bottom:60px}
+.hero { padding: 124px 32px 0; background: var(--body-bg); position: relative; overflow: hidden; transition: .35s; }
+.hero::before { content: ''; position: absolute; inset: 0; background: var(--hero-grad); pointer-events: none; }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--grid-col) 1px, transparent 1px), linear-gradient(90deg, var(--grid-col) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; }
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: .78em; color: var(--muted); margin-bottom: 20px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--muted); transition: .2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb i { font-size: .7em; }
+.tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+.pill-blue { background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.25); color: var(--accent); }
+[data-theme="light"] .pill-blue { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.25); }
+.pill-green { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.25); color: var(--green); }
+[data-theme="light"] .pill-green { color: #15803d; background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.25); }
+.pub-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pub-pulse 2s infinite; }
+@keyframes pub-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+h1.page-title { font-size: clamp(1.9rem, 3.8vw, 2.9rem); font-weight: 900; line-height: 1.12; margin-bottom: 14px; max-width: 820px; color: var(--text); }
+.hero-sub { font-size: .95rem; color: var(--muted); max-width: 700px; margin-bottom: 22px; line-height: 1.7; }
+.hero-meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-bottom: 28px; }
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta i { color: var(--accent); }
+.hero-meta strong { color: var(--text); }
+.hero-btns { display: flex; gap: 10px; flex-wrap: wrap; padding-bottom: 60px; }
 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit;text-decoration:none}
-.btn-pub{background:rgba(34,197,94,.15);color:var(--green);border-color:rgba(34,197,94,.3)}
-.btn-pub:hover{background:rgba(34,197,94,.25);transform:translateY(-2px)}
-[data-theme="light"] .btn-pub{background:rgba(22,163,74,.1);color:#15803d;border-color:rgba(22,163,74,.3)}
-.btn-anchor{background:var(--glass);color:var(--text);border-color:var(--glass-border)}
-.btn-anchor:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
-.btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border)}
-.btn-back:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
-.btn-disabled{opacity:.35;cursor:not-allowed;pointer-events:none;background:var(--glass);color:var(--muted);border-color:var(--glass-border)}
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: .83rem; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
+.btn-pub { background: rgba(34,197,94,.15); color: var(--green); border-color: rgba(34,197,94,.3); }
+.btn-pub:hover { background: rgba(34,197,94,.25); transform: translateY(-2px); }
+[data-theme="light"] .btn-pub { background: rgba(22,163,74,.1); color: #15803d; border-color: rgba(22,163,74,.3); }
+.btn-anchor { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
+.btn-anchor:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-back { background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
+.btn-back:hover { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
 
-/* ── LAYOUT ── */
-.wrap{max-width:1100px;margin:0 auto;padding:56px 32px}
-.divider{max-width:1100px;margin:0 auto;padding:0 32px}
-.divider hr{border:none;border-top:1px solid var(--glass-border)}
-.sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 14px;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden}
-.sec-label::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:pg-shimmer 4s ease-in-out infinite}
-.sl-blue  {background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.2)}
-.sl-purple{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
-[data-theme="light"] .sl-purple{background:rgba(124,58,237,.08);color:#6d28d9;border-color:rgba(124,58,237,.2)}
-.sl-teal  {background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.2)}
-[data-theme="light"] .sl-teal{background:rgba(8,145,178,.08);color:#0e7490}
-.sl-green {background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}
-[data-theme="light"] .sl-green{background:rgba(22,163,74,.08);color:#15803d}
-.sec-title{font-size:clamp(1.2rem,2.4vw,1.7rem);font-weight:900;margin-bottom:28px;color:var(--text)}
+/* ── MAIN LAYOUT (two-column, matches 003) ── */
+.main-layout { max-width: 1100px; margin: 0 auto; padding: 0 32px 56px; display: grid; grid-template-columns: 1fr 310px; gap: 36px; align-items: start; }
+.content-col { display: flex; flex-direction: column; min-width: 0; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* override .wrap and .divider inside content-col so they don't re-center */
+.content-col .wrap { max-width: none; margin: 0; }
+.content-col .divider { max-width: none; padding: 0; }
+
+/* ── SECTION LABELS ── */
+.sec-label { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.sec-label::before { content: ''; position: absolute; left: -100%; top: 0; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); animation: pg-shimmer 4s ease-in-out infinite; }
+.sl-blue { background: rgba(79,142,247,.12); color: var(--accent); border: 1px solid rgba(79,142,247,.2); }
+.sl-purple { background: rgba(167,139,250,.12); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+[data-theme="light"] .sl-purple { background: rgba(124,58,237,.08); color: #6d28d9; border-color: rgba(124,58,237,.2); }
+.sl-teal { background: rgba(6,182,212,.12); color: var(--teal); border: 1px solid rgba(6,182,212,.2); }
+[data-theme="light"] .sl-teal { background: rgba(8,145,178,.08); color: #0e7490; }
+.sl-green { background: rgba(34,197,94,.12); color: var(--green); border: 1px solid rgba(34,197,94,.2); }
+[data-theme="light"] .sl-green { background: rgba(22,163,74,.08); color: #15803d; }
+.sec-title { font-size: clamp(1.2rem, 2.4vw, 1.7rem); font-weight: 900; margin-bottom: 28px; color: var(--text); }
 
 /* ── PROBLEM CARDS ── */
-.prob-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.prob-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
-.prob-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
-.prob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.pc-red::before{background:linear-gradient(90deg,var(--red),transparent)}
-.pc-gold::before{background:linear-gradient(90deg,var(--gold),transparent)}
-.pc-blue::before{background:linear-gradient(90deg,var(--accent),transparent)}
-.prob-card h3{font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--text)}
-.prob-card p{font-size:.82rem;color:var(--muted);line-height:1.65}
-.big-num{font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:6px}
-.n-red{color:var(--red)}.n-gold{color:var(--gold)}.n-blue{color:var(--accent)}
+.prob-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.prob-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+.prob-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+.prob-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.pc-red::before { background: linear-gradient(90deg, var(--red), transparent); }
+.pc-gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+.pc-blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+.prob-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+.prob-card p { font-size: .82rem; color: var(--muted); line-height: 1.65; }
+.big-num { font-size: 2.4rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.n-red { color: var(--red); } .n-gold { color: var(--gold); } .n-blue { color: var(--accent); }
 
 /* ── DATA ── */
-.data-visual{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-.data-left{display:flex;flex-direction:column;gap:16px}
-.data-stat-big{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(6,182,212,.07));border:1px solid rgba(79,142,247,.2);border-radius:var(--radius);padding:28px;text-align:center}
-[data-theme="light"] .data-stat-big{background:linear-gradient(135deg,rgba(37,99,235,.07),rgba(8,145,178,.05));border-color:rgba(37,99,235,.2)}
-.data-stat-big .num{font-size:3.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
-.data-stat-big .lbl{font-size:.85rem;color:var(--muted)}
-.data-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.data-mini{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:16px;text-align:center}
-.data-mini .n{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:4px}
-.data-mini .l{font-size:.74rem;color:var(--muted)}
-.data-right{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:24px}
-.data-right h3{font-size:.9rem;font-weight:800;margin-bottom:18px;color:var(--text)}
-.proc-list{display:flex;flex-direction:column;gap:10px}
-.proc-row{display:flex;align-items:center;gap:10px}
-.proc-name{font-size:.79rem;color:var(--muted);width:170px;flex-shrink:0}
-.proc-bar-wrap{flex:1;background:var(--proc-bar-bg);border-radius:4px;height:7px;overflow:hidden}
-.proc-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--teal))}
-.proc-pct{font-size:.74rem;color:var(--accent);width:38px;text-align:right;flex-shrink:0;font-weight:700}
+.data-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.data-left { display: flex; flex-direction: column; gap: 16px; }
+.data-stat-big { background: linear-gradient(135deg, rgba(79,142,247,.1), rgba(6,182,212,.07)); border: 1px solid rgba(79,142,247,.2); border-radius: var(--radius); padding: 28px; text-align: center; }
+[data-theme="light"] .data-stat-big { background: linear-gradient(135deg, rgba(37,99,235,.07), rgba(8,145,178,.05)); border-color: rgba(37,99,235,.2); }
+.data-stat-big .num { font-size: 3.5rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 6px; }
+.data-stat-big .lbl { font-size: .85rem; color: var(--muted); }
+.data-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.data-mini { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 16px; text-align: center; }
+.data-mini .n { font-size: 1.6rem; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+.data-mini .l { font-size: .74rem; color: var(--muted); }
+.data-right { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 24px; }
+.data-right h3 { font-size: .9rem; font-weight: 800; margin-bottom: 18px; color: var(--text); }
+.proc-list { display: flex; flex-direction: column; gap: 10px; }
+.proc-row { display: flex; align-items: center; gap: 10px; }
+.proc-name { font-size: .79rem; color: var(--muted); width: 170px; flex-shrink: 0; }
+.proc-bar-wrap { flex: 1; background: var(--proc-bar-bg); border-radius: 4px; height: 7px; overflow: hidden; }
+.proc-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--teal)); }
+.proc-pct { font-size: .74rem; color: var(--accent); width: 38px; text-align: right; flex-shrink: 0; font-weight: 700; }
 
 /* ── PIPELINE ── */
-.pipe-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
-.pipe-steps::before{content:'';position:absolute;top:52px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));z-index:0}
-.pipe-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 12px;position:relative;z-index:1}
-.pipe-circle{width:64px;height:64px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;background:var(--body-bg);transition:.35s}
-.pc1{border-color:var(--accent);box-shadow:0 0 20px rgba(79,142,247,.3)}
-.pc2{border-color:var(--purple);box-shadow:0 0 20px rgba(167,139,250,.25)}
-.pc3{border-color:var(--teal);box-shadow:0 0 20px rgba(6,182,212,.25)}
-.pc4{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.25)}
-.pipe-step h4{font-size:.88rem;font-weight:800;margin-bottom:6px;color:var(--text)}
-.pipe-step p{font-size:.78rem;color:var(--muted);line-height:1.55}
-.pipe-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
-.pd-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:16px}
-.pd-title{font-size:.75rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.pd-card ul{list-style:none;display:flex;flex-direction:column;gap:4px}
-.pd-card ul li{font-size:.76rem;color:var(--muted);padding-left:14px;position:relative}
-.pd-card ul li::before{content:'›';position:absolute;left:0;color:var(--accent)}
+.pipe-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+.pipe-steps::before { content: ''; position: absolute; top: 52px; left: 12.5%; right: 12.5%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--teal)); z-index: 0; }
+.pipe-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+.pipe-circle { width: 64px; height: 64px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; background: var(--body-bg); transition: .35s; }
+.pc1 { border-color: var(--accent); box-shadow: 0 0 20px rgba(79,142,247,.3); }
+.pc2 { border-color: var(--purple); box-shadow: 0 0 20px rgba(167,139,250,.25); }
+.pc3 { border-color: var(--teal); box-shadow: 0 0 20px rgba(6,182,212,.25); }
+.pc4 { border-color: var(--green); box-shadow: 0 0 20px rgba(34,197,94,.25); }
+.pipe-step h4 { font-size: .88rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+.pipe-step p { font-size: .78rem; color: var(--muted); line-height: 1.55; }
+.pipe-detail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px; }
+.pd-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 16px; }
+.pd-title { font-size: .75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.pd-card ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.pd-card ul li { font-size: .76rem; color: var(--muted); padding-left: 14px; position: relative; }
+.pd-card ul li::before { content: '›'; position: absolute; left: 0; color: var(--accent); }
 
 /* ── RESULTS ── */
-.results-hero{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
-.rh-card{border-radius:var(--radius);padding:28px;position:relative;overflow:hidden;transition:.2s}
-.rh-left{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(6,182,212,.07));border:1px solid rgba(34,197,94,.25)}
-.rh-right{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(245,158,11,.05));border:1px solid rgba(239,68,68,.2)}
-[data-theme="light"] .rh-left{background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(8,145,178,.05));border-color:rgba(22,163,74,.2)}
-[data-theme="light"] .rh-right{background:linear-gradient(135deg,rgba(220,38,38,.06),rgba(217,119,6,.04));border-color:rgba(220,38,38,.18)}
-.rh-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
-.rh-left .rh-label{color:var(--green)}.rh-right .rh-label{color:var(--red)}
-.rh-big{font-size:3.2rem;font-weight:900;line-height:1;margin-bottom:8px}
-.rh-left .rh-big{color:var(--green)}.rh-right .rh-big{color:var(--red)}
-.rh-desc{font-size:.84rem;color:var(--muted);line-height:1.65}
-.rh-icon{position:absolute;right:20px;top:20px;font-size:2.5rem;opacity:.1}
-.results-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
-.r-metric{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:18px;text-align:center;transition:.2s}
-.r-metric:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border)}
-.rm-val{font-size:1.7rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
-.rm-label{font-size:.72rem;color:var(--muted);line-height:1.5}
-.rm-label strong{color:var(--text)}
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
-.cv-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:24px}
-.cv-card h3{font-size:.9rem;font-weight:800;margin-bottom:4px;color:var(--text)}
-.cv-sub{font-size:.76rem;color:var(--muted);margin-bottom:18px;line-height:1.5}
-.chart-wrap{height:270px;position:relative}
-.bias-visual{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-.bias-row{display:flex;align-items:center;gap:10px}
-.bias-name{font-size:.78rem;color:var(--muted);width:125px;flex-shrink:0;text-align:right}
-.bias-center{flex:1;position:relative;height:22px;display:flex;align-items:center}
-.bias-center-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--center-line);transform:translateX(-50%)}
-.bias-fill{position:absolute;top:50%;transform:translateY(-50%);height:10px;border-radius:5px}
-.bias-val{font-size:.74rem;font-weight:700;width:60px;flex-shrink:0;text-align:left}
-.bias-footer{font-size:.73rem;color:var(--muted);margin-top:14px;text-align:center;padding-top:10px;border-top:1px solid var(--glass-border)}
+.results-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.rh-card { border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden; transition: .2s; }
+.rh-left { background: linear-gradient(135deg, rgba(34,197,94,.1), rgba(6,182,212,.07)); border: 1px solid rgba(34,197,94,.25); }
+.rh-right { background: linear-gradient(135deg, rgba(239,68,68,.08), rgba(245,158,11,.05)); border: 1px solid rgba(239,68,68,.2); }
+[data-theme="light"] .rh-left { background: linear-gradient(135deg, rgba(22,163,74,.08), rgba(8,145,178,.05)); border-color: rgba(22,163,74,.2); }
+[data-theme="light"] .rh-right { background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(217,119,6,.04)); border-color: rgba(220,38,38,.18); }
+.rh-label { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.rh-left .rh-label { color: var(--green); } .rh-right .rh-label { color: var(--red); }
+.rh-big { font-size: 3.2rem; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.rh-left .rh-big { color: var(--green); } .rh-right .rh-big { color: var(--red); }
+.rh-desc { font-size: .84rem; color: var(--muted); line-height: 1.65; }
+.rh-icon { position: absolute; right: 20px; top: 20px; font-size: 2.5rem; opacity: .1; }
+.results-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+.r-metric { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 18px; text-align: center; transition: .2s; }
+.r-metric:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); }
+.rm-val { font-size: 1.7rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 6px; }
+.rm-label { font-size: .72rem; color: var(--muted); line-height: 1.5; }
+.rm-label strong { color: var(--text); }
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.cv-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 24px; }
+.cv-card h3 { font-size: .9rem; font-weight: 800; margin-bottom: 4px; color: var(--text); }
+.cv-sub { font-size: .76rem; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+.chart-wrap { height: 270px; position: relative; }
+.bias-visual { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.bias-row { display: flex; align-items: center; gap: 10px; }
+.bias-name { font-size: .78rem; color: var(--muted); width: 125px; flex-shrink: 0; text-align: right; }
+.bias-center { flex: 1; position: relative; height: 22px; display: flex; align-items: center; }
+.bias-center-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--center-line); transform: translateX(-50%); }
+.bias-fill { position: absolute; top: 50%; transform: translateY(-50%); height: 10px; border-radius: 5px; }
+.bias-val { font-size: .74rem; font-weight: 700; width: 60px; flex-shrink: 0; text-align: left; }
+.bias-footer { font-size: .73rem; color: var(--muted); margin-top: 14px; text-align: center; padding-top: 10px; border-top: 1px solid var(--glass-border); }
 
-/* ── TABLE ── */
-.model-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:24px}
-.model-table thead tr{background:var(--table-head)}
-.model-table th{padding:12px 14px;text-align:left;font-size:.73rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:1px solid var(--glass-border)}
-.model-table td{padding:11px 14px;border-bottom:1px solid var(--glass-border);color:var(--muted);font-size:.82rem}
-.model-table tbody tr:hover td{background:var(--card-hover-bg)}
-.model-table tr.best td{background:var(--table-hl);color:var(--text)}
-.model-table tr.best td:first-child{color:var(--accent);font-weight:800}
-.model-table tr.human td{background:var(--table-human)}
-.model-table tr.human td:first-child{color:var(--red);font-weight:700}
-.mini-bar{display:inline-block;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--teal));margin-left:6px;vertical-align:middle}
-.mini-bar-red{background:var(--red)}
-.badge-best{display:inline-block;background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:4px;padding:1px 7px;font-size:.68rem;font-weight:700;margin-left:6px}
-[data-theme="light"] .badge-best{background:rgba(22,163,74,.12);color:#15803d}
+/* ── MODEL TABLE ── */
+.model-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: 24px; }
+.model-table thead tr { background: var(--table-head); }
+.model-table th { padding: 12px 14px; text-align: left; font-size: .73rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--glass-border); }
+.model-table td { padding: 11px 14px; border-bottom: 1px solid var(--glass-border); color: var(--muted); font-size: .82rem; }
+.model-table tbody tr:hover td { background: var(--card-hover-bg); }
+.model-table tr.best td { background: var(--table-hl); color: var(--text); }
+.model-table tr.best td:first-child { color: var(--accent); font-weight: 800; }
+.model-table tr.human td { background: var(--table-human); }
+.model-table tr.human td:first-child { color: var(--red); font-weight: 700; }
+.mini-bar { display: inline-block; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--teal)); margin-left: 6px; vertical-align: middle; }
+.mini-bar-red { background: var(--red); }
+.badge-best { display: inline-block; background: rgba(34,197,94,.15); color: var(--green); border: 1px solid rgba(34,197,94,.3); border-radius: 4px; padding: 1px 7px; font-size: .68rem; font-weight: 700; margin-left: 6px; }
+[data-theme="light"] .badge-best { background: rgba(22,163,74,.12); color: #15803d; }
 
 /* ── TAKEAWAY ── */
-.takeaway{background:var(--takeaway-bg);border:1px solid var(--takeaway-bdr);border-radius:var(--radius);padding:28px 32px;margin-top:32px}
-.takeaway-title{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.takeaway-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
-.tcard{display:flex;gap:14px;align-items:flex-start}
-.tcard-icon{font-size:1.8rem;flex-shrink:0;line-height:1}
-.tcard h4{font-size:.86rem;font-weight:800;color:var(--text);margin-bottom:5px}
-.tcard p{font-size:.8rem;color:var(--muted);line-height:1.6}
+.takeaway { background: var(--takeaway-bg); border: 1px solid var(--takeaway-bdr); border-radius: var(--radius); padding: 28px 32px; margin-top: 32px; }
+.takeaway-title { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.takeaway-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.tcard { display: flex; gap: 14px; align-items: flex-start; }
+.tcard-icon { font-size: 1.8rem; flex-shrink: 0; line-height: 1; }
+.tcard h4 { font-size: .86rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.tcard p { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+
+/* ── WRAP / DIVIDER (for content sections) ── */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 56px 32px; }
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+.divider hr { border: none; border-top: 1px solid var(--glass-border); }
+
+/* ── SIDEBAR CARDS (matches 003 exactly) ── */
+.sidebar-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 20px; }
+.sidebar-card h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+.ataglance-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.ataglance-header h3 { margin-bottom: 0; }
+.ataglance-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.28); border-radius: 20px; padding: 3px 10px; font-size: .68rem; font-weight: 700; color: var(--accent); }
+[data-theme="light"] .ataglance-badge { background: rgba(37,99,235,.09); border-color: rgba(37,99,235,.3); }
+.tldr-text { font-size: .86rem; color: var(--muted); line-height: 1.72; }
+.tldr-text strong { color: var(--text); }
+.info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px; }
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-pill { background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.2); border-radius: 6px; padding: 3px 10px; font-size: .75rem; color: var(--accent); font-weight: 600; }
+[data-theme="light"] .tech-pill { background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.2); }
+.citation-box { background: rgba(79,142,247,.05); border-left: 3px solid rgba(79,142,247,.45); border-radius: 0 8px 8px 0; padding: 12px; font-size: .76rem; color: var(--muted); line-height: 1.6; margin-top: 4px; }
+[data-theme="light"] .citation-box { background: rgba(37,99,235,.04); border-left-color: rgba(37,99,235,.4); }
+.citation-box strong { color: var(--text); }
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; color: var(--muted); transition: .2s; text-decoration: none; }
+.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
+.sidebar-link i { color: var(--accent); width: 16px; text-align: center; }
 
 /* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .prob-grid,.pipe-steps,.pipe-detail,.results-hero,.chart-grid,.data-visual,.takeaway-grid{grid-template-columns:1fr}
-  .pipe-steps::before{display:none}
-  .data-row,.results-row{grid-template-columns:1fr 1fr}
+@media(max-width: 1000px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .prob-grid { grid-template-columns: 1fr 1fr; }
+  .pipe-steps { grid-template-columns: 1fr 1fr; }
+  .pipe-steps::before { display: none; }
+  .pipe-detail { grid-template-columns: 1fr 1fr; }
+  .results-hero { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr 1fr; }
 }
-@media(max-width:580px){
-  .data-row,.results-row{grid-template-columns:1fr}
-  .hero{padding:96px 16px 0}
-  .wrap{padding:40px 16px}
+@media(max-width: 600px) {
+  .hero { padding: 96px 16px 0; }
+  .main-layout { padding: 0 16px 40px; }
+  .wrap { padding: 40px 0; }
+  .prob-grid { grid-template-columns: 1fr; }
+  .pipe-steps { grid-template-columns: 1fr; }
+  .pipe-detail { grid-template-columns: 1fr; }
+  .data-visual { grid-template-columns: 1fr; }
+  .data-row { grid-template-columns: 1fr 1fr; }
+  .results-row { grid-template-columns: 1fr 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
-
-<!--
-  data-project-index="0"  → project 1 of 6 (0-based)
-  data-footer-note="..."  → appended to footer copyright line
--->
-<body data-project-index="0"
-      data-footer-note="Surgical Endoscopy · DOI 10.1007/s00464-025-11885-0">
+<body data-project-index="0" data-footer-note="Surgical Endoscopy · DOI 10.1007/s00464-025-11885-0">
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -233,7 +276,7 @@ h1{font-size:clamp(1.9rem,3.8vw,2.9rem);font-weight:900;line-height:1.12;margin-
       <span class="pill pill-blue"><i class="fas fa-hospital-user"></i> Healthcare AI · OR Scheduling</span>
       <span class="pill pill-green"><span class="pub-dot"></span> Published Paper · Surgical Endoscopy 2025</span>
     </div>
-    <h1>Can AI predict how long a surgery will take <span class="grad">better than the surgeon?</span></h1>
+    <h1 class="page-title">Can AI Predict How Long a Surgery Will Take<br><span class="grad-text">Better Than the Surgeon?</span></h1>
     <p class="hero-sub">Yes — and by a meaningful margin. Using 17,246 real surgical records, we trained an AI that predicts operating room duration with near-zero systematic bias, while surgeon estimates consistently run <strong>18+ minutes short</strong> every single day.</p>
     <div class="hero-meta">
       <span><i class="fas fa-users"></i> Kwong · <strong>Noorchenarboo</strong> · Grolinger · Hawel · Schlachta · Elnahas</span>
@@ -242,148 +285,210 @@ h1{font-size:clamp(1.9rem,3.8vw,2.9rem);font-weight:900;line-height:1.12;margin-
     </div>
     <div class="hero-btns">
       <a href="https://link.springer.com/article/10.1007/s00464-025-11885-0" target="_blank" class="btn btn-pub"><i class="fas fa-file-alt"></i> Read Paper</a>
-      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> See Results</a>
+      <a href="#problem" class="btn btn-anchor"><i class="fas fa-exclamation-triangle"></i> The Problem</a>
+      <a href="#how-it-works" class="btn btn-anchor"><i class="fas fa-cogs"></i> How It Works</a>
+      <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
       <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
-      <span class="btn btn-disabled"><i class="fas fa-robot"></i> Live Demo — Coming Soon</span>
-      <span class="btn btn-disabled"><i class="fab fa-github"></i> Code — Coming Soon</span>
     </div>
   </div>
 </section>
 
-<!-- ═══ PROBLEM ═══ -->
-<div class="divider"><hr></div>
-<section class="wrap fade-up">
-  <span class="sec-label sl-blue">① The Problem</span>
-  <h2 class="sec-title">Operating rooms run late every day — and it's costing everyone.</h2>
-  <div class="prob-grid">
-    <div class="prob-card pc-red">
-      <div class="big-num n-red">18 min</div>
-      <h3>Average scheduling error</h3>
-      <p>Surgeons estimate case duration from memory and experience. Their guesses are systematically off by over 18 minutes — always in the same direction: too short.</p>
-    </div>
-    <div class="prob-card pc-gold">
-      <div class="big-num n-gold">$1,000s</div>
-      <h3>Per hour of OR time wasted</h3>
-      <p>Operating rooms are the most expensive resource in a hospital. One overrun case delays the next patient, causes staff overtime, and can cancel planned surgeries.</p>
-    </div>
-    <div class="prob-card pc-blue">
-      <div class="big-num n-blue">No two</div>
-      <h3>Patients are the same</h3>
-      <p>A hernia repair in a healthy 30-year-old takes far less time than in a 70-year-old with diabetes and heart disease. Traditional scheduling ignores these differences entirely.</p>
-    </div>
-  </div>
-</section>
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+<div class="content-col">
 
-<!-- ═══ DATA ═══ -->
-<div class="divider"><hr></div>
-<section class="wrap fade-up">
-  <span class="sec-label sl-purple">② The Data</span>
-  <h2 class="sec-title">5 years of real surgery records from 3 hospitals.</h2>
-  <div class="data-visual">
-    <div class="data-left">
-      <div class="data-stat-big">
-        <div class="num">17,246</div>
-        <div class="lbl">Surgical procedures used to train &amp; test our AI — every one a real patient</div>
+  <!-- ① THE PROBLEM -->
+  <div class="divider"><hr></div>
+  <section class="wrap fade-up" id="problem">
+    <span class="sec-label sl-blue">① The Problem</span>
+    <h2 class="sec-title">Operating rooms run late every day — and it's costing everyone.</h2>
+    <div class="prob-grid">
+      <div class="prob-card pc-red">
+        <div class="big-num n-red">18 min</div>
+        <h3>Average scheduling error</h3>
+        <p>Surgeons estimate case duration from memory and experience. Their guesses are systematically off by over 18 minutes — always in the same direction: too short.</p>
       </div>
-      <div class="data-row">
-        <div class="data-mini"><div class="n" style="color:var(--accent)">16,159</div><div class="l">Unique patients</div></div>
-        <div class="data-mini"><div class="n" style="color:var(--teal)">3</div><div class="l">Academic hospitals in London, Canada</div></div>
-        <div class="data-mini"><div class="n" style="color:var(--purple)">2015–20</div><div class="l">5-year retrospective window</div></div>
+      <div class="prob-card pc-gold">
+        <div class="big-num n-gold">$1,000s</div>
+        <h3>Per hour of OR time wasted</h3>
+        <p>Operating rooms are the most expensive resource in a hospital. One overrun case delays the next patient, causes staff overtime, and can cancel planned surgeries.</p>
       </div>
-      <div class="data-row">
-        <div class="data-mini"><div class="n" style="color:var(--green)">11</div><div class="l">Procedure types studied</div></div>
-        <div class="data-mini"><div class="n" style="color:var(--gold)">20</div><div class="l">Input variables per case</div></div>
-        <div class="data-mini"><div class="n" style="color:var(--red)">56.9 yrs</div><div class="l">Average patient age</div></div>
+      <div class="prob-card pc-blue">
+        <div class="big-num n-blue">No two</div>
+        <h3>Patients are the same</h3>
+        <p>A hernia repair in a healthy 30-year-old takes far less time than in a 70-year-old with diabetes and heart disease. Traditional scheduling ignores these differences entirely.</p>
       </div>
     </div>
-    <div class="data-right">
-      <h3>Cases by procedure type</h3>
-      <div class="proc-list" id="procList"></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══ PIPELINE ═══ -->
-<div class="divider"><hr></div>
-<section class="wrap fade-up">
-  <span class="sec-label sl-teal">③ How It Works</span>
-  <h2 class="sec-title">From hospital records to accurate predictions — 4 steps.</h2>
-  <div class="pipe-steps">
-    <div class="pipe-step"><div class="pipe-circle pc1">🗄️</div><h4>Collect &amp; Clean</h4><p>5 years of de-identified records. Outliers removed. Only elective adult cases included. 17,246 clean records.</p></div>
-    <div class="pipe-step"><div class="pipe-circle pc2">🔍</div><h4>Extract Patient Signals</h4><p>20 pre-surgery variables: age, health complexity (ASA score), BMI, procedure type, surgeon, and day of week.</p></div>
-    <div class="pipe-step"><div class="pipe-circle pc3">🤖</div><h4>Train 8 AI Models</h4><p>From simple statistics to deep neural networks. Each tested with 10-fold cross-validation to ensure fairness.</p></div>
-    <div class="pipe-step"><div class="pipe-circle pc4">📊</div><h4>Benchmark vs. Surgeons</h4><p>Every AI model compared directly against real surgeon estimates on 5 accuracy and bias metrics.</p></div>
-  </div>
-  <div class="pipe-detail">
-    <div class="pd-card"><div class="pd-title">Data Sources</div><ul><li>Cerner EMR system</li><li>3 tertiary hospitals</li><li>Elective cases only</li><li>No emergency or cancelled</li><li>Adults (18+) only</li></ul></div>
-    <div class="pd-card"><div class="pd-title" style="color:var(--purple)">Key Inputs Used</div><ul><li>Procedure type &amp; approach</li><li>ASA health complexity score</li><li>Patient age &amp; BMI</li><li>Surgeon identity</li><li>First/last case of day</li><li>Day of week &amp; ICD code</li></ul></div>
-    <div class="pd-card"><div class="pd-title" style="color:var(--teal)">8 Models Tested</div><ul><li>Linear / Ridge / Lasso</li><li>Support Vector Regression</li><li>Random Forest</li><li>Gradient Boosting (GBM)</li><li>XGBoost</li><li>Neural Network (ANN) ✓ Best</li></ul></div>
-    <div class="pd-card"><div class="pd-title" style="color:var(--green)">Validation Approach</div><ul><li>10-fold cross-validation</li><li>Per-fold data preprocessing</li><li>Bayesian hyperparameter tuning</li><li>Statistical bias testing</li><li>TRIPOD-AI reporting standard</li></ul></div>
-  </div>
-</section>
+  <!-- ② THE DATA -->
+  <div class="divider"><hr></div>
+  <section class="wrap fade-up" id="data">
+    <span class="sec-label sl-purple">② The Data</span>
+    <h2 class="sec-title">5 years of real surgery records from 3 hospitals.</h2>
+    <div class="data-visual">
+      <div class="data-left">
+        <div class="data-stat-big">
+          <div class="num">17,246</div>
+          <div class="lbl">Surgical procedures used to train &amp; test our AI — every one a real patient</div>
+        </div>
+        <div class="data-row">
+          <div class="data-mini"><div class="n" style="color:var(--accent)">16,159</div><div class="l">Unique patients</div></div>
+          <div class="data-mini"><div class="n" style="color:var(--teal)">3</div><div class="l">Academic hospitals in London, Canada</div></div>
+          <div class="data-mini"><div class="n" style="color:var(--purple)">2015–20</div><div class="l">5-year retrospective window</div></div>
+        </div>
+        <div class="data-row">
+          <div class="data-mini"><div class="n" style="color:var(--green)">11</div><div class="l">Procedure types studied</div></div>
+          <div class="data-mini"><div class="n" style="color:var(--gold)">20</div><div class="l">Input variables per case</div></div>
+          <div class="data-mini"><div class="n" style="color:var(--red)">56.9 yrs</div><div class="l">Average patient age</div></div>
+        </div>
+      </div>
+      <div class="data-right">
+        <h3>Cases by procedure type</h3>
+        <div class="proc-list" id="procList"></div>
+      </div>
+    </div>
+  </section>
 
-<!-- ═══ RESULTS ═══ -->
-<div class="divider"><hr></div>
-<section class="wrap fade-up" id="results">
-  <span class="sec-label sl-green">④ Results</span>
-  <h2 class="sec-title">The AI eliminates scheduling bias — outperforming surgeons on every metric.</h2>
-  <div class="results-hero">
-    <div class="rh-card rh-left">
-      <div class="rh-icon">🤖</div>
-      <div class="rh-label">AI Model — Neural Network</div>
-      <div class="rh-big">−0.37 min</div>
-      <div class="rh-desc">Average prediction error — essentially <strong>zero bias</strong>. The model makes mistakes in both directions equally, with no systematic drift. Statistically unbiased (p = 0.34).</div>
+  <!-- ③ HOW IT WORKS -->
+  <div class="divider"><hr></div>
+  <section class="wrap fade-up" id="how-it-works">
+    <span class="sec-label sl-teal">③ How It Works</span>
+    <h2 class="sec-title">From hospital records to accurate predictions — 4 steps.</h2>
+    <div class="pipe-steps">
+      <div class="pipe-step"><div class="pipe-circle pc1">🗄️</div><h4>Collect &amp; Clean</h4><p>5 years of de-identified records. Outliers removed. Only elective adult cases included. 17,246 clean records.</p></div>
+      <div class="pipe-step"><div class="pipe-circle pc2">🔍</div><h4>Extract Patient Signals</h4><p>20 pre-surgery variables: age, health complexity (ASA score), BMI, procedure type, surgeon, and day of week.</p></div>
+      <div class="pipe-step"><div class="pipe-circle pc3">🤖</div><h4>Train 8 AI Models</h4><p>From simple statistics to deep neural networks. Each tested with 10-fold cross-validation to ensure fairness.</p></div>
+      <div class="pipe-step"><div class="pipe-circle pc4">📊</div><h4>Benchmark vs. Surgeons</h4><p>Every AI model compared directly against real surgeon estimates on 5 accuracy and bias metrics.</p></div>
     </div>
-    <div class="rh-card rh-right">
-      <div class="rh-icon">👨‍⚕️</div>
-      <div class="rh-label">Surgeon Estimate — Current Practice</div>
-      <div class="rh-big">−18.52 min</div>
-      <div class="rh-desc">Average prediction error — surgeons <strong>consistently underestimate</strong> how long cases take, causing schedules to run over every single day. Statistically significant (p &lt; 0.001).</div>
+    <div class="pipe-detail">
+      <div class="pd-card"><div class="pd-title">Data Sources</div><ul><li>Cerner EMR system</li><li>3 tertiary hospitals</li><li>Elective cases only</li><li>No emergency or cancelled</li><li>Adults (18+) only</li></ul></div>
+      <div class="pd-card"><div class="pd-title" style="color:var(--purple)">Key Inputs Used</div><ul><li>Procedure type &amp; approach</li><li>ASA health complexity score</li><li>Patient age &amp; BMI</li><li>Surgeon identity</li><li>First/last case of day</li><li>Day of week &amp; ICD code</li></ul></div>
+      <div class="pd-card"><div class="pd-title" style="color:var(--teal)">8 Models Tested</div><ul><li>Linear / Ridge / Lasso</li><li>Support Vector Regression</li><li>Random Forest</li><li>Gradient Boosting (GBM)</li><li>XGBoost</li><li>Neural Network (ANN) ✓ Best</li></ul></div>
+      <div class="pd-card"><div class="pd-title" style="color:var(--green)">Validation Approach</div><ul><li>10-fold cross-validation</li><li>Per-fold data preprocessing</li><li>Bayesian hyperparameter tuning</li><li>Statistical bias testing</li><li>TRIPOD-AI reporting standard</li></ul></div>
     </div>
-  </div>
-  <div class="results-row">
-    <div class="r-metric"><div class="rm-val">31.8 min</div><div class="rm-label"><strong>Average Error (MAE)</strong><br><span style="color:var(--red);font-size:.7rem">vs 35.3 min for surgeons</span><br><span style="color:var(--muted);font-size:.7rem">= 10% more accurate</span></div></div>
-    <div class="r-metric"><div class="rm-val">26%</div><div class="rm-label"><strong>% Error (MAPE)</strong><br><span style="color:var(--red);font-size:.7rem">vs 34% for surgeons</span><br><span style="color:var(--muted);font-size:.7rem">= 8 percentage points better</span></div></div>
-    <div class="r-metric"><div class="rm-val">R² 0.78</div><div class="rm-label"><strong>Variance Explained</strong><br><span style="color:var(--muted);font-size:.7rem">78% of what drives surgery length is captured by the model</span></div></div>
-    <div class="r-metric"><div class="rm-val">p = 0.34</div><div class="rm-label"><strong>Bias Test</strong><br><span style="color:var(--green);font-size:.7rem">Only model with no significant bias</span><br><span style="color:var(--muted);font-size:.7rem">(all others p &lt; 0.05)</span></div></div>
-  </div>
-  <div class="chart-grid">
-    <div class="cv-card">
-      <h3>How does each model compare?</h3>
-      <p class="cv-sub">Average prediction error in minutes — lower bars are better. The red dashed line shows how surgeons perform today.</p>
-      <div class="chart-wrap"><canvas id="chartMAE"></canvas></div>
-    </div>
-    <div class="cv-card">
-      <h3>Which models have a scheduling bias?</h3>
-      <p class="cv-sub">A bar extending left means the model consistently underestimates. Zero is perfect. Only the Neural Network achieves near-zero systematic error.</p>
-      <div class="bias-visual" id="biasVis"></div>
-      <div class="bias-footer">← Consistently underestimates &nbsp;|&nbsp; Zero = No bias &nbsp;|&nbsp; Overestimates →</div>
-    </div>
-  </div>
-  <div style="overflow-x:auto">
-    <table class="model-table">
-      <thead><tr><th>Model</th><th>Avg. Error ↓</th><th>% Error ↓</th><th>Fit (R²) ↑</th><th>Scheduling Bias</th><th>Systematically Biased?</th></tr></thead>
-      <tbody>
-        <tr class="best"><td>🤖 Neural Network (ANN) <span class="badge-best">BEST</span></td><td>31.8 min <div class="mini-bar" style="width:55px"></div></td><td>26%</td><td>0.78</td><td style="color:var(--green)">−0.37 min ✓</td><td style="color:var(--green)">No (p=0.34)</td></tr>
-        <tr><td>XGBoost</td><td>32.5 min <div class="mini-bar" style="width:52px"></div></td><td>27%</td><td>0.78</td><td style="color:var(--red)">−2.63 min</td><td style="color:var(--red)">Yes</td></tr>
-        <tr><td>Gradient Boosting (GBM)</td><td>32.4 min <div class="mini-bar" style="width:52px"></div></td><td>27%</td><td>0.78</td><td style="color:var(--red)">−2.67 min</td><td style="color:var(--red)">Yes</td></tr>
-        <tr><td>Random Forest</td><td>36.8 min <div class="mini-bar" style="width:38px"></div></td><td>26%</td><td>0.77</td><td style="color:var(--red)">−2.69 min</td><td style="color:var(--red)">Yes</td></tr>
-        <tr><td>Linear / Ridge / Lasso</td><td>36.9 min <div class="mini-bar" style="width:37px"></div></td><td>31%</td><td>0.72</td><td style="color:var(--red)">−1.7 to −2.1 min</td><td style="color:var(--red)">Yes</td></tr>
-        <tr class="human"><td>👨‍⚕️ Surgeon Estimate (current practice)</td><td>35.3 min <div class="mini-bar mini-bar-red" style="width:43px"></div></td><td>34%</td><td>0.78</td><td style="color:var(--red)">−18.52 min ✗</td><td style="color:var(--red)">Yes (p&lt;0.001)</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="takeaway">
-    <div class="takeaway-title"><i class="fas fa-lightbulb"></i> What this means in practice</div>
-    <div class="takeaway-grid">
-      <div class="tcard"><div class="tcard-icon">🏥</div><div><h4>For Hospital Administrators</h4><p>More accurate OR scheduling means fewer overruns, less overtime pay, and more procedures completed per day — directly improving throughput and revenue per OR.</p></div></div>
-      <div class="tcard"><div class="tcard-icon">👨‍⚕️</div><div><h4>For Surgical Teams</h4><p>A schedule that reflects reality — not wishful thinking. Less rushed finishes, fewer late-night cases, and better preparation time between procedures.</p></div></div>
-      <div class="tcard"><div class="tcard-icon">🧑‍🤝‍🧑</div><div><h4>For Patients</h4><p>Fewer cancellations of same-day surgeries due to time overruns. Less waiting. When your procedure is scheduled, it happens — on time.</p></div></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══ PAGE-SPECIFIC JS ONLY ═══ -->
+  <!-- ④ RESULTS -->
+  <div class="divider"><hr></div>
+  <section class="wrap fade-up" id="results">
+    <span class="sec-label sl-green">④ Results</span>
+    <h2 class="sec-title">The AI eliminates scheduling bias — outperforming surgeons on every metric.</h2>
+    <div class="results-hero">
+      <div class="rh-card rh-left">
+        <div class="rh-icon">🤖</div>
+        <div class="rh-label">AI Model — Neural Network</div>
+        <div class="rh-big">−0.37 min</div>
+        <div class="rh-desc">Average prediction error — essentially <strong>zero bias</strong>. The model makes mistakes in both directions equally, with no systematic drift. Statistically unbiased (p = 0.34).</div>
+      </div>
+      <div class="rh-card rh-right">
+        <div class="rh-icon">👨‍⚕️</div>
+        <div class="rh-label">Surgeon Estimate — Current Practice</div>
+        <div class="rh-big">−18.52 min</div>
+        <div class="rh-desc">Average prediction error — surgeons <strong>consistently underestimate</strong> how long cases take, causing schedules to run over every single day. Statistically significant (p &lt; 0.001).</div>
+      </div>
+    </div>
+    <div class="results-row">
+      <div class="r-metric"><div class="rm-val">31.8 min</div><div class="rm-label"><strong>Average Error (MAE)</strong><br><span style="color:var(--red);font-size:.7rem">vs 35.3 min for surgeons</span><br><span style="color:var(--muted);font-size:.7rem">= 10% more accurate</span></div></div>
+      <div class="r-metric"><div class="rm-val">26%</div><div class="rm-label"><strong>% Error (MAPE)</strong><br><span style="color:var(--red);font-size:.7rem">vs 34% for surgeons</span><br><span style="color:var(--muted);font-size:.7rem">= 8 percentage points better</span></div></div>
+      <div class="r-metric"><div class="rm-val">R² 0.78</div><div class="rm-label"><strong>Variance Explained</strong><br><span style="color:var(--muted);font-size:.7rem">78% of what drives surgery length is captured by the model</span></div></div>
+      <div class="r-metric"><div class="rm-val">p = 0.34</div><div class="rm-label"><strong>Bias Test</strong><br><span style="color:var(--green);font-size:.7rem">Only model with no significant bias</span><br><span style="color:var(--muted);font-size:.7rem">(all others p &lt; 0.05)</span></div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="cv-card">
+        <h3>How does each model compare?</h3>
+        <p class="cv-sub">Average prediction error in minutes — lower bars are better. The red dashed line shows how surgeons perform today.</p>
+        <div class="chart-wrap"><canvas id="chartMAE"></canvas></div>
+      </div>
+      <div class="cv-card">
+        <h3>Which models have a scheduling bias?</h3>
+        <p class="cv-sub">A bar extending left means the model consistently underestimates. Zero is perfect. Only the Neural Network achieves near-zero systematic error.</p>
+        <div class="bias-visual" id="biasVis"></div>
+        <div class="bias-footer">← Consistently underestimates &nbsp;|&nbsp; Zero = No bias &nbsp;|&nbsp; Overestimates →</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="model-table">
+        <thead><tr><th>Model</th><th>Avg. Error ↓</th><th>% Error ↓</th><th>Fit (R²) ↑</th><th>Scheduling Bias</th><th>Systematically Biased?</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>🤖 Neural Network (ANN) <span class="badge-best">BEST</span></td><td>31.8 min <div class="mini-bar" style="width:55px"></div></td><td>26%</td><td>0.78</td><td style="color:var(--green)">−0.37 min ✓</td><td style="color:var(--green)">No (p=0.34)</td></tr>
+          <tr><td>XGBoost</td><td>32.5 min <div class="mini-bar" style="width:52px"></div></td><td>27%</td><td>0.78</td><td style="color:var(--red)">−2.63 min</td><td style="color:var(--red)">Yes</td></tr>
+          <tr><td>Gradient Boosting (GBM)</td><td>32.4 min <div class="mini-bar" style="width:52px"></div></td><td>27%</td><td>0.78</td><td style="color:var(--red)">−2.67 min</td><td style="color:var(--red)">Yes</td></tr>
+          <tr><td>Random Forest</td><td>36.8 min <div class="mini-bar" style="width:38px"></div></td><td>26%</td><td>0.77</td><td style="color:var(--red)">−2.69 min</td><td style="color:var(--red)">Yes</td></tr>
+          <tr><td>Linear / Ridge / Lasso</td><td>36.9 min <div class="mini-bar" style="width:37px"></div></td><td>31%</td><td>0.72</td><td style="color:var(--red)">−1.7 to −2.1 min</td><td style="color:var(--red)">Yes</td></tr>
+          <tr class="human"><td>👨‍⚕️ Surgeon Estimate (current practice)</td><td>35.3 min <div class="mini-bar mini-bar-red" style="width:43px"></div></td><td>34%</td><td>0.78</td><td style="color:var(--red)">−18.52 min ✗</td><td style="color:var(--red)">Yes (p&lt;0.001)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-title"><i class="fas fa-lightbulb"></i> What this means in practice</div>
+      <div class="takeaway-grid">
+        <div class="tcard"><div class="tcard-icon">🏥</div><div><h4>For Hospital Administrators</h4><p>More accurate OR scheduling means fewer overruns, less overtime pay, and more procedures completed per day — directly improving throughput and revenue per OR.</p></div></div>
+        <div class="tcard"><div class="tcard-icon">👨‍⚕️</div><div><h4>For Surgical Teams</h4><p>A schedule that reflects reality — not wishful thinking. Less rushed finishes, fewer late-night cases, and better preparation time between procedures.</p></div></div>
+        <div class="tcard"><div class="tcard-icon">🧑‍🤝‍🧑</div><div><h4>For Patients</h4><p>Fewer cancellations of same-day surgeries due to time overruns. Less waiting. When your procedure is scheduled, it happens — on time.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /content-col -->
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+
+  <div class="sidebar-card fade-up">
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-bolt"></i> Quick read</span>
+    </div>
+    <p class="tldr-text">Surgeons systematically underestimate OR duration by <strong>18+ minutes</strong>. Trained on <strong>17,246 real procedures</strong> across 3 hospitals, a neural network cuts that error to <strong>−0.37 min</strong> — statistically indistinguishable from zero bias (p = 0.34). Every other model tested, including XGBoost, remained significantly biased.</p>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Project Info</h3>
+    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">✅ Published</span></div>
+    <div class="info-row"><span class="info-key">Journal</span><span class="info-val">Surgical Endoscopy</span></div>
+    <div class="info-row"><span class="info-key">DOI</span><span class="info-val">10.1007/s00464-025-11885-0</span></div>
+    <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">17,246 procedures</span></div>
+    <div class="info-row"><span class="info-key">Hospitals</span><span class="info-val">3 tertiary · London, Canada</span></div>
+    <div class="info-row"><span class="info-key">Best Model</span><span class="info-val">Neural Network (ANN)</span></div>
+    <div class="info-row"><span class="info-key">Best MAE</span><span class="info-val">31.8 min</span></div>
+    <div class="info-row"><span class="info-key">Bias (ANN)</span><span class="info-val" style="color:var(--green)">−0.37 min (p=0.34)</span></div>
+    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">Neural Network</span>
+      <span class="tech-pill">XGBoost</span>
+      <span class="tech-pill">Random Forest</span>
+      <span class="tech-pill">GBM</span>
+      <span class="tech-pill">scikit-learn</span>
+      <span class="tech-pill">Bayesian Opt.</span>
+      <span class="tech-pill">10-fold CV</span>
+      <span class="tech-pill">TRIPOD-AI</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Citation</h3>
+    <div class="citation-box"><strong>Kwong J, Noorchenarboo M</strong> et al. (2025). Machine learning for predicting operative duration in elective general surgery. <em>Surgical Endoscopy</em>. doi: 10.1007/s00464-025-11885-0</div>
+  </div>
+
+  <div class="sidebar-card fade-up">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="/projects/Projects-Files/002-nlp-benchmark.html" class="sidebar-link"><i class="fas fa-link"></i> Clinical Text Encoder Benchmark</a>
+      <a href="/projects/Projects-Files/003-energy-anomaly-xai.html" class="sidebar-link"><i class="fas fa-link"></i> Energy Anomaly XAI</a>
+      <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+      <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+    </div>
+  </div>
+
+</div><!-- /sidebar -->
+</div><!-- /main-layout -->
+
 <script>
 const html = document.documentElement;
 
@@ -440,7 +545,7 @@ function buildMAE() {
 
 /* ── BIAS VISUAL ── */
 const biasData = [
-  {n:'Neural Network',v:-0.4, c:'var(--green)'},{n:'XGBoost',v:-2.6,c:'var(--accent)'},
+  {n:'Neural Network',v:-0.4,c:'var(--green)'},{n:'XGBoost',v:-2.6,c:'var(--accent)'},
   {n:'GBM',v:-2.7,c:'var(--accent)'},{n:'Random Forest',v:-2.7,c:'var(--teal)'},
   {n:'Linear Reg.',v:-1.7,c:'var(--muted)'},{n:'Surgeon Est.',v:-18.5,c:'var(--red)'},
 ];
@@ -453,15 +558,10 @@ function buildBias() {
   });
 }
 
-/* ── REBUILD on theme change (called by shared.js) ── */
-function rebuildCharts() {
-  buildMAE();
-  buildBias();
-}
+function rebuildCharts() { buildMAE(); buildBias(); }
 
 buildMAE();
 buildBias();
 </script>
-
 </body>
 </html>
