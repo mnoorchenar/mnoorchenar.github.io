@@ -34,7 +34,7 @@
 html{scroll-behavior:smooth}
 body{background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;transition:background .35s,color .35s}
 a{text-decoration:none;color:inherit}
-canvas{display:block}
+canvas{display:block;width:100%!important}
 
 /* ─── PAGE VARS ─── */
 :root,[data-theme="dark"]{
@@ -967,13 +967,12 @@ function rebuildCharts(){
 }
 
 /* ── INITIAL CHART BUILD ── */
-document.addEventListener('DOMContentLoaded', function(){
-  buildDeclineChart();
-  buildAgeChart();
-  buildPowerChart();
-  buildManhattanChart();
-  buildLollipopChart();
-});
+/* Script is at bottom of body — DOM is already ready, call directly */
+buildDeclineChart();
+buildAgeChart();
+buildPowerChart();
+buildManhattanChart();
+buildLollipopChart();
 </script>
 </body>
 </html>
