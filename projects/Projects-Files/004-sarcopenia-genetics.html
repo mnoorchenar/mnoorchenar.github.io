@@ -345,6 +345,23 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   .cf-step:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-8px;left:50%;transform:translateX(-50%)}
   .nav-inline{padding:0 16px}
 }
+/* PROJECT NAVIGATOR */
+.proj-nav{background:var(--section-alt);border-bottom:1px solid var(--glass-border);transition:background .35s;}
+.proj-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.proj-nav-btn{display:flex;align-items:center;gap:12px;color:var(--muted);transition:.2s;border-radius:8px;padding:8px 14px;text-decoration:none;}
+.proj-nav-btn:hover{color:var(--text);background:var(--glass);}
+.proj-nav-btn:hover i{color:var(--accent);}
+.proj-nav-btn i{color:var(--violet);font-size:.85rem;transition:.2s;}
+.proj-nav-text{display:flex;flex-direction:column;gap:2px;}
+.proj-nav-hint{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);line-height:1;}
+.proj-nav-name{font-size:.83rem;font-weight:700;color:var(--text);line-height:1.2;}
+.proj-nav-next .proj-nav-text{text-align:right;}
+.proj-nav-center{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.proj-nav-dots{display:flex;gap:6px;align-items:center;}
+.proj-nav-dot{width:7px;height:7px;border-radius:50%;background:var(--glass-border);transition:.2s;}
+.proj-nav-dot.active{background:var(--violet);box-shadow:0 0 8px rgba(167,139,250,.5);}
+.proj-nav-count{font-size:.69rem;color:var(--muted);font-weight:600;letter-spacing:.05em;}
+@media(max-width:600px){.proj-nav-name{display:none;}.proj-nav-hint{display:none;}}
 </style>
 </head>
 <body>
@@ -400,6 +417,36 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     <div class="stat-item"><div class="stat-val">0.046</div><div class="stat-label">Gene-Level p-value (IL10)</div></div>
   </div>
 </div>
+
+<!-- PROJECT NAVIGATOR -->
+<nav class="proj-nav">
+  <div class="proj-nav-inner">
+    <a href="/projects/Projects-Files/003-energy-anomaly-xai.html" class="proj-nav-btn proj-nav-prev">
+      <i class="fas fa-arrow-left"></i>
+      <div class="proj-nav-text">
+        <span class="proj-nav-hint">Previous</span>
+        <span class="proj-nav-name">Energy Anomaly XAI</span>
+      </div>
+    </a>
+    <div class="proj-nav-center">
+      <div class="proj-nav-dots">
+        <div class="proj-nav-dot"></div>
+        <div class="proj-nav-dot"></div>
+        <div class="proj-nav-dot"></div>
+        <div class="proj-nav-dot active"></div>
+        <div class="proj-nav-dot"></div>
+      </div>
+      <span class="proj-nav-count">Project 4 of 5</span>
+    </div>
+    <a href="/projects/Projects-Files/005-ascvd-metabolomics.html" class="proj-nav-btn proj-nav-next">
+      <div class="proj-nav-text">
+        <span class="proj-nav-hint">Next</span>
+        <span class="proj-nav-name">ASCVD Metabolomics</span>
+      </div>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+</nav>
 
 <!-- MAIN LAYOUT -->
 <div class="main-layout">
