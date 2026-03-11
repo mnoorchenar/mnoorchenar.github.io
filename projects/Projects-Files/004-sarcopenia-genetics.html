@@ -169,7 +169,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .hb-f1{background:linear-gradient(90deg,var(--violet),var(--teal))}
 .hb-f2{background:linear-gradient(90deg,var(--teal),var(--green))}
 .hb-f3{background:linear-gradient(90deg,var(--rose),var(--violet))}
-.muscle-decline-wrap{position:relative;height:220px;margin-bottom:4px}
+.muscle-decline-wrap{position:relative;height:220px;margin-bottom:4px;display:flex;align-items:center;justify-content:center;}
 .prevalence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
 .prev-card{border-radius:12px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
 .prev-card:hover{transform:translateY(-4px)}
@@ -200,8 +200,8 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .cmini-val{font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:4px;color:var(--violet)}
 .cmini-lbl{font-size:.72rem;color:var(--muted);line-height:1.35}
 .cohort-right{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px}
-.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
-.chart-canvas-h{position:relative;height:220px}
+.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px;}
+.chart-canvas-h{position:relative;height:220px;display:flex;align-items:center;justify-content:center;}
 .data-note{background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(6,182,212,.04));border:1px solid rgba(167,139,250,.18);border-radius:10px;padding:16px 20px;font-size:.83rem;color:var(--muted);line-height:1.65;display:flex;gap:12px;align-items:flex-start;margin-top:16px}
 .data-note i{color:var(--violet);margin-top:2px;flex-shrink:0}
 .data-note strong{color:var(--text)}
@@ -226,8 +226,8 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .wj-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700}
 .wj-old .wj-badge{background:rgba(239,68,68,.15);color:var(--red)}
 .wj-new .wj-badge{background:rgba(34,197,94,.15);color:var(--green)}
-.power-demo{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:22px}
-.power-demo-h{height:200px;position:relative}
+.power-demo{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:22px;}
+.power-demo-h{height:200px;position:relative;display:flex;align-items:center;justify-content:center;}
 .pipe-flow{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
 .pipe-flow::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--violet),var(--teal));z-index:0}
 .pf-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px;position:relative;z-index:1}
@@ -259,10 +259,10 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .rh-lbl{font-size:.78rem;color:var(--muted);line-height:1.4}
 .rh-sub{font-size:.7rem;font-weight:600;margin-top:4px}
 .rh-1 .rh-sub{color:var(--violet)}.rh-2 .rh-sub{color:var(--green)}.rh-3 .rh-sub{color:var(--teal)}
-.manhattan-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
-.manhattan-h{position:relative;height:240px}
-.lollipop-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px}
-.lollipop-h{position:relative;height:200px}
+.manhattan-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px;}
+.manhattan-h{position:relative;height:240px;display:flex;align-items:center;justify-content:center;}
+.lollipop-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px;}
+.lollipop-h{position:relative;height:200px;display:flex;align-items:center;justify-content:center;}
 .snp-table-wrap{overflow-x:auto;margin-top:8px}
 .snp-table{width:100%;border-collapse:collapse;font-size:.78rem}
 .snp-table th{text-align:left;padding:8px 12px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--glass-border)}
@@ -294,8 +294,13 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .take-desc{font-size:.79rem;color:var(--muted);line-height:1.6}
 
 /* ─── SIDEBAR ─── */
-.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
+.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px;}
 .sidebar-card h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.ataglance-header h3{margin-bottom:0;}
+.ataglance-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(132,204,22,.12);border:1px solid rgba(132,204,22,.28);border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700;color:var(--lime);}
+@keyframes badge-shine{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
+[data-theme="light"] .ataglance-badge{background:rgba(101,163,13,.09);border-color:rgba(101,163,13,.3);}
 .tldr-text{font-size:.86rem;color:var(--muted);line-height:1.72}
 .tldr-text strong{color:var(--text)}
 .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
@@ -303,14 +308,14 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .info-key{color:var(--muted);flex-shrink:0}
 .info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
 .tech-pills{display:flex;flex-wrap:wrap;gap:6px}
-.tech-pill{background:rgba(167,139,250,.09);border:1px solid rgba(167,139,250,.22);border-radius:6px;padding:3px 10px;font-size:.74rem;color:var(--violet);font-weight:600}
-[data-theme="light"] .tech-pill{background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.25)}
-.citation-box{background:rgba(167,139,250,.04);border-left:3px solid rgba(167,139,250,.45);border-radius:0 8px 8px 0;padding:12px;font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.tech-pill{background:rgba(132,204,22,.09);border:1px solid rgba(132,204,22,.22);border-radius:6px;padding:3px 10px;font-size:.74rem;color:var(--lime);font-weight:600;}
+[data-theme="light"] .tech-pill{background:rgba(101,163,13,.07);border-color:rgba(101,163,13,.25);}
+.citation-box{background:rgba(132,204,22,.04);border-left:3px solid rgba(132,204,22,.45);border-radius:0 8px 8px 0;padding:12px;font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:4px;}
 .citation-box strong{color:var(--text)}
 .sidebar-links{display:flex;flex-direction:column;gap:8px}
 .sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s}
 .sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text)}
-.sidebar-link i{color:var(--violet);width:16px;text-align:center}
+.sidebar-link i{color:var(--lime);width:16px;text-align:center;}
 
 /* ─── FOOTER ─── */
 .sh-footer{background:var(--section-alt);border-top:1px solid var(--glass-border);padding:40px 24px;text-align:center;transition:background .35s}
@@ -614,7 +619,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 
 <!-- ═══ SIDEBAR ═══ -->
 <div class="sidebar">
-  <div class="sidebar-card fade-up">
+  <div class="sidebar-card">
     <div class="ataglance-header">
       <h3>At a Glance</h3>
       <span class="ataglance-badge"><i class="fas fa-dna"></i> Quick read</span>
@@ -625,7 +630,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       The entire IL10 gene confirmed as a sarcopenia risk gene (<strong>p = 0.046</strong>).
     </p>
   </div>
-  <div class="sidebar-card fade-up">
+  <div class="sidebar-card">
     <h3>Quick Facts</h3>
     <div class="info-row"><span class="info-key">Journal</span><span class="info-val">J. Biostatistics &amp; Epidemiol.</span></div>
     <div class="info-row"><span class="info-key">Volume</span><span class="info-val">8(2): 195–207, 2022</span></div>
@@ -636,7 +641,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     <div class="info-row"><span class="info-key">Key Result</span><span class="info-val">GATES p = 0.046</span></div>
     <div class="info-row"><span class="info-key">Affiliation</span><span class="info-val">Tehran Univ. of Medical Sciences</span></div>
   </div>
-  <div class="sidebar-card fade-up">
+  <div class="sidebar-card">
     <h3>Tech &amp; Methods</h3>
     <div class="tech-pills">
       <span class="tech-pill">MultiPhen</span><span class="tech-pill">GATES</span>
@@ -647,11 +652,11 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       <span class="tech-pill">R (GATES pkg)</span><span class="tech-pill">Candidate-Gene</span>
     </div>
   </div>
-  <div class="sidebar-card fade-up">
+  <div class="sidebar-card">
     <h3>Citation</h3>
     <div class="citation-box"><strong>Noorchenarboo, M.</strong>, Akbarzadeh, M., Fahimfar, N., et al. (2022). Multivariate and Gene-Based Association Testing of Sarcopenia: Bushehr Elderly Health Program (BEH). <em>Journal of Biostatistics and Epidemiology</em>, 8(2), 195–207.</div>
   </div>
-  <div class="sidebar-card fade-up">
+  <div class="sidebar-card">
     <h3>Related Work</h3>
     <div class="sidebar-links">
       <a href="/projects/Projects-Files/001-surgical-duration.html" class="sidebar-link"><i class="fas fa-link"></i> OR Duration Predictor</a>
@@ -685,7 +690,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   <div class="sh-footer-name">Mohammad Noorchenarboo</div>
   <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
   <div class="sh-footer-icons">
-    <a href="mailto:mnoorchenar@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="/cdn-cgi/l/email-protection#d5b8bbbabaa7b6bdb0bbb4a795b2b8b4bcb9fbb6bab8" title="Email"><i class="fas fa-envelope"></i></a>
     <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
     <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
     <a href="/index.html" title="Portfolio"><i class="fas fa-globe"></i></a>
@@ -699,7 +704,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 </footer>
 
 <!-- ═══ JS ═══ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const html = document.documentElement;
 function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
 function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
@@ -961,7 +966,14 @@ function rebuildCharts(){
   buildLollipopChart();
 }
 
-document.addEventListener('DOMContentLoaded', rebuildCharts);
+/* ── INITIAL CHART BUILD ── */
+document.addEventListener('DOMContentLoaded', function(){
+  buildDeclineChart();
+  buildAgeChart();
+  buildPowerChart();
+  buildManhattanChart();
+  buildLollipopChart();
+});
 </script>
 </body>
 </html>
