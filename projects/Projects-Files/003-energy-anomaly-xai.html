@@ -3,22 +3,21 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Energy Anomaly XAI · Mohammad Noorchenarboo</title>
+<!-- ▶ THEME FLICKER FIX: apply saved theme before first paint -->
 <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/projects/shared.css">
+<script src="/projects/shared.js" defer></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.grad-text{background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ─── PAGE VARS ─── */
 :root,[data-theme="dark"]{
-  --body-bg:#070d1f;--section-alt:#0b1224;
-  --text:#e2e8f0;--muted:#8892a4;
-  --accent:#4f8ef7;--accent2:#7c3aed;--teal:#06b6d4;--green:#22c55e;--gold:#f59e0b;--red:#ef4444;
-  --glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
-  --card-hover-bg:rgba(255,255,255,.07);--card-hover-border:rgba(79,142,247,.3);
-  --shadow-card:0 8px 32px rgba(0,0,0,.4);--radius:14px;
   --lime:#84cc16;--orange:#f97316;
   --hero-grad:radial-gradient(ellipse 75% 55% at 50% -8%,rgba(132,204,22,.14),transparent 65%);
-  --grid-col:rgba(132,204,22,.03);
+  --grid-col:rgba(132,204,22,.03);--chart-grid:rgba(255,255,255,.05);--chart-tick:#8892a4;
   --prob-red-bg:rgba(239,68,68,.07);--prob-red-bdr:rgba(239,68,68,.22);
   --prob-gold-bg:rgba(245,158,11,.07);--prob-gold-bdr:rgba(245,158,11,.22);
   --prob-blue-bg:rgba(79,142,247,.07);--prob-blue-bdr:rgba(79,142,247,.22);
@@ -27,15 +26,9 @@
   --insight-bg:linear-gradient(135deg,rgba(132,204,22,.07),rgba(6,182,212,.06));--insight-bdr:rgba(132,204,22,.22);
 }
 [data-theme="light"]{
-  --body-bg:#f8faff;--section-alt:#eef2fb;
-  --text:#0f172a;--muted:#4b5675;
-  --accent:#2563eb;--accent2:#6d28d9;--teal:#0891b2;--green:#16a34a;--gold:#d97706;--red:#dc2626;
-  --glass:rgba(255,255,255,.7);--glass-border:rgba(37,99,235,.12);
-  --card-hover-bg:rgba(255,255,255,.9);--card-hover-border:rgba(37,99,235,.3);
-  --shadow-card:0 8px 32px rgba(37,99,235,.1);
   --lime:#65a30d;--orange:#ea580c;
   --hero-grad:radial-gradient(ellipse 75% 55% at 50% -8%,rgba(101,163,13,.12),transparent 65%);
-  --grid-col:rgba(101,163,13,.045);
+  --grid-col:rgba(101,163,13,.045);--chart-grid:rgba(0,0,0,.06);--chart-tick:#4b5675;
   --prob-red-bg:rgba(220,38,38,.05);--prob-red-bdr:rgba(220,38,38,.18);
   --prob-gold-bg:rgba(217,119,6,.05);--prob-gold-bdr:rgba(217,119,6,.2);
   --prob-blue-bg:rgba(37,99,235,.05);--prob-blue-bdr:rgba(37,99,235,.2);
@@ -43,56 +36,20 @@
   --take-bg:rgba(101,163,13,.06);--take-bdr:rgba(101,163,13,.25);
   --insight-bg:linear-gradient(135deg,rgba(101,163,13,.06),rgba(8,145,178,.05));--insight-bdr:rgba(101,163,13,.28);
 }
-html{scroll-behavior:smooth}
-body{background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;transition:background .35s,color .35s}
-a{text-decoration:none;color:inherit}
-canvas{display:block;width:100%!important}
 
-/* NAV */
-.sh-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(7,13,31,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);transition:background .35s}
-[data-theme="light"] .sh-nav{background:rgba(248,250,255,.9)}
-.sh-nav-logo{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sh-nav-links{display:flex;gap:24px;font-size:.84rem}
-.sh-nav-links a{color:var(--muted);transition:.2s}
-.sh-nav-links a:hover{color:var(--accent)}
-.sh-nav-right{display:flex;align-items:center;gap:14px}
-.sh-nav-social{display:flex;gap:10px}
-.sh-nav-social a{color:var(--muted);font-size:.9rem;transition:.2s}
-.sh-nav-social a:hover{color:var(--accent)}
-.theme-toggle{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);transition:.2s;font-family:inherit}
-.theme-toggle:hover{border-color:var(--card-hover-border);color:var(--text)}
-[data-theme="dark"] .toggle-sun,[data-theme="light"] .toggle-moon{display:none}
-@media(max-width:768px){.sh-nav{padding:0 16px}.sh-nav-links{display:none}}
 
-/* PROJECT NAVIGATOR */
-.proj-nav{background:var(--section-alt);border-bottom:1px solid var(--glass-border);transition:background .35s;}
-.proj-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;}
-.proj-nav-btn{display:flex;align-items:center;gap:12px;color:var(--muted);transition:.2s;border-radius:8px;padding:8px 14px;text-decoration:none;}
-.proj-nav-btn:hover{color:var(--text);background:var(--glass);}
-.proj-nav-btn:hover i{color:var(--accent);}
-.proj-nav-btn i{color:var(--lime);font-size:.85rem;transition:.2s;}
-.proj-nav-text{display:flex;flex-direction:column;gap:2px;}
-.proj-nav-hint{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);line-height:1;}
-.proj-nav-name{font-size:.83rem;font-weight:700;color:var(--text);line-height:1.2;}
-.proj-nav-next .proj-nav-text{text-align:right;}
-.proj-nav-center{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.proj-nav-dots{display:flex;gap:6px;align-items:center;}
-.proj-nav-dot{width:7px;height:7px;border-radius:50%;background:var(--glass-border);transition:.2s;}
-.proj-nav-dot.active{background:var(--lime);box-shadow:0 0 8px rgba(132,204,22,.5);}
-.proj-nav-count{font-size:.69rem;color:var(--muted);font-weight:600;letter-spacing:.05em;}
-@media(max-width:600px){.proj-nav-name{display:none;}.proj-nav-hint{display:none;}}
-
-.grad-text{background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* ─── HERO ─── */
 .hero{padding:124px 24px 0;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s;}
 .hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:var(--hero-grad);}
-.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid-col) 1px,transparent 1px),linear-gradient(90deg,var(--grid-col) 1px,transparent 1px);background-size:48px 48px;}
-.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid-col)1px,transparent 1px),linear-gradient(90deg,var(--grid-col)1px,transparent 1px);background-size:48px 48px;}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;padding-bottom:0;}
 .breadcrumb{font-size:.78rem;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .breadcrumb a{color:var(--muted);transition:.2s;}.breadcrumb a:hover{color:var(--accent);}.breadcrumb span{opacity:.4;}
 .tag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:.74rem;font-weight:700;letter-spacing:.03em;}
 .pill-lime{background:rgba(132,204,22,.12);border:1px solid rgba(132,204,22,.28);color:var(--lime);}
 [data-theme="light"] .pill-lime{background:rgba(101,163,13,.09);border-color:rgba(101,163,13,.3);}
+.pill-gold{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--gold);}
 .pill-green{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);}
 [data-theme="light"] .pill-green{color:#15803d;background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.25);}
 .pub-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pub-pulse 2s infinite}
@@ -102,7 +59,9 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .hero-sub strong{color:var(--text);}
 .hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:26px;}
 .hero-meta span{display:flex;align-items:center;gap:6px;}.hero-meta i{color:var(--lime);}.hero-meta strong{color:var(--text);}
-.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;padding-bottom:0;}
+
+/* ─── BUTTONS ─── */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit;}
 .btn-pub{background:rgba(34,197,94,.14);color:var(--green);border-color:rgba(34,197,94,.3);}
 .btn-pub:hover{background:rgba(34,197,94,.24);transform:translateY(-2px);}
@@ -112,19 +71,20 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border);}
 .btn-back:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px);}
 
-/* STATS BAR */
+/* ─── STATS BAR ─── */
 .stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:background .35s;margin-top:40px;}
 .stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--glass-border);}
 .stat-item{background:var(--section-alt);padding:22px 16px;text-align:center;transition:background .35s;}
 .stat-val{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px;}
 .stat-label{font-size:.74rem;color:var(--muted);line-height:1.4;}
 
-/* LAYOUT */
+/* ─── LAYOUT ─── */
 .main-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start;}
 .content-col{display:flex;flex-direction:column;gap:28px;}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px;}
 .sidebar{position:sticky;top:136px;display:flex;flex-direction:column;gap:20px;}
 
-/* CARDS */
+/* ─── CARDS ─── */
 .card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s;}
 .card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px);}
 .card-title{font-size:1rem;font-weight:800;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px;}
@@ -132,7 +92,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .narrative{font-size:.92rem;color:var(--muted);margin-bottom:16px;line-height:1.72;}
 .narrative strong{color:var(--text);}
 
-/* PROBLEM CARDS */
+/* ─── PROBLEM CARDS ─── */
 .prob-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
 .prob-card{border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
 .prob-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card);}
@@ -148,7 +108,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .big-num{font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:6px;}
 .n-red{color:var(--red);}.n-gold{color:var(--gold);}.n-blue{color:var(--accent);}
 
-/* TIME SERIES */
+/* ─── TIME SERIES CHART ─── */
 .ts-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s;}
 .ts-card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);}
 .ts-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
@@ -157,6 +117,8 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .ts-legend{display:flex;gap:14px;flex-wrap:wrap;}
 .ts-leg-item{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted);}
 .ts-leg-dot{width:10px;height:10px;border-radius:50%;}
+
+/* anomaly annotation cards */
 .anomaly-labels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;}
 .anom-card{border-radius:10px;padding:13px 14px;border:1px solid;transition:.2s;}
 .anom-card:hover{transform:translateY(-2px);}
@@ -164,6 +126,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .anom-card .anom-type{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
 .anom-card .anom-desc{font-size:.75rem;color:var(--muted);line-height:1.5;}
 .anom-card .anom-meta{font-size:.69rem;margin-top:5px;font-weight:700;}
+
 .ac-red{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.25);}
 .ac-red .anom-type,.ac-red .anom-meta{color:#ef4444;}
 .ac-orange{background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.25);}
@@ -172,9 +135,10 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .ac-yellow .anom-type,.ac-yellow .anom-meta{color:#eab308;}
 .ac-purple{background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.25);}
 .ac-purple .anom-type,.ac-purple .anom-meta{color:#a855f7;}
+
 .ts-chart-wrap{position:relative;height:260px;margin-top:16px;}
 
-/* BUILDING GRID */
+/* ─── BUILDING GRID ─── */
 .building-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
 .bld-card{background:var(--bld-bg);border:1px solid var(--bld-bdr);border-radius:12px;padding:16px 10px;text-align:center;transition:.25s;}
 .bld-card:hover{background:var(--bld-hover);border-color:rgba(132,204,22,.3);transform:translateY(-3px);}
@@ -185,7 +149,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .data-note i{color:var(--lime);margin-top:2px;flex-shrink:0;}
 .data-note strong{color:var(--text);}
 
-/* PIPELINE */
+/* ─── PIPELINE ─── */
 .pipe-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
 .pipe-steps::before{content:'';position:absolute;top:50px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--lime),var(--teal));z-index:0;}
 .pipe-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 10px;position:relative;z-index:1;}
@@ -204,7 +168,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .pd-card li{font-size:.74rem;color:var(--muted);padding-left:14px;position:relative;line-height:1.45;}
 .pd-card li::before{content:'›';position:absolute;left:0;color:var(--lime);}
 
-/* RESULTS */
+/* ─── RESULTS ─── */
 .results-top{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
 .rcard{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:20px 16px;text-align:center;transition:.25s;}
 .rcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-card);}
@@ -218,14 +182,14 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .m-chip{background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;padding:8px 6px;text-align:center;font-size:.72rem;font-weight:700;color:var(--muted);transition:.2s;}
 .m-chip:hover{color:var(--text);border-color:var(--card-hover-border);}
 
-/* INSIGHT */
+/* ─── INSIGHT ─── */
 .insight-banner{background:var(--insight-bg);border:1px solid var(--insight-bdr);border-radius:var(--radius);padding:20px 22px;display:flex;gap:14px;align-items:flex-start;margin-top:8px;}
 .insight-icon{font-size:1.8rem;flex-shrink:0;}
 .insight-body h4{font-size:.93rem;font-weight:800;color:var(--text);margin-bottom:5px;}
 .insight-body p{font-size:.83rem;color:var(--muted);line-height:1.65;}
 .insight-body strong{color:var(--lime);}
 
-/* TAKEAWAYS */
+/* ─── TAKEAWAYS ─── */
 .takeaway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .take-card{background:var(--take-bg);border:1px solid var(--take-bdr);border-radius:12px;padding:18px 20px;transition:.25s;}
 .take-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card);}
@@ -233,7 +197,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .take-title{font-size:.88rem;font-weight:800;color:var(--text);margin-bottom:5px;}
 .take-desc{font-size:.79rem;color:var(--muted);line-height:1.6;}
 
-/* SEC LABELS */
+/* ─── SEC LABELS ─── */
 .sec-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 14px;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;}
 .sec-label::before{content:'';position:absolute;left:-100%;top:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:pg-shimmer 4s ease-in-out infinite;}
 @keyframes pg-shimmer{0%,100%{left:-100%}50%{left:100%}}
@@ -243,11 +207,11 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .sl-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.22);}
 .sl-gold{background:rgba(245,158,11,.1);color:var(--gold);border:1px solid rgba(245,158,11,.22);}
 [data-theme="light"] .sl-lime{background:rgba(101,163,13,.07);color:#4d7c0f;border-color:rgba(101,163,13,.25);}
-[data-theme="light"] .sl-teal{background:rgba(8,145,178,.07);color:#0e7490;}
+[data-theme="light"] .sl-teal{background:rgba(8,145,178,.07);color:#0e7490;border-color:rgba(8,145,178,.22);}
 [data-theme="light"] .sl-green{background:rgba(22,163,74,.07);color:#15803d;}
 [data-theme="light"] .sl-gold{background:rgba(217,119,6,.07);color:#92400e;}
 
-/* SIDEBAR */
+/* ─── SIDEBAR ─── */
 .sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px;}
 .sidebar-card h3{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px;}
 .ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
@@ -271,16 +235,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 .sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text);}
 .sidebar-link i{color:var(--lime);width:16px;text-align:center;}
 
-/* FOOTER */
-.sh-footer{background:var(--section-alt);border-top:1px solid var(--glass-border);padding:40px 24px;text-align:center;transition:background .35s}
-.sh-footer-name{font-size:1.1rem;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sh-footer-role{font-size:.8rem;color:var(--muted);margin-bottom:16px}
-.sh-footer-icons{display:flex;gap:16px;justify-content:center;margin-bottom:16px}
-.sh-footer-icons a{color:var(--muted);font-size:1.1rem;transition:.2s}
-.sh-footer-icons a:hover{color:var(--accent)}
-.sh-footer-copy{font-size:.74rem;color:var(--muted)}
-
-/* RESPONSIVE */
+/* ─── RESPONSIVE ─── */
 @media(max-width:960px){
   .main-layout{grid-template-columns:1fr;}
   .sidebar{position:static;}
@@ -302,37 +257,13 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   .results-top{grid-template-columns:1fr;}
   .anomaly-labels{grid-template-columns:1fr 1fr;}
   .stats-inner{grid-template-columns:repeat(2,1fr);}
-  .nav-inline{padding:0 16px;}
-  .proj-nav-name{display:none;}
-  .proj-nav-hint{display:none;}
+  .sh-nav-links{display:none;}
 }
 </style>
 </head>
-<body>
+<!-- ▶ FIX: was &amp;amp; (double-encoded) — corrected to &amp; -->
+<body data-project-index="2" data-footer-note="Energy &amp; Buildings 2025 · DOI 10.1016/j.enbuild.2024.115177">
 
-<nav class="sh-nav">
-  <a href="/index.html" class="sh-nav-logo">MN</a>
-  <div class="sh-nav-links">
-    <a href="/">Home</a>
-    <a href="/projects">Projects</a>
-    <a href="/certifications">Certifications</a>
-    <a href="/classroom-stories">Classrooms</a>
-    <a href="https://mnoorchenar.github.io/Hands-On-AI/" target="_blank">Hands-On AI</a>
-  </div>
-  <div class="sh-nav-right">
-    <div class="sh-nav-social">
-      <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-      <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-      <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-      <a href="mailto:mnoorchenar@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-    </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="toggle-sun">☀️</span>
-      <span class="toggle-moon">🌙</span>
-      <span id="toggleLabel">Light</span>
-    </button>
-  </div>
-</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -344,10 +275,15 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </div>
     <div class="tag-row">
       <span class="pill pill-lime"><i class="fas fa-bolt"></i> Energy · XAI</span>
-      <span class="pill pill-green"><span class="pub-dot"></span> Published Paper · Energy &amp; Buildings 2025</span>
+      <span class="pill pill-green"><span class="pub-dot"></span>Published Paper· Energy &amp; Buildings 2025</span>
     </div>
     <h1 class="page-title">Why Is This Building<br><span class="grad-text">Wasting Energy?</span></h1>
-    <p class="hero-sub">Buildings account for <strong>one-third of global energy consumption</strong> — and anomalies like broken equipment or inefficiencies go unnoticed for months. While deep learning can <em>detect</em> these problems, it can't <em>explain</em> them. This research gives AI the ability to say <strong>why</strong>, not just <strong>that</strong>, something is wrong — and makes those explanations reliably consistent every single time.</p>
+    <p class="hero-sub">
+      Buildings account for <strong>one-third of global energy consumption</strong> — and anomalies like
+      broken equipment or inefficiencies go unnoticed for months. While deep learning can <em>detect</em>
+      these problems, it can't <em>explain</em> them. This research gives AI the ability to say <strong>why</strong>,
+      not just <strong>that</strong>, something is wrong — and makes those explanations reliably consistent every single time.
+    </p>
     <div class="hero-meta">
       <span><i class="fas fa-newspaper"></i> <strong>Energy &amp; Buildings</strong>, Vol. 328, 2025</span>
       <span><i class="fas fa-link"></i> DOI: 10.1016/j.enbuild.2024.115177</span>
@@ -375,10 +311,6 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   </div>
 </div>
 
-<nav class="proj-nav" id="projNav">
-  <div class="proj-nav-inner" id="projNavInner"></div>
-</nav>
-
 <!-- MAIN LAYOUT -->
 <div class="main-layout">
 <div class="content-col">
@@ -387,7 +319,12 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   <div class="card">
     <div class="sec-label sl-red">① The Problem</div>
     <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Buildings Waste Energy — And Nobody Knows Why</div>
-    <p class="narrative">Imagine a hospital where a freezer runs at the wrong temperature for weeks, or an office where the HVAC silently overconsumes electricity every night. These aren't dramatic failures — they're quiet anomalies that bleed energy costs and cause equipment damage over time. <strong>AI can detect these patterns, but until now, it couldn't explain them in a consistent, trustworthy way.</strong></p>
+    <p class="narrative">
+      Imagine a hospital where a freezer runs at the wrong temperature for weeks, or an office where the HVAC
+      silently overconsumes electricity every night. These aren't dramatic failures — they're quiet anomalies
+      that bleed energy costs and cause equipment damage over time.
+      <strong>AI can detect these patterns, but until now, it couldn't explain them in a consistent, trustworthy way.</strong>
+    </p>
     <div class="prob-grid">
       <div class="prob-card pc-red">
         <div class="big-num n-red">⅓</div>
@@ -407,7 +344,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     </div>
   </div>
 
-  <!-- ② ANOMALY VIZ -->
+  <!-- ② ANOMALY VISUALIZATION -->
   <div class="ts-card" id="anomaly-viz">
     <div class="sec-label sl-red" style="margin-bottom:16px">② What Anomalies Look Like in Real Data</div>
     <div class="ts-header">
@@ -421,7 +358,11 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
         <div class="ts-leg-item"><div class="ts-leg-dot" style="background:rgba(132,204,22,.35);width:24px;border-radius:3px;height:10px"></div>Expected range</div>
       </div>
     </div>
-    <div class="ts-chart-wrap"><canvas id="tsChart"></canvas></div>
+
+    <div class="ts-chart-wrap">
+      <canvas id="tsChart"></canvas>
+    </div>
+
     <div class="anomaly-labels">
       <div class="anom-card ac-red">
         <div class="anom-icon">🌡️</div>
@@ -438,7 +379,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       <div class="anom-card ac-yellow">
         <div class="anom-icon">📉</div>
         <div class="anom-type">Sensor / Meter Dropout</div>
-        <div class="anom-desc">Smart meter reported near-zero readings on Thursday midday — likely a communication fault, not a real drop.</div>
+        <div class="anom-desc">Smart meter reported near-zero readings on Thursday midday — likely a communication fault, not real drop.</div>
         <div class="anom-meta">↓ False low · Thu 11am–2pm</div>
       </div>
       <div class="anom-card ac-purple">
@@ -448,20 +389,31 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
         <div class="anom-meta">↑ Unexplained · Fri 11pm–Sat 4am</div>
       </div>
     </div>
+
     <div class="insight-banner" style="margin-top:18px">
       <div class="insight-icon">🔍</div>
       <div class="insight-body">
         <h4>Why Each Anomaly Needs a Different Explanation</h4>
-        <p>A nighttime HVAC spike is caused by <strong>temperature and hour-of-day</strong>. A Wednesday equipment fault is driven by <strong>device runtime and load history</strong>. A sensor dropout looks similar to both yet has a completely different root cause. This is why generic, random-sample explanations fail — the AI must use <strong>context-matched historical patterns</strong> to explain each anomaly correctly.</p>
+        <p>
+          A nighttime HVAC spike is caused by <strong>temperature and hour-of-day</strong>.
+          A Wednesday equipment fault is driven by <strong>device runtime and load history</strong>.
+          A sensor dropout looks similar to both yet has a completely different root cause.
+          This is why generic, random-sample explanations fail — the AI must use
+          <strong>context-matched historical patterns</strong> to explain each anomaly correctly.
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- ③ DATA -->
+  <!-- ③ THE DATA -->
   <div class="card">
     <div class="sec-label sl-lime">③ The Data</div>
     <div class="card-title"><i class="fas fa-database"></i> Five Real Buildings, Thousands of Hours of Energy Data</div>
-    <p class="narrative">To make results meaningful and generalizable, the study used <strong>five real-world energy consumption datasets</strong> spanning entirely different building types — from a private home to a manufacturing plant. Each building has a unique energy rhythm, making the same anomaly look very different depending on context.</p>
+    <p class="narrative">
+      To make results meaningful and generalizable, the study used <strong>five real-world energy consumption datasets</strong>
+      spanning entirely different building types — from a private home to a manufacturing plant. Each building has
+      a unique energy rhythm, making the same anomaly look very different depending on context.
+    </p>
     <div class="building-grid">
       <div class="bld-card"><div class="bld-icon">🏠</div><div class="bld-name">Residence</div><div class="bld-detail">London, Ontario<br>2002–2004<br>Hourly readings</div></div>
       <div class="bld-card"><div class="bld-icon">🏭</div><div class="bld-name">Manufacturing</div><div class="bld-detail">Industrial facility<br>2016–2017<br>High consumption</div></div>
@@ -479,7 +431,11 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
   <div class="card" id="how-it-works">
     <div class="sec-label sl-teal">④ How It Works</div>
     <div class="card-title"><i class="fas fa-cogs"></i> From Raw Meter Data to Trustworthy Explanations</div>
-    <p class="narrative">Think of this approach like a detective who not only identifies a crime but also explains their reasoning by referencing the most relevant past cases — not random ones. The key innovation is choosing the right <strong>comparison context</strong> for every anomaly before generating an explanation.</p>
+    <p class="narrative">
+      Think of this approach like a detective who not only identifies a crime but also explains their reasoning
+      by referencing the most relevant past cases — not random ones. The key innovation is choosing the right
+      <strong>comparison context</strong> for every anomaly before generating an explanation.
+    </p>
     <div class="pipe-steps">
       <div class="pipe-step"><div class="pipe-circle pp1">⚡</div><h4>Detect</h4><p>Train a deep learning model to predict energy. Flag points where prediction error is unusually large.</p></div>
       <div class="pipe-step"><div class="pipe-circle pp2">🔍</div><h4>Find Context</h4><p>For each anomaly, find the most similar historical windows using weighted cosine similarity — not random samples.</p></div>
@@ -546,13 +502,21 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
 
 <!-- SIDEBAR -->
 <div class="sidebar">
+
   <div class="sidebar-card">
     <div class="ataglance-header">
       <h3>At a Glance</h3>
       <span class="ataglance-badge"><i class="fas fa-bolt"></i> Quick read</span>
     </div>
-    <p class="tldr-text">Buildings waste massive amounts of energy due to undetected anomalies. AI can spot them — but its explanations were unreliable. <strong>This paper fixes that</strong> by choosing smarter reference data before generating explanations, cutting variability by an average of <strong>38%</strong> across five building types, ten models, and five explanation methods.</p>
+    <p class="tldr-text">
+      Buildings waste massive amounts of energy due to undetected anomalies.
+      AI can spot them — but its explanations were unreliable.
+      <strong>This paper fixes that</strong> by choosing smarter reference data before generating explanations,
+      cutting variability by an average of <strong>38%</strong> across five building types,
+      ten models, and five explanation methods.
+    </p>
   </div>
+
   <div class="sidebar-card">
     <h3>Quick Facts</h3>
     <div class="info-row"><span class="info-key">Journal</span><span class="info-val">Energy &amp; Buildings</span></div>
@@ -565,6 +529,7 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
     <div class="info-row"><span class="info-key">Funding</span><span class="info-val">NSERC · London Hydro</span></div>
     <div class="info-row"><span class="info-key">Co-author</span><span class="info-val">K. Grolinger, Western University</span></div>
   </div>
+
   <div class="sidebar-card">
     <h3>Tech &amp; Methods</h3>
     <div class="tech-pills">
@@ -576,10 +541,15 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       <span class="tech-pill">Min-Max Scaling</span><span class="tech-pill">Python</span>
     </div>
   </div>
+
   <div class="sidebar-card">
     <h3>Citation</h3>
-    <div class="citation-box"><strong>Noorchenarboo, M.</strong>, &amp; Grolinger, K. (2025). Explaining deep learning-based anomaly detection in energy consumption data by focusing on contextually relevant data. <em>Energy &amp; Buildings</em>, 328, 115177. doi: 10.1016/j.enbuild.2024.115177</div>
+    <div class="citation-box">
+      <strong>Noorchenarboo, M.</strong>, &amp; Grolinger, K. (2025). Explaining deep learning-based anomaly detection in energy consumption data by focusing on contextually relevant data. <em>Energy &amp; Buildings</em>, 328, 115177. doi: 10.1016/j.enbuild.2024.115177
+    </div>
   </div>
+
+  <!-- ▶ FIX: corrected relative links to absolute paths -->
   <div class="sidebar-card">
     <h3>Related Work</h3>
     <div class="sidebar-links">
@@ -589,62 +559,20 @@ h1.page-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;line-height:1
       <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
     </div>
   </div>
+
 </div><!-- /sidebar -->
 </div><!-- /main-layout -->
 
-<!-- FOOTER -->
-<footer class="sh-footer">
-  <div class="sh-footer-name">Mohammad Noorchenarboo</div>
-  <div class="sh-footer-role">Data Scientist · AI Researcher · Biostatistician · Ontario, Canada</div>
-  <div class="sh-footer-icons">
-    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
-    <a href="https://www.linkedin.com/in/mnoorchenar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-    <a href="https://github.com/mnoorchenar" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="/index.html" title="Portfolio"><i class="fas fa-globe"></i></a>
-    <a href="https://huggingface.co/mnoorchenar/spaces" target="_blank" title="HuggingFace"><i class="fas fa-robot"></i></a>
-    <a href="https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-  </div>
-  <div class="sh-footer-copy">© 2025 Mohammad Noorchenarboo</div>
-</footer>
-
 <script>
-/* ── PROJECT NAVIGATOR (auto-rendered) ── */
-const PROJECTS = [
-  { name: 'OR Duration Predictor',      url: '/projects/Projects-Files/001-surgical-duration.html' },
-  { name: 'Clinical Text Benchmark',    url: '/projects/Projects-Files/002-nlp-benchmark.html' },
-  { name: 'Energy Anomaly XAI',         url: '/projects/Projects-Files/003-energy-anomaly-xai.html' },
-  { name: 'Sarcopenia Genetics',        url: '/projects/Projects-Files/004-sarcopenia-genetics.html' },
-  { name: 'ASCVD Metabolomics',         url: '/projects/Projects-Files/005-ascvd-metabolomics.html' },
-];
-
-(function buildProjectNav(){
-  const idx    = parseInt(document.body.dataset.projectIndex, 10); // 0-based
-  const total  = PROJECTS.length;
-  const prev   = PROJECTS[idx - 1] || null;
-  const next   = PROJECTS[idx + 1] || null;
-
-  const dots   = PROJECTS.map(function(_, i){
-    return '<div class="proj-nav-dot' + (i === idx ? ' active' : '') + '"></div>';
-  }).join('');
-
-  const prevBtn = prev
-    ? '<a href="' + prev.url + '" class="proj-nav-btn proj-nav-prev"><i class="fas fa-arrow-left"></i><div class="proj-nav-text"><span class="proj-nav-hint">Previous</span><span class="proj-nav-name">' + prev.name + '</span></div></a>'
-    : '<span class="proj-nav-btn proj-nav-prev" style="opacity:.25;pointer-events:none"><i class="fas fa-arrow-left"></i><div class="proj-nav-text"><span class="proj-nav-hint">Previous</span><span class="proj-nav-name">—</span></div></span>';
-
-  const nextBtn = next
-    ? '<a href="' + next.url + '" class="proj-nav-btn proj-nav-next"><div class="proj-nav-text"><span class="proj-nav-hint">Next</span><span class="proj-nav-name">' + next.name + '</span></div><i class="fas fa-arrow-right"></i></a>'
-    : '<a href="/projects/index.html" class="proj-nav-btn proj-nav-next"><div class="proj-nav-text"><span class="proj-nav-hint">All Projects</span><span class="proj-nav-name">Project Gallery</span></div><i class="fas fa-th-large"></i></a>';
-
-  document.getElementById('projNavInner').innerHTML =
-    prevBtn +
-    '<div class="proj-nav-center"><div class="proj-nav-dots">' + dots + '</div><span class="proj-nav-count">Project ' + (idx + 1) + ' of ' + total + '</span></div>' +
-    nextBtn;
-})();
 const html = document.documentElement;
-function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
-function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
-function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
-function tooltipTheme(){
+
+/* ─── chart rebuild on theme change (called by shared.js) ─── */
+function rebuildCharts() { buildBarChart(); buildTsChart(); }
+
+function isDark()  { return html.getAttribute('data-theme') !== 'light'; }
+function gc()      { return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc()      { return isDark() ? '#8892a4' : '#4b5675'; }
+function tooltipTheme() {
   return {
     backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
     titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
@@ -654,152 +582,213 @@ function tooltipTheme(){
   };
 }
 
-/* ── THEME TOGGLE ── */
-(function(){
-  const btn = document.getElementById('themeToggle');
-  const lbl = document.getElementById('toggleLabel');
-  function sync(){ if(lbl) lbl.textContent = html.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
-  sync();
-  if(btn){
-    btn.addEventListener('click', function(){
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('mn-theme', next);
-      sync();
-      setTimeout(rebuildCharts, 50);
-    });
-  }
-})();
-
-/* ── TIME-SERIES DATA ── */
+/* ══════════════════════════════════
+   TIME-SERIES CHART
+══════════════════════════════════ */
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const N = 7 * 24;
 const tsLabels = [];
 const baseConsumption = [];
+
 const ANOMALIES = [
-  { idx:  2, val: 46.2, col:'#ef4444' },
-  { idx: 62, val: 54.8, col:'#f97316' },
-  { idx: 99, val:  3.1, col:'#eab308' },
-  { idx:143, val: 51.0, col:'#a855f7' },
+  { idx:  2, val: 46.2, col:'#ef4444', label:'HVAC Malfunction\n+2.8× normal' },
+  { idx: 62, val: 54.8, col:'#f97316', label:'Equipment Fault\nSustained high' },
+  { idx: 99, val:  3.1, col:'#eab308', label:'Sensor Dropout\nFalse low reading' },
+  { idx:143, val: 51.0, col:'#a855f7', label:'Overnight Load\nUnknown source' },
 ];
-const anomIdx = new Set(ANOMALIES.map(function(a){ return a.idx; }));
+const anomIdx = new Set(ANOMALIES.map(a => a.idx));
+
 const bandUpper = [], bandLower = [];
 
-function rng(seed){
-  var s = seed;
-  return function(){ s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+function rng(seed) {
+  let s = seed;
+  return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
 }
-var rand = rng(42);
+const rand = rng(42);
 
-for(var i = 0; i < N; i++){
-  var day = Math.floor(i / 24), hr = i % 24;
-  var isWeekend = day >= 5;
-  var label = (hr === 0) ? DAYS[day] : (hr === 12 ? '12pm' : (hr % 6 === 0 ? hr + 'h' : ''));
+for (let i = 0; i < N; i++) {
+  const day = Math.floor(i / 24), hr = i % 24;
+  const isWeekend = day >= 5;
+  const label = (hr === 0) ? DAYS[day] : (hr === 12 ? '12pm' : (hr % 6 === 0 ? `${hr}h` : ''));
   tsLabels.push(label);
-  var dayShape = 18 + 14 * Math.sin((hr - 7) * Math.PI / 10) + 5 * Math.sin((hr - 15) * Math.PI / 5);
-  var occupancy = isWeekend ? 0.35 : 1.0;
-  var base = Math.max(4, dayShape * occupancy + (rand() - 0.5) * 4);
+
+  const dayShape = 18 + 14 * Math.sin((hr - 7) * Math.PI / 10) + 5 * Math.sin((hr - 15) * Math.PI / 5);
+  const occupancy = isWeekend ? 0.35 : 1.0;
+  const base = Math.max(4, dayShape * occupancy + (rand() - 0.5) * 4);
   baseConsumption.push(base);
   bandUpper.push(base + 7);
   bandLower.push(Math.max(2, base - 7));
 }
 
-var tsChart, barChart;
+let tsChart, barChart;
 
-function buildTsChart(){
-  if(tsChart) tsChart.destroy();
-  var canvas = document.getElementById('tsChart');
-  if(!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var anomScatterData = Array(N).fill(null);
-  ANOMALIES.forEach(function(a){ anomScatterData[a.idx] = a.val; });
-  var normalLine = baseConsumption.map(function(v, i){ return anomIdx.has(i) ? null : v; });
+function buildTsChart() {
+  if (tsChart) tsChart.destroy();
+  const ctx = document.getElementById('tsChart').getContext('2d');
+
+  const anomScatterData = Array(N).fill(null);
+  ANOMALIES.forEach(a => { anomScatterData[a.idx] = a.val; });
+
+  const normalLine = baseConsumption.map((v, i) => anomIdx.has(i) ? null : v);
+
   tsChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: tsLabels,
       datasets: [
-        { label:'Expected Upper', data:bandUpper, borderWidth:0, pointRadius:0, fill:'+1', backgroundColor:isDark()?'rgba(132,204,22,.10)':'rgba(101,163,13,.09)', tension:.4, spanGaps:true, order:3 },
-        { label:'Expected Lower', data:bandLower, borderWidth:0, pointRadius:0, fill:false, tension:.4, spanGaps:true, order:4 },
-        { label:'Energy (kWh)', data:normalLine, borderColor:isDark()?'rgba(99,202,255,.85)':'rgba(37,99,235,.75)', borderWidth:1.8, pointRadius:0, pointHoverRadius:4, fill:false, tension:.4, spanGaps:false, order:2 },
-        { label:'Anomaly', data:anomScatterData, type:'scatter',
-          pointRadius: function(ctx){ return anomIdx.has(ctx.dataIndex) ? 8 : 0; },
-          pointHoverRadius: function(ctx){ return anomIdx.has(ctx.dataIndex) ? 12 : 0; },
-          pointBackgroundColor: function(ctx){ var a = ANOMALIES.find(function(a){ return a.idx === ctx.dataIndex; }); return a ? a.col : 'transparent'; },
-          pointBorderColor:'#fff', pointBorderWidth:2, showLine:false, order:1 },
+        {
+          label: 'Expected Upper',
+          data: bandUpper,
+          borderWidth: 0,
+          pointRadius: 0,
+          fill: '+1',
+          backgroundColor: isDark() ? 'rgba(132,204,22,.10)' : 'rgba(101,163,13,.09)',
+          tension: 0.4, spanGaps: true, order: 3,
+        },
+        {
+          label: 'Expected Lower',
+          data: bandLower,
+          borderWidth: 0,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.4, spanGaps: true, order: 4,
+        },
+        {
+          label: 'Energy (kWh)',
+          data: normalLine,
+          borderColor: isDark() ? 'rgba(99,202,255,.85)' : 'rgba(37,99,235,.75)',
+          borderWidth: 1.8,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          fill: false,
+          tension: 0.4,
+          spanGaps: false,
+          order: 2,
+        },
+        {
+          label: 'Anomaly',
+          data: anomScatterData,
+          type: 'scatter',
+          pointRadius: (ctx) => anomIdx.has(ctx.dataIndex) ? 8 : 0,
+          pointHoverRadius: (ctx) => anomIdx.has(ctx.dataIndex) ? 12 : 0,
+          pointBackgroundColor: (ctx) => {
+            const a = ANOMALIES.find(a => a.idx === ctx.dataIndex);
+            return a ? a.col : 'transparent';
+          },
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          showLine: false,
+          order: 1,
+        },
       ]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{ mode:'index', intersect:false },
-      plugins:{
-        legend:{ display:false },
-        tooltip:{
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
           ...tooltipTheme(),
-          callbacks:{
-            title: function(items){ var idx = items[0].dataIndex; return DAYS[Math.floor(idx/24)] + '  ' + String(idx%24).padStart(2,'0') + ':00'; },
-            label: function(item){
-              if(item.dataset.label === 'Expected Upper') return ' Expected ceiling: ' + item.raw?.toFixed(1) + ' kWh';
-              if(item.dataset.label === 'Expected Lower') return null;
-              if(item.dataset.label === 'Energy (kWh)' && item.raw !== null) return ' Consumption: ' + item.raw?.toFixed(1) + ' kWh';
-              if(item.dataset.label === 'Anomaly' && item.raw !== null){ var a = ANOMALIES.find(function(a){ return a.idx === item.dataIndex; }); return a ? [' ⚠ ANOMALY: ' + item.raw.toFixed(1) + ' kWh'] : null; }
+          callbacks: {
+            title: (items) => {
+              const idx = items[0].dataIndex;
+              const day = DAYS[Math.floor(idx/24)], hr = idx % 24;
+              return `${day}  ${String(hr).padStart(2,'0')}:00`;
+            },
+            label: (item) => {
+              if (item.dataset.label === 'Expected Upper') return ` Expected ceiling: ${item.raw?.toFixed(1)} kWh`;
+              if (item.dataset.label === 'Expected Lower') return null;
+              if (item.dataset.label === 'Energy (kWh)' && item.raw !== null)
+                return ` Consumption: ${item.raw?.toFixed(1)} kWh`;
+              if (item.dataset.label === 'Anomaly' && item.raw !== null) {
+                const a = ANOMALIES.find(a => a.idx === item.dataIndex);
+                return a ? [` ⚠ ANOMALY: ${item.raw.toFixed(1)} kWh`, ` ${a.label.replace('\n',' — ')}`] : null;
+              }
               return null;
             },
-            filter: function(item){ return item.raw !== null; }
+            filter: (item) => item.raw !== null,
           }
         }
       },
-      scales:{
-        x:{ ticks:{ color:tc(), font:{size:10,family:'inherit'}, maxRotation:0, autoSkip:false, callback:function(v,i){ return tsLabels[i]||null; } }, grid:{color:gc()} },
-        y:{ ticks:{color:tc(),font:{size:10,family:'inherit'}}, grid:{color:gc()}, title:{display:true,text:'Energy (kWh)',color:tc(),font:{size:11,family:'inherit'}}, min:0, max:68 }
+      scales: {
+        x: {
+          ticks: {
+            color: tc(),
+            font: { size: 10, family: 'inherit' },
+            maxRotation: 0,
+            autoSkip: false,
+            callback: (v, i) => tsLabels[i] || null,
+          },
+          grid: { color: gc() },
+        },
+        y: {
+          ticks: { color: tc(), font: { size: 10, family: 'inherit' } },
+          grid: { color: gc() },
+          title: {
+            display: true,
+            text: 'Energy (kWh)',
+            color: tc(),
+            font: { size: 11, family: 'inherit' },
+          },
+          min: 0, max: 68,
+        }
       }
     }
   });
 }
 
-function buildBarChart(){
-  if(barChart) barChart.destroy();
-  var canvas = document.getElementById('reductionChart');
-  if(!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var bLabels  = ['Residential','Manufacturing','Medical Clinic','Retail Store','Office Building'];
-  var randVals = [0.050, 1.214, 0.126, 0.034, 0.219];
-  var propVals = [0.028, 0.360, 0.081, 0.023, 0.105];
+/* ══════════════════════════════════
+   BAR CHART (variability reduction)
+══════════════════════════════════ */
+const bLabels   = ['Residential','Manufacturing','Medical Clinic','Retail Store','Office Building'];
+const randVals  = [0.050, 1.214, 0.126, 0.034, 0.219];
+const propVals  = [0.028, 0.360, 0.081, 0.023, 0.105];
+
+function buildBarChart() {
+  if (barChart) barChart.destroy();
+  const ctx = document.getElementById('reductionChart').getContext('2d');
   barChart = new Chart(ctx, {
     type: 'bar',
-    data:{
+    data: {
       labels: bLabels,
-      datasets:[
-        { label:'Random Baseline',          data:randVals, backgroundColor:'rgba(249,115,22,.55)', borderColor:'rgba(249,115,22,.9)', borderWidth:1, borderRadius:5 },
-        { label:'Proposed (Context-Aware)', data:propVals, backgroundColor:'rgba(132,204,22,.55)', borderColor:'rgba(132,204,22,.9)', borderWidth:1, borderRadius:5 },
+      datasets: [
+        { label: 'Random Baseline',          data: randVals, backgroundColor: 'rgba(249,115,22,.55)', borderColor: 'rgba(249,115,22,.9)', borderWidth: 1, borderRadius: 5 },
+        { label: 'Proposed (Context-Aware)', data: propVals, backgroundColor: 'rgba(132,204,22,.55)', borderColor: 'rgba(132,204,22,.9)', borderWidth: 1, borderRadius: 5 },
       ]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{ labels:{ color:tc(), font:{size:12,family:'inherit'}, boxWidth:14 } },
-        tooltip:{
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tc(), font: { size: 12, family: 'inherit' }, boxWidth: 14 } },
+        tooltip: {
           ...tooltipTheme(),
-          callbacks:{
-            afterLabel: function(ctx){ if(ctx.datasetIndex===1){ var pct=Math.round((1-propVals[ctx.dataIndex]/randVals[ctx.dataIndex])*100); return '↓ '+pct+'% reduction'; } return ''; }
+          callbacks: {
+            afterLabel: (ctx) => {
+              if (ctx.datasetIndex === 1) {
+                const pct = Math.round((1 - propVals[ctx.dataIndex] / randVals[ctx.dataIndex]) * 100);
+                return `↓ ${pct}% reduction`;
+              }
+              return '';
+            }
           }
         }
       },
-      scales:{
-        x:{ ticks:{color:tc(),font:{size:11,family:'inherit'}}, grid:{color:gc()} },
-        y:{ ticks:{color:tc(),font:{size:11,family:'inherit'}}, grid:{color:gc()}, title:{display:true,text:'Mean SHAP Variability',color:tc(),font:{size:11,family:'inherit'}} }
+      scales: {
+        x: { ticks: { color: tc(), font: { size: 11, family: 'inherit' } }, grid: { color: gc() } },
+        y: {
+          ticks: { color: tc(), font: { size: 11, family: 'inherit' } },
+          grid: { color: gc() },
+          title: { display: true, text: 'Mean SHAP Variability', color: tc(), font: { size: 11, family: 'inherit' } }
+        }
       }
     }
   });
 }
 
-function rebuildCharts(){ buildTsChart(); buildBarChart(); }
-
-if(document.readyState === 'complete'){
-  rebuildCharts();
-} else {
-  window.addEventListener('load', rebuildCharts);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  buildTsChart();
+  buildBarChart();
+});
 </script>
 </body>
 </html>
