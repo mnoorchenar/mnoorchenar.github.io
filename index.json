@@ -56,6 +56,10 @@
           {
             "name": "009-vae-project-page",
             "html": "projects/Projects-Files/009-vae-project-page.html"
+          },
+          {
+            "name": "010-transformer-edu-viz",
+            "html": "projects/Projects-Files/010-transformer-edu-viz.html"
           }
         ]
       }
