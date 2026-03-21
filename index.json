@@ -60,6 +60,10 @@
           {
             "name": "010-transformer-edu-viz",
             "html": "projects/Projects-Files/010-transformer-edu-viz.html"
+          },
+          {
+            "name": "011-experiment-lab",
+            "html": "projects/Projects-Files/011-experiment-lab.html"
           }
         ]
       }
