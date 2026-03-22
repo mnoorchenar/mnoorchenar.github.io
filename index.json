@@ -68,6 +68,14 @@
           {
             "name": "012-research-rag-bench",
             "html": "projects/Projects-Files/012-research-rag-bench.html"
+          },
+          {
+            "name": "013-docmind",
+            "html": "projects/Projects-Files/013-docmind.html"
+          },
+          {
+            "name": "014-langgraph-support-agent",
+            "html": "projects/Projects-Files/014-langgraph-support-agent.html"
           }
         ]
       }
