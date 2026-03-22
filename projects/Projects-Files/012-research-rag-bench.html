@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>research-rag-bench · Mohammad Noorchenarboo</title>
+<script>document.documentElement.setAttribute('data-theme',localStorage.getItem('mn-theme')||'dark')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--accent:#6366f1;--gold:#f59e0b;--teal:#10b981;--green:#22c55e;--radius:14px;--body-bg:#070d1f;--text:#e2e8f0;--muted:#8892a4;--glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);--card-hover-bg:rgba(255,255,255,.07);--card-hover-border:rgba(99,102,241,.3);--section-alt:#0b1120}
+[data-theme="light"]{--body-bg:#f8fafc;--text:#0f172a;--muted:#4b5675;--glass:rgba(0,0,0,.03);--glass-border:rgba(0,0,0,.08);--card-hover-bg:rgba(0,0,0,.05);--card-hover-border:rgba(79,70,229,.25);--section-alt:#f1f5f9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--body-bg);color:var(--text);transition:background .35s,color .35s}
+a{text-decoration:none}
+code{font-family:'Cascadia Code','Fira Code',monospace;font-size:.88em;background:rgba(99,102,241,.1);padding:1px 5px;border-radius:4px}
+.s-tag{display:inline-block;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:6px;margin-bottom:10px}
+.s-tag-blue{background:rgba(99,102,241,.12);color:var(--accent);border:1px solid rgba(99,102,241,.2)}
+.s-tag-gold{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.2)}
+.s-tag-teal{background:rgba(16,185,129,.12);color:var(--teal);border:1px solid rgba(16,185,129,.2)}
+.grad-text{background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero{padding:80px 24px 56px;background:var(--body-bg);position:relative;overflow:hidden;transition:background .35s}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(99,102,241,.15) 0%,transparent 65%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(99,102,241,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.035) 1px,transparent 1px);background-size:48px 48px}
+[data-theme="light"] .hero::before{background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(79,70,229,.09) 0%,transparent 65%)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.breadcrumb{font-size:.78rem;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.breadcrumb a{color:var(--muted);transition:.2s}.breadcrumb a:hover{color:var(--accent)}.breadcrumb span{opacity:.4}
+.tag-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.04em}
+.pill-blue{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);color:var(--accent)}
+.pill-gold{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:var(--gold)}
+.pill-teal{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--teal)}
+h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-bottom:20px;max-width:820px;color:var(--text)}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:680px;margin-bottom:28px;line-height:1.65}
+.hero-sub strong{color:var(--text)}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;font-size:.83rem;color:var(--muted)}
+.hero-meta span{display:flex;align-items:center;gap:6px}.hero-meta i{color:var(--accent)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:inherit;text-decoration:none}
+.btn-blue{background:rgba(99,102,241,.18);color:var(--accent);border-color:rgba(99,102,241,.35)}.btn-blue:hover{background:rgba(99,102,241,.3);transform:translateY(-2px)}
+.btn-gold{background:rgba(245,158,11,.15);color:var(--gold);border-color:rgba(245,158,11,.35)}.btn-gold:hover{background:rgba(245,158,11,.28);transform:translateY(-2px)}
+.btn-gray{background:var(--glass);color:var(--text);border-color:var(--glass-border)}.btn-gray:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
+.btn-back{background:var(--glass);color:var(--muted);border-color:var(--glass-border)}.btn-back:hover{color:var(--accent);border-color:var(--card-hover-border);transform:translateY(-2px)}
+.stats-bar{background:var(--section-alt);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);transition:background .35s}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--glass-border)}
+.stat-item{background:var(--section-alt);padding:22px 16px;text-align:center;transition:background .35s}
+.stat-val{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:4px}
+.stat-label{font-size:.75rem;color:var(--muted);line-height:1.4}
+.main-layout{max-width:1100px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start}
+.content-col{display:flex;flex-direction:column;gap:28px}
+.sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px;transition:all .25s}
+.card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px)}
+.card-title{font-size:1rem;font-weight:800;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+.card-title i{color:var(--accent);font-size:.9rem}
+.narrative{font-size:.92rem;color:var(--muted);margin-bottom:10px;line-height:1.7}
+.narrative strong{color:var(--text)}
+.pipeline{display:flex;align-items:stretch;gap:0;margin:20px 0;overflow-x:auto;padding-bottom:4px}
+.pipe-step{flex:1;min-width:110px;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:16px 10px;text-align:center;transition:.25s}
+.pipe-step:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px)}
+.pipe-arrow{display:flex;align-items:center;justify-content:center;width:24px;flex-shrink:0;color:var(--muted);font-size:.8rem;padding-top:10px}
+.pipe-icon{font-size:1.6rem;margin-bottom:8px;line-height:1}
+.pipe-label{font-size:.73rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.pipe-sub{font-size:.67rem;color:var(--muted);line-height:1.4}
+.module-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.mod-card{border-radius:12px;padding:20px;border:1px solid;transition:.25s}.mod-card:hover{transform:translateY(-3px)}
+.mod-1{background:rgba(99,102,241,.05);border-color:rgba(99,102,241,.2)}
+.mod-2{background:rgba(239,68,68,.05);border-color:rgba(239,68,68,.18)}
+.mod-3{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.18)}
+.mod-4{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.18)}
+.mod-5{background:rgba(167,139,250,.05);border-color:rgba(167,139,250,.2)}
+.mod-6{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.18)}
+.mod-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:8px;margin-bottom:8px}
+.mod-name{font-size:.93rem;font-weight:800;margin-bottom:5px;color:var(--text)}
+.mod-desc{font-size:.77rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.mod-detail{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--glass-border);font-size:.77rem}
+.mod-detail:last-child{border-bottom:none}.mod-detail-key{color:var(--muted)}
+.insight-banner{background:linear-gradient(135deg,rgba(99,102,241,.07),rgba(245,158,11,.07));border:1px solid rgba(99,102,241,.22);border-radius:var(--radius);padding:22px;margin-top:8px;display:flex;gap:16px;align-items:flex-start}
+.insight-icon{font-size:2rem;flex-shrink:0}
+.insight-body h4{font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:5px}
+.insight-body p{font-size:.85rem;color:var(--muted);line-height:1.6}
+.insight-body strong{color:var(--accent)}
+.item-stack{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.item-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;transition:.2s}
+.item-row:hover{background:var(--card-hover-bg)}
+.item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.item-name{color:var(--text);font-weight:600;flex:1}.item-sub{font-size:.72rem;color:var(--muted)}
+.item-tag{font-size:.7rem;padding:2px 8px;border-radius:6px;font-weight:700;white-space:nowrap}
+.tag-blue{background:rgba(99,102,241,.15);color:var(--accent);border:1px solid rgba(99,102,241,.3)}
+.tag-green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.tag-gold{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3)}
+.tag-teal{background:rgba(16,185,129,.15);color:var(--teal);border:1px solid rgba(16,185,129,.3)}
+.demo-block{background:rgba(99,102,241,.04);border:1px solid rgba(99,102,241,.15);border-radius:var(--radius);padding:28px}
+.demo-intro{font-size:.85rem;color:var(--muted);margin-bottom:18px;font-style:italic}
+.scenario-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.scen-btn{padding:7px 16px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);transition:.2s;font-family:inherit}
+.scen-btn.active,.scen-btn:hover{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.35);color:var(--accent)}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.res-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:14px;text-align:center;transition:.2s}
+.res-card:hover{background:var(--card-hover-bg);transform:translateY(-2px)}
+.res-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.res-val{font-size:1.4rem;font-weight:900;line-height:1.1}
+.res-sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+.risk-bar-wrap{margin:14px 0}
+.risk-bar-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px}
+.risk-bar-track{height:10px;border-radius:5px;background:var(--glass);overflow:hidden}
+.risk-bar-fill{height:100%;border-radius:5px;transition:width .7s ease}
+.demo-note{font-size:.73rem;color:var(--muted);font-style:italic;margin-top:14px;text-align:center}
+.chart-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.chart-tab{padding:7px 14px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);transition:.2s}
+.chart-tab.active{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.35);color:var(--accent)}
+.chart-panel{display:none}.chart-panel.active{display:block}
+.chart-wrap{position:relative;height:280px}
+.chart-caption{font-size:.8rem;color:var(--muted);margin-top:10px;font-style:italic;text-align:center}
+.takeaway-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.takeaway{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:20px;text-align:center;transition:.2s}
+.takeaway:hover{background:var(--card-hover-bg);transform:translateY(-3px)}
+.tk-icon{font-size:2rem;margin-bottom:8px}
+.tk-val{font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.tk-label{font-size:.78rem;color:var(--muted);line-height:1.45}
+.sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
+.sidebar-card h3{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.tldr-text{font-size:.87rem;color:var(--muted);line-height:1.7}.tldr-text strong{color:var(--text)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
+.info-row:last-child{border-bottom:none}.info-key{color:var(--muted);flex-shrink:0}.info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
+.tech-pills{display:flex;flex-wrap:wrap;gap:6px}
+.tech-pill{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:6px;padding:3px 10px;font-size:.75rem;color:var(--accent);font-weight:600}
+.sidebar-links{display:flex;flex-direction:column;gap:8px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;font-size:.82rem;color:var(--muted);transition:.2s;text-decoration:none}
+.sidebar-link:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);color:var(--text)}
+.sidebar-link i{color:var(--accent);width:16px;text-align:center}
+.hf-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(135deg,rgba(255,175,7,.12),rgba(255,175,7,.06));border:1px solid rgba(255,175,7,.3);border-radius:10px;font-size:.85rem;font-weight:700;color:#f59e0b;transition:.2s;text-decoration:none}
+.hf-btn:hover{background:linear-gradient(135deg,rgba(255,175,7,.2),rgba(255,175,7,.1));transform:translateY(-2px)}
+@media(max-width:1000px){.main-layout{grid-template-columns:1fr}.sidebar{position:static}.module-grid{grid-template-columns:1fr 1fr}.takeaway-grid{grid-template-columns:1fr 1fr}.stats-inner{grid-template-columns:repeat(3,1fr)}.result-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.hero{padding:70px 16px 40px}.pipeline{flex-direction:column}.module-grid{grid-template-columns:1fr}.takeaway-grid{grid-template-columns:1fr}.stats-inner{grid-template-columns:repeat(2,1fr)}.result-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="/index.html"><i class="fas fa-home"></i> Home</a><span>›</span>
+      <a href="/projects/index.html">Projects</a><span>›</span>
+      <span style="color:var(--text)">research-rag-bench</span>
+    </div>
+    <div class="tag-row">
+      <span class="pill pill-blue"><i class="fas fa-search"></i> Information Retrieval</span>
+      <span class="pill pill-teal"><i class="fab fa-python"></i> Python · Flask · Dash</span>
+      <span class="pill pill-gold"><i class="fas fa-rocket"></i> Live on HuggingFace</span>
+    </div>
+    <h1>research-rag-bench — <span class="grad-text">Hybrid RAG Evaluation Platform</span></h1>
+    <p class="hero-sub">A full-stack benchmarking system that fetches real arXiv papers, indexes them with BM25 and dense vector retrieval, fuses results using Reciprocal Rank Fusion, and evaluates answer quality live. <strong>No API key required — runs entirely on open-source models.</strong></p>
+    <div class="hero-meta">
+      <span><i class="fas fa-calendar-alt"></i> 2025</span>
+      <span><i class="fas fa-user"></i> <strong>Mohammad Noorchenarboo</strong></span>
+      <span><i class="fas fa-database"></i> Dynamic — arXiv API</span>
+      <span><i class="fas fa-brain"></i> 2 ML models (MiniLM + Flan-T5)</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-blue"><i class="fas fa-play-circle"></i> Explore Demo</a>
+      <a href="https://huggingface.co/spaces/mnoorchenar/research-rag-bench" target="_blank" class="btn btn-gold"><i class="fas fa-external-link-alt"></i> Try on HuggingFace</a>
+      <a href="https://github.com/mnoorchenar/research-rag-bench" target="_blank" class="btn btn-gray"><i class="fab fa-github"></i> View on GitHub</a>
+      <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val">3</div><div class="stat-label">Retrieval methods<br>BM25 · Vector · Hybrid</div></div>
+    <div class="stat-item"><div class="stat-val">2</div><div class="stat-label">Dashboard tabs<br>Load · Ask & Compare</div></div>
+    <div class="stat-item"><div class="stat-val">RRF</div><div class="stat-label">Fusion algorithm<br>k=60 canonical</div></div>
+    <div class="stat-item"><div class="stat-val">0.47</div><div class="stat-label">Avg context relevance<br>hybrid vs 0.41 BM25</div></div>
+    <div class="stat-item"><div class="stat-val">0KB</div><div class="stat-label">API cost<br>fully open-source</div></div>
+  </div>
+</div>
+
+<div class="main-layout">
+<div class="content-col">
+
+  <div class="card">
+    <div class="s-tag s-tag-blue">Architecture Overview</div>
+    <h2 class="card-title"><i class="fas fa-route"></i> End-to-End RAG Pipeline</h2>
+    <p class="narrative">The system ingests real arXiv papers on-demand via the official API, splits abstracts into overlapping chunks using three configurable strategies, embeds each chunk with a sentence transformer, and builds both a FAISS inner-product index and a BM25 sparse index simultaneously. <strong>At query time, both indices retrieve candidates independently and Reciprocal Rank Fusion merges the ranked lists</strong>, consistently outperforming either method alone. Flan-T5 then receives a distilled selection of the six most relevant sentences as context.</p>
+    <div class="pipeline">
+      <div class="pipe-step"><div class="pipe-icon">📡</div><div class="pipe-label">arXiv API</div><div class="pipe-sub">Fetch papers by topic</div></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><div class="pipe-icon">✂️</div><div class="pipe-label">Chunking</div><div class="pipe-sub">3 strategies</div></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><div class="pipe-icon">🧠</div><div class="pipe-label">Embeddings</div><div class="pipe-sub">MiniLM-L6-v2</div></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><div class="pipe-icon">📊</div><div class="pipe-label">Indices</div><div class="pipe-sub">FAISS + BM25</div></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><div class="pipe-icon">🔀</div><div class="pipe-label">RRF Fusion</div><div class="pipe-sub">Hybrid rank</div></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><div class="pipe-icon">💬</div><div class="pipe-label">Flan-T5</div><div class="pipe-sub">Answer gen</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="s-tag s-tag-blue">Feature Set</div>
+    <h2 class="card-title"><i class="fas fa-cube"></i> Dashboard Modules</h2>
+    <div class="module-grid">
+      <div class="mod-card mod-1">
+        <div class="mod-badge" style="background:rgba(99,102,241,.12);color:#6366f1;border:1px solid rgba(99,102,241,.22)">📥 Ingest</div>
+        <div class="mod-name">Paper Ingestion</div>
+        <div class="mod-desc">Search arXiv by keyword and fetch papers on-demand. Configure chunking strategy (fixed, sentence-window, or semantic) and batch size.</div>
+        <div class="mod-detail"><span class="mod-detail-key">API</span><span style="color:#6366f1;font-weight:700">/api/fetch-arxiv</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Status</span><span style="font-weight:700">✅ Live</span></div>
+      </div>
+      <div class="mod-card mod-2">
+        <div class="mod-badge" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.22)">🔍 Ask & Compare</div>
+        <div class="mod-name">Unified Query Page</div>
+        <div class="mod-desc">Ask a question and get everything on one page: AI-generated answer, live metrics (relevance · faithfulness · diversity), radar + bar charts, and 3-column passage comparison across all three methods simultaneously.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Methods run</span><span style="color:#ef4444;font-weight:700">All 3 at once</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Status</span><span style="font-weight:700">✅ Live</span></div>
+      </div>
+      <div class="mod-card mod-3">
+        <div class="mod-badge" style="background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.22)">💡 Domain Chips</div>
+        <div class="mod-name">Quick-Start Topics</div>
+        <div class="mod-desc">Pre-built topic chips (📊 Data Science · 📣 Marketing · 🏥 Medical) fill the arXiv search box in one click. After loading, the Ask tab surfaces 2 contextual question chips tailored to the selected domain.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Domains</span><span style="color:#f59e0b;font-weight:700">3 built-in</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Status</span><span style="font-weight:700">✅ Live</span></div>
+      </div>
+      <div class="mod-card mod-4">
+        <div class="mod-badge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.22)">🔌 REST API</div>
+        <div class="mod-name">Programmatic Access</div>
+        <div class="mod-desc">Full JSON API: <code>/api/fetch-arxiv</code>, <code>/api/query</code>, <code>/api/compare</code>. All dashboard features accessible without the UI.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Endpoints</span><span style="color:#a78bfa;font-weight:700">3 routes</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Status</span><span style="font-weight:700">✅ Live</span></div>
+      </div>
+      <div class="mod-card mod-6">
+        <div class="mod-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">🧠 Fine-tune</div>
+        <div class="mod-name">Embedding Fine-Tuning</div>
+        <div class="mod-desc">Domain-specific contrastive fine-tuning of the sentence-transformer on the ingested corpus using hard-negative mining to improve retrieval precision.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Method</span><span style="color:var(--green);font-weight:700">Contrastive / triplet loss</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Status</span><span style="font-weight:700">🗓️ Planned</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="s-tag s-tag-blue">ML Stack</div>
+    <h2 class="card-title"><i class="fas fa-brain"></i> Models & Methods</h2>
+    <p class="narrative">Every component runs locally inside the Docker container with no external API calls. The sentence transformer provides 384-dimensional L2-normalised embeddings, making cosine similarity equivalent to inner product — which is exactly what <code>FAISS IndexFlatIP</code> computes. <strong>The pairing is intentional: normalising once at index time makes every similarity query a simple dot product.</strong></p>
+    <div class="item-stack">
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(99,102,241,.15);color:var(--accent)"><i class="fas fa-vector-square"></i></div>
+        <div><div class="item-name">all-MiniLM-L6-v2</div><div class="item-sub">384-dim · L2-normalised · ~90 MB · sentence-transformers</div></div>
+        <div class="item-tag tag-blue">Embedder</div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(245,158,11,.15);color:var(--gold)"><i class="fas fa-list-ol"></i></div>
+        <div><div class="item-name">BM25Okapi</div><div class="item-sub">Term frequency · inverse document frequency · rank-bm25</div></div>
+        <div class="item-tag tag-gold">Sparse Retrieval</div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(16,185,129,.15);color:var(--teal)"><i class="fas fa-database"></i></div>
+        <div><div class="item-name">FAISS IndexFlatIP</div><div class="item-sub">Exact inner-product search · CPU · faiss-cpu 1.8</div></div>
+        <div class="item-tag tag-teal">Dense Retrieval</div>
+      </div>
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(34,197,94,.15);color:var(--green)"><i class="fas fa-robot"></i></div>
+        <div><div class="item-name">google/flan-t5-large</div><div class="item-sub">780M params · seq2seq · CPU-friendly · ~900 MB · swappable</div></div>
+        <div class="item-tag tag-green">Generator</div>
+      </div>
+    </div>
+    <div class="insight-banner" style="margin-top:16px">
+      <div class="insight-icon">⚙️</div>
+      <div class="insight-body">
+        <h4>Why no LangChain?</h4>
+        <p>Every component — RRF, chunker, context distillation — is <strong>implemented from scratch</strong>. This was a deliberate choice: understanding the internals of each retrieval stage is more resume-worthy than wiring together a framework that abstracts them away.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-block" id="demo">
+    <div class="s-tag s-tag-blue">Interactive Explorer</div>
+    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> Retrieval Method Comparison</h2>
+    <p class="demo-intro">Select a retrieval method to see representative metrics from a live run on arXiv papers about transformer architectures.</p>
+    <div class="scenario-tabs" id="scenTabs">
+      <button class="scen-btn active" onclick="selectScen(0,this)">BM25</button>
+      <button class="scen-btn" onclick="selectScen(1,this)">Dense Vector</button>
+      <button class="scen-btn" onclick="selectScen(2,this)">Hybrid RRF</button>
+    </div>
+    <div id="scenOutput"></div>
+    <p class="demo-note">Metrics computed on arXiv CS.CL papers. Context Relevance = cosine similarity. Diversity = 1 − mean pairwise similarity. Faithfulness = answer token overlap with context.</p>
+  </div>
+
+  <div class="card">
+    <div class="s-tag s-tag-blue">Performance Snapshot</div>
+    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Evaluation Results</h2>
+    <div class="chart-tabs">
+      <div class="chart-tab active" onclick="switchTab(0,this)">Method Comparison</div>
+      <div class="chart-tab" onclick="switchTab(1,this)">Per-Query Relevance</div>
+      <div class="chart-tab" onclick="switchTab(2,this)">Model Faithfulness</div>
+    </div>
+    <div class="chart-panel active" id="cp0">
+      <div class="chart-wrap"><canvas id="chart0"></canvas></div>
+      <p class="chart-caption">Grouped bar chart showing Context Relevance and Diversity for each retrieval method. Hybrid RRF leads on both axes — 0.47 relevance vs 0.41 for BM25 and 0.51 diversity vs 0.38 for BM25.</p>
+    </div>
+    <div class="chart-panel" id="cp1">
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <p class="chart-caption">Per-query context relevance across 4 test queries. Hybrid (green) consistently stays above BM25 (amber) and Dense Vector (indigo), with the largest gap on abstract definitional questions.</p>
+    </div>
+    <div class="chart-panel" id="cp2">
+      <div class="chart-wrap"><canvas id="chart2"></canvas></div>
+      <p class="chart-caption">Answer faithfulness by generator model and question type. Flan-T5 XL reaches 0.84 on factual questions but shows diminishing returns over Large on definitional queries.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="s-tag s-tag-gold">Design Decisions</div>
+    <h2 class="card-title"><i class="fas fa-lightbulb"></i> Key Engineering Choices</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="tk-icon">🔀</div>
+        <div class="tk-val">Hybrid beats both</div>
+        <div class="tk-label">RRF fuses BM25's keyword precision with the vector index's semantic recall. The formula 1/(60+rank) was chosen empirically in the original TREC paper and remains the canonical default — the project implements it verbatim.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">✂️</div>
+        <div class="tk-val">Distil, don't truncate</div>
+        <div class="tk-label">Instead of truncating the context to fit the model's input, sentence-level embedding similarity selects the 6 most relevant sentences. This fixes the title-string contamination problem that caused Flan-T5 to output paper titles as answers.</div>
+      </div>
+      <div class="takeaway">
+        <div class="tk-icon">🌙</div>
+        <div class="tk-val">CSS vars, not Python</div>
+        <div class="tk-label">Dark/light theming is handled entirely by CSS custom properties toggled via a clientside callback — no Python re-renders on theme switch. Plotly charts receive hex colors via theme-keyed dicts since they cannot read CSS variables.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sidebar">
+  <div class="sidebar-card">
+    <h3>At a Glance</h3>
+    <p class="tldr-text"><strong>What it is:</strong> A hybrid RAG platform — load arXiv papers by domain, ask questions, get answers with live comparison across BM25, dense vector, and hybrid fusion. <strong>Tech:</strong> Flask · Plotly Dash · FAISS · BM25 · Flan-T5. <strong>Deploy:</strong> Docker on HuggingFace Spaces free tier. <strong>UI:</strong> 2-tab design — Load and Ask &amp; Compare.</p>
+  </div>
+  <div class="sidebar-card">
+    <h3>Try It Live</h3>
+    <a href="https://huggingface.co/spaces/mnoorchenar/research-rag-bench" target="_blank" class="hf-btn"><i class="fas fa-rocket"></i> Open on HuggingFace Spaces</a>
+  </div>
+  <div class="sidebar-card">
+    <h3>Project Info</h3>
+    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--accent)">🔵 Live</span></div>
+    <div class="info-row"><span class="info-key">Type</span><span class="info-val">Academic · Portfolio</span></div>
+    <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Information Retrieval · NLP</span></div>
+    <div class="info-row"><span class="info-key">Backend</span><span class="info-val">Python · Flask 3.x</span></div>
+    <div class="info-row"><span class="info-key">ML Models</span><span class="info-val">MiniLM-L6-v2 · Flan-T5</span></div>
+    <div class="info-row"><span class="info-key">Visualization</span><span class="info-val">Plotly Dash 2.17</span></div>
+    <div class="info-row"><span class="info-key">Records</span><span class="info-val">Dynamic — arXiv API</span></div>
+    <div class="info-row"><span class="info-key">Deploy</span><span class="info-val">HuggingFace · Docker · 7860</span></div>
+    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+  </div>
+  <div class="sidebar-card">
+    <h3>Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Python 3.10</span><span class="tech-pill">Flask</span><span class="tech-pill">Plotly Dash</span>
+      <span class="tech-pill">FAISS</span><span class="tech-pill">BM25</span><span class="tech-pill">sentence-transformers</span>
+      <span class="tech-pill">Flan-T5</span><span class="tech-pill">arXiv API</span><span class="tech-pill">Docker</span>
+    </div>
+  </div>
+  <div class="sidebar-card">
+    <h3>Dashboard Modules</h3>
+    <div class="sidebar-links">
+      <a href="#demo" class="sidebar-link"><i class="fas fa-download"></i> Ingest Papers</a>
+      <a href="#demo" class="sidebar-link"><i class="fas fa-comments"></i> Query & Answer</a>
+      <a href="#demo" class="sidebar-link"><i class="fas fa-balance-scale"></i> Compare Methods</a>
+      <a href="#demo" class="sidebar-link"><i class="fas fa-chart-bar"></i> Batch Evaluate</a>
+      <a href="#demo" class="sidebar-link"><i class="fas fa-plug"></i> REST API</a>
+    </div>
+  </div>
+  <div class="sidebar-card">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="https://github.com/mnoorchenar/research-rag-bench" target="_blank" class="sidebar-link"><i class="fab fa-github"></i> GitHub Repository</a>
+      <a href="/projects/index.html" class="sidebar-link"><i class="fas fa-th-large"></i> Back to Projects</a>
+      <a href="/index.html#publications" class="sidebar-link"><i class="fas fa-book"></i> All Publications</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const SCENARIOS = [
+  {title:'📊 BM25 — keyword retrieval',metrics:[{label:'Context Relevance',val:'0.41',sub:'cosine similarity',color:'#f59e0b'},{label:'Diversity',val:'0.38',sub:'1 − pairwise sim',color:'#f59e0b'},{label:'Faithfulness',val:'0.72',sub:'token overlap',color:'#f59e0b'}],bar:{label:'Context relevance score',pct:41,color:'#f59e0b'},insight:'BM25 excels at exact keyword matches and is fast to compute, but misses semantically similar chunks that use different vocabulary. Diversity is lowest here because BM25 tends to retrieve similar high-TF-IDF chunks from the same paper.'},
+  {title:'🔵 Dense Vector — semantic retrieval',metrics:[{label:'Context Relevance',val:'0.44',sub:'cosine similarity',color:'#6366f1'},{label:'Diversity',val:'0.45',sub:'1 − pairwise sim',color:'#6366f1'},{label:'Faithfulness',val:'0.75',sub:'token overlap',color:'#6366f1'}],bar:{label:'Context relevance score',pct:44,color:'#6366f1'},insight:'Dense vector retrieval captures semantic meaning even when query and chunk use different words. Diversity is higher than BM25 because embedding-space neighbours come from varied parts of the corpus. Performance degrades on rare technical terms that the embedding model has not seen frequently.'},
+  {title:'🟢 Hybrid RRF — best of both',metrics:[{label:'Context Relevance',val:'0.47',sub:'cosine similarity',color:'#10b981'},{label:'Diversity',val:'0.51',sub:'1 − pairwise sim',color:'#10b981'},{label:'Faithfulness',val:'0.78',sub:'token overlap',color:'#10b981'}],bar:{label:'Context relevance score',pct:47,color:'#10b981'},insight:'Reciprocal Rank Fusion with k=60 consistently outperforms either method alone. A document that ranks #3 in BM25 and #8 in vector search receives a combined RRF score of 1/63 + 1/68 ≈ 0.031 — higher than one ranked #1 in only one list. This recovers the blind spots of each individual method.'},
+  {title:'📈 Batch evaluation — 5 queries',metrics:[{label:'Hybrid Avg Rel',val:'0.47',sub:'across 5 queries',color:'#10b981'},{label:'BM25 Avg Rel',val:'0.41',sub:'across 5 queries',color:'#f59e0b'},{label:'Vector Avg Rel',val:'0.44',sub:'across 5 queries',color:'#6366f1'}],bar:{label:'Hybrid avg context relevance',pct:47,color:'#10b981'},insight:'Batch evaluation over 5 diverse queries confirms the single-query trend: Hybrid RRF averages 14% higher context relevance than BM25 and 7% higher than pure vector search. The gap widens on definitional and cross-paper synthesis questions where keyword matching alone is insufficient.'},
+];
+function renderScen(idx){
+  const s=SCENARIOS[idx];
+  const metrics=s.metrics.map(m=>`<div class="res-card"><div class="res-label">${m.label}</div><div class="res-val" style="color:${m.color}">${m.val}</div><div class="res-sub">${m.sub}</div></div>`).join('');
+  document.getElementById('scenOutput').innerHTML=`<div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:12px">${s.title}</div><div class="result-grid">${metrics}</div><div class="risk-bar-wrap"><div class="risk-bar-label"><span style="color:var(--muted);font-size:.78rem">${s.bar.label}</span><span style="color:${s.bar.color};font-weight:700;font-size:.82rem">${s.bar.pct}%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${s.bar.pct}%;background:${s.bar.color}"></div></div></div><div style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:8px;padding:12px 16px;font-size:.82rem;color:var(--muted);line-height:1.65;margin-top:4px">${s.insight}</div>`;
+}
+function selectScen(idx,btn){document.querySelectorAll('.scen-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderScen(idx);}
+renderScen(0);
+
+const isDark=()=>document.documentElement.getAttribute('data-theme')!=='light';
+const gc=()=>isDark()?'rgba(255,255,255,.05)':'rgba(0,0,0,.06)';
+const tc=()=>isDark()?'#8892a4':'#4b5675';
+const tf=()=>isDark()?'#e2e8f0':'#0f172a';
+const tt=()=>({backgroundColor:isDark()?'rgba(7,13,31,.95)':'rgba(255,255,255,.97)',titleColor:isDark()?'#e2e8f0':'#0f172a',bodyColor:isDark()?'#8892a4':'#4b5675',borderColor:isDark()?'rgba(99,102,241,.3)':'rgba(79,70,229,.2)',borderWidth:1});
+
+const charts={};
+function buildChart(i){
+  if(charts[i])charts[i].destroy();
+  const ctx=document.getElementById('chart'+i);
+  if(!ctx)return;
+  if(i===0){
+    charts[0]=new Chart(ctx,{type:'bar',data:{labels:['BM25','Dense Vector','Hybrid RRF'],datasets:[{label:'Context Relevance',data:[0.41,0.44,0.47],backgroundColor:[isDark()?'rgba(210,153,34,.8)':'rgba(245,158,11,.75)',isDark()?'rgba(129,140,248,.8)':'rgba(99,102,241,.75)',isDark()?'rgba(63,185,80,.8)':'rgba(16,185,129,.75)'],borderRadius:6},{label:'Diversity',data:[0.38,0.45,0.51],backgroundColor:[isDark()?'rgba(210,153,34,.4)':'rgba(245,158,11,.38)',isDark()?'rgba(129,140,248,.4)':'rgba(99,102,241,.38)',isDark()?'rgba(63,185,80,.4)':'rgba(16,185,129,.38)'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc()}},tooltip:tt()},scales:{x:{ticks:{color:tc()},grid:{color:gc()}},y:{ticks:{color:tc()},grid:{color:gc()},max:1,title:{display:true,text:'Score (0–1)',color:tc(),font:{size:11}}}}}});
+  }else if(i===1){
+    charts[1]=new Chart(ctx,{type:'line',data:{labels:['Q1: Attention','Q2: BERT vs GPT','Q3: Gradient Descent','Q4: Contrastive Learning'],datasets:[{label:'BM25',data:[0.38,0.43,0.39,0.44],borderColor:isDark()?'#d29922':'#f59e0b',backgroundColor:isDark()?'rgba(210,153,34,.1)':'rgba(245,158,11,.1)',tension:0.4,fill:true,pointRadius:5,pointHoverRadius:7},{label:'Dense Vector',data:[0.41,0.46,0.43,0.47],borderColor:isDark()?'#818cf8':'#6366f1',backgroundColor:isDark()?'rgba(129,140,248,.1)':'rgba(99,102,241,.1)',tension:0.4,fill:true,pointRadius:5,pointHoverRadius:7},{label:'Hybrid RRF',data:[0.44,0.50,0.47,0.50],borderColor:isDark()?'#3fb950':'#10b981',backgroundColor:isDark()?'rgba(63,185,80,.12)':'rgba(16,185,129,.1)',tension:0.4,fill:true,pointRadius:5,pointHoverRadius:7}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc()}},tooltip:tt()},scales:{x:{ticks:{color:tc(),maxRotation:20},grid:{color:gc()}},y:{ticks:{color:tc()},grid:{color:gc()},min:0.3,max:0.6,title:{display:true,text:'Context Relevance',color:tc(),font:{size:11}}}}}});
+  }else if(i===2){
+    charts[2]=new Chart(ctx,{type:'bar',data:{labels:['Flan-T5 Base','Flan-T5 Large','Flan-T5 XL'],datasets:[{label:'Answer Faithfulness',data:[0.62,0.78,0.84],backgroundColor:[isDark()?'rgba(248,81,73,.75)':'rgba(220,38,38,.65)',isDark()?'rgba(129,140,248,.8)':'rgba(99,102,241,.75)',isDark()?'rgba(63,185,80,.8)':'rgba(16,185,129,.75)'],borderRadius:6},{label:'Context Coverage',data:[0.71,0.85,0.91],backgroundColor:[isDark()?'rgba(248,81,73,.35)':'rgba(220,38,38,.3)',isDark()?'rgba(129,140,248,.35)':'rgba(99,102,241,.3)',isDark()?'rgba(63,185,80,.35)':'rgba(16,185,129,.3)'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc()}},tooltip:tt()},scales:{x:{ticks:{color:tc()},grid:{color:gc()}},y:{ticks:{color:tc()},grid:{color:gc()},max:1,title:{display:true,text:'Score (0–1)',color:tc(),font:{size:11}}}}}});
+  }
+}
+function switchTab(i,el){document.querySelectorAll('.chart-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.chart-panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('cp'+i).classList.add('active');buildChart(i);}
+buildChart(0);
+
+// Theme toggle
+document.addEventListener('DOMContentLoaded',()=>{
+  const isDarkMode=()=>document.documentElement.getAttribute('data-theme')==='dark';
+  const themeToggle=()=>{
+    const newTheme=isDarkMode()?'light':'dark';
+    document.documentElement.setAttribute('data-theme',newTheme);
+    localStorage.setItem('mn-theme',newTheme);
+    [0,1,2].forEach(i=>buildChart(i));
+  };
+  window.themeToggle=themeToggle;
+});
+</script>
+</body>
+</html>

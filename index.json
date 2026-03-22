@@ -64,6 +64,10 @@
           {
             "name": "011-experiment-lab",
             "html": "projects/Projects-Files/011-experiment-lab.html"
+          },
+          {
+            "name": "012-research-rag-bench",
+            "html": "projects/Projects-Files/012-research-rag-bench.html"
           }
         ]
       }
