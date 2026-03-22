@@ -128,6 +128,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 .tk-label{font-size:.76rem;color:var(--muted);line-height:1.45}
 .sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px}
 .sidebar-card h3{font-size:.79rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px}
+.ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ataglance-header h3{margin-bottom:0}
+.ataglance-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.28);color:#6ee7b7;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700}
+[data-theme="light"] .ataglance-badge{background:rgba(5,150,105,.09);border-color:rgba(5,150,105,.3);color:#065f46}
 .tldr-text{font-size:.85rem;color:var(--muted);line-height:1.7}
 .tldr-text strong{color:var(--text)}
 .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--glass-border);font-size:.8rem;gap:8px}
@@ -358,7 +362,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 
 <div class="sidebar">
   <div class="sidebar-card">
-    <h3>At a Glance</h3>
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-headset"></i> Quick read</span>
+    </div>
     <p class="tldr-text"><strong>What it is:</strong> A multi-turn LangGraph ReAct customer support agent with live graph tracing, tool logs, and session analytics. <strong>Tech:</strong> Flask, LangGraph 0.2, HuggingFace Inference API, Chart.js. <strong>Deploy:</strong> HuggingFace Spaces Docker, port 7860. <strong>Scope:</strong> Order tracking, FAQ search, ticket creation, product lookup, human escalation.</p>
   </div>
   <div class="sidebar-card">

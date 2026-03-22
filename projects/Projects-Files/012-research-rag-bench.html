@@ -125,6 +125,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 .tk-label{font-size:.78rem;color:var(--muted);line-height:1.45}
 .sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
 .sidebar-card h3{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ataglance-header h3{margin-bottom:0}
+.ataglance-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);color:#fdba74;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700}
+[data-theme="light"] .ataglance-badge{background:rgba(234,88,12,.09);border-color:rgba(234,88,12,.3);color:#c2410c}
 .tldr-text{font-size:.87rem;color:var(--muted);line-height:1.7}.tldr-text strong{color:var(--text)}
 .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
 .info-row:last-child{border-bottom:none}.info-key{color:var(--muted);flex-shrink:0}.info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
@@ -341,7 +345,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 
 <div class="sidebar">
   <div class="sidebar-card">
-    <h3>At a Glance</h3>
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-search"></i> Quick read</span>
+    </div>
     <p class="tldr-text"><strong>What it is:</strong> A hybrid RAG platform — load arXiv papers by domain, ask questions, get answers with live comparison across BM25, dense vector, and hybrid fusion. <strong>Tech:</strong> Flask · Plotly Dash · FAISS · BM25 · Flan-T5. <strong>Deploy:</strong> Docker on HuggingFace Spaces free tier. <strong>UI:</strong> 2-tab design — Load and Ask &amp; Compare.</p>
   </div>
   <div class="sidebar-card">

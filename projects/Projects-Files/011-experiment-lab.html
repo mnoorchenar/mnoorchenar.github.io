@@ -182,6 +182,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 /* ── SIDEBAR ── */
 .sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
 .sidebar-card h3{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ataglance-header h3{margin-bottom:0}
+.ataglance-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#86efac;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700}
+[data-theme="light"] .ataglance-badge{background:rgba(22,163,74,.09);border-color:rgba(22,163,74,.3);color:#166534}
 .tldr-text{font-size:.87rem;color:var(--muted);line-height:1.7}
 .tldr-text strong{color:var(--text)}
 .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px}
@@ -518,7 +522,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 <div class="sidebar">
 
   <div class="sidebar-card">
-    <h3>At a Glance</h3>
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-flask"></i> Quick read</span>
+    </div>
     <p class="tldr-text"><strong>What it is:</strong> A Flask-based statistical experimentation suite with four interactive modules. <strong>Tech:</strong> Python, SciPy, statsmodels, Plotly, Jinja2. <strong>Deploy:</strong> Docker on HuggingFace Spaces (port 7860). <strong>Scope:</strong> Power analysis, A/B testing, factorial DoE, sequential testing.</p>
   </div>
 

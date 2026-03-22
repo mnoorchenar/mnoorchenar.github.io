@@ -102,6 +102,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 .tk-label{font-size:.78rem;color:var(--muted);line-height:1.45}
 .sidebar-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px}
 .sidebar-card h3{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.ataglance-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ataglance-header h3{margin-bottom:0}
+.ataglance-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.28);color:#f9a8d4;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700}
+[data-theme="light"] .ataglance-badge{background:rgba(219,39,119,.09);border-color:rgba(219,39,119,.3);color:#9d174d}
 .tldr-text{font-size:.87rem;color:var(--muted);line-height:1.7} .tldr-text strong{color:var(--text)}
 .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:.82rem;gap:8px} .info-row:last-child{border-bottom:none}
 .info-key{color:var(--muted);flex-shrink:0} .info-val{color:var(--text);font-weight:600;text-align:right;font-size:.79rem}
@@ -331,7 +335,10 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 
 <div class="sidebar">
   <div class="sidebar-card">
-    <h3>At a Glance</h3>
+    <div class="ataglance-header">
+      <h3>At a Glance</h3>
+      <span class="ataglance-badge"><i class="fas fa-file-alt"></i> Quick read</span>
+    </div>
     <p class="tldr-text"><strong>What it is:</strong> Minimal agentic document research platform with 5 LangGraph agents and hybrid RAG. <strong>Tech:</strong> LangGraph · Qwen 2.5-7B · FAISS · BM25 · Flask. <strong>Deploy:</strong> Docker on HuggingFace Spaces (free tier). <strong>Scope:</strong> Upload a PDF or paste a URL, ask questions, get cited answers with a live agent trace.</p>
   </div>
   <div class="sidebar-card">
