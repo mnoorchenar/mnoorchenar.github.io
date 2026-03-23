@@ -14,6 +14,10 @@
       {
         "name": "nav",
         "html": "projects/nav.html"
+      },
+      {
+        "name": "projects-summary",
+        "html": "projects/projects-summary.html"
       }
     ],
     "subfolders": [

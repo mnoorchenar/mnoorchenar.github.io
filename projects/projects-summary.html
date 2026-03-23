@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Portfolio Summary — Mohammad Noorchenarboo</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="shared.css">
+<script src="shared.js" defer></script>
+<style>
+:root {
+  --accent: #4f8ef7; --teal: #06b6d4; --gold: #f59e0b; --green: #22c55e;
+  --radius: 14px;
+}
+body { font-family: 'Segoe UI', system-ui, sans-serif; }
+
+/* HERO */
+.hero {
+  padding: 120px 32px 64px;
+  text-align: center;
+  background: var(--body-bg);
+  position: relative; overflow: hidden;
+  transition: background .35s;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(79,142,247,.15) 0%, transparent 65%);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(79,142,247,.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(79,142,247,.03) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; line-height: 1.2;
+  margin-bottom: 16px; color: var(--text);
+}
+.hero-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 20px; border-radius: 8px; font-size: .85rem; font-weight: 600;
+  background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted);
+  text-decoration: none; transition: all .2s;
+}
+.back-btn:hover { color: var(--accent); border-color: rgba(79,142,247,.4); transform: translateY(-2px); }
+
+/* MAIN */
+.main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; display: flex; flex-direction: column; gap: 32px; }
+
+/* PROJECT CARD */
+.proj {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 32px;
+  transition: all .25s;
+}
+.proj:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-2px); }
+
+.proj-num {
+  font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--accent); margin-bottom: 10px; opacity: .7;
+}
+.proj-title {
+  font-size: 1.18rem; font-weight: 900; line-height: 1.3;
+  color: var(--text); margin-bottom: 6px;
+}
+.proj-domain {
+  font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--teal); margin-bottom: 16px;
+}
+.proj-body { font-size: .92rem; color: var(--muted); line-height: 1.75; margin-bottom: 20px; }
+.proj-body p + p { margin-top: 12px; }
+.proj-body strong { color: var(--text); }
+
+/* TAGS */
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.tag {
+  display: inline-block; font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em;
+  padding: 3px 10px; border-radius: 6px;
+  background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.2); color: var(--accent);
+}
+
+/* LINKS */
+.link-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.lnk {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 16px; border-radius: 8px; font-size: .82rem; font-weight: 600;
+  text-decoration: none; border: 1px solid transparent; transition: all .2s;
+}
+.lnk-detail {
+  background: rgba(79,142,247,.12); border-color: rgba(79,142,247,.3); color: var(--accent);
+}
+.lnk-detail:hover { background: rgba(79,142,247,.25); transform: translateY(-2px); }
+.lnk-paper {
+  background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.3); color: var(--gold);
+}
+.lnk-paper:hover { background: rgba(245,158,11,.22); transform: translateY(-2px); }
+.lnk-demo {
+  background: rgba(6,182,212,.1); border-color: rgba(6,182,212,.3); color: var(--teal);
+}
+.lnk-demo:hover { background: rgba(6,182,212,.22); transform: translateY(-2px); }
+.lnk-gh {
+  background: var(--glass); border-color: var(--glass-border); color: var(--muted);
+}
+[data-theme="dark"] .lnk-gh { color: #cbd5e1; }
+.lnk-gh:hover { background: var(--card-hover-bg); border-color: rgba(148,163,184,.4); transform: translateY(-2px); }
+
+/* DIVIDER */
+.section-label {
+  font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted); margin-bottom: 8px; opacity: .6;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> All Projects</a>
+    <h1 style="margin-top:28px">Project Portfolio Summary</h1>
+    <p class="hero-sub">
+      A concise overview of all projects — methods, technology stack, production patterns,
+      and key results. Optimized for ATS keyword detection and technical recruiter review.
+    </p>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- 001 -->
+<div class="proj">
+<div class="proj-num">Project 01 · Healthcare AI · Published</div>
+<div class="proj-title">Neural Network vs. Surgeon: OR Duration Prediction — ANN, XGBoost, scikit-learn</div>
+<div class="proj-domain">Clinical Machine Learning · Predictive Modeling · Published · Surgical Endoscopy 2025</div>
+<div class="proj-body">
+  <p>Benchmarked <strong>8 machine learning models</strong> — Linear Regression, Ridge, Lasso, SVR, Random Forest, GBM, XGBoost, and a Neural Network (ANN) — against real surgeon estimates for predicting elective surgical case duration. The study covers <strong>17,246 procedures from 3 academic hospitals</strong> in London, Canada (2015–2020), using 20 structured pre-operative features including procedure type, ASA health complexity score, patient age, BMI, surgeon identity, ICD code, and day of week. Published in <strong>Surgical Endoscopy (2025)</strong>.</p>
+  <p>The best model — a <strong>Neural Network (ANN)</strong> — achieved MAE = 31.8 min, MAPE = 26%, R² = 0.78, and a near-zero systematic bias of <strong>−0.37 min (p = 0.34)</strong> — the only model statistically free of scheduling error. By contrast, surgeon estimates showed a consistent <strong>−18.52 min underestimation (p &lt; 0.001)</strong>. All models were validated with <strong>10-fold cross-validation</strong>, Bayesian hyperparameter tuning, and TRIPOD-AI reporting standards using Python, scikit-learn, XGBoost, and Keras/TensorFlow.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">Neural Network</span><span class="tag">XGBoost</span><span class="tag">scikit-learn</span>
+  <span class="tag">Random Forest</span><span class="tag">GBM</span><span class="tag">Bayesian Optimization</span>
+  <span class="tag">TRIPOD-AI</span><span class="tag">Healthcare AI</span><span class="tag">Predictive Modeling</span>
+  <span class="tag">Feature Engineering</span><span class="tag">10-fold CV</span><span class="tag">Python</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/001-surgical-duration.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://link.springer.com/article/10.1007/s00464-025-11885-0" target="_blank"><i class="fas fa-file-alt"></i> Published Paper</a>
+</div>
+</div>
+
+<!-- 002 -->
+<div class="proj">
+<div class="proj-num">Project 02 · NLP · Preprint</div>
+<div class="proj-title">Clinical Text Encoder Benchmark: Sentence-BERT vs ClinicalBERT vs TF-IDF — 5 Strategies, 180K Cases</div>
+<div class="proj-domain">Natural Language Processing · Model Evaluation · SSRN Preprint 2025</div>
+<div class="proj-body">
+  <p>Benchmarked <strong>five text-encoding strategies</strong> — Label Encoding, Count Vectorization, TF-IDF, ClinicalBERT, and Sentence-BERT — on <strong>180,366 real elective surgical cases</strong> from 3 tertiary hospitals in London, Canada (2015–2020). Each strategy was fused with structured pre-operative features (age, BMI, ASA score, sex, procedure type) and evaluated against multiple ML models using MAE, SMAPE, and R² with 10-fold cross-validation. Submitted as an SSRN preprint (2025).</p>
+  <p>The best encoder — <strong>Sentence-BERT</strong> — achieved MAE = 27.6 min, SMAPE = 23.0%, and R² = 0.77, reducing prediction error by <strong>up to 16%</strong> over traditional encodings. ClinicalBERT also showed statistically significant gains over the structured-only baseline (p &lt; 0.01). Results confirm that sentence-level transformer embeddings, which encode the full meaning of a surgical narrative, outperform all token-level and frequency-based strategies. Tech stack: Python, <strong>Hugging Face</strong>, PyTorch, scikit-learn, XGBoost, SHAP.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">NLP</span><span class="tag">Sentence-BERT</span><span class="tag">ClinicalBERT</span>
+  <span class="tag">TF-IDF</span><span class="tag">HuggingFace</span><span class="tag">Transformers</span>
+  <span class="tag">PyTorch</span><span class="tag">scikit-learn</span><span class="tag">XGBoost</span>
+  <span class="tag">SHAP</span><span class="tag">Clinical Text Mining</span><span class="tag">Python</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/002-nlp-benchmark.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://ssrn.com/abstract=5489578" target="_blank"><i class="fas fa-file-alt"></i> Preprint</a>
+</div>
+</div>
+
+
+<!-- 003 -->
+<div class="proj">
+<div class="proj-num">Project 03 · Explainable AI · Published</div>
+<div class="proj-title">Explainable AI for Energy Anomaly Detection: Context-Aware SHAP, LSTM, 10 DL Architectures</div>
+<div class="proj-domain">Explainable AI · Time Series · Anomaly Detection · Energy & Buildings 2025</div>
+<div class="proj-body">
+  <p>Developed a <strong>context-aware XAI framework</strong> for deep learning-based energy anomaly detection across five real building types — residential, manufacturing, medical clinic, retail, and office. The key innovation replaces SHAP's random background baseline with <strong>cosine-similarity-matched historical windows</strong>, weighted by Random Forest feature importances, so explanations are grounded in each anomaly's actual operational context. Published in <strong>Energy &amp; Buildings (2025)</strong>, the method was evaluated across <strong>10 deep learning architectures</strong> (LSTM, GRU, BiLSTM, BiGRU, 1D-CNN, TCN, DCNN, WaveNet, TFT, TST) and 5 XAI techniques over 250+ model–dataset–XAI combinations.</p>
+  <p>Results show a <strong>38% average reduction in explanation variability</strong> across all datasets and methods, with a maximum of <strong>80.3%</strong> reduction on the manufacturing facility using Partition SHAP (p &lt; 0.001). The anomaly detection pipeline uses IQR-based thresholding with 48-hour sliding window inputs and Bayesian hyperparameter tuning on all models. Funded by <strong>NSERC</strong> and <strong>London Hydro</strong>; co-authored with K. Grolinger, Western University. Tech stack: Python, SHAP, LIME, Random Forest, Cosine Similarity, Bayesian Optimization, Min-Max Scaling.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">Explainable AI</span><span class="tag">XAI</span><span class="tag">SHAP</span>
+  <span class="tag">LIME</span><span class="tag">LSTM</span><span class="tag">GRU</span>
+  <span class="tag">TCN</span><span class="tag">WaveNet</span><span class="tag">Anomaly Detection</span>
+  <span class="tag">Time Series</span><span class="tag">Energy Analytics</span><span class="tag">Python</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/003-energy-anomaly-xai.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://doi.org/10.1016/j.enbuild.2024.115177" target="_blank"><i class="fas fa-file-alt"></i> Published Paper</a>
+</div>
+</div>
+
+
+<!-- 004 -->
+<div class="proj">
+<div class="proj-num">Project 04 · Biostatistics · Published</div>
+<div class="proj-title">GWAS Identifies IL10 as Sarcopenia Risk Gene: MultiPhen, GATES, BEH Cohort</div>
+<div class="proj-domain">Biostatistics · Genomics · Genetic Risk Prediction · J. Biostatistics & Epidemiology 2022</div>
+<div class="proj-body">
+  <p>Applied a <strong>multivariate candidate-gene approach</strong> to identify genetic risk factors for sarcopenia in 2,772 elderly Iranians (BEH cohort, aged 60+) genotyped at 663,377 SNPs. Rather than testing muscle mass and grip strength separately, the study used <strong>MultiPhen</strong> — a joint ordinal regression method that regresses genotype on both outcomes simultaneously — providing up to <strong>2× more statistical power</strong> than conventional single-trait GWAS. After LD filtering (r² ≤ 0.4, MAF &gt; 0.01, HWE p &gt; 0.05), 27 independent SNPs within ±50 kb of the IL10 gene were aggregated via the <strong>GATES Extended Simes procedure</strong>. Published in the <strong>Journal of Biostatistics and Epidemiology (2022)</strong>.</p>
+  <p>Three intronic IL10 variants reached significance — rs11119603 (p = 0.00384), rs57461190 (p = 0.00411), and rs3950619 (p = 0.03641) — with effect sizes ranging 0.178–0.883. The GATES gene-level test confirmed IL10 at p = 0.046, the <strong>first genomic validation of IL10 as a sarcopenia risk gene in an Iranian population</strong>. Tech stack: <strong>R</strong>, MultiPhen, GATES, PLINK.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">GWAS</span><span class="tag">Biostatistics</span><span class="tag">MultiPhen</span>
+  <span class="tag">GATES</span><span class="tag">Ordinal Regression</span><span class="tag">Linkage Disequilibrium</span>
+  <span class="tag">Candidate-Gene</span><span class="tag">IL10</span><span class="tag">Population Genetics</span>
+  <span class="tag">Epidemiology</span><span class="tag">PLINK</span><span class="tag">R</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/004-sarcopenia-genetics.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://jbe.tums.ac.ir/index.php/jbe/article/view/916" target="_blank"><i class="fas fa-file-alt"></i> Published Paper</a>
+</div>
+</div>
+
+
+<!-- 005 -->
+<div class="proj">
+<div class="proj-num">Project 05 · Clinical Data Science · Published</div>
+<div class="proj-title">Metabolomics Pipeline for ASCVD Biomarker Discovery: PCA, Logistic Regression, KEGG Enrichment</div>
+<div class="proj-domain">Metabolomics · Cardiovascular Risk · Biomarker Discovery · Frontiers in Cardiovascular Medicine 2023</div>
+<div class="proj-body">
+  <p>Profiled <strong>50 plasma metabolites</strong> (30 acylcarnitines + 20 amino acids) via FIA-MS/MS in 1,102 fasting participants from the STEPs 2016 national survey (age 40–79, Tehran University of Medical Sciences). To handle the high dimensionality and multicollinearity of 50 correlated metabolites, the pipeline applied <strong>PCA with Varimax rotation</strong> (KMO = 0.874, Bartlett p &lt; 0.001) to produce 10 orthogonal metabolite factors, followed by <strong>binary logistic regression</strong> stratified across four ACC/AHA ASCVD risk groups. Pathway enrichment was performed via <strong>MetaboAnalyst v5.0 / KEGG</strong> with Benjamini-Hochberg FDR correction. Published in <strong>Frontiers in Cardiovascular Medicine (2023)</strong>.</p>
+  <p>Multiple linear regression on all 50 metabolites identified <strong>14 significant ASCVD biomarkers</strong> — 3 acylcarnitines (C4DC, C8:1, C16OH) and 11 amino acids — with C16OH showing the strongest single-metabolite correlation (r = 0.279, p &lt; 0.001). PCA logistic regression confirmed Factor 10 (ornithine + citrulline) as the highest-risk factor (OR = 1.570, p &lt; 0.001) and Factor 9 (glycine, serine, threonine) as the only protective factor (OR = 0.741, p &lt; 0.001). Tech stack: <strong>FIA-MS/MS, PCA (Varimax), SPSS v19.0, MetaboAnalyst v5.0, KEGG</strong>.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">Metabolomics</span><span class="tag">FIA-MS/MS</span><span class="tag">PCA</span>
+  <span class="tag">Logistic Regression</span><span class="tag">MetaboAnalyst</span><span class="tag">KEGG</span>
+  <span class="tag">Biomarker Discovery</span><span class="tag">ASCVD</span><span class="tag">Cardiovascular Risk</span>
+  <span class="tag">Benjamini-Hochberg</span><span class="tag">Epidemiology</span><span class="tag">SPSS</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/005-ascvd-metabolomics.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://www.frontiersin.org/journals/cardiovascular-medicine/articles/10.3389/fcvm.2023.1161761/full" target="_blank"><i class="fas fa-file-alt"></i> Published Paper</a>
+</div>
+</div>
+
+<!-- 006 -->
+<div class="proj">
+<div class="proj-num">Project 06 · Digital Health · Published</div>
+<div class="proj-title">Gamified CABG Recovery RCT: Delban Android App vs. Teach-Back — ANOVA, SPSS, STATA</div>
+<div class="proj-domain">Digital Health · Gamification · Randomized Clinical Trial · JMIR 2021</div>
+<div class="proj-body">
+  <p>Conducted the <strong>statistical analysis</strong> for a 3-arm randomized clinical trial (n=123 CABG patients, block randomization size 4, n=41 per arm) comparing a custom <strong>gamified Android app ("Delban")</strong> against teach-back training and usual care over 30 days post-discharge. Delban covered three clinical modules — diet, medication, and movement — with star rewards and a shared social leaderboard. Outcomes were measured via the <strong>Sanaie dietary questionnaire</strong> (30 items), <strong>Sanaie movement scale</strong> (19 items), and the <strong>MMAS medication adherence scale</strong> (Cronbach α = 0.82). Published in <strong>JMIR (2021)</strong>.</p>
+  <p>Statistical analysis used <strong>one-way ANOVA</strong> with Dunnett post-hoc tests in <strong>SPSS v20 and STATA v12</strong>. Gamification significantly outperformed both teach-back and control for diet (F = 71.8, Δ = +1.797, p &lt; 0.001) and movement adherence (F = 124.5, Δ = +2.013, p &lt; 0.001), with non-overlapping 95% CIs confirming a genuine advantage over teach-back. Medication adherence improved in both active arms vs. control (F = 9.66, p &lt; 0.001) but did not differ significantly between the two interventions. Tech stack: <strong>SPSS v20, STATA v12, one-way ANOVA, Dunnett post-hoc, Fisher exact test, Cronbach alpha</strong>.</p>
+</div>
+<div class="tag-row">
+  <span class="tag">RCT</span><span class="tag">Gamification</span><span class="tag">mHealth</span>
+  <span class="tag">Android App</span><span class="tag">One-Way ANOVA</span><span class="tag">Dunnett Post-Hoc</span>
+  <span class="tag">MMAS</span><span class="tag">Block Randomization</span><span class="tag">Digital Health</span>
+  <span class="tag">SPSS</span><span class="tag">STATA</span><span class="tag">Clinical Trial</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/006-cabg-gamification.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-paper" href="https://www.jmir.org/2021/12/e22557/" target="_blank"><i class="fas fa-file-alt"></i> Published Paper</a>
+</div>
+</div>
+
+<!-- 007 -->
+<div class="proj">
+<div class="proj-num">Project 07 · LLM · Bioinformatics · Live Demo</div>
+<div class="proj-title">LLM Drug Target Discovery via AlphaFold: UniProt, 5-Model Fallback, Flask</div>
+<div class="proj-domain">Large Language Models · Drug Discovery · Bioinformatics · Generative AI</div>
+<div class="proj-body">
+  <p>Built a <strong>Flask web application</strong> that converts a plain-language biomedical query into validated human protein drug targets with <strong>AlphaFold 3D structures</strong> rendered in-browser. The core engine is a <strong>5-model LLM fallback chain</strong> — Llama-3.2-3B-Instruct → Mistral-7B-Instruct-v0.3 → Phi-3-mini-4k-instruct → Apriel-5B-Instruct → Llama-3.1-5B-Instruct — where each model is tried with three API methods (conversational → chat_completion → text_generation) before cascading to the next. LLMs return a <strong>structured JSON array of 3–5 human protein targets</strong> with UniProt IDs, function summaries, and known drugs per query.</p>
+  <p>Every LLM-suggested UniProt ID is <strong>cross-validated live against the UniProt REST API</strong> with a strict <em>Homo sapiens</em> organism filter (organism_id:9606) — hallucinated or non-human IDs are dropped automatically. <strong>AlphaFold EBI (v4/v3)</strong> structures are fetched with RCSB PDB fallback for 3D in-browser rendering. Additional resilience layers include a <strong>3-level UniProt deep search fallback</strong> with progressive keyword extraction and a curated disease-protein JSON database as last resort. A <strong>per-protein LLM chat assistant</strong> handles follow-up Q&amp;A. Deployed on <strong>HuggingFace Spaces</strong> (2025).</p>
+</div>
+<div class="tag-row">
+  <span class="tag">LLM</span><span class="tag">Flask</span><span class="tag">HuggingFace</span>
+  <span class="tag">UniProt REST</span><span class="tag">AlphaFold</span><span class="tag">RCSB PDB</span>
+  <span class="tag">Llama 3</span><span class="tag">Mistral</span><span class="tag">Drug Discovery</span>
+  <span class="tag">Bioinformatics</span><span class="tag">Generative AI</span><span class="tag">Python</span>
+</div>
+<div class="link-row">
+  <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+  <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+</div>
+</div>
+
+<!-- 008 -->
+<div class="proj">
+  <div class="proj-num">Project 08 · FinTech · Risk Analytics · Live Demo</div>
+  <div class="proj-title">RiskSight Pro: Full-Stack Risk Intelligence Platform for Banking &amp; Insurance</div>
+  <div class="proj-domain">Machine Learning · Financial Risk Management · FinTech · Data Analytics · MLOps</div>
+  <div class="proj-body">
+    <p>Built a <strong>full-stack risk intelligence dashboard</strong> unifying seven risk modules — credit scoring, fraud detection, market risk (VaR/CVaR), loan portfolio analysis, insurance claims analytics, underwriting risk, and loss-ratio monitoring — into a single <strong>Flask + Plotly application</strong> deployed on <strong>HuggingFace Spaces</strong>. Three production-style <strong>Scikit-learn ML models</strong> (Random Forest, Gradient Boosting, Logistic Regression) are trained at startup on <strong>5,200+ synthetic records</strong> across credit, fraud, insurance, and market domains. Three <strong>REST API endpoints</strong> (<code>/api/credit</code>, <code>/api/fraud</code>, <code>/api/underwriting</code>) deliver real-time ML scoring from browser forms — mirroring the microservice pattern of production risk systems.</p>
+    <p>The <strong>market risk engine</strong> computes <strong>VaR at 95% &amp; 99%, CVaR (Expected Shortfall), Sharpe ratio, and maximum drawdown</strong> via historical simulation on 252 days of synthetic returns with a rolling 21-day window. The <strong>credit risk module</strong> outputs Probability of Default, LGD proxy, and Expected Loss per applicant. All <strong>Plotly figures are serialised server-side to JSON</strong> and rendered client-side — responsive, interactive, and theme-consistent. The entire application — data generation, ML training, seven pages, REST endpoints, and CSS — is contained in <strong>a single <code>app.py</code></strong>, containerised via <strong>Docker</strong> for reproducible deployment (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Machine Learning</span><span class="tag">Flask</span><span class="tag">Scikit-learn</span>
+    <span class="tag">Plotly</span><span class="tag">Random Forest</span><span class="tag">Gradient Boosting</span>
+    <span class="tag">Credit Risk</span><span class="tag">Fraud Detection</span><span class="tag">VaR / CVaR</span>
+    <span class="tag">Risk Analytics</span><span class="tag">HuggingFace</span><span class="tag">Docker</span>
+    <span class="tag">REST API</span><span class="tag">Python</span><span class="tag">FinTech</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/008-risksight-pro.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/risksight-pro" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/risksight-pro" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
+
+
+</div><!-- /main -->
+</body>
+</html>

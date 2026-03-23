@@ -296,7 +296,10 @@
   <div class="hero-orb hero-orb-2"></div>
   <div class="hero-orb hero-orb-3"></div>
   <h1 class="hero-title">Data Science <span class="grad-text">Projects</span></h1>
-  <p>Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.</p>
+	<p>
+	  Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.
+	  <a class="summary-link" href="projects-summary.html">See quick summary of all projects</a>
+	</p>
   <div class="hero-stats">
     <div class="sbar-stat"><div class="sbar-num" id="totalCount">14</div><div class="sbar-label">Projects</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Domains</div></div>
@@ -327,7 +330,7 @@
   <div class="projects-grid" id="projectsGrid">
 
     <!-- ─── CARD 1 ─── -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="deep learning bert surgical prediction or scheduling">
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="neural network ann xgboost scikit-learn random forest GBM surgical prediction or scheduling">
       <div class="proj-thumb">
         <img src="../images/projects/proj_surgical.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Surgical Duration Predictor">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.3))">🏥</div>
@@ -336,10 +339,10 @@
       <div class="proj-body">
         <div class="proj-num">01</div>
         <div class="proj-domain">Healthcare · OR Scheduling</div>
-        <div class="proj-title">BERT + Multimodal ML: Surgical Duration Prediction — SHAP, Flask, Healthcare AI</div>
+        <div class="proj-title">Neural Network vs. Surgeon: OR Duration Prediction — ANN, XGBoost, scikit-learn</div>
         <div class="proj-tagline">Can AI predict how long a surgery will take better than the surgeon?</div>
-        <div class="proj-desc">Multimodal ML system predicting general surgery duration using structured clinical data and BERT-encoded operative notes. Published in Surgical Endoscopy 2025.</div>
-        <div class="proj-tags"><span class="proj-tag">BERT</span><span class="proj-tag">Transformers</span><span class="proj-tag">SHAP</span><span class="proj-tag">Flask</span></div>
+        <div class="proj-desc">Benchmarked 8 ML models — ANN, XGBoost, Random Forest, GBM, and more — against real surgeon estimates on 17,246 procedures. ANN achieved near-zero bias (−0.37 min) vs. surgeons' consistent −18.52 min underestimation. Published in Surgical Endoscopy 2025.</div>
+        <div class="proj-tags"><span class="proj-tag">Neural Network</span><span class="proj-tag">XGBoost</span><span class="proj-tag">scikit-learn</span><span class="proj-tag">Random Forest</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/001-surgical-duration.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -349,7 +352,7 @@
     </div>
 
     <!-- ─── CARD 2 ─── -->
-    <div class="proj-card fade-up" data-domain="nlp" data-tags="nlp text encoding bert clinical notes benchmarking clinicalbert biobert">
+    <div class="proj-card fade-up" data-domain="nlp" data-tags="nlp text encoding sentence-bert clinicalbert tf-idf benchmarking clinical notes label encoding count vectorization">
       <div class="proj-thumb">
         <img src="../images/projects/proj_nlp.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="NLP Benchmark">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.35))">💬</div>
@@ -358,10 +361,10 @@
       <div class="proj-body">
         <div class="proj-num">02</div>
         <div class="proj-domain">NLP · Clinical Text</div>
-        <div class="proj-title">Clinical NLP Benchmark: BioBERT vs ClinicalBERT — Transformers, TF-IDF, Scikit-learn</div>
+        <div class="proj-title">Clinical NLP Benchmark: Sentence-BERT vs ClinicalBERT — TF-IDF, 5 Strategies, 180K Cases</div>
         <div class="proj-tagline">Which AI reading strategy works best on doctor's notes?</div>
-        <div class="proj-desc">Side-by-side benchmark of TF-IDF, Word2Vec, BioBERT, and ClinicalBERT on surgical notes for duration prediction. SSRN preprint 2025.</div>
-        <div class="proj-tags"><span class="proj-tag">ClinicalBERT</span><span class="proj-tag">BioBERT</span><span class="proj-tag">NLP</span><span class="proj-tag">Benchmarking</span></div>
+        <div class="proj-desc">Benchmarked 5 text-encoding strategies — Label Encoding, Count Vectorization, TF-IDF, ClinicalBERT, and Sentence-BERT — on 180K surgical cases. Sentence-BERT reduced prediction error by up to 16% over traditional encodings. SSRN preprint 2025.</div>
+        <div class="proj-tags"><span class="proj-tag">Sentence-BERT</span><span class="proj-tag">ClinicalBERT</span><span class="proj-tag">NLP</span><span class="proj-tag">Benchmarking</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/002-nlp-benchmark.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -393,7 +396,7 @@
     </div>
 
     <!-- ─── CARD 4 ─── -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="genetics sarcopenia muscle gwas snp biostatistics">
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="genetics sarcopenia muscle gwas snp biostatistics multiphen gates plink il10">
       <div class="proj-thumb">
         <img src="../images/projects/proj_sarcopenia.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Sarcopenia Genetics">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(167,139,250,.3))">🧬</div>
@@ -402,10 +405,10 @@
       <div class="proj-body">
         <div class="proj-num">04</div>
         <div class="proj-domain">Healthcare · Genetics</div>
-        <div class="proj-title">GWAS + Machine Learning for Sarcopenia Risk: Biostatistics, Genetic Biomarker Discovery</div>
+        <div class="proj-title">GWAS for Sarcopenia Risk: IL10 Gene Discovery — MultiPhen, GATES, Biostatistics</div>
         <div class="proj-tagline">How do genes shape muscle loss in aging?</div>
-        <div class="proj-desc">Interactive GWAS visualization and SNP analysis for sarcopenia, integrating biostatistics and machine learning. Uncovers novel genetic associations and risk factors. Published in J. of Biostatistics &amp; Epidemiology 2022.</div>
-        <div class="proj-tags"><span class="proj-tag">GWAS</span><span class="proj-tag">SNP</span><span class="proj-tag">Biostatistics</span><span class="proj-tag">Machine Learning</span></div>
+        <div class="proj-desc">Multivariate candidate-gene GWAS using MultiPhen and GATES on 2,772 elderly participants. First genomic validation of IL10 as a sarcopenia risk gene in an Iranian population. Published in J. of Biostatistics &amp; Epidemiology 2022.</div>
+        <div class="proj-tags"><span class="proj-tag">GWAS</span><span class="proj-tag">SNP</span><span class="proj-tag">Biostatistics</span><span class="proj-tag">MultiPhen</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/004-sarcopenia-genetics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -415,7 +418,7 @@
     </div>
 
     <!-- ─── CARD 5 ─── -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="ascvd metabolomics cardiovascular risk ml biostatistics">
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="ascvd metabolomics cardiovascular risk pca logistic regression biostatistics biomarker">
       <div class="proj-thumb">
         <img src="../images/projects/proj_ascvd.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="ASCVD Metabolomics">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(34,197,94,.3))">🫀</div>
@@ -424,10 +427,10 @@
       <div class="proj-body">
         <div class="proj-num">05</div>
         <div class="proj-domain">Healthcare · Metabolomics</div>
-        <div class="proj-title">ASCVD Risk Prediction with Metabolomics & ML: XGBoost, Biomarker Discovery Pipeline</div>
+        <div class="proj-title">ASCVD Risk with Metabolomics: PCA, Logistic Regression & Biomarker Discovery Pipeline</div>
         <div class="proj-tagline">Can blood metabolites reveal hidden cardiovascular risk?</div>
-        <div class="proj-desc">Machine learning analysis of metabolomics data for ASCVD risk prediction. Integrates clinical and omics features to uncover novel biomarkers. Published in Frontiers in Cardiovascular Medicine 2023.</div>
-        <div class="proj-tags"><span class="proj-tag">Metabolomics</span><span class="proj-tag">ASCVD</span><span class="proj-tag">Biostatistics</span><span class="proj-tag">Machine Learning</span></div>
+        <div class="proj-desc">PCA and logistic regression analysis of 50 plasma metabolites (acylcarnitines + amino acids) for ASCVD risk prediction. Identified 14 significant biomarkers across four ACC/AHA risk groups. Published in Frontiers in Cardiovascular Medicine 2023.</div>
+        <div class="proj-tags"><span class="proj-tag">Metabolomics</span><span class="proj-tag">ASCVD</span><span class="proj-tag">PCA</span><span class="proj-tag">Logistic Regression</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/005-ascvd-metabolomics.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -437,7 +440,7 @@
     </div>
 
     <!-- ─── CARD 6 ─── -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="cabg gamification surgery patient engagement ml">
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="cabg gamification surgery rct randomized clinical trial anova spss stata patient engagement">
       <div class="proj-thumb">
         <img src="../images/projects/proj_cabg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="CABG Gamification">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(245,158,11,.3))">🎮</div>
@@ -446,10 +449,10 @@
       <div class="proj-body">
         <div class="proj-num">06</div>
         <div class="proj-domain">Healthcare · Gamification</div>
-        <div class="proj-title">Gamified CABG Recovery: ML-Personalized Patient Engagement — Flask, Clinical Trial</div>
+        <div class="proj-title">Gamified CABG Recovery RCT: Delban App vs. Teach-Back — ANOVA, SPSS, STATA</div>
         <div class="proj-tagline">Can gamification improve surgical outcomes?</div>
-        <div class="proj-desc">Gamified patient engagement platform for CABG surgery recovery. Uses ML to personalize feedback and track progress. Published in JMIR 2021.</div>
-        <div class="proj-tags"><span class="proj-tag">Gamification</span><span class="proj-tag">CABG</span><span class="proj-tag">Patient Engagement</span><span class="proj-tag">Machine Learning</span></div>
+        <div class="proj-desc">3-arm randomized clinical trial comparing a gamified Android app (Delban) against teach-back training and usual care for post-CABG recovery. Statistical analysis via one-way ANOVA with Dunnett post-hoc tests. Published in JMIR 2021.</div>
+        <div class="proj-tags"><span class="proj-tag">Gamification</span><span class="proj-tag">RCT</span><span class="proj-tag">ANOVA</span><span class="proj-tag">Clinical Trial</span></div>
       </div>
       <div class="proj-actions">
         <a href="Projects-Files/006-cabg-gamification.html" class="proj-btn proj-btn-details"><i class="fas fa-layer-group"></i> Details</a>
@@ -678,7 +681,6 @@ function applyFilters() {
   const ctx = canvas.getContext('2d');
   let W, H, points, centroids, raf, lineT = 0;
 
-  // 3 clusters: Healthcare (blue), NLP (teal), Energy/Stats (purple)
   const CLUSTERS = [
     { hue: 210, label: 'Healthcare' },
     { hue: 182, label: 'NLP'        },
@@ -723,7 +725,6 @@ function applyFilters() {
         });
       }
     });
-    // outliers — desaturated, wander freely
     for (let i = 0; i < OUTLIERS; i++) {
       points.push({
         x: Math.random() * W,  y: Math.random() * H,
@@ -736,7 +737,6 @@ function applyFilters() {
     }
   }
 
-  // ── helpers ──────────────────────────────────────────
   function diamond(x, y, r) {
     ctx.beginPath();
     ctx.moveTo(x, y - r * 1.6);
@@ -759,14 +759,12 @@ function applyFilters() {
     ctx.restore();
   }
 
-  // animated regression line + 95% CI band
   function regressionLine(dark) {
     lineT += 0.0022;
     const slope     = Math.sin(lineT * 0.65) * 0.38 + 0.14;
     const intercept = H * 0.54 + Math.sin(lineT * 0.38) * H * 0.09;
     const y0 = intercept, y1 = intercept + slope * W;
 
-    // CI band fill
     const band = 26;
     const perp = Math.sqrt(1 + slope * slope);
     const bx = -slope / perp * band, by = 1 / perp * band;
@@ -777,7 +775,6 @@ function applyFilters() {
     ctx.fillStyle = `rgba(79,142,247,${dark ? .035 : .025})`;
     ctx.fill();
 
-    // CI boundary dashes
     [1, -1].forEach(s => {
       ctx.beginPath();
       ctx.moveTo(0 + s * bx, y0 + s * by);
@@ -789,7 +786,6 @@ function applyFilters() {
       ctx.setLineDash([]);
     });
 
-    // main regression line
     const gr = ctx.createLinearGradient(0, y0, W, y1);
     gr.addColorStop(0,   `rgba(79,142,247,0)`);
     gr.addColorStop(.2,  `rgba(79,142,247,${dark ? .22 : .14})`);
@@ -801,7 +797,6 @@ function applyFilters() {
     ctx.setLineDash([7, 10]); ctx.stroke(); ctx.setLineDash([]);
   }
 
-  // faint axis tick marks at edges (chart-like)
   function axisTicks(dark) {
     const a = dark ? .07 : .05;
     ctx.strokeStyle = `rgba(120,160,255,${a})`;
@@ -814,7 +809,6 @@ function applyFilters() {
     }
   }
 
-  // ── main draw ────────────────────────────────────────
   function draw() {
     ctx.clearRect(0, 0, W, H);
     const dark = isDark();
@@ -822,12 +816,10 @@ function applyFilters() {
     axisTicks(dark);
     regressionLine(dark);
 
-    // dashed cluster ellipses
     CLUSTERS.forEach((cl, ci) => {
       clusterEllipse(centroids[ci].x, centroids[ci].y, W * .13, H * .21, cl.hue, dark);
     });
 
-    // correlation lines between nearby same-cluster points
     for (let i = 0; i < points.length; i++) {
       if (points[i].cluster === -1) continue;
       for (let j = i + 1; j < points.length; j++) {
@@ -845,24 +837,19 @@ function applyFilters() {
       }
     }
 
-    // centroid cross-hair + pulsing rings
     const pulse = .5 + .5 * Math.sin(Date.now() * 0.0022);
     CLUSTERS.forEach((cl, ci) => {
       const c  = centroids[ci];
       const ab = (dark ? .4 : .3) + pulse * (dark ? .2 : .12);
-      // outer pulsing ring
       ctx.beginPath(); ctx.arc(c.x, c.y, 7 + pulse * 4, 0, Math.PI * 2);
       ctx.strokeStyle = `hsla(${cl.hue},75%,68%,${ab * .55})`; ctx.lineWidth = 1.2; ctx.stroke();
-      // core dot
       ctx.beginPath(); ctx.arc(c.x, c.y, 3.5, 0, Math.PI * 2);
       ctx.fillStyle   = `hsla(${cl.hue},80%,74%,${ab})`; ctx.fill();
-      // cross-hair
       ctx.strokeStyle = `hsla(${cl.hue},65%,68%,${ab * .45})`; ctx.lineWidth = .8;
       ctx.beginPath(); ctx.moveTo(c.x - 11, c.y); ctx.lineTo(c.x + 11, c.y); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(c.x, c.y - 11); ctx.lineTo(c.x, c.y + 11); ctx.stroke();
     });
 
-    // data points (circles + diamonds)
     points.forEach(p => {
       const outlier = p.cluster === -1;
       const a = outlier ? (dark ? .22 : .15) : (dark ? .58 : .44);
@@ -874,10 +861,8 @@ function applyFilters() {
 
   function tick() {
     points.forEach(p => {
-      // pull toward home cluster + tiny random jitter
       p.vx += (p.cx - p.x) * p.pull + (Math.random() - .5) * .035;
       p.vy += (p.cy - p.y) * p.pull + (Math.random() - .5) * .035;
-      // damping & speed cap
       p.vx *= .972; p.vy *= .972;
       const spd = Math.hypot(p.vx, p.vy);
       if (spd > 1.1) { p.vx = p.vx / spd * 1.1; p.vy = p.vy / spd * 1.1; }
