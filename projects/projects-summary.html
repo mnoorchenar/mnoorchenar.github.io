@@ -304,7 +304,146 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; }
   </div>
 </div>
 
+<!-- 009 -->
+<div class="proj">
+  <div class="proj-num">Project 09 · Generative AI · Deep Learning · Live Demo</div>
+  <div class="proj-title">Interactive VAE Playground: Train, Visualise &amp; Navigate a Generative Model in Real Time</div>
+  <div class="proj-domain">Generative AI · Deep Learning · Neural Networks · Representation Learning · MLOps</div>
+  <div class="proj-body">
+    <p>Built a <strong>fully interactive deep learning playground</strong> where users configure and train a <strong>Variational Autoencoder (VAE) on MNIST from scratch</strong>, then explore the learned latent space — all inside a browser-based five-tab interface backed by a live <strong>PyTorch training loop</strong>. The VAE architecture follows an <strong>encoder–reparameterisation–decoder pipeline</strong> (784 → 400 → L → 400 → 784) optimised with the <strong>ELBO loss (Binary Cross-Entropy + KL divergence)</strong> via Adam. Hyperparameters — epochs, batch size, learning rate, hidden dimension, and latent dimension — are fully configurable at runtime, and a <strong>live loss curve polls the training thread every 600 ms</strong> without page reloads.</p>
+    <p>The app exposes <strong>seven Flask REST API endpoints</strong> returning base64-encoded PNG responses for all visualisations (loss curve, latent scatter, reconstruction grid, slider-driven generation). A <strong>2-D latent manifold scatter plot</strong> encodes 10,000 MNIST test images and colours them by digit class, making representation learning directly observable. Two sliders (Z₁, Z₂ ranging −3 to +3) let users <strong>navigate the latent space in real time</strong> and decode any coordinate into a generated digit, alongside a full <strong>15 × 15 manifold grid</strong>. Training runs in a <strong>Python daemon thread</strong> for a non-blocking UI. Deployed on <strong>HuggingFace Spaces</strong> (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Generative AI</span><span class="tag">VAE</span><span class="tag">PyTorch</span>
+    <span class="tag">Deep Learning</span><span class="tag">Representation Learning</span><span class="tag">ELBO</span>
+    <span class="tag">KL Divergence</span><span class="tag">Latent Space</span><span class="tag">MNIST</span>
+    <span class="tag">Flask</span><span class="tag">REST API</span><span class="tag">HuggingFace</span>
+    <span class="tag">Neural Networks</span><span class="tag">Python</span><span class="tag">Matplotlib</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/009-vae-project-page.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/VAE-Playground" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/VAE-Playground" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
 
+<!-- 010 -->
+<div class="proj">
+  <div class="proj-num">Project 10 · NLP · Deep Learning · Live Demo</div>
+  <div class="proj-title">Interactive Transformer Trainer: Seq2Seq Attention Visualisation from Scratch</div>
+  <div class="proj-domain">Natural Language Processing · Deep Learning · Seq2Seq · Transformer Architecture · MLOps</div>
+  <div class="proj-body">
+    <p>Built a <strong>6-step interactive educational playground</strong> that trains a <strong>vanilla Transformer (encoder–decoder seq2seq)</strong> on a handcrafted English-to-French dataset entirely in the browser, powered by a real <strong>PyTorch training loop</strong> streamed live via <strong>Server-Sent Events (SSE)</strong>. The full Transformer stack — <strong>multi-head self-attention, cross-attention, positional encoding, label-smoothed KL divergence loss, and warmup inverse-sqrt LR scheduling</strong> — is implemented from scratch and configurable at runtime (d_model 64–256, 1–4 layers, 2/4/8 heads, d_ff 128–512). A <strong>live parameter count and ASCII architecture diagram</strong> update dynamically on every hyperparameter change. Training runs in a <strong>Python daemon thread</strong> pushing per-epoch JSON events (loss, perplexity, LR, sample translations) to a <strong>Chart.js live loss curve</strong> with early stopping and best-checkpoint restoration.</p>
+    <p>Post-training evaluation computes <strong>SacreBLEU corpus scores</strong> for both <strong>greedy and beam-4 decoding</strong> across all 138 sentence pairs with a side-by-side comparison table. The inference tab renders a <strong>cross-attention heatmap on an HTML Canvas</strong> — weights extracted from the last decoder layer, averaged across heads — showing exactly which source token the model attended to at each decoding step. A live <strong>token colour-coder</strong> flags out-of-vocabulary (OOV) words in real time with UNK badges before translation. The 6-step wizard enforces <strong>sequential step-locking</strong> (Data → Vocab → Model → Train → Evaluate → Infer) to mirror the correct conceptual pipeline. Deployed on <strong>HuggingFace Spaces via Docker</strong> (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Transformer</span><span class="tag">NLP</span><span class="tag">Seq2Seq</span>
+    <span class="tag">PyTorch</span><span class="tag">Attention Mechanism</span><span class="tag">BLEU</span>
+    <span class="tag">Beam Search</span><span class="tag">SSE</span><span class="tag">Label Smoothing</span>
+    <span class="tag">Flask</span><span class="tag">Deep Learning</span><span class="tag">HuggingFace</span>
+    <span class="tag">Docker</span><span class="tag">Python</span><span class="tag">Machine Translation</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/010-transformer-edu-viz.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/transformer-edu-viz" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/transformer-edu-viz" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
+
+
+<!-- 011 -->
+<div class="proj">
+  <div class="proj-num">Project 11 · Statistics · Experimentation · Live Demo</div>
+  <div class="proj-title">ExperimentLab: Full-Stack Statistical Experimentation Suite — A/B Testing, Power Analysis, DoE &amp; Sequential Testing</div>
+  <div class="proj-domain">Statistical Analysis · Experimental Design · A/B Testing · Data Science · Decision Intelligence</div>
+  <div class="proj-body">
+    <p>Built a <strong>production-quality statistical experimentation platform</strong> covering the full controlled-experiment lifecycle across four interactive modules: <strong>Power Calculator</strong> (two-proportion z-test sample sizing with power curves across MDE and power targets), <strong>A/B Test Analyzer</strong> (two-proportion z-test and Welch's t-test with Cohen's d effect size, CSV upload support, and a <strong>2×2 statistical + practical significance verdict matrix</strong> enforcing both p-value and business-relevance thresholds), <strong>Two-Factor Design of Experiments / DoE</strong> (full two-way factorial ANOVA with interaction via statsmodels OLS for 2×2 and 3×3 designs with replicates), and <strong>Sequential Testing Demo</strong> (Monte Carlo simulation of the peeking problem vs. O'Brien-Fleming alpha-spending boundary correction). All computation runs <strong>server-side in Python using SciPy, NumPy, and statsmodels</strong>; results are serialised as <strong>Plotly JSON</strong> and rendered client-side.</p>
+    <p>The application is architected as a set of <strong>self-contained Flask Blueprints</strong> — one per module — keeping statistical logic fully decoupled from presentation with zero cross-module dependencies. A <strong>debounced live computation pattern</strong> (400–800 ms per module) fires POST requests on input change, giving a live-calculator feel without server overload. The entire stack is <strong>containerised via Docker</strong> and deployed on <strong>HuggingFace Spaces</strong> (port 7860). The A/B analyzer's dual-gate verdict — requiring clearance of both statistical significance (<em>p</em>-value) and a user-defined practical significance threshold — directly reflects <strong>industry-standard experiment decision frameworks</strong> used at data-driven organisations (2024).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">A/B Testing</span><span class="tag">Statistical Inference</span><span class="tag">Power Analysis</span>
+    <span class="tag">ANOVA</span><span class="tag">Design of Experiments</span><span class="tag">Sequential Testing</span>
+    <span class="tag">SciPy</span><span class="tag">statsmodels</span><span class="tag">Plotly</span>
+    <span class="tag">Flask</span><span class="tag">Docker</span><span class="tag">HuggingFace</span>
+    <span class="tag">Experimentation</span><span class="tag">Python</span><span class="tag">Data Science</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/011-experiment-lab.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/experiment-lab" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/experiment-lab" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
+
+
+<!-- 012 -->
+<div class="proj">
+  <div class="proj-num">Project 12 · NLP · Information Retrieval · Live Demo</div>
+  <div class="proj-title">research-rag-bench: Hybrid RAG Evaluation Platform — BM25, Dense Vector &amp; Reciprocal Rank Fusion</div>
+  <div class="proj-domain">Retrieval-Augmented Generation · Information Retrieval · NLP · LLM Evaluation · MLOps</div>
+  <div class="proj-body">
+    <p>Built a <strong>full-stack Retrieval-Augmented Generation (RAG) benchmarking platform</strong> that fetches real arXiv papers on-demand via the official API, indexes them with both <strong>BM25 sparse retrieval (BM25Okapi)</strong> and <strong>dense vector retrieval (FAISS IndexFlatIP + all-MiniLM-L6-v2, 384-dim L2-normalised embeddings)</strong>, and fuses ranked results using <strong>Reciprocal Rank Fusion (RRF, k=60)</strong>. All three retrieval methods — BM25, dense, and hybrid — run simultaneously on every query, with live evaluation metrics (context relevance, faithfulness, diversity) visualised in <strong>radar and grouped bar charts via Plotly Dash</strong>. A <strong>Flan-T5-large generator (780M params)</strong> receives the 6 most relevant sentences — selected by sentence-level embedding similarity rather than naive truncation — as distilled context for answer generation. The entire stack runs <strong>fully open-source with no external API key</strong>.</p>
+    <p>Three configurable <strong>chunking strategies</strong> (fixed, sentence-window, semantic) and a full <strong>JSON REST API</strong> (<code>/api/fetch-arxiv</code>, <code>/api/query</code>, <code>/api/compare</code>) make all features accessible programmatically. Every component — RRF fusion, chunker, context distillation, evaluation metrics — is <strong>implemented from scratch without LangChain</strong>, demonstrating internals-level understanding of each retrieval stage. Evaluation results show hybrid RRF achieves <strong>0.47 average context relevance vs 0.41 BM25</strong> and <strong>0.51 diversity vs 0.38 BM25</strong>. Architecture is <strong>containerised via Docker</strong> and deployed on <strong>HuggingFace Spaces</strong> (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">RAG</span><span class="tag">Information Retrieval</span><span class="tag">BM25</span>
+    <span class="tag">FAISS</span><span class="tag">Dense Retrieval</span><span class="tag">Hybrid Search</span>
+    <span class="tag">Reciprocal Rank Fusion</span><span class="tag">Flan-T5</span><span class="tag">sentence-transformers</span>
+    <span class="tag">LLM Evaluation</span><span class="tag">Flask</span><span class="tag">Plotly Dash</span>
+    <span class="tag">Docker</span><span class="tag">HuggingFace</span><span class="tag">Python</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/012-research-rag-bench.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/research-rag-bench" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/research-rag-bench" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
+
+<!-- 013 -->
+<div class="proj">
+  <div class="proj-num">Project 13 · Agentic AI · LLM · Live Demo</div>
+  <div class="proj-title">DocMind: Multi-Agent Document Research Platform — LangGraph, Hybrid RAG &amp; Hallucination Detection</div>
+  <div class="proj-domain">Agentic AI · LLM Orchestration · Retrieval-Augmented Generation · NLP · MLOps</div>
+  <div class="proj-body">
+    <p>Built a <strong>multi-agent document research system</strong> using a <strong>LangGraph 0.2 StateGraph</strong> with five specialised agents — Planner, Retriever, Grader, Generator, and Critic — executing in a clean linear pipeline with only <strong>3 LLM calls per query</strong> (Qwen 2.5-7B-Instruct via HuggingFace Router OpenAI-compatible API). The <strong>Grader agent is entirely score-based</strong> (hybrid search score × 0.7 + keyword overlap × 0.3), eliminating 5 sequential LLM calls and reducing average query latency by ~60% while remaining instant and deterministic. The <strong>Retriever agent</strong> runs parallel <strong>FAISS IndexFlatIP semantic search</strong> and <strong>BM25Okapi keyword search</strong> over ingested chunks, fusing results via <strong>Reciprocal Rank Fusion (RRF, k=60)</strong> — improving top-5 recall by ~18% over pure semantic search on technical documents. Embeddings use <strong>BAAI/bge-small-en-v1.5 running locally</strong> via sentence-transformers, with zero API dependency on retrieval.</p>
+    <p>The <strong>Generator agent</strong> produces structured answers with inline <strong>[Source: filename, p.N] citations</strong> strictly grounded in retrieved context (Qwen at temp 0.4, max 512 tokens). The <strong>Critic agent</strong> performs <strong>hallucination detection and completeness evaluation</strong>, outputting an APPROVED or NEEDS_REVIEW verdict with a warning badge in the UI (temp 0.1, near-deterministic). Document ingestion supports <strong>PDF uploads (pypdf, up to 10 MB)</strong> and <strong>public URL scraping (requests + BeautifulSoup)</strong>, chunked at 500 tokens with 50-token overlap. The entire LLM layer is <strong>provider-agnostic</strong> via the OpenAI SDK — swappable to OpenAI, Groq, Anthropic, or Ollama with one URL change. All LangChain chains use <strong>LCEL pipe syntax</strong> (<code>prompt | llm</code>). The Flask backend executes the graph via <strong>Python threading with query-ID polling</strong> for a live agent trace UI. Deployed on <strong>HuggingFace Spaces via Docker</strong> (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Agentic AI</span><span class="tag">LangGraph</span><span class="tag">LangChain</span>
+    <span class="tag">RAG</span><span class="tag">Hybrid Search</span><span class="tag">FAISS</span>
+    <span class="tag">BM25</span><span class="tag">RRF</span><span class="tag">Hallucination Detection</span>
+    <span class="tag">Qwen 2.5</span><span class="tag">LLM Orchestration</span><span class="tag">Flask</span>
+    <span class="tag">Docker</span><span class="tag">HuggingFace</span><span class="tag">Python</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/013-docmind.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/docmind" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/docmind" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
+
+
+<!-- 014 -->
+<div class="proj">
+  <div class="proj-num">Project 14 · Agentic AI · LLM · Live Demo</div>
+  <div class="proj-title">TechStore Support Agent: Multi-Turn ReAct Chatbot — LangGraph, 5 Tools, Real-Time SSE Streaming</div>
+  <div class="proj-domain">Agentic AI · Conversational AI · LLM Orchestration · Customer Support Automation · MLOps</div>
+  <div class="proj-body">
+    <p>Built an <strong>intelligent multi-turn customer support chatbot</strong> powered by a <strong>LangGraph 0.2 ReAct StateGraph</strong> with four nodes — Router, Agent, Tool Executor, and Responder — and <strong>conditional edges looping up to 4 ReAct iterations</strong> per turn before forcing a Final Answer. The agent dispatches five live tools: <strong>FAQ search</strong> (keyword-scored knowledge base, 15 entries), <strong>order status lookup</strong>, <strong>support ticket creation</strong>, <strong>product catalogue search</strong> (8 products), and <strong>human escalation</strong>. Since free-tier HuggingFace models do not support native function calling, tool dispatch uses a <strong>layered regex-based ReAct parser</strong> extracting Action/Action Input blocks with JSON fallback — covering the full output variance of open models. Four <strong>free HuggingFace LLMs</strong> are selectable at runtime mid-session (Mistral-7B, Zephyr-7B, Phi-3-Mini, Llama-3-8B), all at temperature 0.25 via <strong>HuggingFace Hub InferenceClient</strong> with <code>stream=True</code>.</p>
+    <p>Token streaming to the browser is delivered via <strong>Server-Sent Events (SSE)</strong>, with LangGraph running in a <strong>Python daemon thread bridged by a per-session thread-safe <code>queue.Queue</code></strong> — keeping Flask's HTTP response non-blocking. Every graph node emits enter/exit SSE events with millisecond timing, driving a <strong>live animated graph trace visualiser</strong> in the UI. A <strong>session analytics dashboard</strong> (Chart.js) tracks tool usage frequency and per-turn response latency in real time. The entire stack is <strong>zero-persistence</strong> — all state in-memory, no database, no external services beyond the HF Inference API — enabling <strong>indefinite free-tier deployment on HuggingFace Spaces via Docker</strong> (2025).</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Agentic AI</span><span class="tag">LangGraph</span><span class="tag">ReAct</span>
+    <span class="tag">LangChain</span><span class="tag">Conversational AI</span><span class="tag">Chatbot</span>
+    <span class="tag">SSE Streaming</span><span class="tag">Tool Use</span><span class="tag">LLM Orchestration</span>
+    <span class="tag">HuggingFace</span><span class="tag">Flask</span><span class="tag">Docker</span>
+    <span class="tag">Customer Support AI</span><span class="tag">Python</span><span class="tag">Multi-Turn</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/014-langgraph-support-agent.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+    <a class="lnk lnk-demo" href="https://huggingface.co/spaces/mnoorchenar/langgraph-support-agent" target="_blank"><i class="fas fa-robot"></i> Live Demo</a>
+    <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/langgraph-support-agent" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</div>
 </div><!-- /main -->
 </body>
 </html>

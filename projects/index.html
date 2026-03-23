@@ -189,6 +189,16 @@
 #searchInput:focus { border-color: var(--card-hover-border); background: var(--card-hover-bg); }
 #searchInput::placeholder { color: var(--muted); }
 
+.summary-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--accent); font-weight: 600; text-decoration: none;
+  border-bottom: 1px dashed rgba(79,142,247,.4);
+  transition: border-color .2s, opacity .2s;
+  white-space: nowrap;
+}
+.summary-link::after { content: '→'; font-size: .85em; }
+.summary-link:hover { border-color: var(--accent); opacity: .8; }
+
 /* project grid */
 .projects-section { padding: 8px 32px 80px; max-width: 1200px; margin: 0 auto; }
 .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
@@ -296,10 +306,10 @@
   <div class="hero-orb hero-orb-2"></div>
   <div class="hero-orb hero-orb-3"></div>
   <h1 class="hero-title">Data Science <span class="grad-text">Projects</span></h1>
-	<p>
-	  Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.
-	  <a class="summary-link" href="projects-summary.html">See quick summary of all projects</a>
-	</p>
+  <p>
+    Peer-reviewed ML research turned into interactive presentations — more demos and open-source releases coming soon.
+    <a class="summary-link" href="projects-summary.html">See quick summary of all projects</a>
+  </p>
   <div class="hero-stats">
     <div class="sbar-stat"><div class="sbar-num" id="totalCount">14</div><div class="sbar-label">Projects</div></div>
     <div class="sbar-stat"><div class="sbar-num">3</div><div class="sbar-label">Domains</div></div>
@@ -330,7 +340,7 @@
   <div class="projects-grid" id="projectsGrid">
 
     <!-- ─── CARD 1 ─── -->
-    <div class="proj-card fade-up" data-domain="healthcare" data-tags="neural network ann xgboost scikit-learn random forest GBM surgical prediction or scheduling">
+    <div class="proj-card fade-up" data-domain="healthcare" data-tags="neural network ann xgboost scikit-learn random forest gbm surgical prediction or scheduling bayesian">
       <div class="proj-thumb">
         <img src="../images/projects/proj_surgical.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Surgical Duration Predictor">
         <div class="proj-thumb-fallback" style="background:linear-gradient(135deg,var(--navy3),rgba(79,142,247,.3))">🏥</div>
@@ -581,7 +591,7 @@
       <div class="proj-body">
         <div class="proj-num">12</div>
         <div class="proj-domain">NLP · Information Retrieval</div>
-        <div class="proj-title">Hybrid RAG Pipeline: BM25, FAISS, LangChain, LLM & Vector Search on arXiv</div>
+        <div class="proj-title">Hybrid RAG Pipeline: BM25, FAISS, Dense Vector & Reciprocal Rank Fusion on arXiv</div>
         <div class="proj-tagline">Full-stack hybrid RAG system with BM25, dense vectors, and Reciprocal Rank Fusion.</div>
         <div class="proj-desc">A benchmarking platform that fetches real arXiv papers, indexes them with BM25 and dense vector retrieval, fuses results using Reciprocal Rank Fusion, and evaluates answer quality live. No API key required — runs entirely on open-source models.</div>
         <div class="proj-tags"><span class="proj-tag">RAG</span><span class="proj-tag">LLM</span><span class="proj-tag">FAISS</span><span class="proj-tag">BM25</span><span class="proj-tag">Flask</span></div>
@@ -602,7 +612,7 @@
       </div>
       <div class="proj-body">
         <div class="proj-num">13</div>
-        <div class="proj-domain">NLP · Document Intelligence</div>
+        <div class="proj-domain">Agentic AI · LLM Orchestration</div>
         <div class="proj-title">DocMind: Agentic RAG Document Q&A — LangChain, FAISS, Multi-Agent LLM Pipeline</div>
         <div class="proj-tagline">Multi-agent document Q&A with planning, retrieval, grading, and verification.</div>
         <div class="proj-desc">An intelligent document analysis system using a 5-agent pipeline: Planner routes user queries, Retriever finds relevant chunks with hybrid search, Grader scores chunks in-place of LLM calls, Generator produces answers, and Critic verifies factuality. Reduces latency by 60% compared to naive RAG.</div>
@@ -624,7 +634,7 @@
       </div>
       <div class="proj-body">
         <div class="proj-num">14</div>
-        <div class="proj-domain">NLP · Agent Systems</div>
+        <div class="proj-domain">Agentic AI · Conversational AI</div>
         <div class="proj-title">LangGraph ReAct Agent: LangChain, Tool Calling, Streaming LLM, Production AI System</div>
         <div class="proj-tagline">AI-powered customer support with LangGraph ReAct, 5 tools, and live token streaming.</div>
         <div class="proj-desc">An intelligent customer support chatbot using LangGraph's ReAct architecture. Features 4 switchable free HuggingFace LLMs, 5 real dispatch tools (order lookup, FAQ search, ticket creation, etc.), real-time token streaming, and full execution transparency. Watch every agent decision unfold.</div>
