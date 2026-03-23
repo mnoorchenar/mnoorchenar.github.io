@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -h \"breadcrumb\" \"E:\\\\GitHub\\\\mnoorchenar.github.io\\\\projects\\\\Projects-Files\"/*.html)"
+    ]
+  }
+}
