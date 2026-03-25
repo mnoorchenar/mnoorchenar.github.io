@@ -434,20 +434,84 @@ section{padding:90px 0}
 
 
 /* ── SKILL BADGES ── */
-.skill-category{margin-bottom:40px}
-.skill-cat-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
-.skill-cat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1em;flex-shrink:0}
-.skill-cat-title{font-size:.95em;font-weight:700;color:var(--text)}
-.skill-cat-count{margin-left:auto;font-size:.72em;font-weight:700;color:var(--muted);background:var(--glass);border:1px solid var(--glass-border);padding:2px 10px;border-radius:10px}
-.skill-badges{display:flex;flex-wrap:wrap;gap:10px}
-.skill-badge{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:8px 14px;transition:.25s cubic-bezier(.22,1,.36,1);cursor:default}
-.skill-badge:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
-.skill-badge i{font-size:1.35em;line-height:1;flex-shrink:0;transition:transform .25s}
-.skill-badge img.skill-icon-img{width:1.45em;height:1.45em;object-fit:contain;flex-shrink:0;transition:transform .25s}
-.skill-badge:hover i,.skill-badge:hover img.skill-icon-img{transform:scale(1.15)}
-.skill-badge-name{font-size:.82em;font-weight:600;color:var(--text);white-space:nowrap}
-.skill-badge-yrs{font-size:.68em;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.22);color:var(--accent);white-space:nowrap;margin-left:2px}
-[data-theme="light"] .skill-badge-yrs{background:rgba(37,99,235,.09);border-color:rgba(37,99,235,.22);color:#2563eb}
+.skills-cat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+  margin-bottom:52px;
+}
+.skill-category{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:24px 24px 20px;
+  transition:.35s;
+  position:relative;
+  overflow:hidden;
+}
+.skill-category::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--teal));
+  transform:scaleX(0);transition:.35s;transform-origin:left;
+}
+.skill-category:hover{
+  background:var(--card-hover-bg);
+  border-color:var(--card-hover-border);
+  transform:translateY(-3px);
+}
+.skill-category:hover::after{transform:scaleX(1)}
+.skill-category.full-width{grid-column:1 / -1}
+.skill-cat-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:18px;padding-bottom:12px;
+  border-bottom:1px solid var(--glass-border);
+}
+.skill-cat-icon{
+  width:36px;height:36px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95em;flex-shrink:0;
+}
+.skill-cat-title{font-size:.93em;font-weight:700;color:var(--text)}
+.skill-cat-count{
+  margin-left:auto;font-size:.7em;font-weight:700;
+  color:var(--muted);background:var(--glass);
+  border:1px solid var(--glass-border);
+  padding:2px 9px;border-radius:10px;white-space:nowrap;
+}
+.skill-badges{display:flex;flex-wrap:wrap;gap:9px}
+.skill-badge{
+  display:flex;align-items:center;gap:8px;
+  background:var(--navy);
+  border:1px solid var(--glass-border);
+  border-radius:10px;padding:7px 12px;
+  transition:.22s cubic-bezier(.22,1,.36,1);
+  cursor:default;
+}
+[data-theme="light"] .skill-badge{background:rgba(255,255,255,.7)}
+.skill-badge:hover{
+  background:var(--card-hover-bg);
+  border-color:var(--card-hover-border);
+  transform:translateY(-3px);
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+}
+.skill-badge i{
+  font-size:1.3em;line-height:1;
+  flex-shrink:0;transition:transform .22s;
+}
+.skill-badge:hover i{transform:scale(1.18)}
+.skill-badge-name{font-size:.81em;font-weight:600;color:var(--text);white-space:nowrap}
+.skill-badge-yrs{
+  font-size:.67em;font-weight:700;
+  padding:2px 7px;border-radius:7px;
+  background:rgba(79,142,247,.12);
+  border:1px solid rgba(79,142,247,.22);
+  color:var(--accent);white-space:nowrap;margin-left:1px;
+}
+[data-theme="light"] .skill-badge-yrs{
+  background:rgba(37,99,235,.09);
+  border-color:rgba(37,99,235,.22);color:#2563eb;
+}
 [data-theme="dark"] .devicon-github-original{color:#d0d7de!important}
 .skill-cat-icon.blue  {background:rgba(79,142,247,.15);color:var(--accent)}
 .skill-cat-icon.purple{background:rgba(124,58,237,.15);color:var(--accent2)}
@@ -458,6 +522,12 @@ section{padding:90px 0}
 [data-theme="light"] .skill-cat-icon.blue  {color:#2563eb}
 [data-theme="light"] .skill-cat-icon.purple{color:#6d28d9}
 [data-theme="light"] .skill-cat-icon.gold  {color:#d97706}
+
+/* responsive: stack to 1 col on mobile */
+@media(max-width:768px){
+  .skills-cat-grid{grid-template-columns:1fr}
+  .skill-category.full-width{grid-column:1}
+}
 
 /* ── ABOUT ── */
 #about{background:var(--body-bg)}
@@ -1201,10 +1271,12 @@ footer::before{
       <p class="section-desc">A broad toolkit spanning AI, statistics, programming, and visualization</p>
     </div>
 
-    <div class="fade-up">
+    <div class="skills-cat-grid fade-up">
 
-      <!-- ── Languages & Libraries ── -->
-      <div class="skill-category">
+      <!-- ══ ROW 1 — full width ══ -->
+
+      <!-- Languages & Libraries -->
+      <div class="skill-category full-width">
         <div class="skill-cat-header">
           <div class="skill-cat-icon blue"><i class="fas fa-code"></i></div>
           <span class="skill-cat-title">Languages &amp; Libraries</span>
@@ -1248,16 +1320,16 @@ footer::before{
             <span class="skill-badge-yrs">4+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save scipy.svg to icons/ folder -->
+          <!-- SciPy: no devicon → fas fa-infinity matches the math/scientific nature -->
           <div class="skill-badge">
-            <img src="icons/scipy.svg" alt="SciPy" class="skill-icon-img">
+            <i class="fas fa-infinity" style="color:#8caae6"></i>
             <span class="skill-badge-name">SciPy / statsmodels</span>
             <span class="skill-badge-yrs">4+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save xgboost.svg to icons/ folder -->
+          <!-- XGBoost: no devicon → fas fa-tree fits gradient boosted trees -->
           <div class="skill-badge">
-            <img src="icons/xgboost.svg" alt="XGBoost" class="skill-icon-img">
+            <i class="fas fa-tree" style="color:#3db346"></i>
             <span class="skill-badge-name">XGBoost</span>
             <span class="skill-badge-yrs">3+ yrs</span>
           </div>
@@ -1283,7 +1355,9 @@ footer::before{
         </div>
       </div>
 
-      <!-- ── DevOps & Tooling ── -->
+      <!-- ══ ROW 2 ══ -->
+
+      <!-- DevOps & Tooling -->
       <div class="skill-category">
         <div class="skill-cat-header">
           <div class="skill-cat-icon purple"><i class="fas fa-cogs"></i></div>
@@ -1316,9 +1390,9 @@ footer::before{
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save mlflow.svg to icons/ folder -->
+          <!-- MLflow: no devicon → fas fa-vials fits experiment tracking -->
           <div class="skill-badge">
-            <img src="icons/mlflow.svg" alt="MLflow" class="skill-icon-img">
+            <i class="fas fa-vials" style="color:#0194e2"></i>
             <span class="skill-badge-name">MLflow</span>
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
@@ -1332,7 +1406,7 @@ footer::before{
         </div>
       </div>
 
-      <!-- ── GenAI & LLM Tools ── -->
+      <!-- GenAI & LLM Tools -->
       <div class="skill-category">
         <div class="skill-cat-header">
           <div class="skill-cat-icon gold"><i class="fas fa-magic"></i></div>
@@ -1347,16 +1421,16 @@ footer::before{
             <span class="skill-badge-yrs">3+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save langchain.svg to icons/ folder -->
+          <!-- LangChain: no devicon → fa-link chain is the official metaphor -->
           <div class="skill-badge">
-            <img src="icons/langchain.svg" alt="LangChain" class="skill-icon-img">
+            <i class="fas fa-link" style="color:#1c7c6c"></i>
             <span class="skill-badge-name">LangChain</span>
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save langgraph.svg to icons/ folder -->
+          <!-- LangGraph: no devicon → fa-project-diagram fits graph/node concept -->
           <div class="skill-badge">
-            <img src="icons/langgraph.svg" alt="LangGraph" class="skill-icon-img">
+            <i class="fas fa-project-diagram" style="color:#7c3aed"></i>
             <span class="skill-badge-name">LangGraph</span>
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
@@ -1364,7 +1438,9 @@ footer::before{
         </div>
       </div>
 
-      <!-- ── Statistical Tools ── -->
+      <!-- ══ ROW 3 ══ -->
+
+      <!-- Statistical Tools -->
       <div class="skill-category">
         <div class="skill-cat-header">
           <div class="skill-cat-icon teal"><i class="fas fa-chart-bar"></i></div>
@@ -1373,23 +1449,23 @@ footer::before{
         </div>
         <div class="skill-badges">
 
-          <!-- ⬇️ REPLACE: save spss.svg to icons/ folder -->
+          <!-- SPSS: no devicon → fa-chart-bar in IBM blue -->
           <div class="skill-badge">
-            <img src="icons/spss.svg" alt="SPSS" class="skill-icon-img">
+            <i class="fas fa-chart-bar" style="color:#006699"></i>
             <span class="skill-badge-name">SPSS</span>
             <span class="skill-badge-yrs">10+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save minitab.svg to icons/ folder -->
+          <!-- MINITAB: no devicon → fa-chart-line in Minitab green -->
           <div class="skill-badge">
-            <img src="icons/minitab.svg" alt="MINITAB" class="skill-icon-img">
+            <i class="fas fa-chart-line" style="color:#00a651"></i>
             <span class="skill-badge-name">MINITAB</span>
             <span class="skill-badge-yrs">10+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save stata.svg to icons/ folder -->
+          <!-- STATA: no devicon → fa-chart-area in Stata blue -->
           <div class="skill-badge">
-            <img src="icons/stata.svg" alt="STATA" class="skill-icon-img">
+            <i class="fas fa-chart-area" style="color:#1a5ca8"></i>
             <span class="skill-badge-name">STATA</span>
             <span class="skill-badge-yrs">2+ yrs</span>
           </div>
@@ -1397,12 +1473,12 @@ footer::before{
         </div>
       </div>
 
-      <!-- ── Visualization & Deployment ── -->
+      <!-- Visualization & Deployment -->
       <div class="skill-category">
         <div class="skill-cat-header">
           <div class="skill-cat-icon green"><i class="fas fa-chart-pie"></i></div>
           <span class="skill-cat-title">Visualization &amp; Deployment</span>
-          <span class="skill-cat-count">6 tools</span>
+          <span class="skill-cat-count">7 tools</span>
         </div>
         <div class="skill-badges">
 
@@ -1412,9 +1488,9 @@ footer::before{
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save powerbi.svg to icons/ folder -->
+          <!-- Power BI: no devicon → fa-chart-bar in official Power BI yellow -->
           <div class="skill-badge">
-            <img src="icons/powerbi.svg" alt="Power BI" class="skill-icon-img">
+            <i class="fas fa-chart-bar" style="color:#f2c811"></i>
             <span class="skill-badge-name">Power BI</span>
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
@@ -1443,9 +1519,9 @@ footer::before{
             <span class="skill-badge-yrs">3+ yrs</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save seaborn.svg to icons/ folder -->
+          <!-- Seaborn: no devicon → fa-water fits the ocean/wave name origin -->
           <div class="skill-badge">
-            <img src="icons/seaborn.svg" alt="Seaborn" class="skill-icon-img">
+            <i class="fas fa-water" style="color:#4c72b0"></i>
             <span class="skill-badge-name">Seaborn</span>
             <span class="skill-badge-yrs">3+ yrs</span>
           </div>
@@ -1453,8 +1529,10 @@ footer::before{
         </div>
       </div>
 
-      <!-- ── Cloud & HPC ── -->
-      <div class="skill-category">
+      <!-- ══ ROW 4 — full width ══ -->
+
+      <!-- Cloud & HPC -->
+      <div class="skill-category full-width">
         <div class="skill-cat-header">
           <div class="skill-cat-icon red"><i class="fas fa-cloud"></i></div>
           <span class="skill-cat-title">Cloud &amp; HPC Platforms</span>
@@ -1468,9 +1546,9 @@ footer::before{
             <span class="skill-badge-yrs">1+ yr</span>
           </div>
 
-          <!-- ⬇️ REPLACE: save nvidia.svg to icons/ folder -->
+          <!-- NVIDIA: no devicon → fa-microchip in NVIDIA green -->
           <div class="skill-badge">
-            <img src="icons/nvidia.svg" alt="NVIDIA" class="skill-icon-img">
+            <i class="fas fa-microchip" style="color:#76b900"></i>
             <span class="skill-badge-name">Large-Scale GPU Computing</span>
             <span class="skill-badge-yrs">2+ yrs</span>
           </div>
@@ -1478,7 +1556,7 @@ footer::before{
         </div>
       </div>
 
-    </div><!-- /fade-up -->
+    </div><!-- /skills-cat-grid -->
 
     <!-- ── Domain Tag Clouds ── -->
     <div class="expertise-grid fade-up">
@@ -1518,6 +1596,7 @@ footer::before{
 
   </div>
 </section>
+
 
 <!-- AWARDS -->
 <section id="awards" style="background:var(--body-bg)">
