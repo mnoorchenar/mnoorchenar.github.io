@@ -7,6 +7,7 @@
 <title>Mohammad Noorchenarboo – Data Scientist & AI Researcher</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <style>
 /* ═══════════════════════════════════════════
    DARK THEME (default)
@@ -431,39 +432,32 @@ section{padding:90px 0}
 .pub-link{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);color:var(--accent);padding:5px 14px;border-radius:8px;font-size:.8em;font-weight:600;text-decoration:none;transition:.2s}
 .pub-link:hover{background:rgba(79,142,247,.2);transform:translateY(-1px)}
 
-/* ── SKILLS ── */
-#skills{background:var(--skills-gradient)}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:52px}
-.skill-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:26px;transition:.35s;position:relative;overflow:hidden}
-.skill-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--teal));transform:scaleX(0);transition:.35s;transform-origin:left}
-.skill-card:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-4px)}
-.skill-card:hover::after{transform:scaleX(1)}
-.skill-card-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
-.skill-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1em;transition:.3s}
-.skill-icon.blue{background:rgba(79,142,247,.15);color:var(--accent)}
-.skill-icon.purple{background:rgba(124,58,237,.15);color:var(--accent2)}
-.skill-icon.teal{background:rgba(6,182,212,.15);color:var(--teal)}
-.skill-icon.gold{background:rgba(245,158,11,.15);color:var(--gold)}
-.skill-icon.green{background:rgba(34,197,94,.15);color:var(--green)}
-.skill-card:hover .skill-icon{transform:scale(1.12) rotate(5deg)}
-.skill-card h3{font-size:.95em;font-weight:700;color:var(--text)}
-.skill-list{list-style:none}
-.skill-list li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--glass-border);font-size:.86em}
-.skill-list li:last-child{border-bottom:none}
-.skill-name{color:var(--text);font-weight:500}
-.skill-years{color:var(--muted);font-size:.78em;background:rgba(255,255,255,.05);padding:2px 8px;border-radius:8px}
-[data-theme="light"] .skill-years{background:rgba(37,99,235,.07)}
-.expertise-grid{display:flex;flex-direction:column;gap:26px}
-.exp-group h3{font-size:.88em;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.exp-group h3::after{content:'';flex:1;height:1px;background:var(--glass-border)}
-.tag-cloud{display:flex;flex-wrap:wrap;gap:10px}
-.tag{padding:8px 16px;border-radius:20px;font-size:.875em;font-weight:500;transition:.25s;cursor:default;border:1px solid}
-.tag.blue{background:var(--tag-blue-bg);border-color:var(--tag-blue-bdr);color:var(--tag-blue-clr)}
-.tag.blue:hover{background:rgba(37,99,235,.2);transform:translateY(-3px)}
-.tag.purple{background:var(--tag-purple-bg);border-color:var(--tag-purple-bdr);color:var(--tag-purple-clr)}
-.tag.purple:hover{background:rgba(109,40,217,.2);transform:translateY(-3px)}
-.tag.teal{background:var(--tag-teal-bg);border-color:var(--tag-teal-bdr);color:var(--tag-teal-clr)}
-.tag.teal:hover{background:rgba(8,145,178,.2);transform:translateY(-3px)}
+
+/* ── SKILL BADGES ── */
+.skill-category{margin-bottom:40px}
+.skill-cat-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
+.skill-cat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1em;flex-shrink:0}
+.skill-cat-title{font-size:.95em;font-weight:700;color:var(--text)}
+.skill-cat-count{margin-left:auto;font-size:.72em;font-weight:700;color:var(--muted);background:var(--glass);border:1px solid var(--glass-border);padding:2px 10px;border-radius:10px}
+.skill-badges{display:flex;flex-wrap:wrap;gap:10px}
+.skill-badge{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:8px 14px;transition:.25s cubic-bezier(.22,1,.36,1);cursor:default}
+.skill-badge:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.skill-badge i{font-size:1.35em;line-height:1;flex-shrink:0;transition:transform .25s}
+.skill-badge img.skill-icon-img{width:1.45em;height:1.45em;object-fit:contain;flex-shrink:0;transition:transform .25s}
+.skill-badge:hover i,.skill-badge:hover img.skill-icon-img{transform:scale(1.15)}
+.skill-badge-name{font-size:.82em;font-weight:600;color:var(--text);white-space:nowrap}
+.skill-badge-yrs{font-size:.68em;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.22);color:var(--accent);white-space:nowrap;margin-left:2px}
+[data-theme="light"] .skill-badge-yrs{background:rgba(37,99,235,.09);border-color:rgba(37,99,235,.22);color:#2563eb}
+[data-theme="dark"] .devicon-github-original{color:#d0d7de!important}
+.skill-cat-icon.blue  {background:rgba(79,142,247,.15);color:var(--accent)}
+.skill-cat-icon.purple{background:rgba(124,58,237,.15);color:var(--accent2)}
+.skill-cat-icon.gold  {background:rgba(245,158,11,.15);color:var(--gold)}
+.skill-cat-icon.teal  {background:rgba(6,182,212,.15);color:var(--teal)}
+.skill-cat-icon.green {background:rgba(34,197,94,.15);color:var(--green)}
+.skill-cat-icon.red   {background:rgba(239,68,68,.15);color:#ef4444}
+[data-theme="light"] .skill-cat-icon.blue  {color:#2563eb}
+[data-theme="light"] .skill-cat-icon.purple{color:#6d28d9}
+[data-theme="light"] .skill-cat-icon.gold  {color:#d97706}
 
 /* ── ABOUT ── */
 #about{background:var(--body-bg)}
@@ -1197,6 +1191,7 @@ footer::before{
   </div>
 </section>
 
+
 <!-- SKILLS -->
 <section id="skills">
   <div class="container">
@@ -1205,71 +1200,322 @@ footer::before{
       <h2 class="section-title">Technical <span>Expertise</span></h2>
       <p class="section-desc">A broad toolkit spanning AI, statistics, programming, and visualization</p>
     </div>
-    <div class="skills-grid">
-      <div class="skill-card fade-up">
-        <div class="skill-card-header"><div class="skill-icon blue"><i class="fas fa-code"></i></div><h3>Programming</h3></div>
-        <ul class="skill-list">
-          <li><span class="skill-name">Python (TensorFlow, PyTorch, Scikit-learn)</span><span class="skill-years">5+ yrs</span></li>
-          <li><span class="skill-name">R, R Markdown, R Shiny</span><span class="skill-years">10+ yrs</span></li>
-          <li><span class="skill-name">SQL</span><span class="skill-years">1+ yr</span></li>
-          <li><span class="skill-name">MATLAB</span><span class="skill-years">3+ yrs</span></li>
-          <li><span class="skill-name">Git / GitHub</span><span class="skill-years">5+ yrs</span></li>
-        </ul>
+
+    <div class="fade-up">
+
+      <!-- ── Languages & Libraries ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon blue"><i class="fas fa-code"></i></div>
+          <span class="skill-cat-title">Languages &amp; Libraries</span>
+          <span class="skill-cat-count">11 tools</span>
+        </div>
+        <div class="skill-badges">
+
+          <div class="skill-badge">
+            <i class="devicon-python-plain colored"></i>
+            <span class="skill-badge-name">Python</span>
+            <span class="skill-badge-yrs">6+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-tensorflow-original colored"></i>
+            <span class="skill-badge-name">TensorFlow / Keras</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-pytorch-original colored"></i>
+            <span class="skill-badge-name">PyTorch</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-scikitlearn-plain colored"></i>
+            <span class="skill-badge-name">Scikit-learn</span>
+            <span class="skill-badge-yrs">5+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-pandas-original colored"></i>
+            <span class="skill-badge-name">Pandas</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-numpy-original colored"></i>
+            <span class="skill-badge-name">NumPy</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save scipy.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/scipy.svg" alt="SciPy" class="skill-icon-img">
+            <span class="skill-badge-name">SciPy / statsmodels</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save xgboost.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/xgboost.svg" alt="XGBoost" class="skill-icon-img">
+            <span class="skill-badge-name">XGBoost</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-r-original colored"></i>
+            <span class="skill-badge-name">R / R Shiny / R Markdown</span>
+            <span class="skill-badge-yrs">10+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-postgresql-plain colored"></i>
+            <span class="skill-badge-name">SQL</span>
+            <span class="skill-badge-yrs">4+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-apachespark-plain colored"></i>
+            <span class="skill-badge-name">PySpark</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+        </div>
       </div>
-      <div class="skill-card fade-up">
-        <div class="skill-card-header"><div class="skill-icon purple"><i class="fas fa-chart-bar"></i></div><h3>Statistical Tools</h3></div>
-        <ul class="skill-list">
-          <li><span class="skill-name">SPSS, MINITAB</span><span class="skill-years">10+ yrs</span></li>
-          <li><span class="skill-name">STATA</span><span class="skill-years">2+ yrs</span></li>
-          <li><span class="skill-name">SAS</span><span class="skill-years">1+ yr</span></li>
-          <li><span class="skill-name">PLINK (Genomics)</span><span class="skill-years">2+ yrs</span></li>
-        </ul>
+
+      <!-- ── DevOps & Tooling ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon purple"><i class="fas fa-cogs"></i></div>
+          <span class="skill-cat-title">DevOps &amp; Tooling</span>
+          <span class="skill-cat-count">6 tools</span>
+        </div>
+        <div class="skill-badges">
+
+          <div class="skill-badge">
+            <i class="devicon-github-original colored"></i>
+            <span class="skill-badge-name">GitHub</span>
+            <span class="skill-badge-yrs">5+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-docker-plain colored"></i>
+            <span class="skill-badge-name">Docker</span>
+            <span class="skill-badge-yrs">2+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-ubuntu-plain colored"></i>
+            <span class="skill-badge-name">Linux (Ubuntu)</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-apacheairflow-plain colored"></i>
+            <span class="skill-badge-name">Apache Airflow</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save mlflow.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/mlflow.svg" alt="MLflow" class="skill-icon-img">
+            <span class="skill-badge-name">MLflow</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-jira-plain colored"></i>
+            <span class="skill-badge-name">Jira</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+        </div>
       </div>
-      <div class="skill-card fade-up">
-        <div class="skill-card-header"><div class="skill-icon teal"><i class="fas fa-chart-pie"></i></div><h3>Visualization &amp; BI</h3></div>
-        <ul class="skill-list">
-          <li><span class="skill-name">Tableau, Power BI</span><span class="skill-years">1+ yr</span></li>
-          <li><span class="skill-name">Flask &amp; Streamlit Dashboards</span><span class="skill-years">1+ yr</span></li>
-          <li><span class="skill-name">Plotly, Matplotlib, Seaborn</span><span class="skill-years">3+ yrs</span></li>
-        </ul>
+
+      <!-- ── GenAI & LLM Tools ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon gold"><i class="fas fa-magic"></i></div>
+          <span class="skill-cat-title">GenAI &amp; LLM Tools</span>
+          <span class="skill-cat-count">3 tools</span>
+        </div>
+        <div class="skill-badges">
+
+          <div class="skill-badge">
+            <i class="devicon-huggingface-plain colored"></i>
+            <span class="skill-badge-name">Hugging Face</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save langchain.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/langchain.svg" alt="LangChain" class="skill-icon-img">
+            <span class="skill-badge-name">LangChain</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save langgraph.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/langgraph.svg" alt="LangGraph" class="skill-icon-img">
+            <span class="skill-badge-name">LangGraph</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+        </div>
       </div>
-      <div class="skill-card fade-up">
-        <div class="skill-card-header"><div class="skill-icon gold"><i class="fas fa-mobile-alt"></i></div><h3>Mobile &amp; Edge AI</h3></div>
-        <ul class="skill-list">
-          <li><span class="skill-name">TensorFlow Lite Converter</span><span class="skill-years">&lt;1 yr</span></li>
-          <li><span class="skill-name">PyTorch Quantization Toolkit</span><span class="skill-years">&lt;1 yr</span></li>
-        </ul>
+
+      <!-- ── Statistical Tools ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon teal"><i class="fas fa-chart-bar"></i></div>
+          <span class="skill-cat-title">Statistical Tools</span>
+          <span class="skill-cat-count">3 tools</span>
+        </div>
+        <div class="skill-badges">
+
+          <!-- ⬇️ REPLACE: save spss.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/spss.svg" alt="SPSS" class="skill-icon-img">
+            <span class="skill-badge-name">SPSS</span>
+            <span class="skill-badge-yrs">10+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save minitab.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/minitab.svg" alt="MINITAB" class="skill-icon-img">
+            <span class="skill-badge-name">MINITAB</span>
+            <span class="skill-badge-yrs">10+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save stata.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/stata.svg" alt="STATA" class="skill-icon-img">
+            <span class="skill-badge-name">STATA</span>
+            <span class="skill-badge-yrs">2+ yrs</span>
+          </div>
+
+        </div>
       </div>
-      <div class="skill-card fade-up">
-        <div class="skill-card-header"><div class="skill-icon green"><i class="fas fa-tools"></i></div><h3>Other Skills</h3></div>
-        <ul class="skill-list">
-          <li><span class="skill-name">Linux (Ubuntu)</span><span class="skill-years">3+ yrs</span></li>
-          <li><span class="skill-name">Docker</span><span class="skill-years">1+ yr</span></li>
-          <li><span class="skill-name">LaTeX</span><span class="skill-years">3+ yrs</span></li>
-          <li><span class="skill-name">Web Scraping</span><span class="skill-years">1+ yr</span></li>
-        </ul>
+
+      <!-- ── Visualization & Deployment ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon green"><i class="fas fa-chart-pie"></i></div>
+          <span class="skill-cat-title">Visualization &amp; Deployment</span>
+          <span class="skill-cat-count">6 tools</span>
+        </div>
+        <div class="skill-badges">
+
+          <div class="skill-badge">
+            <i class="devicon-tableau-plain colored"></i>
+            <span class="skill-badge-name">Tableau</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save powerbi.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/powerbi.svg" alt="Power BI" class="skill-icon-img">
+            <span class="skill-badge-name">Power BI</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-flask-original colored"></i>
+            <span class="skill-badge-name">Flask</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-streamlit-original colored"></i>
+            <span class="skill-badge-name">Streamlit</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-plotly-plain colored"></i>
+            <span class="skill-badge-name">Plotly</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+          <div class="skill-badge">
+            <i class="devicon-matplotlib-plain colored"></i>
+            <span class="skill-badge-name">Matplotlib</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save seaborn.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/seaborn.svg" alt="Seaborn" class="skill-icon-img">
+            <span class="skill-badge-name">Seaborn</span>
+            <span class="skill-badge-yrs">3+ yrs</span>
+          </div>
+
+        </div>
       </div>
-    </div>
+
+      <!-- ── Cloud & HPC ── -->
+      <div class="skill-category">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon red"><i class="fas fa-cloud"></i></div>
+          <span class="skill-cat-title">Cloud &amp; HPC Platforms</span>
+          <span class="skill-cat-count">2 platforms</span>
+        </div>
+        <div class="skill-badges">
+
+          <div class="skill-badge">
+            <i class="devicon-azure-plain colored"></i>
+            <span class="skill-badge-name">Microsoft Azure</span>
+            <span class="skill-badge-yrs">1+ yr</span>
+          </div>
+
+          <!-- ⬇️ REPLACE: save nvidia.svg to icons/ folder -->
+          <div class="skill-badge">
+            <img src="icons/nvidia.svg" alt="NVIDIA" class="skill-icon-img">
+            <span class="skill-badge-name">Large-Scale GPU Computing</span>
+            <span class="skill-badge-yrs">2+ yrs</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /fade-up -->
+
+    <!-- ── Domain Tag Clouds ── -->
     <div class="expertise-grid fade-up">
       <div class="exp-group">
         <h3>Biostatistics &amp; Clinical Research</h3>
         <div class="tag-cloud">
-          <span class="tag blue">Biostatistical Methods</span><span class="tag blue">Clinical Trials Design &amp; Analysis</span><span class="tag blue">Survival Analysis</span><span class="tag blue">Longitudinal Data Analysis</span><span class="tag blue">Medical Image Analysis</span><span class="tag blue">Epidemiological Methods</span>
+          <span class="tag blue">Biostatistical Methods</span>
+          <span class="tag blue">Clinical Trials Design &amp; Analysis</span>
+          <span class="tag blue">Survival Analysis</span>
+          <span class="tag blue">Longitudinal Data Analysis</span>
+          <span class="tag blue">Medical Image Analysis</span>
+          <span class="tag blue">Epidemiological Methods</span>
         </div>
       </div>
       <div class="exp-group">
         <h3>Artificial Intelligence</h3>
         <div class="tag-cloud">
-          <span class="tag purple">Machine Learning</span><span class="tag purple">Deep Learning</span><span class="tag purple">Generative AI</span><span class="tag purple">Large Language Models</span><span class="tag purple">Natural Language Processing</span><span class="tag purple">Explainable AI</span><span class="tag purple">Computer Vision</span>
+          <span class="tag purple">Machine Learning</span>
+          <span class="tag purple">Deep Learning</span>
+          <span class="tag purple">Generative AI</span>
+          <span class="tag purple">Large Language Models</span>
+          <span class="tag purple">Natural Language Processing</span>
+          <span class="tag purple">Explainable AI</span>
+          <span class="tag purple">Computer Vision</span>
         </div>
       </div>
       <div class="exp-group">
         <h3>Computational &amp; Genomic Research</h3>
         <div class="tag-cloud">
-          <span class="tag teal">Statistical Genetics &amp; Genomics</span><span class="tag teal">Bioinformatics</span><span class="tag teal">Multi-Omics Analysis</span><span class="tag teal">Genotype–Phenotype Association</span>
+          <span class="tag teal">Statistical Genetics &amp; Genomics</span>
+          <span class="tag teal">Bioinformatics</span>
+          <span class="tag teal">Multi-Omics Analysis</span>
+          <span class="tag teal">Genotype–Phenotype Association</span>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
