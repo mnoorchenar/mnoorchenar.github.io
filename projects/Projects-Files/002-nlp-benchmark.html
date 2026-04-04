@@ -25,8 +25,10 @@
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
 .pill-blue { background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.25); color: var(--accent); }
 .pill-gold { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.25); color: var(--gold); }
+.pill-green { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.28); color: var(--green); }
 [data-theme="light"] .pill-blue { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.25); }
 [data-theme="light"] .pill-gold { background: rgba(217,119,6,.1); border-color: rgba(217,119,6,.25); color: #92400e; }
+[data-theme="light"] .pill-green { background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.3); color: #15803d; }
 .pub-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pb-pulse 2s infinite; }
 @keyframes pb-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
 
@@ -225,12 +227,12 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     </div>
     <div class="tag-row">
       <span class="pill pill-blue"><i class="fas fa-comments-medical"></i> NLP · Clinical AI</span>
-      <span class="pill pill-gold"><span class="pub-dot"></span> Published · IJMI 2026</span>
+      <span class="pill pill-green"><span class="pub-dot"></span> Published · IJMI 2026</span>
     </div>
 
     <h1 class="page-title">Benchmarking Text Encoding Strategies<br><span class="grad-text">for Surgical Case Duration Prediction</span></h1>
 
-    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study benchmarks five text-encoding strategies in a multimodal pipeline that combines clinical text with structured perioperative variables for surgical duration prediction.</strong> Evaluated on 180,370 elective cases across 3 tertiary hospitals, contextual embeddings (Sentence-BERT and ClinicalBERT) achieved the best and comparable overall performance.</p>
+    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study benchmarks five text-encoding strategies in a multimodal pipeline that combines clinical text with structured perioperative variables for surgical duration prediction.</strong> Evaluated on 180,370 elective cases across 3 tertiary hospitals, contextual embeddings (Sentence-BERT and ClinicalBERT) achieved comparable top overall performance.</p>
     <div class="hero-meta">
       <span><i class="fas fa-paper-plane"></i> Published in IJMI · 2026</span>
       <span><i class="fas fa-users"></i> <strong>Noorchenarboo</strong> et al.</span>
@@ -252,7 +254,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
   <div class="stats-inner">
     <div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Encoding strategies benchmarked head-to-head</div></div>
     <div class="stat-item"><div class="stat-val">180,370</div><div class="stat-label">Elective surgical cases from 3 tertiary hospitals</div></div>
-    <div class="stat-item"><div class="stat-val">26.4</div><div class="stat-label">Best MAE in minutes — Sentence-BERT / ClinicalBERT</div></div>
+    <div class="stat-item"><div class="stat-val">26.4</div><div class="stat-label">Lowest MAE in minutes — Sentence-BERT / ClinicalBERT</div></div>
     <div class="stat-item"><div class="stat-val">16%</div><div class="stat-label">Reduction in prediction error vs structured-only baseline</div></div>
     <div class="stat-item"><div class="stat-val">0.86</div><div class="stat-label">Best R² achieved (SMAPE 21.6%)</div></div>
   </div>
@@ -324,11 +326,13 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
       <div class="enc-card enc-clinical">
         <div class="enc-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">🏥 Clinical Transformer</div>
         <div class="enc-name">ClinicalBERT</div>
-        <div class="enc-tagline">BERT fine-tuned on real clinical notes (MIMIC-III). Speaks the language of the OR — abbreviations, surgical slang, and clinical shorthand. Showed statistically significant gains over structured-only baseline (p &lt; 0.01).</div>
+        <div class="enc-tagline">BERT fine-tuned on real clinical notes (MIMIC-III). Speaks the language of the OR — abbreviations, surgical slang, and clinical shorthand. Published results show performance comparable to Sentence-BERT (MAE ≈ 26.4 min, SMAPE ≈ 21.6%, R² ≈ 0.86; p &gt; 0.82 between the two).</div>
         <div class="enc-bar-wrap"><div class="enc-bar" style="width:82%;background:rgba(79,142,247,.65)"></div></div>
-        <div class="enc-caption">Relative performance</div>
-        <div class="enc-metric"><span class="enc-metric-label">MAE improvement</span><span class="enc-metric-val" style="color:var(--accent)">Significant (p &lt; 0.01)</span></div>
-        <div class="enc-metric"><span class="enc-metric-label">Embedding type</span><span class="enc-metric-val" style="color:var(--accent)">Token-level (MIMIC-III)</span></div>
+        <div class="enc-caption">Statistically comparable to Sentence-BERT</div>
+        <div class="enc-metric"><span class="enc-metric-label">MAE</span><span class="enc-metric-val" style="color:var(--accent)">≈26.4 min</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">SMAPE</span><span class="enc-metric-val" style="color:var(--accent)">≈21.6%</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">R²</span><span class="enc-metric-val" style="color:var(--accent)">≈0.86</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">Pairwise test</span><span class="enc-metric-val" style="color:var(--accent)">vs Sentence-BERT: p &gt; 0.82</span></div>
       </div>
       <div class="enc-card enc-sbert">
         <div class="enc-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">🚀 Contextual Top Tier</div>
@@ -417,7 +421,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     </div>
     <div class="chart-panel active" id="cp0">
       <div class="chart-wrap"><canvas id="chart0"></canvas></div>
-      <p class="chart-caption">Contextual embeddings (Sentence-BERT and ClinicalBERT) achieve comparable best MAE (≈26.4 min), and both outperform traditional encodings and structured-only baselines.</p>
+      <p class="chart-caption">Contextual embeddings (Sentence-BERT and ClinicalBERT) achieve comparable lowest MAE (≈26.4 min), and both outperform traditional encodings and structured-only baselines.</p>
     </div>
     <div class="chart-panel" id="cp1">
       <div class="chart-wrap"><canvas id="chart1"></canvas></div>
@@ -461,7 +465,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
       <h3>At a Glance</h3>
       <span class="ataglance-badge"><i class="fas fa-bolt"></i> Quick read</span>
     </div>
-    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,370 real cases with six ML models. <strong>The answer:</strong> Contextual embeddings (Sentence-BERT and ClinicalBERT) achieved comparable best performance (MAE ≈ 26.4 min, SMAPE ≈ 21.6%, R² ≈ 0.86) and reduced error by up to 16% versus structured-only baselines.</p>
+    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,370 real cases with six ML models. <strong>The answer:</strong> Contextual embeddings (Sentence-BERT and ClinicalBERT) achieved comparable top performance (MAE ≈ 26.4 min, SMAPE ≈ 21.6%, R² ≈ 0.86) and reduced error by up to 16% versus structured-only baselines.</p>
   </div>
 
   <div class="sidebar-card fade-up">
@@ -472,7 +476,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">180,370 cases</span></div>
     <div class="info-row"><span class="info-key">Hospitals</span><span class="info-val">3 tertiary · 2015–2020</span></div>
     <div class="info-row"><span class="info-key">Top Encoders</span><span class="info-val">Sentence-BERT + ClinicalBERT</span></div>
-    <div class="info-row"><span class="info-key">Best MAE</span><span class="info-val">≈26.4 min</span></div>
+    <div class="info-row"><span class="info-key">Lowest MAE</span><span class="info-val">≈26.4 min</span></div>
     <div class="info-row"><span class="info-key">Best R²</span><span class="info-val">≈0.86</span></div>
     <div class="info-row"><span class="info-key">Year</span><span class="info-val">2026</span></div>
   </div>
