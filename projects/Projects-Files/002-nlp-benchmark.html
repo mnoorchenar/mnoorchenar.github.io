@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Clinical NLP Benchmarking: BioBERT vs ClinicalBERT — Transformers, TF-IDF, Scikit-learn · Mohammad Noorchenarboo</title>
+<title>Benchmarking Text Encoding Strategies for Surgical Duration Prediction · International Journal of Medical Informatics · Mohammad Noorchenarboo</title>
 <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -211,7 +211,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
 }
 </style>
 </head>
-<body data-project-index="1" data-footer-note="SSRN · DOI 10.2139/ssrn.5489578">
+<body data-project-index="1" data-footer-note="International Journal of Medical Informatics · DOI 10.1016/j.ijmedinf.2026.106416">
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -225,20 +225,20 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     </div>
     <div class="tag-row">
       <span class="pill pill-blue"><i class="fas fa-comments-medical"></i> NLP · Clinical AI</span>
-      <span class="pill pill-gold"><span class="pub-dot"></span> Preprint · SSRN 5489578</span>
+      <span class="pill pill-gold"><span class="pub-dot"></span> Published · IJMI 2026</span>
     </div>
 
-    <h1 class="page-title">Do Clinical Transformer Embeddings<br><span class="grad-text">Actually Outpredict Traditional Encodings by 16%?</span></h1>
+    <h1 class="page-title">Benchmarking Text Encoding Strategies<br><span class="grad-text">for Surgical Case Duration Prediction</span></h1>
 
-    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study benchmarks five text-encoding strategies — from simple label encoding to clinical transformer embeddings — to find out which best converts those notes into accurate surgical duration predictions.</strong> Tested on 180,366 real cases across 3 hospitals, the gap between methods is larger than you'd expect.</p>
+    <p class="hero-sub">Surgeons write rich narratives about every operation. <strong>This study benchmarks five text-encoding strategies in a multimodal pipeline that combines clinical text with structured perioperative variables for surgical duration prediction.</strong> Evaluated on 180,370 elective cases across 3 tertiary hospitals, contextual embeddings (Sentence-BERT and ClinicalBERT) achieved the best and comparable overall performance.</p>
     <div class="hero-meta">
-      <span><i class="fas fa-paper-plane"></i> SSRN Preprint · 2025</span>
+      <span><i class="fas fa-paper-plane"></i> Published in IJMI · 2026</span>
       <span><i class="fas fa-users"></i> <strong>Noorchenarboo</strong> et al.</span>
-      <span><i class="fas fa-database"></i> 180,366 surgical cases</span>
+      <span><i class="fas fa-database"></i> 180,370 surgical cases</span>
       <span><i class="fas fa-hospital"></i> 3 Tertiary Hospitals · London, Canada</span>
     </div>
     <div class="hero-actions">
-      <a href="https://ssrn.com/abstract=5489578" target="_blank" class="btn btn-pub"><i class="fas fa-file-alt"></i> Read Preprint</a>
+      <a href="https://doi.org/10.1016/j.ijmedinf.2026.106416" target="_blank" class="btn btn-pub"><i class="fas fa-file-alt"></i> Read Published Paper</a>
       <a href="#encoders" class="btn btn-anchor"><i class="fas fa-brain"></i> The Encoders</a>
       <a href="#demo" class="btn btn-anchor"><i class="fas fa-flask"></i> Interactive Demo</a>
       <a href="#results" class="btn btn-anchor"><i class="fas fa-chart-bar"></i> Results</a>
@@ -251,10 +251,10 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
 <div class="stats-bar fade-up">
   <div class="stats-inner">
     <div class="stat-item"><div class="stat-val">5</div><div class="stat-label">Encoding strategies benchmarked head-to-head</div></div>
-    <div class="stat-item"><div class="stat-val">180K+</div><div class="stat-label">Real elective surgical cases from 3 tertiary hospitals</div></div>
-    <div class="stat-item"><div class="stat-val">27.6</div><div class="stat-label">Best MAE in minutes — Sentence-BERT embeddings</div></div>
-    <div class="stat-item"><div class="stat-val">16%</div><div class="stat-label">Max reduction in prediction error over traditional encodings</div></div>
-    <div class="stat-item"><div class="stat-val">0.77</div><div class="stat-label">Best R² achieved — Sentence-BERT (SMAPE 23.0%)</div></div>
+    <div class="stat-item"><div class="stat-val">180,370</div><div class="stat-label">Elective surgical cases from 3 tertiary hospitals</div></div>
+    <div class="stat-item"><div class="stat-val">26.4</div><div class="stat-label">Best MAE in minutes — Sentence-BERT / ClinicalBERT</div></div>
+    <div class="stat-item"><div class="stat-val">16%</div><div class="stat-label">Reduction in prediction error vs structured-only baseline</div></div>
+    <div class="stat-item"><div class="stat-val">0.86</div><div class="stat-label">Best R² achieved (SMAPE 21.6%)</div></div>
   </div>
 </div>
 
@@ -282,7 +282,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
       <div class="insight-icon">💡</div>
       <div class="insight-body">
         <h4>Why Do Embeddings Matter So Much?</h4>
-        <p>A label encoder sees <em>"laparoscopic cholecystectomy"</em> as an arbitrary integer. A clinical transformer embedding understands it as a minimally invasive gallbladder removal with a predictable time profile. <strong>The encoding method determines how much medical meaning the model can extract — and our results show the gap is up to 16% in prediction accuracy.</strong></p>
+        <p>A label encoder sees <em>"laparoscopic cholecystectomy"</em> as an arbitrary integer. A clinical transformer embedding understands it as a minimally invasive gallbladder removal with a predictable time profile. <strong>The encoding method determines how much medical meaning the model can extract — and the published results show contextual embeddings materially improve prediction accuracy over structured-only inputs.</strong></p>
       </div>
     </div>
   </div>
@@ -330,16 +330,16 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
         <div class="enc-metric"><span class="enc-metric-label">MAE improvement</span><span class="enc-metric-val" style="color:var(--accent)">Significant (p &lt; 0.01)</span></div>
         <div class="enc-metric"><span class="enc-metric-label">Embedding type</span><span class="enc-metric-val" style="color:var(--accent)">Token-level (MIMIC-III)</span></div>
       </div>
-      <div class="enc-card enc-sbert winner">
-        <div class="enc-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">🚀 Best Encoder</div>
+      <div class="enc-card enc-sbert">
+        <div class="enc-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">🚀 Contextual Top Tier</div>
         <div class="enc-name">Sentence-BERT</div>
-        <div class="enc-tagline">Sentence-level transformer embeddings optimised for semantic similarity — captures the full meaning of a surgical narrative, not just individual tokens. Best MAE of 27.6 min, SMAPE 23.0%, R² 0.77. Up to 16% reduction over traditional encodings.</div>
+        <div class="enc-tagline">Sentence-level transformer embeddings optimised for semantic similarity — captures the full meaning of a surgical narrative, not just individual tokens. Published results show performance comparable to ClinicalBERT (MAE ≈ 26.4 min, SMAPE ≈ 21.6%, R² ≈ 0.86; p &gt; 0.82 between the two).</div>
         <div class="enc-bar-wrap"><div class="enc-bar" style="width:100%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>
-        <div class="enc-caption">Best performing encoder overall</div>
-        <div class="enc-metric"><span class="enc-metric-label">MAE</span><span class="enc-metric-val" style="color:var(--green)">27.6 min (best)</span></div>
-        <div class="enc-metric"><span class="enc-metric-label">SMAPE</span><span class="enc-metric-val" style="color:var(--green)">23.0%</span></div>
-        <div class="enc-metric"><span class="enc-metric-label">R²</span><span class="enc-metric-val" style="color:var(--green)">0.77</span></div>
-        <div class="enc-metric"><span class="enc-metric-label">Error reduction</span><span class="enc-metric-val" style="color:var(--green)">Up to 16%</span></div>
+        <div class="enc-caption">Statistically comparable to ClinicalBERT</div>
+        <div class="enc-metric"><span class="enc-metric-label">MAE</span><span class="enc-metric-val" style="color:var(--green)">≈26.4 min</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">SMAPE</span><span class="enc-metric-val" style="color:var(--green)">≈21.6%</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">R²</span><span class="enc-metric-val" style="color:var(--green)">≈0.86</span></div>
+        <div class="enc-metric"><span class="enc-metric-label">Pairwise test</span><span class="enc-metric-val" style="color:var(--green)">vs ClinicalBERT: p &gt; 0.82</span></div>
       </div>
     </div>
   </div>
@@ -417,7 +417,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     </div>
     <div class="chart-panel active" id="cp0">
       <div class="chart-wrap"><canvas id="chart0"></canvas></div>
-      <p class="chart-caption">Sentence-BERT achieves the lowest MAE (27.6 min) — outperforming traditional encodings by up to 16%. ClinicalBERT also shows significant gains (p &lt; 0.01).</p>
+      <p class="chart-caption">Contextual embeddings (Sentence-BERT and ClinicalBERT) achieve comparable best MAE (≈26.4 min), and both outperform traditional encodings and structured-only baselines.</p>
     </div>
     <div class="chart-panel" id="cp1">
       <div class="chart-wrap"><canvas id="chart1"></canvas></div>
@@ -425,7 +425,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
     </div>
     <div class="chart-panel" id="cp2">
       <div class="chart-wrap"><canvas id="chart2"></canvas></div>
-      <p class="chart-caption">Sentence-BERT achieves the highest share of predictions within ±30 minutes, directly enabling more reliable OR scheduling.</p>
+      <p class="chart-caption">Contextual embeddings achieve the highest share of predictions within ±30 minutes, supporting more reliable OR scheduling.</p>
     </div>
   </div>
 
@@ -441,8 +441,8 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
       </div>
       <div class="takeaway">
         <div class="tk-icon">🧠</div>
-        <div class="tk-val">Sentence context wins</div>
-        <div class="tk-label">Sentence-BERT — which encodes full sentence meaning — outperforms all other strategies including token-level models like ClinicalBERT.</div>
+        <div class="tk-val">Contextual embeddings lead</div>
+        <div class="tk-label">Sentence-BERT and ClinicalBERT both achieve top-tier performance in the published benchmark, with no significant difference between them.</div>
       </div>
       <div class="takeaway">
         <div class="tk-icon">🔬</div>
@@ -461,20 +461,20 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
       <h3>At a Glance</h3>
       <span class="ataglance-badge"><i class="fas fa-bolt"></i> Quick read</span>
     </div>
-    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,366 real cases. <strong>The answer:</strong> Sentence-BERT transformer embeddings reduce MAE to 27.6 min and cut prediction error by up to 16% over traditional encodings.</p>
+    <p class="tldr-text"><strong>The question:</strong> Which text-encoding strategy best extracts predictive signal from surgical notes? <strong>The approach:</strong> Benchmark 5 strategies on 180,370 real cases with six ML models. <strong>The answer:</strong> Contextual embeddings (Sentence-BERT and ClinicalBERT) achieved comparable best performance (MAE ≈ 26.4 min, SMAPE ≈ 21.6%, R² ≈ 0.86) and reduced error by up to 16% versus structured-only baselines.</p>
   </div>
 
   <div class="sidebar-card fade-up">
     <h3>Project Info</h3>
-    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--gold)">📄 SSRN Preprint</span></div>
+    <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">✅ Published (IJMI)</span></div>
     <div class="info-row"><span class="info-key">Domain</span><span class="info-val">Clinical NLP</span></div>
     <div class="info-row"><span class="info-key">ML Task</span><span class="info-val">Regression + Embeddings</span></div>
-    <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">180,366 cases</span></div>
+    <div class="info-row"><span class="info-key">Dataset</span><span class="info-val">180,370 cases</span></div>
     <div class="info-row"><span class="info-key">Hospitals</span><span class="info-val">3 tertiary · 2015–2020</span></div>
-    <div class="info-row"><span class="info-key">Best Encoder</span><span class="info-val">Sentence-BERT</span></div>
-    <div class="info-row"><span class="info-key">Best MAE</span><span class="info-val">27.6 min</span></div>
-    <div class="info-row"><span class="info-key">Best R²</span><span class="info-val">0.77</span></div>
-    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2025</span></div>
+    <div class="info-row"><span class="info-key">Top Encoders</span><span class="info-val">Sentence-BERT + ClinicalBERT</span></div>
+    <div class="info-row"><span class="info-key">Best MAE</span><span class="info-val">≈26.4 min</span></div>
+    <div class="info-row"><span class="info-key">Best R²</span><span class="info-val">≈0.86</span></div>
+    <div class="info-row"><span class="info-key">Year</span><span class="info-val">2026</span></div>
   </div>
 
   <div class="sidebar-card fade-up">
@@ -494,7 +494,7 @@ h1.page-title { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-he
 
   <div class="sidebar-card fade-up">
     <h3>Citation</h3>
-    <div class="citation-box"><strong>Noorchenarboo M</strong> et al. (2025). Benchmarking Text Encoding Strategies in Multimodal Clinical Data for Surgical Case Duration Prediction. <em>SSRN</em>. doi: 10.2139/ssrn.5489578</div>
+    <div class="citation-box"><strong>Noorchenarboo M</strong> et al. (2026). Benchmarking text encoding strategies in multimodal clinical data for surgical case duration prediction. <em>International Journal of Medical Informatics</em>, 214, 106416. doi: 10.1016/j.ijmedinf.2026.106416</div>
   </div>
 
   <div class="sidebar-card fade-up">
@@ -563,7 +563,7 @@ function buildChart(i){
   if(!ctx) return;
   const g = gc(), t = tc(), tip = tt();
   if(i === 0){
-    charts[0] = new Chart(ctx, { type:'bar', data:{ labels:['Label\nEncoding','Count\nVectorizer','TF-IDF','ClinicalBERT','Sentence-BERT'], datasets:[{ label:'Mean Absolute Error (minutes)', data:[32.9,32.4,31.8,29.2,27.6], backgroundColor:['rgba(136,146,164,.55)','rgba(167,139,250,.55)','rgba(245,158,11,.6)',isDark()?'rgba(79,142,247,.65)':'rgba(37,99,235,.65)','rgba(34,197,94,.75)'], borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g}}, y:{ticks:{color:t},grid:{color:g},min:24,title:{display:true,text:'MAE (minutes) — lower is better',color:t,font:{size:11}}} } } });
+    charts[0] = new Chart(ctx, { type:'bar', data:{ labels:['Label\nEncoding','Count\nVectorizer','TF-IDF','ClinicalBERT','Sentence-BERT'], datasets:[{ label:'Mean Absolute Error (minutes)', data:[32.9,32.4,31.8,26.4,26.4], backgroundColor:['rgba(136,146,164,.55)','rgba(167,139,250,.55)','rgba(245,158,11,.6)',isDark()?'rgba(79,142,247,.65)':'rgba(37,99,235,.65)','rgba(34,197,94,.75)'], borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g}}, y:{ticks:{color:t},grid:{color:g},min:24,title:{display:true,text:'MAE (minutes) — lower is better',color:t,font:{size:11}}} } } });
   } else if(i === 1){
     charts[1] = new Chart(ctx, { type:'bar', data:{ labels:['Cholecystectomy','Appendectomy','Colectomy','Hernia Repair','Whipple'], datasets:[ {label:'TF-IDF',data:[.31,.34,.20,.35,.14],backgroundColor:'rgba(245,158,11,.5)',borderRadius:3}, {label:'ClinicalBERT',data:[.44,.47,.38,.46,.31],backgroundColor:isDark()?'rgba(79,142,247,.6)':'rgba(37,99,235,.6)',borderRadius:3}, {label:'Sentence-BERT',data:[.52,.54,.47,.53,.41],backgroundColor:'rgba(34,197,94,.75)',borderRadius:3} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:t,font:{size:10}}},tooltip:tip}, scales:{ x:{ticks:{color:t},grid:{color:g}}, y:{ticks:{color:t},grid:{color:g},min:0,max:.7,title:{display:true,text:'R² Score — higher is better',color:t,font:{size:11}}} } } });
   } else if(i === 2){
