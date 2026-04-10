@@ -8,6 +8,10 @@
         "html": "projects/_template.html"
       },
       {
+        "name": "docs-template",
+        "html": "projects/docs-template.html"
+      },
+      {
         "name": "footer",
         "html": "projects/footer.html"
       },
@@ -80,6 +84,10 @@
           {
             "name": "014-langgraph-support-agent",
             "html": "projects/Projects-Files/014-langgraph-support-agent.html"
+          },
+          {
+            "name": "015-tiny-surgical-bert",
+            "html": "projects/Projects-Files/015-tiny-surgical-bert.html"
           }
         ]
       }

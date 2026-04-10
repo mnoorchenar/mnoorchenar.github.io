@@ -444,6 +444,28 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; }
     <a class="lnk lnk-gh" href="https://github.com/mnoorchenar/langgraph-support-agent" target="_blank"><i class="fab fa-github"></i> GitHub</a>
   </div>
 </div>
+
+
+<!-- 015 -->
+<div class="proj">
+  <div class="proj-num">Project 15 · Clinical NLP · Edge AI · Under Review</div>
+  <div class="proj-title">TinySurgicalBERT: Knowledge Distillation for Real-Time Surgical Duration Prediction — BERT, ONNX, XGBoost</div>
+  <div class="proj-domain">Clinical NLP · Knowledge Distillation · OR Scheduling · Edge Deployment · Under Journal Review 2026</div>
+  <div class="proj-body">
+    <p>Proposed <strong>TinySurgicalBERT</strong>, a <strong>0.75 MB INT8-quantised BERT student model</strong> distilled from Bio-ClinicalBERT (436 MB) on a 180,370-case retrospective surgical dataset. A <strong>domain-specific Byte-Pair Encoding (BPE) tokeniser</strong> trained exclusively on surgical procedure text achieves <strong>0% out-of-vocabulary rate</strong> (vs. ~8% for Bio-ClinicalBERT's WordPiece vocabulary). The two-layer student (4 heads, 128-d hidden, 0.63M parameters) is trained with a combined <strong>MSE + cosine-similarity distillation objective</strong> to transfer Bio-ClinicalBERT's 256-d embedding geometry. After static <strong>INT8 quantisation and ONNX export</strong>, the model runs entirely on CPU at <strong>0.484 ± 0.072 ms per case</strong> — 43.7× faster than Bio-ClinicalBERT — with no GPU or network dependency at inference time.</p>
+    <p>All four encoding strategies (Structured Only, SentenceBERT, Bio-ClinicalBERT, TinySurgicalBERT) were evaluated across <strong>8 regression models</strong> (Linear Regression, Ridge, Lasso, ElasticNet, Random Forest, XGBoost, LightGBM, MLP) under <strong>5-fold cross-validation with Optuna TPE hyperparameter optimisation</strong> (20 trials × 32 combinations). TinySurgicalBERT achieves <strong>MAE = 26.38 ± 0.09 min with XGBoost</strong> — statistically equivalent to SentenceBERT (26.35 ± 0.07) and Bio-ClinicalBERT (26.40 ± 0.11) by Wilcoxon signed-rank with Benjamini–Hochberg FDR correction — while requiring <strong>580× less storage</strong>. All text-augmented encoders reduce MAE by <strong>~24%</strong> over the structured-only baseline (34.80 ± 0.12 min), confirming that free-text procedure descriptions provide independent predictive signal beyond structured EHR features.</p>
+  </div>
+  <div class="tag-row">
+    <span class="tag">Knowledge Distillation</span><span class="tag">BERT</span><span class="tag">ONNX</span>
+    <span class="tag">Clinical NLP</span><span class="tag">INT8 Quantisation</span><span class="tag">XGBoost</span>
+    <span class="tag">LightGBM</span><span class="tag">Optuna</span><span class="tag">5-Fold CV</span>
+    <span class="tag">OR Scheduling</span><span class="tag">Edge Deployment</span><span class="tag">HuggingFace</span>
+    <span class="tag">PyTorch</span><span class="tag">scikit-learn</span><span class="tag">Python</span>
+  </div>
+  <div class="link-row">
+    <a class="lnk lnk-detail" href="https://mnoorchenar.github.io/projects/Projects-Files/015-tiny-surgical-bert.html" target="_blank"><i class="fas fa-layer-group"></i> Project Page</a>
+  </div>
+</div>
 </div><!-- /main -->
 </body>
 </html>

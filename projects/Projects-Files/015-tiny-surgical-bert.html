@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TinySurgicalBERT — Surgical Duration Prediction · Mohammad Noorchenarboo</title>
+
+<!-- ▶ THEME FLICKER FIX -->
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'dark')</script>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+<style>
+:root {
+  --accent: #4f8ef7;
+  --gold:   #f59e0b;
+  --teal:   #06b6d4;
+  --green:  #22c55e;
+  --purple: #a78bfa;
+  --red:    #f87171;
+  --radius: 14px;
+
+  --body-bg:          #070d1f;
+  --text:             #e2e8f0;
+  --muted:            #8892a4;
+  --glass:            rgba(255,255,255,.04);
+  --glass-border:     rgba(255,255,255,.08);
+  --card-hover-bg:    rgba(255,255,255,.07);
+  --card-hover-border:rgba(79,142,247,.3);
+  --section-alt:      #0b1120;
+}
+[data-theme="light"] {
+  --body-bg:          #f8fafc;
+  --text:             #0f172a;
+  --muted:            #4b5675;
+  --glass:            rgba(0,0,0,.03);
+  --glass-border:     rgba(0,0,0,.08);
+  --card-hover-bg:    rgba(0,0,0,.05);
+  --card-hover-border:rgba(37,99,235,.25);
+  --section-alt:      #f1f5f9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--body-bg); color: var(--text); transition: background .35s, color .35s; }
+a { text-decoration: none; }
+code { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: .88em; background: rgba(79,142,247,.1); padding: 1px 5px; border-radius: 4px; }
+
+/* ── SECTION TAG ── */
+.s-tag { display: inline-block; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; padding: 3px 10px; border-radius: 6px; margin-bottom: 10px; }
+.s-tag-blue { background: rgba(79,142,247,.12); color: var(--accent); border: 1px solid rgba(79,142,247,.2); }
+.s-tag-gold { background: rgba(245,158,11,.12); color: var(--gold);   border: 1px solid rgba(245,158,11,.2); }
+.s-tag-teal { background: rgba(6,182,212,.12);  color: var(--teal);   border: 1px solid rgba(6,182,212,.2); }
+.s-tag-green{ background: rgba(34,197,94,.12);  color: var(--green);  border: 1px solid rgba(34,197,94,.2); }
+
+/* ── GRADIENT TEXT ── */
+.grad-text { background: linear-gradient(135deg, var(--accent), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.grad-gold  { background: linear-gradient(135deg, var(--gold), #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 24px 56px;
+  background: var(--body-bg);
+  position: relative; overflow: hidden; transition: background .35s;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(79,142,247,.15) 0%, transparent 65%);
+}
+[data-theme="light"] .hero::before {
+  background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(37,99,235,.09) 0%, transparent 65%);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(79,142,247,.035) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(79,142,247,.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* ── BREADCRUMB ── */
+.breadcrumb { font-size: .78rem; color: var(--muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--muted); transition: .2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { opacity: .4; }
+
+/* ── PILLS ── */
+.tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+.pill-blue { background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.25); color: var(--accent); }
+.pill-gold { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.25); color: var(--gold); }
+.pill-teal { background: rgba(6,182,212,.12);  border: 1px solid rgba(6,182,212,.25);  color: var(--teal); }
+.pill-green{ background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.25);  color: var(--green); }
+[data-theme="light"] .pill-blue { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.25); }
+[data-theme="light"] .pill-gold { background: rgba(217,119,6,.1); border-color: rgba(217,119,6,.25); color: #92400e; }
+[data-theme="light"] .pill-teal { background: rgba(8,145,178,.1); border-color: rgba(8,145,178,.25); color: #0e7490; }
+
+h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; margin-bottom: 20px; max-width: 820px; color: var(--text); }
+.hero-sub { font-size: 1rem; color: var(--muted); max-width: 680px; margin-bottom: 28px; line-height: 1.65; }
+.hero-sub strong { color: var(--text); }
+.hero-meta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; font-size: .83rem; color: var(--muted); }
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta i { color: var(--accent); }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all .2s; font-family: inherit; text-decoration: none; }
+.btn-blue { background: rgba(79,142,247,.18); color: var(--accent); border-color: rgba(79,142,247,.35); }
+.btn-blue:hover { background: rgba(79,142,247,.3); transform: translateY(-2px); }
+.btn-gold { background: rgba(245,158,11,.15); color: var(--gold); border-color: rgba(245,158,11,.35); }
+.btn-gold:hover { background: rgba(245,158,11,.28); transform: translateY(-2px); }
+.btn-gray { background: var(--glass); color: var(--text); border-color: var(--glass-border); }
+.btn-gray:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.btn-back { background: var(--glass); color: var(--muted); border-color: var(--glass-border); }
+.btn-back:hover { color: var(--accent); border-color: var(--card-hover-border); transform: translateY(-2px); }
+
+/* ── STATS BAR ── */
+.stats-bar { background: var(--section-alt); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: background .35s; }
+.stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--glass-border); }
+.stat-item { background: var(--section-alt); padding: 22px 16px; text-align: center; transition: background .35s; }
+.stat-val { font-size: 1.8rem; font-weight: 900; background: linear-gradient(135deg,var(--accent),var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: .75rem; color: var(--muted); line-height: 1.4; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout { max-width: 1100px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
+.content-col { display: flex; flex-direction: column; gap: 28px; }
+.sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── CARDS ── */
+.card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 28px; transition: all .25s; }
+.card:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.card-title { font-size: 1rem; font-weight: 800; margin-bottom: 18px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.card-title i { color: var(--accent); font-size: .9rem; }
+.narrative { font-size: .92rem; color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+.narrative strong { color: var(--text); }
+
+/* ── PIPELINE ── */
+.pipeline { display: flex; align-items: stretch; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 4px; }
+.pipe-step { flex: 1; min-width: 120px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 16px 10px; text-align: center; transition: .25s; }
+.pipe-step:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); transform: translateY(-3px); }
+.pipe-arrow { display: flex; align-items: center; justify-content: center; width: 28px; flex-shrink: 0; color: var(--muted); font-size: .8rem; padding-top: 10px; }
+.pipe-icon  { font-size: 1.8rem; margin-bottom: 8px; line-height: 1; }
+.pipe-label { font-size: .75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pipe-sub   { font-size: .7rem; color: var(--muted); line-height: 1.4; }
+
+/* ── MODULE GRID ── */
+.module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+.mod-card { border-radius: 12px; padding: 20px; border: 1px solid; transition: .25s; }
+.mod-card:hover { transform: translateY(-3px); }
+.mod-1 { background: rgba(79,142,247,.05);  border-color: rgba(79,142,247,.2); }
+.mod-2 { background: rgba(239,68,68,.05);   border-color: rgba(239,68,68,.18); }
+.mod-3 { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
+.mod-4 { background: rgba(6,182,212,.05);   border-color: rgba(6,182,212,.18); }
+.mod-5 { background: rgba(167,139,250,.05); border-color: rgba(167,139,250,.2); }
+.mod-6 { background: rgba(34,197,94,.05);   border-color: rgba(34,197,94,.18); }
+.mod-badge { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 8px; margin-bottom: 8px; }
+.mod-name  { font-size: .93rem; font-weight: 800; margin-bottom: 5px; color: var(--text); }
+.mod-desc  { font-size: .77rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+.mod-detail { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--glass-border); font-size: .77rem; }
+.mod-detail:last-child { border-bottom: none; }
+.mod-detail-key { color: var(--muted); }
+
+/* ── INSIGHT BANNER ── */
+.insight-banner { background: linear-gradient(135deg,rgba(79,142,247,.07),rgba(245,158,11,.07)); border: 1px solid rgba(79,142,247,.22); border-radius: var(--radius); padding: 22px; margin-top: 8px; display: flex; gap: 16px; align-items: flex-start; }
+.insight-icon { font-size: 2rem; flex-shrink: 0; }
+.insight-body h4 { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.insight-body p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+.insight-body strong { color: var(--accent); }
+
+/* ── ITEM STACK ── */
+.item-stack { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.item-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; transition: .2s; }
+.item-row:hover { background: var(--card-hover-bg); }
+.item-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+.item-name { color: var(--text); font-weight: 600; flex: 1; }
+.item-sub  { font-size: .72rem; color: var(--muted); }
+.item-tag  { font-size: .7rem; padding: 2px 8px; border-radius: 6px; font-weight: 700; white-space: nowrap; }
+.tag-blue  { background: rgba(79,142,247,.15); color: var(--accent);  border: 1px solid rgba(79,142,247,.3); }
+.tag-red   { background: rgba(239,68,68,.15);  color: #f87171;        border: 1px solid rgba(239,68,68,.3); }
+.tag-green { background: rgba(34,197,94,.15);  color: var(--green);   border: 1px solid rgba(34,197,94,.3); }
+.tag-gold  { background: rgba(245,158,11,.15); color: var(--gold);    border: 1px solid rgba(245,158,11,.3); }
+.tag-teal  { background: rgba(6,182,212,.15);  color: var(--teal);    border: 1px solid rgba(6,182,212,.3); }
+.tag-purple{ background: rgba(167,139,250,.15);color: var(--purple);  border: 1px solid rgba(167,139,250,.3); }
+
+/* ── DEMO BLOCK ── */
+.demo-block { background: rgba(79,142,247,.04); border: 1px solid rgba(79,142,247,.15); border-radius: var(--radius); padding: 28px; }
+.demo-intro { font-size: .85rem; color: var(--muted); margin-bottom: 18px; font-style: italic; }
+.scenario-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.scen-btn { padding: 7px 16px; border-radius: 20px; font-size: .8rem; font-weight: 600; cursor: pointer; background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); transition: .2s; font-family: inherit; }
+.scen-btn.active, .scen-btn:hover { background: rgba(79,142,247,.15); border-color: rgba(79,142,247,.35); color: var(--accent); }
+.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+.res-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px; text-align: center; transition: .2s; }
+.res-card:hover { background: var(--card-hover-bg); transform: translateY(-2px); }
+.res-label { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.res-val   { font-size: 1.4rem; font-weight: 900; line-height: 1.1; }
+.res-sub   { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+.risk-bar-wrap { margin: 14px 0; }
+.risk-bar-label { display: flex; justify-content: space-between; font-size: .8rem; margin-bottom: 5px; }
+.risk-bar-track { height: 10px; border-radius: 5px; background: var(--glass); overflow: hidden; }
+.risk-bar-fill  { height: 100%; border-radius: 5px; transition: width .7s ease; }
+.demo-note { font-size: .73rem; color: var(--muted); font-style: italic; margin-top: 14px; text-align: center; }
+
+/* ── CHART TABS ── */
+.chart-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.chart-tab  { padding: 7px 14px; border-radius: 20px; font-size: .8rem; font-weight: 600; cursor: pointer; background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); transition: .2s; }
+.chart-tab.active { background: rgba(79,142,247,.15); border-color: rgba(79,142,247,.35); color: var(--accent); }
+.chart-panel { display: none; }
+.chart-panel.active { display: block; }
+.chart-wrap  { position: relative; height: 280px; }
+.chart-caption { font-size: .8rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; }
+
+/* ── COMPARISON TABLE (results) ── */
+.cmp-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .82rem; }
+.cmp-table th { background: rgba(79,142,247,.1); color: var(--text); font-weight: 700; padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(79,142,247,.2); }
+.cmp-table td { padding: 9px 14px; border-bottom: 1px solid var(--glass-border); color: var(--muted); }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr.highlight td { background: rgba(79,142,247,.07); color: var(--text); font-weight: 600; }
+.cmp-table tr:hover td { background: rgba(255,255,255,.03); }
+.badge-ours { background: linear-gradient(135deg,rgba(79,142,247,.25),rgba(6,182,212,.15)); border: 1px solid rgba(79,142,247,.4); border-radius: 6px; padding: 2px 8px; font-size: .69rem; font-weight: 800; color: var(--accent); }
+
+/* ── TAKEAWAYS ── */
+.takeaway-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 8px; }
+.takeaway { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 20px; text-align: center; transition: .2s; }
+.takeaway:hover { background: var(--card-hover-bg); transform: translateY(-3px); }
+.tk-icon  { font-size: 2rem; margin-bottom: 8px; }
+.tk-val   { font-size: 1.2rem; font-weight: 900; background: linear-gradient(135deg,var(--accent),var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+.tk-label { font-size: .78rem; color: var(--muted); line-height: 1.45; }
+
+/* ── SIDEBAR ── */
+.sidebar-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 20px; }
+.sidebar-card h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+.tldr-text { font-size: .87rem; color: var(--muted); line-height: 1.7; }
+.tldr-text strong { color: var(--text); }
+.info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: .82rem; gap: 8px; }
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); flex-shrink: 0; }
+.info-val { color: var(--text); font-weight: 600; text-align: right; font-size: .79rem; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-pill { background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.2); border-radius: 6px; padding: 3px 10px; font-size: .75rem; color: var(--accent); font-weight: 600; }
+[data-theme="light"] .tech-pill { background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.2); }
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; font-size: .82rem; color: var(--muted); transition: .2s; text-decoration: none; }
+.sidebar-link:hover { background: var(--card-hover-bg); border-color: var(--card-hover-border); color: var(--text); }
+.sidebar-link i { color: var(--accent); width: 16px; text-align: center; }
+
+/* ── EFFICIENCY RIBBON ── */
+.eff-ribbon { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 16px 0; }
+.eff-card { border-radius: 12px; padding: 18px 14px; text-align: center; border: 1px solid; }
+.eff-card.ours { background: rgba(79,142,247,.08); border-color: rgba(79,142,247,.3); }
+.eff-card.mid  { background: rgba(245,158,11,.06); border-color: rgba(245,158,11,.25); }
+.eff-card.slow { background: rgba(239,68,68,.05);  border-color: rgba(239,68,68,.2); }
+.eff-name { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.eff-val  { font-size: 1.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 3px; }
+.eff-sub  { font-size: .7rem; color: var(--muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .module-grid { grid-template-columns: 1fr 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr 1fr; }
+  .stats-inner { grid-template-columns: repeat(3,1fr); }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+  .eff-ribbon { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 70px 16px 40px; }
+  .pipeline { flex-direction: column; }
+  .module-grid { grid-template-columns: 1fr; }
+  .takeaway-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: repeat(2,1fr); }
+  .result-grid { grid-template-columns: 1fr; }
+  .eff-ribbon { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="breadcrumb">
+      <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+      <span>›</span>
+      <a href="/projects/index.html">Projects</a>
+      <span>›</span>
+      <span style="color:var(--text)">TinySurgicalBERT</span>
+    </div>
+
+    <div class="tag-row">
+      <span class="pill pill-blue"><i class="fas fa-hospital"></i> Clinical NLP</span>
+      <span class="pill pill-teal"><i class="fab fa-python"></i> PyTorch · ONNX · XGBoost</span>
+      <span class="pill pill-gold"><i class="fas fa-file-alt"></i> Journal Submission</span>
+      <span class="pill pill-green"><i class="fas fa-microchip"></i> Edge Deployment</span>
+    </div>
+
+    <h1>TinySurgicalBERT — <span class="grad-text">Distilled Clinical LM for OR Scheduling</span></h1>
+
+    <p class="hero-sub">
+      A <strong>0.75 MB INT8 BERT student model</strong> distilled from Bio-ClinicalBERT on 180,370 surgical cases,
+      achieving the same predictive accuracy as 436 MB clinical encoders at <strong>43.7× faster inference</strong>
+      — designed for real-time operating-room scheduling on standard CPU hardware.
+    </p>
+
+    <div class="hero-meta">
+      <span><i class="fas fa-calendar-alt"></i> 2026</span>
+      <span><i class="fas fa-user"></i> <strong>Mohammad Noorchenarboo</strong></span>
+      <span><i class="fas fa-database"></i> 180,370 surgical cases</span>
+      <span><i class="fas fa-brain"></i> 4 encoders · 8 regression models</span>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-blue"><i class="fas fa-flask"></i> Explore Results</a>
+      <a href="#results" class="btn btn-gold"><i class="fas fa-chart-bar"></i> View Charts</a>
+      <a href="/projects/Projects-Files/001-surgical-duration.html" class="btn btn-gray">
+        <i class="fas fa-link"></i> Prior Benchmarking Paper
+      </a>
+      <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     STATS BAR
+════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-val">180K</div>
+      <div class="stat-label">Surgical cases, single tertiary institution</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">0.75 MB</div>
+      <div class="stat-label">TinySurgicalBERT on-disk size (INT8 ONNX)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">26.38</div>
+      <div class="stat-label">MAE (min) — XGBoost + TinySurgicalBERT</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">580×</div>
+      <div class="stat-label">Compression vs. Bio-ClinicalBERT (436 MB)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">0.484 ms</div>
+      <div class="stat-label">Per-case inference — CPU, no GPU needed</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MAIN LAYOUT
+════════════════════════════════════════════ -->
+<div class="main-layout">
+<div class="content-col">
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 1: Pipeline
+  ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="s-tag s-tag-blue">Methodology Overview</div>
+    <h2 class="card-title"><i class="fas fa-route"></i> End-to-End Pipeline</h2>
+
+    <p class="narrative">
+      The pipeline begins with a 194,661-case retrospective EHR dataset filtered to 180,370 valid records.
+      <strong>Four text-encoding strategies compete</strong> — from a structured-only baseline that discards all free text
+      to TinySurgicalBERT, a student distilled specifically from surgical procedure language.
+      After feature assembly (text embedding ‖ structured vector), eight regression models are evaluated
+      under 5-fold cross-validation with Optuna hyperparameter optimisation.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-icon">🏥</div>
+        <div class="pipe-label">EHR Data</div>
+        <div class="pipe-sub">194,661 cases → 180,370 after QC filters</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🔤</div>
+        <div class="pipe-label">Text Encoding</div>
+        <div class="pipe-sub">4 strategies incl. TinySurgicalBERT distillation</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🔗</div>
+        <div class="pipe-label">Feature Assembly</div>
+        <div class="pipe-sub">Text embed ‖ 38-dim structured vector</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">⚙️</div>
+        <div class="pipe-label">HPO + CV</div>
+        <div class="pipe-sub">Optuna TPE, 20 trials, 5-fold CV</div>
+      </div>
+      <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="pipe-step">
+        <div class="pipe-icon">📊</div>
+        <div class="pipe-label">Evaluation</div>
+        <div class="pipe-sub">MAE, RMSE, sMAPE, R² + Wilcoxon FDR-BH</div>
+      </div>
+    </div>
+
+    <div class="insight-banner">
+      <div class="insight-icon">💡</div>
+      <div class="insight-body">
+        <h4>Why Procedure Text Matters</h4>
+        <p>Structured EHR fields (surgeon ID, specialty, ASA grade) plateau at MAE ≈ 34.8 min.
+           Adding any text encoding drops MAE to ≈ 26.4 min —
+           <strong>a robust 24 % improvement</strong> that is consistent across all eight non-linear models and all five folds.
+           The procedure description encodes the specific surgical plan at a granularity no categorical code can match.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 2: Module Breakdown
+  ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="s-tag s-tag-teal">TinySurgicalBERT Components</div>
+    <h2 class="card-title"><i class="fas fa-layer-group"></i> Distillation & Compression Pipeline</h2>
+
+    <div class="module-grid">
+
+      <div class="mod-card mod-1">
+        <div class="mod-badge" style="background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.22)">
+          📝 BPE Tokeniser
+        </div>
+        <div class="mod-name">Domain-Specific Vocabulary</div>
+        <div class="mod-desc">Trained on all 180,370 surgical procedure strings. Eliminates OOV tokens entirely, compared with ~8% OOV rate for the standard Bio-ClinicalBERT WordPiece vocabulary on the same data.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Vocab size</span><span style="color:var(--accent);font-weight:700">2,500 tokens</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">OOV rate</span><span style="font-weight:700">0% (vs. ~8% Bio-ClinicalBERT)</span></div>
+      </div>
+
+      <div class="mod-card mod-2">
+        <div class="mod-badge" style="background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.22)">
+          🧠 Student Architecture
+        </div>
+        <div class="mod-name">Compact Transformer</div>
+        <div class="mod-desc">Two transformer layers, four attention heads, 128-dimensional hidden representation with a learned 128 → 256 output projection. Only 0.63M parameters vs. 110M in Bio-ClinicalBERT.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Parameters</span><span style="color:#f87171;font-weight:700">0.63M (vs. 110M teacher)</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Layers / Heads / Hidden</span><span style="font-weight:700">2 / 4 / 128</span></div>
+      </div>
+
+      <div class="mod-card mod-3">
+        <div class="mod-badge" style="background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.22)">
+          🎓 Distillation Objective
+        </div>
+        <div class="mod-name">MSE + Cosine Loss</div>
+        <div class="mod-desc">Combined loss: α·‖eₛ − eₜ‖² + (1−α)·(1 − cos(eₛ,eₜ)). MSE enforces magnitude agreement while the cosine term preserves the directional embedding geometry of Bio-ClinicalBERT.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Teacher</span><span style="color:var(--gold);font-weight:700">Bio-ClinicalBERT (MIMIC-III)</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Embedding dim</span><span style="font-weight:700">256-d (PCA-projected teacher)</span></div>
+      </div>
+
+      <div class="mod-card mod-4">
+        <div class="mod-badge" style="background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.22)">
+          ⚡ INT8 ONNX Export
+        </div>
+        <div class="mod-name">Static Quantisation</div>
+        <div class="mod-desc">After distillation, the student is statically quantised to 8-bit integers and exported to ONNX Runtime format. Inference runs entirely on CPU — no GPU or network dependency at prediction time.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Final model size</span><span style="color:var(--teal);font-weight:700">0.752 MB</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Per-case inference</span><span style="font-weight:700">0.484 ± 0.072 ms</span></div>
+      </div>
+
+      <div class="mod-card mod-5">
+        <div class="mod-badge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.22)">
+          🔍 Optuna HPO
+        </div>
+        <div class="mod-name">Tree-Structured Parzen Estimator</div>
+        <div class="mod-desc">Each of the 32 encoding × model combinations receives 20 Optuna TPE trials (first 5 random), tuned independently per fold to prevent information leakage from validation data.</div>
+        <div class="mod-detail"><span class="mod-detail-key">Trials per combination</span><span style="color:#a78bfa;font-weight:700">20 (5 random warm-up)</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">Total combinations</span><span style="font-weight:700">32 (4 encoders × 8 models)</span></div>
+      </div>
+
+      <div class="mod-card mod-6">
+        <div class="mod-badge" style="background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.22)">
+          📐 Statistical Testing
+        </div>
+        <div class="mod-name">Wilcoxon + FDR-BH</div>
+        <div class="mod-desc">Pairwise Wilcoxon signed-rank tests on 5-fold metric vectors. Multiple comparisons corrected via Benjamini–Hochberg FDR across 12 test pairs (3 baselines × 4 metrics).</div>
+        <div class="mod-detail"><span class="mod-detail-key">vs. Structured Only</span><span style="color:var(--green);font-weight:700">W = 0, p = 0.0625 (strongest)</span></div>
+        <div class="mod-detail"><span class="mod-detail-key">vs. large encoders</span><span style="font-weight:700">W ≥ 4, p ≥ 0.44 (no diff.)</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 3: Model Stack
+  ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="s-tag s-tag-blue">Encoding Strategies Compared</div>
+    <h2 class="card-title"><i class="fas fa-brain"></i> Four Text Encoders</h2>
+    <p class="narrative">
+      All four strategies share the same downstream regression suite and 5-fold CV protocol,
+      ensuring a fair paired comparison. <strong>TinySurgicalBERT is the only encoder designed
+      for edge deployment</strong>, trading 436× less storage for zero accuracy loss.
+    </p>
+
+    <div class="item-stack">
+
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(79,142,247,.15);color:var(--accent)">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div>
+          <div class="item-name">TinySurgicalBERT (ours)</div>
+          <div class="item-sub">0.63M params · 0.75 MB · 0.484 ms/case · 256-d output · CPU ONNX Runtime</div>
+        </div>
+        <div class="item-tag tag-blue">Proposed</div>
+      </div>
+
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(239,68,68,.15);color:#f87171">
+          <i class="fas fa-hospital-user"></i>
+        </div>
+        <div>
+          <div class="item-name">Bio-ClinicalBERT</div>
+          <div class="item-sub">110M params · 436 MB · 21.19 ms/case · 768-d → PCA 384 · Teacher model</div>
+        </div>
+        <div class="item-tag tag-red">Teacher</div>
+      </div>
+
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(245,158,11,.15);color:var(--gold)">
+          <i class="fas fa-exchange-alt"></i>
+        </div>
+        <div>
+          <div class="item-name">SentenceBERT</div>
+          <div class="item-sub">22.7M params · 91 MB · 2.57 ms/case · 384-d embeddings · General domain</div>
+        </div>
+        <div class="item-tag tag-gold">Baseline</div>
+      </div>
+
+      <div class="item-row">
+        <div class="item-icon" style="background:rgba(136,146,164,.15);color:var(--muted)">
+          <i class="fas fa-table"></i>
+        </div>
+        <div>
+          <div class="item-name">Structured Only</div>
+          <div class="item-sub">38-dim EHR features only — no text encoding. φ(p) = 0. Strong structured baseline.</div>
+        </div>
+        <div class="item-tag" style="background:rgba(136,146,164,.15);color:var(--muted);border:1px solid rgba(136,146,164,.3)">Baseline</div>
+      </div>
+
+    </div>
+
+    <div class="insight-banner" style="margin-top:16px;background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(6,182,212,.07));border-color:rgba(34,197,94,.25)">
+      <div class="insight-icon">⚙️</div>
+      <div class="insight-body">
+        <h4>Deployment Gap Closed</h4>
+        <p>Prior work forced a binary trade-off: high accuracy with a 436 MB encoder impractical at the point of care,
+           or fast scheduling with a structured-only model that ignores the richest pre-operative signal.
+           <strong>TinySurgicalBERT occupies the intersection</strong> — statistically equivalent accuracy at 0.75 MB and 0.484 ms/case.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 4: Encoding Comparison Explorer
+  ──────────────────────────────────────────── -->
+  <div class="demo-block" id="demo">
+    <div class="s-tag s-tag-blue">Interactive Explorer</div>
+    <h2 class="card-title" style="margin-bottom:4px"><i class="fas fa-flask"></i> Encoding Strategy Explorer</h2>
+    <p class="demo-intro">Select an encoding strategy to see its XGBoost performance across all four metrics (mean ± SD, 5-fold CV). The R² bar shows the fraction of surgical duration variance explained.</p>
+
+    <div class="scenario-tabs" id="scenTabs">
+      <button class="scen-btn active"    onclick="selectScen(0,this)">📋 Structured Only</button>
+      <button class="scen-btn"           onclick="selectScen(1,this)">🔤 SentenceBERT</button>
+      <button class="scen-btn"           onclick="selectScen(2,this)">🏥 Bio-ClinicalBERT</button>
+      <button class="scen-btn"           onclick="selectScen(3,this)">⚡ TinySurgicalBERT</button>
+    </div>
+
+    <div id="scenOutput"></div>
+    <p class="demo-note">Results from 5-fold cross-validation on 180,370 retrospective surgical cases. Statistical comparisons via two-sided Wilcoxon signed-rank with Benjamini–Hochberg FDR correction.</p>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 5: Performance Charts
+  ──────────────────────────────────────────── -->
+  <div class="card" id="results">
+    <div class="s-tag s-tag-blue">Performance Snapshot</div>
+    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Results at a Glance</h2>
+
+    <div class="chart-tabs">
+      <div class="chart-tab active" onclick="switchTab(0,this)">MAE by Encoder (XGBoost)</div>
+      <div class="chart-tab"        onclick="switchTab(1,this)">Model Size (log scale)</div>
+      <div class="chart-tab"        onclick="switchTab(2,this)">Inference Time (log scale)</div>
+    </div>
+
+    <div class="chart-panel active" id="cp0">
+      <div class="chart-wrap"><canvas id="chart0"></canvas></div>
+      <p class="chart-caption">Mean Absolute Error (minutes ↓) for XGBoost paired with each encoding strategy. All three text-augmented encoders reduce MAE by ~24 % over the structured-only baseline. TinySurgicalBERT achieves 26.38 min — statistically indistinguishable from Bio-ClinicalBERT (26.40) and SentenceBERT (26.35).</p>
+    </div>
+    <div class="chart-panel" id="cp1">
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <p class="chart-caption">On-disk model file size in MB (log scale ↓). TinySurgicalBERT (0.75 MB INT8 ONNX) is 121× smaller than SentenceBERT (91 MB) and 580× smaller than Bio-ClinicalBERT (436 MB), enabling deployment on edge and mobile hardware common in OR scheduling systems.</p>
+    </div>
+    <div class="chart-panel" id="cp2">
+      <div class="chart-wrap"><canvas id="chart2"></canvas></div>
+      <p class="chart-caption">End-to-end per-case inference time in ms (log scale ↓), measured over N=30 repeated passes on 200 procedure descriptions under single-item CPU inference. TinySurgicalBERT (0.484 ms) is 5.3× faster than SentenceBERT and 43.7× faster than Bio-ClinicalBERT. Both differences are significant (p &lt; 0.001, Wilcoxon FDR-BH).</p>
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 6: Full Results Table + Efficiency
+  ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="s-tag s-tag-gold">Deployment Profile</div>
+    <h2 class="card-title"><i class="fas fa-tachometer-alt"></i> Efficiency Comparison</h2>
+    <p class="narrative">
+      TinySurgicalBERT is evaluated against three baselines on two deployment-critical dimensions:
+      <strong>on-disk model size</strong> and <strong>end-to-end per-case CPU inference time</strong>.
+      Downstream XGBoost prediction contributes &lt;0.005 ms/case for all encoders (negligible).
+    </p>
+
+    <div class="eff-ribbon">
+      <div class="eff-card ours">
+        <div class="eff-name">⚡ TinySurgicalBERT <span class="badge-ours">OURS</span></div>
+        <div class="eff-val" style="color:var(--accent)">0.75 MB</div>
+        <div class="eff-sub">0.484 ± 0.072 ms · 2L · 4H · 128d · 0.63M params</div>
+      </div>
+      <div class="eff-card mid">
+        <div class="eff-name">🔤 SentenceBERT</div>
+        <div class="eff-val" style="color:var(--gold)">91 MB</div>
+        <div class="eff-sub">2.570 ± 0.136 ms · 6L · 12H · 384d · 22.7M params</div>
+      </div>
+      <div class="eff-card slow">
+        <div class="eff-name">🏥 Bio-ClinicalBERT</div>
+        <div class="eff-val" style="color:var(--red)">436 MB</div>
+        <div class="eff-sub">21.190 ± 0.111 ms · 12L · 12H · 768d · 110M params</div>
+      </div>
+    </div>
+
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>MAE ↓ (min)</th>
+          <th>RMSE ↓ (min)</th>
+          <th>sMAPE ↓ (%)</th>
+          <th>R² ↑</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>TinySurgicalBERT + XGBoost <span class="badge-ours">OURS</span></td>
+          <td>26.38 ± 0.09</td>
+          <td>41.87 ± 0.77</td>
+          <td>21.61 ± 0.15</td>
+          <td>0.8543 ± 0.0051</td>
+        </tr>
+        <tr>
+          <td>SentenceBERT + XGBoost</td>
+          <td>26.35 ± 0.07</td>
+          <td>41.89 ± 0.75</td>
+          <td>21.56 ± 0.06</td>
+          <td>0.8542 ± 0.0049</td>
+        </tr>
+        <tr>
+          <td>Bio-ClinicalBERT + XGBoost</td>
+          <td>26.40 ± 0.11</td>
+          <td>41.93 ± 0.81</td>
+          <td>21.62 ± 0.09</td>
+          <td>0.8539 ± 0.0054</td>
+        </tr>
+        <tr>
+          <td>Structured Only + XGBoost</td>
+          <td>34.80 ± 0.12</td>
+          <td>51.77 ± 0.67</td>
+          <td>28.84 ± 0.12</td>
+          <td>0.7773 ± 0.0050</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.74rem;color:var(--muted);margin-top:10px;line-height:1.6">
+      Mean ± SD over 5-fold CV. Statistical comparisons: TinySurgicalBERT vs. Structured Only — W = 0, p = 0.0625 (all folds consistently signed, strongest evidence achievable at n = 5).
+      vs. SentenceBERT / Bio-ClinicalBERT — W ≥ 4, p ≥ 0.44 (no significant difference). FDR-BH corrected across 12 pairs.
+    </p>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────
+       CARD 7: Key Design Decisions
+  ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="s-tag s-tag-gold">Design Decisions</div>
+    <h2 class="card-title"><i class="fas fa-lightbulb"></i> Why These Choices Work</h2>
+    <div class="takeaway-grid">
+
+      <div class="takeaway">
+        <div class="tk-icon">📝</div>
+        <div class="tk-val">Domain BPE</div>
+        <div class="tk-label">A vocabulary of 2,500 tokens trained exclusively on surgical procedure text yields 0% OOV rate — eliminating the tokenisation noise that degrades general-purpose encoders on surgical terminology.</div>
+      </div>
+
+      <div class="takeaway">
+        <div class="tk-icon">🎓</div>
+        <div class="tk-val">580× Smaller</div>
+        <div class="tk-label">Knowledge distillation transfers Bio-ClinicalBERT's embedding geometry into a 2-layer student via combined MSE + cosine loss. INT8 quantisation then halves per-weight storage with negligible accuracy loss.</div>
+      </div>
+
+      <div class="takeaway">
+        <div class="tk-icon">⚡</div>
+        <div class="tk-val">43.7× Faster</div>
+        <div class="tk-label">ONNX Runtime CPU inference at 0.484 ms/case enables real-time point-of-care scheduling without GPU or cloud dependency — a hard requirement on the commodity hardware used in most OR systems.</div>
+      </div>
+
+      <div class="takeaway">
+        <div class="tk-icon">🔬</div>
+        <div class="tk-val">24% MAE Drop</div>
+        <div class="tk-label">Including any text encoding reduces MAE from 34.80 to ~26.4 min — a robust effect consistent across all 8 non-linear models and all 5 folds, confirming that procedure free-text provides independent predictive signal.</div>
+      </div>
+
+      <div class="takeaway">
+        <div class="tk-icon">🛡️</div>
+        <div class="tk-val">Rigorous CV</div>
+        <div class="tk-label">Optuna TPE tuning is conducted per-fold on the inner training split, preventing validation leakage. Wilcoxon signed-rank tests with FDR-BH correction guard against false positives across 12 pairwise comparisons.</div>
+      </div>
+
+      <div class="takeaway">
+        <div class="tk-icon">🏥</div>
+        <div class="tk-val">Clinical Ready</div>
+        <div class="tk-label">The complete pipeline produces a single .onnx artefact requiring no HuggingFace runtime, no GPU, and no internet at inference time — designed from the ground up for deployment in the resource-constrained OR scheduling environment.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div><!-- /content-col -->
+
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════ -->
+<div class="sidebar">
+
+  <div class="sidebar-card">
+    <h3>At a Glance</h3>
+    <p class="tldr-text">
+      <strong>What it is:</strong> A 0.75 MB INT8 BERT student distilled from Bio-ClinicalBERT for surgical duration prediction.
+      <strong>Tech:</strong> PyTorch, HuggingFace, ONNX Runtime, XGBoost, Optuna.
+      <strong>Deploy:</strong> CPU-only, no GPU, no cloud dependency.
+      <strong>Result:</strong> Same accuracy as 436 MB Bio-ClinicalBERT at 43.7× faster inference.
+    </p>
+  </div>
+
+  <div class="sidebar-card">
+    <h3>Project Info</h3>
+    <div class="info-row"><span class="info-key">Status</span>     <span class="info-val" style="color:var(--gold)">📄 Under Review</span></div>
+    <div class="info-row"><span class="info-key">Type</span>       <span class="info-val">Academic Research</span></div>
+    <div class="info-row"><span class="info-key">Domain</span>     <span class="info-val">Clinical NLP · OR Scheduling</span></div>
+    <div class="info-row"><span class="info-key">ML Models</span>  <span class="info-val">BERT (distillation) · XGBoost · LightGBM · MLP</span></div>
+    <div class="info-row"><span class="info-key">Dataset</span>    <span class="info-val">180,370 surgical cases</span></div>
+    <div class="info-row"><span class="info-key">Encoders</span>   <span class="info-val">4 strategies · 8 regressors</span></div>
+    <div class="info-row"><span class="info-key">Compression</span><span class="info-val">580× (vs. Bio-ClinicalBERT)</span></div>
+    <div class="info-row"><span class="info-key">Year</span>       <span class="info-val">2026</span></div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3>Tech Stack</h3>
+    <div class="tech-pills">
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">PyTorch</span>
+      <span class="tech-pill">HuggingFace</span>
+      <span class="tech-pill">ONNX Runtime</span>
+      <span class="tech-pill">XGBoost</span>
+      <span class="tech-pill">LightGBM</span>
+      <span class="tech-pill">Optuna</span>
+      <span class="tech-pill">scikit-learn</span>
+      <span class="tech-pill">Tokenizers</span>
+      <span class="tech-pill">NumPy</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3>Key Metrics</h3>
+    <div class="info-row"><span class="info-key">MAE (TinySurgBERT)</span><span class="info-val" style="color:var(--accent)">26.38 ± 0.09 min</span></div>
+    <div class="info-row"><span class="info-key">RMSE</span>              <span class="info-val">41.87 ± 0.77 min</span></div>
+    <div class="info-row"><span class="info-key">R²</span>                <span class="info-val">0.8543 ± 0.0051</span></div>
+    <div class="info-row"><span class="info-key">sMAPE</span>             <span class="info-val">21.61 ± 0.15 %</span></div>
+    <div class="info-row"><span class="info-key">Inference</span>         <span class="info-val" style="color:var(--green)">0.484 ± 0.072 ms</span></div>
+    <div class="info-row"><span class="info-key">Model size</span>        <span class="info-val" style="color:var(--green)">0.752 MB</span></div>
+  </div>
+
+  <div class="sidebar-card">
+    <h3>Related Work</h3>
+    <div class="sidebar-links">
+      <a href="/projects/Projects-Files/001-surgical-duration.html" class="sidebar-link">
+        <i class="fas fa-link"></i> Benchmarking Study (Paper 1)
+      </a>
+      <a href="/projects/Projects-Files/002-nlp-benchmark.html" class="sidebar-link">
+        <i class="fas fa-link"></i> NLP Benchmark
+      </a>
+      <a href="/index.html#publications" class="sidebar-link">
+        <i class="fas fa-book"></i> All Publications
+      </a>
+      <a href="/projects/index.html" class="sidebar-link">
+        <i class="fas fa-th-large"></i> Back to Projects
+      </a>
+    </div>
+  </div>
+
+</div><!-- /sidebar -->
+</div><!-- /main-layout -->
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+
+/* ─── THEME HELPERS ─── */
+const html = document.documentElement;
+function isDark(){ return html.getAttribute('data-theme') !== 'light'; }
+function gc(){ return isDark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; }
+function tc(){ return isDark() ? '#8892a4' : '#4b5675'; }
+function tt(){
+  return {
+    backgroundColor: isDark() ? 'rgba(7,13,31,.95)' : 'rgba(255,255,255,.97)',
+    titleColor:      isDark() ? '#e2e8f0' : '#0f172a',
+    bodyColor:       isDark() ? '#8892a4'  : '#4b5675',
+    borderColor:     isDark() ? 'rgba(79,142,247,.3)' : 'rgba(37,99,235,.2)',
+    borderWidth: 1
+  };
+}
+
+
+/* ─── ENCODING STRATEGY SCENARIOS ─── */
+const SCENARIOS = [
+  {
+    title: '📋 Structured Only — No Text Encoding (Baseline)',
+    metrics: [
+      { label: 'MAE', val: '34.80', sub: '± 0.12 min', color: '#ef4444' },
+      { label: 'RMSE', val: '51.77', sub: '± 0.67 min', color: '#ef4444' },
+      { label: 'R²', val: '0.777', sub: '± 0.005', color: '#f59e0b' }
+    ],
+    bar: { label: 'Variance explained (R²)', pct: 77.7, color: '#ef4444' },
+    insight: 'Using only structured EHR fields (surgeon ID, specialty, ASA grade, demographics), XGBoost plateaus at MAE 34.80 min. This represents the current state of practice in most OR scheduling systems. The procedure free-text — the single richest pre-operative predictor — is entirely discarded.'
+  },
+  {
+    title: '🔤 SentenceBERT — General-Domain Sentence Encoder',
+    metrics: [
+      { label: 'MAE', val: '26.35', sub: '± 0.07 min', color: '#22c55e' },
+      { label: 'RMSE', val: '41.89', sub: '± 0.75 min', color: '#22c55e' },
+      { label: 'R²', val: '0.854', sub: '± 0.005', color: '#4f8ef7' }
+    ],
+    bar: { label: 'Variance explained (R²)', pct: 85.4, color: '#22c55e' },
+    insight: 'SentenceBERT (22.7M params, 91 MB) produces 384-d embeddings via a siamese sentence-transformer trained on general text. Adding these to the structured features cuts MAE by 8.45 min (~24%). Despite carrying ~8% OOV surgical terms, the semantic generalisation is sufficient for accurate predictions. However, 2.57 ms/case is too slow for real-time scheduling on edge hardware.'
+  },
+  {
+    title: '🏥 Bio-ClinicalBERT — Clinical Domain BERT',
+    metrics: [
+      { label: 'MAE', val: '26.40', sub: '± 0.11 min', color: '#22c55e' },
+      { label: 'RMSE', val: '41.93', sub: '± 0.81 min', color: '#22c55e' },
+      { label: 'R²', val: '0.854', sub: '± 0.005', color: '#4f8ef7' }
+    ],
+    bar: { label: 'Variance explained (R²)', pct: 85.4, color: '#06b6d4' },
+    insight: 'Bio-ClinicalBERT (110M params, 436 MB) was pre-trained on MIMIC-III clinical notes, giving it strong clinical domain knowledge. Its 768-d embeddings are PCA-projected to 384-d before concatenation. Accuracy is statistically equivalent to SentenceBERT and TinySurgicalBERT (W ≥ 4, p ≥ 0.44). At 21.19 ms/case, it is 43.7× slower than TinySurgicalBERT — impractical for point-of-care scheduling without GPU acceleration.'
+  },
+  {
+    title: '⚡ TinySurgicalBERT — Distilled Edge Encoder (Ours)',
+    metrics: [
+      { label: 'MAE', val: '26.38', sub: '± 0.09 min', color: '#4f8ef7' },
+      { label: 'RMSE', val: '41.87', sub: '± 0.77 min', color: '#4f8ef7' },
+      { label: 'R²', val: '0.854', sub: '± 0.005', color: '#22c55e' }
+    ],
+    bar: { label: 'Variance explained (R²)', pct: 85.4, color: '#4f8ef7' },
+    insight: 'TinySurgicalBERT (0.63M params, 0.75 MB) matches Bio-ClinicalBERT and SentenceBERT accuracy while being 580× and 121× smaller respectively. At 0.484 ms/case on CPU, it satisfies real-time OR scheduling requirements without any GPU or network dependency. Domain-specific BPE tokenisation eliminates all OOV tokens on held-out surgical cases from the same institution.'
+  }
+];
+
+function renderScen(idx){
+  const s = SCENARIOS[idx];
+  const metrics = s.metrics.map(m => `
+    <div class="res-card">
+      <div class="res-label">${m.label}</div>
+      <div class="res-val" style="color:${m.color}">${m.val}</div>
+      <div class="res-sub">${m.sub}</div>
+    </div>`).join('');
+  document.getElementById('scenOutput').innerHTML = `
+    <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:12px">${s.title}</div>
+    <div class="result-grid">${metrics}</div>
+    <div class="risk-bar-wrap">
+      <div class="risk-bar-label">
+        <span style="color:var(--muted);font-size:.78rem">${s.bar.label}</span>
+        <span style="color:${s.bar.color};font-weight:700;font-size:.82rem">${s.bar.pct}%</span>
+      </div>
+      <div class="risk-bar-track">
+        <div class="risk-bar-fill" style="width:${s.bar.pct}%;background:${s.bar.color}"></div>
+      </div>
+    </div>
+    <div style="background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.15);border-radius:8px;padding:12px 16px;font-size:.82rem;color:var(--muted);line-height:1.65;margin-top:4px">${s.insight}</div>`;
+}
+function selectScen(idx, btn){
+  document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderScen(idx);
+}
+renderScen(0);
+
+
+/* ─── CHARTS ─── */
+const charts = {};
+
+function buildChart(i){
+  if(charts[i]) charts[i].destroy();
+  const ctx = document.getElementById('chart' + i);
+  if(!ctx) return;
+  const g = gc(), t = tc(), tip = tt();
+
+  if(i === 0){
+    /* Chart 1: MAE comparison across encoding strategies (XGBoost) */
+    charts[0] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Structured Only', 'SentenceBERT', 'Bio-ClinicalBERT', 'TinySurgicalBERT'],
+        datasets:[{
+          label: 'MAE (min)',
+          data: [34.80, 26.35, 26.40, 26.38],
+          backgroundColor: [
+            'rgba(239,68,68,.75)',
+            'rgba(245,158,11,.75)',
+            'rgba(6,182,212,.75)',
+            'rgba(79,142,247,.9)'
+          ],
+          borderRadius: 8,
+          borderWidth: 0
+        }]
+      },
+      options:{
+        responsive: true, maintainAspectRatio: false,
+        plugins:{
+          legend:{ labels:{ color:t } },
+          tooltip: tip
+        },
+        scales:{
+          x:{ ticks:{ color:t }, grid:{ color:g } },
+          y:{
+            ticks:{ color:t },
+            grid:{ color:g },
+            title:{ display:true, text:'MAE (minutes ↓)', color:t, font:{ size:11 } },
+            min: 20, max: 40
+          }
+        }
+      }
+    });
+
+  } else if(i === 1){
+    /* Chart 2: Model size — log scale */
+    charts[1] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['TinySurgicalBERT', 'SentenceBERT', 'Bio-ClinicalBERT'],
+        datasets:[{
+          label: 'Model Size (MB)',
+          data: [0.752, 90.87, 435.76],
+          backgroundColor: [
+            'rgba(79,142,247,.9)',
+            'rgba(245,158,11,.75)',
+            'rgba(239,68,68,.75)'
+          ],
+          borderRadius: 8,
+          borderWidth: 0
+        }]
+      },
+      options:{
+        responsive: true, maintainAspectRatio: false,
+        plugins:{
+          legend:{ labels:{ color:t } },
+          tooltip: tip
+        },
+        scales:{
+          x:{ ticks:{ color:t }, grid:{ color:g } },
+          y:{
+            type: 'logarithmic',
+            ticks:{ color:t },
+            grid:{ color:g },
+            title:{ display:true, text:'Model Size in MB (log scale ↓)', color:t, font:{ size:11 } }
+          }
+        }
+      }
+    });
+
+  } else if(i === 2){
+    /* Chart 3: Inference time — log scale */
+    charts[2] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['TinySurgicalBERT', 'SentenceBERT', 'Bio-ClinicalBERT'],
+        datasets:[{
+          label: 'Inference Time (ms/case)',
+          data: [0.484, 2.570, 21.190],
+          backgroundColor: [
+            'rgba(79,142,247,.9)',
+            'rgba(245,158,11,.75)',
+            'rgba(239,68,68,.75)'
+          ],
+          borderRadius: 8,
+          borderWidth: 0
+        }]
+      },
+      options:{
+        responsive: true, maintainAspectRatio: false,
+        plugins:{
+          legend:{ labels:{ color:t } },
+          tooltip: tip
+        },
+        scales:{
+          x:{ ticks:{ color:t }, grid:{ color:g } },
+          y:{
+            type: 'logarithmic',
+            ticks:{ color:t },
+            grid:{ color:g },
+            title:{ display:true, text:'Per-case inference time in ms (log scale ↓)', color:t, font:{ size:11 } }
+          }
+        }
+      }
+    });
+  }
+}
+
+function switchTab(i, el){
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.chart-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cp' + i).classList.add('active');
+  buildChart(i);
+}
+
+buildChart(0);
+
+</script>
+
+</body>
+</html>
