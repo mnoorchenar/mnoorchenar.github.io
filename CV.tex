@@ -1,0 +1,462 @@
+\documentclass[10pt,a4paper,ragged2e]{altacv}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\colorlet{tagbg}{black!10}
+\usepackage{transparent}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{amber}{rgb}{1.0, 0.49, 0.0}
+\geometry{left=1cm,right=9cm,marginparwidth=6.5cm,marginparsep=1.25cm,top=1.4cm,bottom=1.4cm}
+\ifxetexorluatex
+  \setmainfont{Carlito}
+\else
+  \usepackage[default]{lato}
+\fi
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{VividPurple}{HTML}{3E0097}
+\definecolor{SlateGrey}{HTML}{2E2E2E}
+\definecolor{LightGrey}{HTML}{666666}
+\colorlet{heading}{VividPurple}
+\colorlet{accent}{VividPurple}
+\colorlet{emphasis}{SlateGrey}
+\colorlet{body}{black}
+
+\renewcommand{\itemmarker}{{\small\textbullet}}
+\renewcommand{\ratingmarker}{\faCircle}
+
+\newcommand{\cvlink}[4]{%
+  \noindent
+  \begin{tcolorbox}[enhanced,colback=VividPurple!8,colframe=VividPurple!40,boxrule=0.4pt,arc=3pt,left=4pt,right=4pt,top=2pt,bottom=2pt,before skip=3pt,after skip=3pt]
+    \textcolor{VividPurple}{#1}\;\textbf{\small #2}\\[1pt]
+    \textcolor{LightGrey}{\scriptsize\href{#3}{#4}}
+  \end{tcolorbox}%
+}
+
+\newcommand{\skillcategory}[2]{%
+  \smallskip
+  \noindent\colorbox{VividPurple!15}{%
+    \textcolor{VividPurple}{#1}\;\textbf{\small #2}%
+  }%
+  \smallskip
+}
+
+\definecolor{CertBlue}{HTML}{0055AA}
+
+%% ---- Project entry command ----
+\newcommand{\cvproject}[6]{%
+  \noindent\textcolor{VividPurple}{\textbf{\small #1}}\enspace{\footnotesize\textcolor{SlateGrey}{\href{#2}{\faGithub\,\texttt{Code}}}\enspace\textcolor[HTML]{FF9D00}{\href{#3}{\faExternalLink\,\texttt{Demo}}}\enspace\textcolor[HTML]{1A7F5A}{\href{#4}{\faBook\,\texttt{Docs}}}}\vspace{1pt}\\
+  \noindent{\small #5}\vspace{1pt}\\
+  \noindent#6
+  \vspace{3pt}{\color{VividPurple!20}\hrule}\vspace{6pt}
+}
+%% ---- Project entry — no GitHub, Docs only ----
+\newcommand{\cvprojectnogit}[6]{%
+  \noindent\textcolor{VividPurple}{\textbf{\small #1}}\enspace{\footnotesize\textcolor[HTML]{1A7F5A}{\href{#4}{\faBook\,\texttt{Docs}}}}\vspace{1pt}\\
+  \noindent{\small #5}\vspace{1pt}\\
+  \noindent#6
+  \vspace{3pt}{\color{VividPurple!20}\hrule}\vspace{6pt}
+}
+%% ---- Tag chip helper ----
+\newcommand{\ptag}[1]{\colorbox{VividPurple!12}{\tiny\textcolor{VividPurple}{#1}}\,}
+
+\definecolor{GoogleBlue}{HTML}{4285F4}
+\definecolor{GoogleRed}{HTML}{EA4335}
+\definecolor{GoogleYellow}{HTML}{FBBC05}
+\definecolor{GoogleGreen}{HTML}{34A853}
+\newcommand{\googletext}{\textbf{\textcolor{GoogleBlue}{G}\textcolor{GoogleRed}{o}\textcolor{GoogleYellow}{o}\textcolor{GoogleBlue}{g}\textcolor{GoogleGreen}{l}\textcolor{GoogleRed}{e}}}
+
+\definecolor{LinkedInBlue}{HTML}{0A66C2}
+\definecolor{AzureBlue}{HTML}{0089D6}
+
+
+\begin{document}
+\name{Mohammad Noorchenarboo}
+\tagline{AI Scientist | Generative AI \& LLM Engineer}
+
+\personalinfo{%
+  \email{mnoorchenarboo@gmail.com}
+  \location{Ontario, Canada}
+  \linkedin{\href{https://www.linkedin.com/in/mnoorchenar}{mnoorchenar}}
+  \github{\href{https://mnoorchenar.github.io/}{mnoorchenar.github.io}}
+  \googlescholar{\href{https://scholar.google.com/citations?user=nn_Toq0AAAAJ}{Google Scholar}}
+}
+
+\begin{fullwidth}
+\makecvheader
+\end{fullwidth}
+
+\AtBeginEnvironment{itemize}{\small}
+
+%% ===================== PAGE 1 SIDEBAR =====================
+\marginpar{%
+\vspace*{\dimexpr1pt-\baselineskip}\raggedright
+\vspace{2.5mm}
+\cvsection{About Me}
+AI Scientist specializing in Generative AI, LLMs, and RAG systems, with deep expertise in transformer fine-tuning, knowledge distillation, agentic AI (LangGraph), and MLOps. Built end-to-end LLM pipelines --- from BERT fine-tuning and INT8/ONNX quantization to multi-agent systems and hybrid RAG architectures. Proficient in Python, PyTorch, and HuggingFace; deploys production-ready models on GPU-accelerated HPC and cloud infrastructure. Teaches graduate-level GenAI and ML courses; focused on scalable, interpretable, and deployment-ready AI solutions.
+\par
+
+\vspace{5pt}
+\cvsection{Technical Skills}
+
+\skillcategory{\faCode}{Languages \& Libraries}
+\begin{itemize}
+    \item Python (TensorFlow, Keras, PyTorch, scikit-learn, XGBoost, Plotly, etc.) (6+ years)
+    \item {\fontsize{8.5}{10}\selectfont Pandas, NumPy, SciPy, statsmodels (4+ years)}
+    \item R, R Markdown, R Shiny (10+ years)
+    \item SQL (4+ years)
+    \item PySpark (1+ year)
+\end{itemize}
+
+\smallskip
+\skillcategory{\faCogs}{DevOps \& Tooling}
+\begin{itemize}
+    \item MLflow, Apache Airflow (1+ year)
+    \item Docker (2+ years)
+    \item GitHub (5+ years)
+    \item Linux (Ubuntu) (3+ years)
+    \item Jira (1+ year)
+\end{itemize}
+
+\smallskip
+\skillcategory{\faMagic}{GenAI \& LLM Tools}
+\begin{itemize}
+    \item Hugging Face, Transformers (3+ years)
+    \item LangChain, LangGraph, Agentic AI (1+ year)
+    \item RAG, Hybrid Search (FAISS, BM25, RRF)
+    \item PEFT / LoRA, ONNX / INT8 Quantization
+    \item Prompt Engineering, OpenAI API
+\end{itemize}
+
+\smallskip
+\skillcategory{\faFlask}{Statistical Tools}
+\begin{itemize}
+    \item SPSS, MINITAB (10+ years)
+    \item STATA (2+ years)
+\end{itemize}
+
+\smallskip
+\skillcategory{\faBarChart}{Visualization \& Deployment}
+\begin{itemize}
+    \item Tableau, Power BI (1+ year)
+    \item Flask, Streamlit (1+ year)
+\end{itemize}
+
+\smallskip
+\skillcategory{\faCloud}{Cloud \& HPC Platforms}
+\begin{itemize}
+    \item Microsoft Azure (1+ year)
+    \item Large-Scale GPU Computing (2+ years)
+\end{itemize}
+
+\smallskip\smallskip
+\noindent\colorbox{CertBlue!15}{%
+  \textcolor{CertBlue}{\faCertificate}\;\textbf{\small Certifications (Selected)}\quad\hfill{\scriptsize\textcolor{CertBlue}{\href{https://mnoorchenar.github.io/certifications}{\faExternalLink\, full list}}}%
+}
+\smallskip
+\begin{itemize}[leftmargin=0pt, label={}]
+    \item \textcolor{AzureBlue}{\faWindows}\;Microsoft Azure AI Essentials
+    \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;Practical A/B Testing
+    \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;Risk Management and Insurance Planning: Designing for Client Needs
+    % \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;Data Governance for the Healthcare Industry
+    % \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;Excel for Financial Planning and Analysis (FP\&A)
+    % \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;SAS\textsuperscript{\textregistered} 9.4 Cert Prep: SAS Programming Essentials
+    % \item \textcolor{LinkedInBlue}{\faLinkedinSquare}\;Project Management: Healthcare Projects
+\end{itemize}
+
+
+}% end page 1 marginpar
+
+%% ===================== PAGE 1 MAIN COLUMN =====================
+% \vspace{-2mm}
+\cvsection{Work Experience}
+
+\vspace{-1mm}
+\cvevent{}{Professor}{May 2024 -- Ongoing}{Fanshawe College, London, Ontario, Canada}{}
+\begin{itemize}
+\item Design and deliver graduate-level AI/ML courses spanning statistical models, ML families (supervised, unsupervised, ensemble), computer vision (CNNs, YOLO, Vision Transformers, OpenCV), time series (RNN, LSTM, GRU), LLMs (GPT, BERT, fine-tuning), generative AI (VAEs, GANs, Diffusion), NLP, ETL and CI/CD pipelines, XAI (SHAP, LIME), and cloud-based deployment; supervise capstone projects and mentor students in TensorFlow and PyTorch.
+\item Achieved 4.90/5.00 satisfaction KPIs across \textasciitilde450 enrollments and 15 deliveries, +0.34 above department average with +32.8\% growth over 5 semesters.
+\end{itemize}
+
+\vspace{-2mm}\divider\vspace{-1mm}
+
+\cvevent{}{Senior Data Scientist}{May 2023 -- Dec 2025}{\begin{minipage}[t]{\linewidth}London Health Sciences Centre Research Institute (LHSC), London, ON, Canada\end{minipage}}
+\begin{itemize}
+\item Designed and deployed predictive machine learning pipelines on 180,000+ multimodal EHR records from 3 hospitals; benchmarked 8 architectures (XGBoost, LightGBM, ANN, TabTransformer) with feature engineering, 10-fold cross-validation, Bayesian optimization, reducing prediction error by 16\%.
+\item Built end-to-end ETL and MLOps pipelines with CI/CD integration on GPU-accelerated HPC infrastructure; deployed RAG systems and LLM-based clinical NLP solutions in Python; compressed fine-tuned ClinicalBERT by 99.25\% via knowledge distillation and INT8/ONNX quantization for edge inference (43.7$\times$ faster); applied SHAP for interpretable, production-ready outputs.
+\item Partnered with cross-functional clinical and engineering teams across 3 institutions; delivered Plotly and Flask KPI dashboards to surgical and administrative stakeholders; results published in \textit{Surgical Endoscopy} (2025) and \textit{International Journal of Medical Informatics} (2026).
+\end{itemize}
+
+\vspace{-2mm}\divider\vspace{-1mm}
+
+\cvevent{}{Applied AI Scientist}{Nov 2022 -- Apr 2023}{\begin{minipage}[t]{\linewidth}London Hydro, London, Ontario, Canada\end{minipage}}
+\begin{itemize}
+\item Benchmarked 20+ deep learning time-series forecasting architectures (LSTM, GRU, TCN, Temporal Fusion Transformer) on large-scale smart meter energy data; engineered end-to-end ML pipelines, hyperparameter optimization.
+\item Designed an anomaly detection pipeline; maintained relational SQL databases; built interactive R Shiny and Flask dashboards for anomaly diagnostics.
+\item Developed SHAP explainability frameworks reducing explanation variability by 38\% across 250+ scenarios; published in \textit{Energy \& Buildings} (2025).
+\end{itemize}
+
+\vspace{-2mm}\divider\vspace{-1mm}
+
+\cvevent{}{Principal Data Scientist}{Jan 2020 -- Aug 2022}{\begin{minipage}[t]{\linewidth}Endocrinology and Metabolism Research Institute (EMRI), Tehran, Iran\end{minipage}}
+\begin{itemize}
+\item Analyzed high-dimensional datasets (663K+ features) applying PCA, regression, and ANOVA in R, and Python; performed statistical inference and predictive feature discovery across large-scale cohort studies; contributed to peer-reviewed publications on risk modeling and biomarker identification.
+\item Developed reproducible ETL and data quality pipelines for cross-functional research teams; maintained SQL databases across parallel multi-cohort studies; delivered R Markdown dashboards for analytical reporting.
+% ; collaborated with internationally affiliated researchers from Imperial College London.
+\end{itemize}
+
+\vspace{-2mm}\divider\vspace{-1mm}
+
+\cvevent{}{Data Scientist}{Jan 2014 -- Feb 2018}{\begin{minipage}[t]{\linewidth}Moshaveran Iran Research Institute, Tehran, Iran\end{minipage}}
+\begin{itemize}
+\item Delivered predictive ML and risk modeling solutions across banking, insurance, and retail --- credit risk scoring, customer churn modeling, customer segmentation, and demand forecasting for high-dimensional business data.
+\item Led statistical consulting across 500+ projects covering A/B testing, KPI tracking, power analysis, sample size determination, meta-analysis, market analysis, survey analysis, product optimization using R, SPSS; communicated data-driven insights to non-technical financial services stakeholders.
+\end{itemize}
+
+% \vspace{-2mm}\divider\vspace{-2mm}
+
+% \cvevent{}{Statistical Programmer}{Mar 2013 -- Aug 2014}{Royan Stem Cell Technology Institute Cord Blood Bank, Tehran, Iran}
+% \begin{itemize}
+% \item Developed statistical prediction models on integrated biomedical and demographic data; applied multi-source database integration and QC validation pipelines to support clinical research.
+% % EXTRA: Harmonized blood sample and demographic data from multiple source databases; produced visual data summaries for interdisciplinary clinical teams.
+% \end{itemize}
+
+\break % ==================== PAGE 2 ====================
+
+%% ===================== PAGE 2 SIDEBAR =====================
+\marginpar{%
+\vspace*{\dimexpr5pt-\baselineskip}\raggedright
+\vspace{-5mm}
+
+\cvsection{\fontsize{15}{16}\selectfont{Developing Expertise}}
+
+% Add/update any new skills that I need to learn and are required based on the job description
+
+\smallskip
+\cvtag{Google Cloud Platform (GCP)}
+\cvtag{Snowflake}
+\cvtag{Amazon Web Services (AWS)}
+\cvtag{Databricks}
+
+
+\cvsection{\fontsize{14}{16}\selectfont{Honors \& Awards}}
+\vspace{-1mm}
+{\small
+\noindent\googletext\;\textbf{Events Speaker} -- Generative AI \& Real-World Applications \emph{[2025]}\\[3pt]
+\noindent\textcolor{amber}{\faTrophy}\;\textbf{Danny Ho SE Scholarship} (\$10,000), Western University -- \textit{1 of 2 recipients} \emph{[2025]}\\[3pt]
+\noindent\textcolor{amber}{\faTrophy}\;\textbf{Graduate Scholarship in Engineering and Science} (\$1,000), Western University \emph{[2026]}\\[3pt]
+
+\noindent\textcolor{VividPurple}{\faBook}\;\textbf{Workshops} -- R, SPSS, MINITAB at TUMS\\[3pt]
+\noindent\textcolor{VividPurple}{\faBullhorn}\;\textbf{KIDS Rock IT Speaker} -- AI lecture, Fanshawe College \emph{[2025]}\\[3pt]
+\noindent\textcolor{amber}{\faStar}\;\textbf{National Rankings} -- 4th (Ph.D. Biostatistics, 2018) $\cdot$ 5th (M.Sc., 2013)
+}
+
+\vspace{4pt}
+
+\cvsection{\fontsize{14}{16}\selectfont{Teaching \& Reviewing}}
+\vspace{-1mm}
+{\small
+\noindent\textbf{Teaching Assistant} \hfill \textit{2016 -- Ongoing}\\
+\textcolor{LightGrey}{\scriptsize Western University \& Other Institutions}
+\vspace{3pt}
+
+\noindent Courses taught include: Intro to Machine Learning (×2), Software Construction, Software Project \& Process Management, Scripting Programming Language Fundamentals, Software Design for Systems Engineering, Programming Fundamentals for Engineers, and Biostatistical Methods.
+
+\vspace{5pt}
+\noindent\textbf{Journal Reviewer} \hfill \textit{2016 -- 2025}\\
+\textcolor{LightGrey}{\scriptsize\textit{IEEE Transactions on Industrial Informatics} (2025--present)}\\
+\textcolor{LightGrey}{\scriptsize\textit{Journal of Biostatistics and Epidemiology} (2019--2022)}
+}
+
+\vspace{4pt}
+
+\cvsection{\fontsize{14}{16}\selectfont{Selected Publications}}
+{\scriptsize\textcolor{LightGrey}{\faExternalLink\;\href{https://scholar.google.ca/citations?user=nn_Toq0AAAAJ&hl=en}{Full list on Google Scholar}}}
+\smallskip
+\begin{itemize}
+
+%% ── CLUSTER A: CLINICAL AI & HEALTHCARE ─────────────────────────────────
+%% Activate for: Healthcare AI · Clinical ML · Health Informatics · Digital Health
+
+\item \textbf{Noorchenarboo, M.}, Kwong, M., Elnahas, A., Hawel, J., Schlachta, C. M., \& Grolinger, K. \textit{Benchmarking text encoding strategies in multimodal clinical data for surgical case duration prediction}. \textbf{International Journal of Medical Informatics}, 106416, 2026.
+
+\item Kwong, M., \textbf{Noorchenarboo, M.}, et al. (2025). Optimizing surgical efficiency: Predicting case duration of common general surgery procedures using machine learning. \textit{Surgical Endoscopy}, 39(8), 5227--5234.
+
+% \item Danish, M.U., \textbf{Noorchenarboo, M.}, et al. (2024). ChebyRegNet: An unsupervised deep learning technique for deformable medical image registration. In \textit{IECON 2024 -- 50th Annual Conference of the IEEE Industrial Electronics Society} (pp. 1--8).
+
+% \item Ghorbani, B., \textbf{Noorchenarboo, M.}, et al. (2021). Comparing the effects of gamification and teach-back training methods on adherence to a therapeutic regimen in patients after coronary artery bypass graft surgery: Randomized clinical trial. \textit{Journal of Medical Internet Research}, 23(12), e22557.
+
+% \item Mousavi, S.A., \textbf{Noorchenarboo, M.}, \& Moheimani, H. (2021). Developing a diagnostic decision support tool with machine learning classification algorithms to improve breast cancer screening: A cross-sectional study on Iranian women.
+
+%% ── CLUSTER B: ENERGY & EXPLAINABLE AI ──────────────────────────────────
+%% Activate for: Energy Analytics · XAI · Time Series · Industrial AI
+
+\item \textbf{Noorchenarboo, M.}, \& Grolinger, K. (2025). Explaining deep learning-based anomaly detection in energy consumption data by focusing on contextually relevant data. \textit{Energy and Buildings}, 328, 115177.
+
+% \item \textbf{Noorchenarboo, M.}, \& Grolinger, K. (2026). DEPICT: Explainable energy forecasting with pattern integration and temporal attention. \textit{Available at SSRN 5660227}.
+
+% \item \textbf{Noorchenarboo, M.}, \& Grolinger, K. (2025). Temporal Deep Explainer: A model-agnostic feature attribution approach for interpretable time-series load forecasting. \textit{Available at SSRN 5500798}.
+
+%% ── CLUSTER C: BIOSTATISTICS & EPIDEMIOLOGY ─────────────────────────────
+%% Activate for: Biostatistics · Pharma · CRO · Clinical Research · Epidemiology
+
+% \item Dehghanbanadaki, H., \textbf{Noorchenarboo, M.}, et al. (2023). Metabolomics profile and 10-year atherosclerotic cardiovascular disease (ASCVD) risk score. \textit{Frontiers in Cardiovascular Medicine}, 10, 1161761.
+
+% \item \textbf{Noorchenarboo, M.}, Mousavi, S.A., \& Moheimani, H. (2020). Country level socioeconomic and health system indicators explain COVID-19 mortality worldwide. \textit{Available at SSRN 3640720}.
+
+\end{itemize}
+
+\cvsection{Links}
+
+\cvlink{\faGlobe}{Portfolio}{https://mnoorchenar.github.io/}{mnoorchenar.github.io}
+
+\cvlink{\faCode}{Projects}{https://mnoorchenar.github.io/projects}{mnoorchenar.github.io/projects}
+
+}% end page 2 marginpar
+
+%% ===================== PAGE 2 MAIN COLUMN =====================
+\vspace{-20pt}
+\cvsection{{Education}}
+\cvevent{ \textbf{Ph.D.} Computer Engineering}{}{2022 -- 2026 (expected)}{Western University, London, Ontario, Canada}
+
+\vspace{-3mm}
+\divider
+
+\cvevent{ \textbf{M.Sc.} Biostatistics}{}{2019 -- 2022}{Tehran University of Medical Sciences (TUMS), Tehran, Iran}
+
+\vspace{-3mm}
+\divider
+
+\cvevent{\textbf{M.Sc.} Industrial Engineering}{}{2013 -- 2015}{Iran University of Science and Technology (IUST), Tehran, Iran}
+
+\vspace{-3mm}
+\divider
+
+\cvevent{ \textbf{B.Sc.} Statistics}{}{2009 -- 2013}{Ferdowsi University, Mashhad, Iran}
+
+%% ===================== SELECTED PROJECTS =====================
+\cvsection{Selected Projects}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER A · HEALTHCARE & CLINICAL AI  [domain-specialist]
+%% Activate for: Healthcare AI · Clinical DS · Biomedical ML · Health Informatics
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 01 ── Surgical OR Duration Prediction · Published · Surgical Endoscopy 2025
+% TAGS: Healthcare AI, OR Scheduling, Predictive Modeling, ANN, XGBoost, Random Forest, GBM, SVR, scikit-learn, Bayesian Optimization, Optuna, TRIPOD-AI, 10-fold CV, Feature Engineering, Keras/TensorFlow, Python
+% DETAILS: 17,246 elective surgical records, 3 academic hospitals (Cerner EMR, 2015–2020), 20 pre-operative features (procedure type, ASA score, BMI, surgeon ID, ICD code, day-of-week). 8 models: Linear, Ridge, Lasso, SVR, RF, GBM, XGBoost, ANN. ANN best: MAE=31.8 min, MAPE=26%, R²=0.78, bias=−0.37 min (p=0.34, statistically zero); surgeon estimates: −18.52 min underestimation (p<0.001). Optuna Bayesian tuning.
+% \cvprojectnogit{ML Benchmark: Surgical OR Duration Prediction}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/001-surgical-duration.html}{A predictive scheduling model benchmarking 8 ML architectures on 17,246 elective surgical records from 3 hospitals; ANN achieved MAE=31.8 min with near-zero bias ($-$0.37 min, p=0.34), outperforming surgeon estimates by 18+ min; validated with 10-fold CV, Bayesian tuning, and TRIPOD-AI standards. Published in \textit{Surgical Endoscopy} (2025).}{\ptag{Healthcare AI}\ptag{Neural Network}\ptag{XGBoost}\ptag{scikit-learn}\ptag{Bayesian Opt.}\ptag{TRIPOD-AI}\ptag{Python}}
+
+% ── PROJECT 02 ── Clinical NLP Benchmark · Published · IJMI 2026
+% TAGS: NLP, Clinical NLP, Sentence-BERT, ClinicalBERT, TF-IDF, HuggingFace, Transformers, Multimodal Fusion, scikit-learn, PyTorch, XGBoost, SHAP, Text Encoding, Benchmarking, 10-fold CV, Python
+% DETAILS: 180,366 operative notes, 3 hospitals, 2015–2020. 5 strategies: Label Encoding, Count Vectorization, TF-IDF, ClinicalBERT (MIMIC-III fine-tuned), Sentence-BERT; each fused with structured features (age, BMI, ASA, sex, procedure type). Sentence-BERT: MAE=27.6, SMAPE=23%, R²=0.77 (16% error reduction). ClinicalBERT: statistically significant over structured-only baseline (p<0.01). SHAP for feature attribution. Published in International Journal of Medical Informatics (Elsevier), 106416, 2026.
+% \cvprojectnogit{Clinical NLP Benchmark: Sentence-BERT, ClinicalBERT, TF-IDF}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/002-nlp-benchmark.html}{A systematic benchmark comparing 5 text-encoding strategies --- from Label Encoding to Sentence-BERT --- on 180,366 surgical operative notes fused with structured clinical features; Sentence-BERT achieved MAE=27.6 min, a 16\% error reduction over traditional encodings; SHAP applied for feature attribution across all model--encoding combinations. Published in \textit{International Journal of Medical Informatics} (2026).}{\ptag{NLP}\ptag{Sentence-BERT}\ptag{ClinicalBERT}\ptag{HuggingFace}\ptag{PyTorch}\ptag{XGBoost}\ptag{SHAP}}
+
+% ── PROJECT 15 ── TinySurgicalBERT: BERT Distillation for Edge OR Scheduling · Under Review 2026
+% TAGS: Knowledge Distillation, BERT, ONNX, Clinical NLP, INT8 Quantisation, Edge Deployment, OR Scheduling, XGBoost, LightGBM, MLP, Optuna, TPE, 5-fold CV, Wilcoxon, Benjamini-Hochberg, PyTorch, HuggingFace, scikit-learn, Python
+% DETAILS: Bio-ClinicalBERT (436 MB, 110M params) distilled into TinySurgicalBERT (0.75 MB, 0.63M params, 2 layers, 4 heads, 128-d hidden, 256-d output projection). Domain BPE tokenizer (2,500 tokens): 0% OOV vs ~8% WordPiece. Distillation: MSE + cosine-similarity loss. INT8 + ONNX → 0.484±0.072 ms/case (43.7× faster, 580× smaller; 5.3× faster than SentenceBERT). 4 encoders × 8 regressors, 5-fold CV, Optuna TPE (20 trials × 32 combos). MAE=26.38±0.09 (XGBoost, R²=0.8543) ≡ SentenceBERT and Bio-ClinicalBERT (Wilcoxon+BH FDR). ~24% MAE improvement over structured-only (34.80±0.12). 180,370 cases.
+% \cvprojectnogit{TinySurgicalBERT: BERT Distillation for Edge OR Scheduling}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/015-tiny-surgical-bert.html}{Distilled Bio-ClinicalBERT (436 MB) into a 0.75 MB INT8-quantised surgical BERT with domain-specific BPE tokenisation (0\% OOV); achieves MAE=26.38 min with XGBoost (R$^2$=0.8543, 5-fold CV) --- statistically equivalent to full BERT --- at 43.7$\times$ faster inference and 580$\times$ less storage. Under journal review (2026).}{\ptag{Knowledge Distillation}\ptag{BERT}\ptag{ONNX}\ptag{INT8}\ptag{Edge Deployment}\ptag{XGBoost}\ptag{Optuna}\ptag{Clinical NLP}}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER B · ENERGY & INDUSTRIAL AI  [domain-specialist]
+%% Activate for: Energy Analytics · Industrial ML · IoT · Smart Grid roles
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 03 ── Energy Anomaly XAI · Published · Energy & Buildings 2025
+% TAGS: Explainable AI, XAI, SHAP, LIME, Anomaly Detection, Time Series, Deep Learning, LSTM, GRU, BiLSTM, TCN, WaveNet, Temporal Fusion Transformer, Time Series Transformer, Energy Analytics, Smart Meter, Cosine Similarity, Random Forest, Bayesian Optimization, Python
+% DETAILS: 5 building types (residential, manufacturing, medical clinic, retail, office), 2002–2017 data. 10 DL architectures: LSTM, GRU, BiLSTM, BiGRU, 1D-CNN, TCN, DCNN, WaveNet, TFT, TST. 5 XAI: Kernel SHAP, Partition SHAP, Sampling SHAP, LIME, Permutation Importance. 250+ model–dataset–XAI combinations. 38% avg variability reduction, max 80.3% (manufacturing, Partition SHAP, p<0.001). IQR thresholding, 48-hr sliding window, min-max scaling. Weather + calendar features. NSERC + London Hydro funded.
+% \cvprojectnogit{Explainable AI for Deep Learning Anomaly Detection}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/003-energy-anomaly-xai.html}{An XAI framework for anomaly detection in smart-meter energy data that replaces random SHAP baselines with cosine-similarity-matched historical windows, reducing explanation variability by 38\% on average (up to 80.3\%) across 5 building types and 10 architectures (LSTM, GRU, TCN, WaveNet, TFT, TST). Published in \textit{Energy \& Buildings} (2025).}{\ptag{XAI}\ptag{SHAP}\ptag{LSTM}\ptag{TCN}\ptag{WaveNet}\ptag{Anomaly Detection}\ptag{Python}}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER C · BIOSTATISTICS & RESEARCH  [domain-specialist / academic]
+%% Activate for: Biostatistics · Epidemiology · Clinical Research · Pharma · CRO
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 04 ── GWAS Sarcopenia Genetics · Published · J. Biostatistics & Epidemiology 2022
+% TAGS: GWAS, Biostatistics, MultiPhen, GATES, Ordinal Regression, Linkage Disequilibrium, SNP, Population Genetics, Epidemiology, Candidate-Gene, IL10, PLINK, R
+% DETAILS: BEH cohort, 2,772 participants (60+), 663,377 genome-wide SNPs. MultiPhen: joint regression on SMI + Handgrip Strength (up to 2× power vs. single-trait GWAS). GATES: 27 SNPs, LD r²≤0.4, MAF>0.01, HWE p>0.05, ±50 kb of IL10 (chr1). 3 significant intronic variants: rs11119603 (p=0.00384), rs57461190 (p=0.00411), rs3950619 (p=0.03641); GATES p=0.046. Effect sizes 0.178–0.883. First IL10 confirmation as sarcopenia risk gene in an Iranian population.
+% \cvprojectnogit{GWAS Identifies IL10 as Sarcopenia Risk Gene}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/004-sarcopenia-genetics.html}{A genome-wide association study on 663K SNPs from 2,772 elderly Iranians used MultiPhen joint regression and GATES aggregation to confirm IL10 (p=0.046) as the first genomically validated sarcopenia risk gene in an Iranian population, with up to 2$\times$ more power than single-trait GWAS. Published in \textit{J. Biostatistics \& Epidemiology} (2022).}{\ptag{GWAS}\ptag{MultiPhen}\ptag{GATES}\ptag{Biostatistics}\ptag{R}\ptag{Epidemiology}\ptag{Population Genetics}}
+
+% ── PROJECT 05 ── ASCVD Metabolomics Biomarker Discovery · Published · Frontiers in Cardiovascular Medicine 2023
+% TAGS: Metabolomics, FIA-MS/MS, PCA, Varimax Rotation, Logistic Regression, MetaboAnalyst, KEGG, Biomarker Discovery, ASCVD, Cardiovascular Risk, Benjamini-Hochberg, FDR, Epidemiology, SPSS
+% DETAILS: 1,102 fasting plasma samples (STEPs 2016, TUMS). FIA-MS/MS: 30 acylcarnitines + 20 amino acids. PCA Varimax: KMO=0.874, Bartlett p<0.001, 10 orthogonal factors. Binary logistic regression across 4 ACC/AHA ASCVD risk groups, BH-FDR. 14 biomarkers: C4DC, C8:1, C16OH + 11 amino acids. Factor 10 (ornithine+citrulline): OR=1.570 (p<0.001). Factor 9 (glycine/serine/threonine): OR=0.741 (p<0.001). C16OH strongest single-metabolite (r=0.279, p<0.001). SPSS v19.0, MetaboAnalyst v5.0. 17 co-authors.
+% \cvprojectnogit{Metabolomics Pipeline for ASCVD Biomarker Discovery}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/005-ascvd-metabolomics.html}{A metabolomics pipeline profiling 50 FIA-MS/MS plasma metabolites in 1,102 participants used PCA (Varimax) and logistic regression to identify 14 significant ASCVD biomarkers --- 3 acylcarnitines and 11 amino acids; the ornithine/citrulline factor showed highest risk (OR=1.57) while glycine/serine emerged as protective (OR=0.74). Published in \textit{Frontiers in Cardiovascular Medicine} (2023).}{\ptag{Metabolomics}\ptag{FIA-MS/MS}\ptag{PCA}\ptag{Logistic Regression}\ptag{MetaboAnalyst}\ptag{SPSS}\ptag{Epidemiology}}
+
+% ── PROJECT 06 ── Gamified CABG Recovery RCT · Published · JMIR 2021
+% TAGS: RCT, Gamification, mHealth, Android App, Digital Health, ANOVA, Dunnett Post-Hoc, Block Randomization, MMAS, Cronbach Alpha, SPSS, STATA, Clinical Trial
+% DETAILS: 3-arm RCT, n=123 CABG patients, n=41/arm, block randomization (size 4). Delban Android app: diet/medication/movement modules, star rewards (+6/−3), social leaderboard. Sanaie diet (30-item, 4-pt Likert), Sanaie movement (19-item, 5-pt Likert), MMAS (Cronbach α=0.82). SPSS v20, STATA v12. Diet: F=71.8, Δ=+1.797, p<0.001. Movement: F=124.5, Δ=+2.013, p<0.001. Medication: F=9.66, p<0.001 (no gamification vs teach-back difference).
+% \cvprojectnogit{Gamified CABG Recovery vs. Teach-Back: 3-Arm RCT}{}{}{https://mnoorchenar.github.io/projects/Projects-Files/006-cabg-gamification.html}{A three-arm RCT (n=123 CABG patients) compared a custom gamified Android app against teach-back training and usual care; one-way ANOVA with Dunnett post-hoc confirmed gamification significantly outperformed teach-back on diet (F=71.8, $\Delta$=+1.80) and movement adherence (F=124.5, $\Delta$=+2.01) at 30 days. Published in \textit{JMIR} (2021).}{\ptag{RCT}\ptag{Gamification}\ptag{mHealth}\ptag{ANOVA}\ptag{Dunnett Post-Hoc}\ptag{SPSS}\ptag{Clinical Trial}}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER D · LLM, AGENTIC AI & RAG  [transferable — high demand]
+%% Activate for: ML Engineer · AI Engineer · LLM/NLP Researcher · AI Scientist
+%% Default active: 13 (DocMind), 07 (LLM Drug Discovery), 12 (Hybrid RAG)
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 13 ── DocMind: Five-Agent LangGraph Document Research · Live Demo [DEFAULT ACTIVE]
+% TAGS: Agentic AI, LangGraph, LangChain, Multi-Agent System, StateGraph, RAG, Hybrid Search, FAISS, BM25, Reciprocal Rank Fusion, Hallucination Detection, LLM Orchestration, Qwen 2.5, LCEL, Flask, Docker, HuggingFace, Python
+% DETAILS: 5 agents via LangGraph 0.2 StateGraph: Planner (Qwen2.5-7B, temp 0.3), Retriever (parallel FAISS IndexFlatIP + BM25Okapi, RRF k=60), Grader (score=hybrid×0.7+keyword×0.3, ~1ms, no LLM → ~60% latency reduction), Generator (temp 0.4, max 512 tokens, [Source: filename, p.N] inline citations), Critic (temp 0.1, APPROVED/NEEDS_REVIEW verdict). bge-small-en-v1.5 local embeddings. PDF (pypdf ≤10MB) + URL (BeautifulSoup). 500-token chunks, 50-token overlap. LCEL pipe syntax. Flask+Gunicorn+threading, query-ID polling (1.5s). Provider-agnostic via OpenAI SDK. Hybrid RRF: +18% top-5 recall over semantic-only.
+\cvproject{Five-Agent LangGraph Document Research System}{https://github.com/mnoorchenar/docmind}{https://huggingface.co/spaces/mnoorchenar/docmind}{https://mnoorchenar.github.io/projects/Projects-Files/013-docmind.html}{A five-agent document research system built on LangGraph 0.2 StateGraph --- Planner, Retriever, Grader, Generator, and Critic --- using only 3 LLM calls per query (Qwen2.5-7B); score-based Grading cuts latency by 60\%; hybrid FAISS + BM25 + RRF improves top-5 recall by +18\%; cited answers with hallucination detection; PDF and URL ingestion.}{\ptag{Agentic AI}\ptag{LangGraph}\ptag{LangChain}\ptag{RAG}\ptag{FAISS}\ptag{BM25}\ptag{Hallucination Detection}\ptag{HuggingFace}}
+
+% ── PROJECT 14 ── ReAct Multi-Turn Customer Support Agent · Live Demo
+% TAGS: Agentic AI, ReAct, LangGraph, LangChain, Conversational AI, Multi-Turn Chatbot, Tool Use, Function Calling, SSE Streaming, LLM Orchestration, Customer Support Automation, Mistral, Zephyr, Phi-3, Llama 3, HuggingFace, Flask, Docker, Python
+% DETAILS: 4-node StateGraph: Router → Agent → Tool Executor → Responder; conditional edges loop up to 4 iterations. 5 tools: FAQ search (15 KB entries), order lookup, ticket creation, product search (8 products), human escalation. 4 LLMs switchable at runtime (Mistral-7B, Zephyr-7B-β, Phi-3-Mini, Llama-3-8B), temp=0.25. Regex ReAct parser (Action/Action Input blocks) + JSON fallback. SSE via per-session queue.Queue bridging daemon thread to Flask. Per-node timing ±1ms. Chart.js session analytics. Zero-persistence (Python dict). Flask 3 + gunicorn 1 worker × 4 gthread.
+\cvproject{LangGraph ReAct Multi-Turn Customer Support Agent}{https://github.com/mnoorchenar/langgraph-support-agent}{https://huggingface.co/spaces/mnoorchenar/langgraph-support-agent}{https://mnoorchenar.github.io/projects/Projects-Files/014-langgraph-support-agent.html}{A multi-turn LangGraph 0.2 ReAct customer support agent with 4-node StateGraph, 5 live tools (FAQ search, order lookup, ticket creation, product search, human escalation), and 4 runtime-switchable HuggingFace LLMs; SSE token streaming via per-session queue; live animated graph trace with per-node latency timing. Deployed via Docker.}{\ptag{Agentic AI}\ptag{LangGraph}\ptag{ReAct}\ptag{LangChain}\ptag{Tool Use}\ptag{SSE Streaming}\ptag{Conversational AI}\ptag{HuggingFace}}
+
+% ── PROJECT 07 ── LLM Drug Target Discovery via AlphaFold Pipeline · Live Demo [DEFAULT ACTIVE]
+% TAGS: LLM, Large Language Model, Llama 3, Mistral, Phi-3, HuggingFace, Drug Discovery, Bioinformatics, UniProt REST API, AlphaFold, RCSB PDB, Flask, REST API, Generative AI, Prompt Engineering, Hallucination Mitigation, Python
+% DETAILS: 5-model LLM fallback: Llama-3.2-3B → Mistral-7B → Phi-3-mini → Apriel-5B → Llama-3.1-5B; each tried via 3 API methods (conversational → chat_completion → text_generation) before cascading. LLMs return structured JSON: 3–5 targets with UniProt IDs, function summaries, known drugs. UniProt REST validation: organism_id=9606 (Homo sapiens), 250M+ proteins. AlphaFold EBI v4/v3 + RCSB PDB fallback for 3D in-browser rendering. 3-level deep search fallback + curated disease-protein JSON as last resort. Per-protein LLM chat assistant.
+\cvproject{LLM Drug Target Discovery via AlphaFold Pipeline}{https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery}{https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery}{https://mnoorchenar.github.io/projects/Projects-Files/007-Protein-Sequencing-AI-Discovery.html}{A biomedical AI system that accepts plain-language disease questions and returns validated human drug-target proteins via a 5-model LLM fallback chain (Llama, Mistral, Phi-3); each UniProt ID verified live via REST API; AlphaFold 3D structures rendered in-browser with a per-protein LLM chat assistant. Deployed on HuggingFace Spaces (2025).}{\ptag{LLM}\ptag{Flask}\ptag{HuggingFace}\ptag{UniProt}\ptag{AlphaFold}\ptag{Bioinformatics}\ptag{Drug Discovery}}
+
+% ── PROJECT 12 ── Hybrid RAG Benchmarking Platform · Live Demo [DEFAULT ACTIVE]
+% TAGS: RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, FAISS, Dense Retrieval, Reciprocal Rank Fusion, RRF, Sentence Transformers, Flan-T5, LLM Evaluation, Information Retrieval, Chunking Strategies, Context Distillation, Plotly Dash, Flask, Docker, HuggingFace, Python
+% DETAILS: all-MiniLM-L6-v2 (384-dim, L2-normalised). FAISS IndexFlatIP + BM25Okapi. RRF k=60 (1/(60+rank)). 3 chunking strategies: fixed, sentence-window, semantic. Context distillation: 6 sentences by embedding similarity (not naive truncation). Flan-T5-large (780M params, seq2seq). Eval: context relevance (cosine), faithfulness (token overlap), diversity (1−pairwise similarity). REST: /api/fetch-arxiv, /api/query, /api/compare. Hybrid vs BM25: 0.47 vs 0.41 relevance, 0.51 vs 0.38 diversity. No LangChain, no API keys.
+\cvproject{Hybrid RAG Benchmarking Platform: BM25, FAISS, RRF}{https://github.com/mnoorchenar/research-rag-bench}{https://huggingface.co/spaces/mnoorchenar/research-rag-bench}{https://mnoorchenar.github.io/projects/Projects-Files/012-research-rag-bench.html}{A hybrid RAG benchmarking platform that ingests real arXiv papers on demand, indexes with FAISS and BM25 simultaneously, and fuses results via Reciprocal Rank Fusion (k=60), improving relevance to 0.47 vs 0.41 BM25-only; Flan-T5-large generates answers from 6-sentence distilled context; live evaluation in Plotly Dash.}{\ptag{RAG}\ptag{Hybrid Search}\ptag{BM25}\ptag{FAISS}\ptag{RRF}\ptag{Flan-T5}\ptag{LLM Evaluation}\ptag{Flask}}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER E · ML ENGINEERING & ANALYTICS  [transferable — broad]
+%% Activate for: Data Scientist · ML Engineer · Data Analyst · Quant · FinTech
+%% Default active: 11 (A/B Testing)
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 11 ── Full-Stack A/B Testing & Experimentation Platform · Live Demo [DEFAULT ACTIVE]
+% TAGS: A/B Testing, Statistical Inference, Power Analysis, MDE, Effect Size, Cohen's d, Two-Proportion Z-Test, Welch's T-Test, ANOVA, Design of Experiments, DoE, Sequential Testing, O'Brien-Fleming, Monte Carlo, SciPy, statsmodels, Plotly, Flask, Docker, HuggingFace, Python
+% DETAILS: 4 Flask Blueprint modules. Power: Fleiss (1981) two-proportion z-test, per-group n, power-vs-MDE curve, sample-size trade-off chart. A/B: z-test/Welch's t-test, Cohen's d, 2×2 verdict matrix (statistical AND practical significance threshold), CSV upload. DoE: two-way factorial ANOVA via statsmodels OLS, 2×2/3×3 designs, optional replicates, interaction plot + main-effects chart. Sequential: Monte Carlo 5–50 runs, O'Brien-Fleming correction (z_α/√(t/T)). Debounced 400ms/800ms live POST. Plotly graph_objects JSON, client-side render. Docker port 7860.
+% \cvproject{Full-Stack Statistical Experimentation, A/B Testing Platform}{https://github.com/mnoorchenar/experiment-lab}{https://huggingface.co/spaces/mnoorchenar/experiment-lab}{https://mnoorchenar.github.io/projects/Projects-Files/011-experiment-lab.html}{A full-stack statistical experimentation suite covering the complete experiment lifecycle --- power analysis with MDE curves; A/B testing via z-test and Welch's t-test with a dual-gate significance verdict; two-way factorial ANOVA with interaction; and Monte Carlo sequential testing comparing peeking-problem inflation vs O'Brien-Fleming correction. Deployed on HuggingFace Spaces via Docker.}{\ptag{A/B Testing}\ptag{Power Analysis}\ptag{ANOVA}\ptag{DoE}\ptag{Sequential Testing}\ptag{SciPy}\ptag{statsmodels}\ptag{Flask}}
+
+% ── PROJECT 08 ── Financial Risk Intelligence Dashboard · Live Demo
+% TAGS: Machine Learning, Credit Risk, Fraud Detection, Market Risk, VaR, CVaR, Expected Shortfall, Sharpe Ratio, Underwriting Risk, Insurance Analytics, FinTech, Risk Modeling, Probability of Default, Random Forest, Gradient Boosting, Logistic Regression, scikit-learn, Plotly, Flask, REST API, Docker, HuggingFace, Python
+% DETAILS: 7 modules: Credit (RF 100 trees, 1,200 records, PD/LGD/EL output), Fraud (GBM 100 estimators, 3,000 tx, threshold=0.25, OHE merchant risk), Market Risk (VaR 95%/99%, CVaR, Sharpe, max drawdown, 252 synthetic returns, $10M portfolio), Loan Portfolio (EL, grade mix, region×purpose heatmap), Claims (1,000 policyholders, smoker/BMI/age flags), Loss Ratio (LR + 25% expense), Underwriting (LR L2 on age/BMI/smoker/children/vehicle/region). 3 REST: /api/credit, /api/fraud, /api/underwriting. 5,200+ synthetic records trained at startup. Single app.py, Docker port 7860.
+% \cvproject{Production ML Risk Dashboard for Banking Insurance}{https://github.com/mnoorchenar/risksight-pro}{https://huggingface.co/spaces/mnoorchenar/risksight-pro}{https://mnoorchenar.github.io/projects/Projects-Files/008-risksight-pro.html}{A full-stack banking and insurance risk intelligence platform unifying 7 ML-powered modules --- credit scoring, fraud detection, VaR/CVaR, loan portfolio, claims, underwriting, and loss ratio --- with 3 live Scikit-learn models trained on 5,200+ records and 3 REST scoring endpoints. Deployed on HuggingFace Spaces via Docker.}{\ptag{Flask}\ptag{scikit-learn}\ptag{Credit Risk}\ptag{Fraud Detection}\ptag{VaR/CVaR}\ptag{Risk Analytics}\ptag{Docker}\ptag{FinTech}}
+
+%% ════════════════════════════════════════════════════════════════════════════
+%% CLUSTER F · DEEP LEARNING EDUCATION  [selective — technical audiences]
+%% Activate for: ML Researcher · DL Engineer · GenAI roles · Teaching-adjacent
+%% ════════════════════════════════════════════════════════════════════════════
+
+% ── PROJECT 09 ── Interactive VAE Training & Latent Space Explorer · Live Demo
+% TAGS: Variational Autoencoder, VAE, Generative AI, PyTorch, Deep Learning, Representation Learning, Unsupervised Learning, ELBO, KL Divergence, Latent Space, MNIST, Flask, REST API, HuggingFace, Python
+% DETAILS: FC-VAE: 784→400→μ/logσ²(L-dim)→reparameterise(z=μ+exp(½logσ²)·ε)→400→784 (Sigmoid). ELBO = BCE(sum) + KL(Gaussian closed-form). Adam LR=1e-3. 7 Flask REST endpoints (base64 PNG). 5-tab UI: live loss, architecture viewer (dynamic diagram + ELBO formula), 2D latent scatter (10K pts coloured by digit class), reconstruction grid (10 random samples), Z₁/Z₂ sliders (−3 to +3) + 15×15 manifold grid (225 pts). Training in daemon thread, polled 600ms via /status.
+% \cvproject{Interactive VAE Training and Latent Space Explorer}{https://github.com/mnoorchenar/VAE-Playground}{https://huggingface.co/spaces/mnoorchenar/VAE-Playground}{https://mnoorchenar.github.io/projects/Projects-Files/009-vae-project-page.html}{An interactive VAE playground where users configure and train a PyTorch Variational Autoencoder on MNIST in the browser; a 5-tab UI covers live ELBO loss tracking, 2-D latent manifold scatter (10K points), side-by-side reconstructions, and real-time Z\textsubscript{1}/Z\textsubscript{2} slider navigation with a 15$\times$15 manifold grid. Deployed on HuggingFace Spaces (2025).}{\ptag{VAE}\ptag{PyTorch}\ptag{Generative AI}\ptag{Latent Space}\ptag{ELBO}\ptag{Flask}\ptag{HuggingFace}}
+
+% ── PROJECT 10 ── Interactive Transformer Trainer: Seq2Seq + Attention Visualization · Live Demo
+% TAGS: Transformer, NLP, Seq2Seq, Machine Translation, Multi-Head Attention, Cross-Attention, Positional Encoding, BLEU, SacreBLEU, Beam Search, Label Smoothing, Warmup LR, SSE, Server-Sent Events, PyTorch, Flask, Docker, HuggingFace, Python
+% DETAILS: Vanilla Transformer encoder-decoder from scratch. Configurable: d_model 64–256, num_heads 2/4/8, num_layers 1–4, d_ff 128–512; live parameter count. Label-smoothed KL (ε=0.05). Adam β₁=0.9, β₂=0.98, warmup inverse-sqrt LR (100 steps). 138 EN→FR pairs, 8 vocab categories, augmentation 1–16×, 87.5/12.5 train-val split, 15-sentence held-out test. SSE: per-epoch loss, PPL, LR, 3 sample translations → Chart.js. Early stopping + best-checkpoint. SacreBLEU + greedy vs beam-4 decoding side-by-side. Cross-attention heatmap on HTML Canvas (last decoder layer, head-averaged). 6-step wizard with step-locking.
+% \cvproject{Interactive Transformer Trainer with Attention Visualization}{https://github.com/mnoorchenar/transformer-edu-viz}{https://huggingface.co/spaces/mnoorchenar/transformer-edu-viz}{https://mnoorchenar.github.io/projects/Projects-Files/010-transformer-edu-viz.html}{A 6-step browser playground training a PyTorch Transformer seq2seq (EN$\to$FR) from scratch with configurable d\_model, heads, layers, and d\_ff; per-epoch SSE streams live loss and sample translations; post-training evaluation covers SacreBLEU, greedy vs beam-4 decoding, and cross-attention heatmap on Canvas. Deployed on HuggingFace Spaces via Docker.}{\ptag{Transformer}\ptag{NLP}\ptag{Seq2Seq}\ptag{PyTorch}\ptag{Attention}\ptag{BLEU}\ptag{Flask}\ptag{HuggingFace}}
+
+\vspace{3mm}
+\cvsection{Professional Resume Summary}
+\vspace{-3mm}
+\sloppy
+
+\wheelchart{1.5cm}{0.5cm}{%
+  15/8em/accent!30/\footnotesize\\[1ex]\raggedright Computer Vision,
+  20/7em/accent!60/\footnotesize\\[1ex]\raggedright Generative AI,
+  10/8em/accent!5/\footnotesize\\[1ex]\raggedright Time Series Analysis,
+  30/12em/accent!40/\footnotesize\\[1ex]\raggedright NLP \& LLMs,
+  15/8em/accent/\footnotesize\\[-0.5ex]\raggedright Statistical Modeling,
+  10/20em/accent!20/\footnotesize\\[1ex]\raggedright Explainable AI
+}
+
+\clearpage
+\end{document}

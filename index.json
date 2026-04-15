@@ -8,10 +8,6 @@
         "html": "projects/_template.html"
       },
       {
-        "name": "docs-template",
-        "html": "projects/docs-template.html"
-      },
-      {
         "name": "footer",
         "html": "projects/footer.html"
       },
@@ -92,5 +88,16 @@
         ]
       }
     ]
+  },
+  {
+    "name": "templates",
+    "folder": "templates",
+    "files": [
+      {
+        "name": "docs-template",
+        "html": "templates/docs-template.html"
+      }
+    ],
+    "subfolders": []
   }
 ]
