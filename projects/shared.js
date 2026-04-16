@@ -229,7 +229,54 @@
 
 
   /* ─────────────────────────────────────────
-     7.  FADE-UP ON SCROLL
+     7.  MERGE SIDEBAR IMAGE + AT-A-GLANCE CARD
+         Combines the standalone image card and
+         the "At a Glance" card into one card:
+         image on top, summary below, badge
+         centred at the bottom.
+  ───────────────────────────────────────────*/
+  function initAtaGlanceMerge() {
+    const imgCard = document.querySelector('.sidebar-proj-img-card');
+    if (!imgCard) return;
+
+    const img     = imgCard.querySelector('.sidebar-proj-img');
+    const ataCard = imgCard.nextElementSibling;
+    if (!img || !ataCard) return;
+
+    const tldr  = ataCard.querySelector('.tldr-text');
+    const badge = ataCard.querySelector('.ataglance-badge');
+    if (!tldr) return;
+
+    // Build merged card
+    const merged = document.createElement('div');
+    merged.className = 'sidebar-card sidebar-ataglance-merged';
+
+    // Image at top
+    merged.appendChild(img.cloneNode(true));
+
+    // Body: summary text + badge centred at bottom
+    const body = document.createElement('div');
+    body.className = 'sidebar-ataglance-body';
+    body.appendChild(tldr.cloneNode(true));
+
+    if (badge) {
+      const footer = document.createElement('div');
+      footer.className = 'ataglance-footer';
+      footer.appendChild(badge.cloneNode(true));
+      body.appendChild(footer);
+    }
+
+    merged.appendChild(body);
+
+    // Swap: insert merged, remove the two originals
+    imgCard.parentNode.insertBefore(merged, imgCard);
+    imgCard.remove();
+    ataCard.remove();
+  }
+
+
+  /* ─────────────────────────────────────────
+     8.  FADE-UP ON SCROLL
   ───────────────────────────────────────────*/
   function initFadeUp() {
     const io = new IntersectionObserver(entries => {
@@ -324,6 +371,7 @@
       markActiveLink();
       initCopyrightModal();
       applyFooterNote();
+      initAtaGlanceMerge();
       initFadeUp();
       initKeyboardNav(projectIndex, projects);
 
@@ -333,6 +381,7 @@
       console.warn('[shared.js] Could not load nav/footer fragments:', err.message);
       initThemeToggle();
       initCopyrightModal();
+      initAtaGlanceMerge();
       initFadeUp();
     }
 

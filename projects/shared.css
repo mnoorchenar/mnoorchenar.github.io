@@ -378,13 +378,36 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ════════════════════════════════
-   10. SIDEBAR PROJECT IMAGE
+   10. SIDEBAR PROJECT IMAGE CARD
+   (two-card state before JS merge)
 ════════════════════════════════ */
 .sidebar-proj-img-card { padding: 0 !important; overflow: hidden; }
 .sidebar-proj-img {
   width: 100%; display: block;
   height: 160px; object-fit: cover;
   object-position: center top;
+}
+
+/* ════════════════════════════════
+   10b. MERGED ATAGLANCE CARD
+   (created by shared.js at runtime)
+════════════════════════════════ */
+.sidebar-ataglance-merged {
+  padding: 0 !important;
+  overflow: hidden;
+}
+.sidebar-ataglance-merged .sidebar-proj-img {
+  height: 160px; width: 100%; display: block;
+  object-fit: cover; object-position: center top;
+  border-radius: 0;
+}
+.sidebar-ataglance-body {
+  padding: 16px 20px 18px;
+}
+.sidebar-ataglance-body .tldr-text { margin-bottom: 0; }
+.ataglance-footer {
+  text-align: center;
+  margin-top: 14px;
 }
 
 
