@@ -532,7 +532,7 @@ section{padding:90px 0}
 
 /* ── ABOUT ── */
 #about{background:var(--body-bg)}
-.about-inner{display:flex;flex-direction:column;gap:36px}
+.about-inner{display:grid;grid-template-columns:2fr 3fr;gap:44px;align-items:start}
 .about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.78}
 .about-text p strong{color:var(--text)}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -544,75 +544,75 @@ section{padding:90px 0}
 .about-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
 
 /* ── SKILL WAVE GRID ── */
-@keyframes sb-float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-9px)}
-}
+@keyframes sb-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .skill-bubble-box{
-  width:100%;
-  border-radius:var(--radius);
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  padding:22px 20px 14px;
+  width:100%;border-radius:var(--radius);
+  background:var(--glass);border:1px solid var(--glass-border);
+  padding:14px;display:flex;flex-direction:column;gap:7px;
 }
-.sbb-legend{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
-  margin-top:16px;padding-top:12px;
-  border-top:1px solid var(--glass-border);
+/* ── category row group ── */
+.sbb-cat-group{border-radius:10px;padding:9px 11px 10px;border:1px solid transparent;transition:border-color .3s}
+.sbb-cat-label{
+  font-size:.6em;font-weight:800;text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:7px;
+  display:flex;align-items:center;gap:6px;
 }
-.sbb-legend span{
-  display:flex;align-items:center;gap:5px;
-  font-size:.68em;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.06em;
-}
-.sbb-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
-.sbb-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(82px,1fr));
-  gap:10px;
-}
+.sbb-cat-label i{font-size:1em}
+.sbb-cat-items{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+/* ── individual bubble ── */
 .skill-bubble{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;padding:14px 6px 12px;
-  border-radius:12px;
-  background:var(--glass);
-  border:1px solid var(--glass-border);
+  gap:5px;padding:11px 4px 9px;
+  border-radius:9px;background:var(--glass);border:1px solid transparent;
   cursor:default;user-select:none;
   animation:sb-float 3.4s ease-in-out infinite;
-  transition:box-shadow .22s,border-color .22s,background .22s;
+  transition:box-shadow .2s,border-color .2s,background .2s,transform .18s;
   position:relative;overflow:hidden;
 }
-/* shimmer sweep on hover */
 .skill-bubble::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);
-  transform:translateX(-100%);transition:transform .45s;
+  background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.1) 50%,transparent 62%);
+  transform:translateX(-120%);transition:transform .4s;
 }
-.skill-bubble:hover::before{transform:translateX(100%)}
-.skill-bubble:hover{animation-play-state:paused;transform:translateY(-5px) scale(1.07)}
-.skill-bubble i{font-size:1.5em;line-height:1;pointer-events:none}
+.skill-bubble:hover::before{transform:translateX(120%)}
+.skill-bubble:hover{animation-play-state:paused;transform:translateY(-4px) scale(1.09);z-index:5}
+.skill-bubble i{font-size:1.38em;line-height:1;pointer-events:none}
 .skill-bubble .sb-name{
-  font-size:.58em;font-weight:700;text-align:center;
-  color:var(--muted);line-height:1.25;
-  width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:.5em;font-weight:700;text-align:center;
+  color:var(--muted);line-height:1.2;
+  width:62px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;
 }
-/* category accent + glow */
-.skill-bubble.cat-ml   {border-color:rgba(79,142,247,.28)}
-.skill-bubble.cat-ml::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(79,142,247,.6)}
-.skill-bubble.cat-ml:hover{border-color:rgba(79,142,247,.8);box-shadow:0 8px 24px rgba(79,142,247,.3);background:rgba(79,142,247,.06)}
-.skill-bubble.cat-llm  {border-color:rgba(245,158,11,.28)}
-.skill-bubble.cat-llm::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(245,158,11,.6)}
-.skill-bubble.cat-llm:hover{border-color:rgba(245,158,11,.8);box-shadow:0 8px 24px rgba(245,158,11,.3);background:rgba(245,158,11,.06)}
-.skill-bubble.cat-stats{border-color:rgba(6,182,212,.28)}
-.skill-bubble.cat-stats::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(6,182,212,.6)}
-.skill-bubble.cat-stats:hover{border-color:rgba(6,182,212,.8);box-shadow:0 8px 24px rgba(6,182,212,.3);background:rgba(6,182,212,.06)}
-.skill-bubble.cat-dev  {border-color:rgba(124,58,237,.28)}
-.skill-bubble.cat-dev::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(124,58,237,.6)}
-.skill-bubble.cat-dev:hover{border-color:rgba(124,58,237,.8);box-shadow:0 8px 24px rgba(124,58,237,.3);background:rgba(124,58,237,.06)}
-.skill-bubble.cat-viz  {border-color:rgba(34,197,94,.28)}
-.skill-bubble.cat-viz::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(34,197,94,.6)}
-.skill-bubble.cat-viz:hover{border-color:rgba(34,197,94,.8);box-shadow:0 8px 24px rgba(34,197,94,.3);background:rgba(34,197,94,.06)}
+/* ── ML & Deep Learning (blue) ── */
+.sbb-cat-group.cat-ml{background:rgba(79,142,247,.05);border-color:rgba(79,142,247,.2)}
+.sbb-cat-group.cat-ml .sbb-cat-label{color:#4f8ef7}
+.sbb-cat-group.cat-ml .skill-bubble{border-color:rgba(79,142,247,.22)}
+.sbb-cat-group.cat-ml .skill-bubble:hover{border-color:rgba(79,142,247,.85);box-shadow:0 6px 20px rgba(79,142,247,.28);background:rgba(79,142,247,.09)}
+/* ── GenAI & LLM (gold) ── */
+.sbb-cat-group.cat-llm{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.2)}
+.sbb-cat-group.cat-llm .sbb-cat-label{color:#f59e0b}
+.sbb-cat-group.cat-llm .skill-bubble{border-color:rgba(245,158,11,.22)}
+.sbb-cat-group.cat-llm .skill-bubble:hover{border-color:rgba(245,158,11,.85);box-shadow:0 6px 20px rgba(245,158,11,.28);background:rgba(245,158,11,.09)}
+/* ── Statistics (teal) ── */
+.sbb-cat-group.cat-stats{background:rgba(6,182,212,.05);border-color:rgba(6,182,212,.2)}
+.sbb-cat-group.cat-stats .sbb-cat-label{color:#06b6d4}
+.sbb-cat-group.cat-stats .skill-bubble{border-color:rgba(6,182,212,.22)}
+.sbb-cat-group.cat-stats .skill-bubble:hover{border-color:rgba(6,182,212,.85);box-shadow:0 6px 20px rgba(6,182,212,.28);background:rgba(6,182,212,.09)}
+/* ── DevOps & MLOps (purple) ── */
+.sbb-cat-group.cat-dev{background:rgba(124,58,237,.05);border-color:rgba(124,58,237,.2)}
+.sbb-cat-group.cat-dev .sbb-cat-label{color:#7c3aed}
+.sbb-cat-group.cat-dev .skill-bubble{border-color:rgba(124,58,237,.22)}
+.sbb-cat-group.cat-dev .skill-bubble:hover{border-color:rgba(124,58,237,.85);box-shadow:0 6px 20px rgba(124,58,237,.28);background:rgba(124,58,237,.09)}
+/* ── Visualization & BI (green) ── */
+.sbb-cat-group.cat-viz{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.2)}
+.sbb-cat-group.cat-viz .sbb-cat-label{color:#22c55e}
+.sbb-cat-group.cat-viz .skill-bubble{border-color:rgba(34,197,94,.22)}
+.sbb-cat-group.cat-viz .skill-bubble:hover{border-color:rgba(34,197,94,.85);box-shadow:0 6px 20px rgba(34,197,94,.28);background:rgba(34,197,94,.09)}
+/* ── Data Engineering (orange) ── */
+.sbb-cat-group.cat-eng{background:rgba(249,115,22,.05);border-color:rgba(249,115,22,.2)}
+.sbb-cat-group.cat-eng .sbb-cat-label{color:#f97316}
+.sbb-cat-group.cat-eng .skill-bubble{border-color:rgba(249,115,22,.22)}
+.sbb-cat-group.cat-eng .skill-bubble:hover{border-color:rgba(249,115,22,.85);box-shadow:0 6px 20px rgba(249,115,22,.28);background:rgba(249,115,22,.09)}
 
 /* ── AWARDS ── */
 #awards{background:var(--body-bg)}
@@ -795,6 +795,8 @@ footer::before{
 ══════════════════════════════════════════ */
 @media(max-width:1024px){
   .hcard{grid-template-columns:200px 1fr}
+  .about-inner{grid-template-columns:1fr}
+  .sbb-cat-items{grid-template-columns:repeat(6,1fr)}
   .awards-grid{grid-template-columns:repeat(2,1fr)}
 }
 
@@ -1043,66 +1045,87 @@ footer::before{
         <p>I pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University while teaching <strong>15 graduate-level Deep Learning courses</strong> at Fanshawe College (CNNs, RNNs, Vision Transformers, Diffusion Models, BERT, GPT, XAI) and conducting applied research at the London Health Sciences Centre on 180K+ EHR records. Recipient of the <strong>Danny Ho Graduate Scholarship ($10,000)</strong> — awarded to only two students annually across the entire Faculty of Engineering.</p>
       </div>
 
-      <!-- skill wave grid -->
-      <div class="skill-bubble-box">
-        <div class="sbb-grid" id="skill-bubble-box">
+      <!-- skill wave grid — 6 categories × 6 items -->
+      <div class="skill-bubble-box" id="skill-bubble-box">
 
-        <!-- ML / Deep Learning -->
-        <div class="skill-bubble cat-ml"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
-        <div class="skill-bubble cat-ml"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
-        <div class="skill-bubble cat-ml"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
-        <div class="skill-bubble cat-ml"><i class="devicon-scikitlearn-plain colored"></i><span class="sb-name">Scikit-learn</span></div>
-        <div class="skill-bubble cat-ml"><i class="fas fa-tree" style="color:#3db346"></i><span class="sb-name">XGBoost</span></div>
-        <div class="skill-bubble cat-ml"><i class="fas fa-table" style="color:#150458"></i><span class="sb-name">Pandas</span></div>
-        <div class="skill-bubble cat-ml"><i class="fas fa-border-all" style="color:#4dabcf"></i><span class="sb-name">NumPy</span></div>
-
-        <!-- GenAI / LLM -->
-        <div class="skill-bubble cat-llm"><i class="fas fa-smile" style="color:#ffd21e"></i><span class="sb-name">HuggingFace</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-search" style="color:#4f8ef7"></i><span class="sb-name">RAG / FAISS</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-sliders-h" style="color:#f59e0b"></i><span class="sb-name">Fine-Tuning</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-terminal" style="color:#06b6d4"></i><span class="sb-name">Prompting</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-compress-arrows-alt" style="color:#34d399"></i><span class="sb-name">Distillation</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-microchip" style="color:#6366f1"></i><span class="sb-name">ONNX</span></div>
-        <div class="skill-bubble cat-llm"><i class="fas fa-robot" style="color:#ec4899"></i><span class="sb-name">Agentic AI</span></div>
-
-        <!-- Statistics & Analytics -->
-        <div class="skill-bubble cat-stats"><i class="fas fa-registered" style="color:#276dc3"></i><span class="sb-name">R / Shiny</span></div>
-        <div class="skill-bubble cat-stats"><i class="devicon-postgresql-plain colored"></i><span class="sb-name">SQL</span></div>
-        <div class="skill-bubble cat-stats"><i class="fas fa-infinity" style="color:#8caae6"></i><span class="sb-name">SciPy</span></div>
-        <div class="skill-bubble cat-stats"><i class="fas fa-chart-bar" style="color:#006699"></i><span class="sb-name">SPSS</span></div>
-        <div class="skill-bubble cat-stats"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
-        <div class="skill-bubble cat-stats"><i class="fas fa-chart-area" style="color:#1a5ca8"></i><span class="sb-name">STATA</span></div>
-
-        <!-- DevOps & Tools -->
-        <div class="skill-bubble cat-dev"><i class="devicon-github-original colored"></i><span class="sb-name">GitHub</span></div>
-        <div class="skill-bubble cat-dev"><i class="devicon-docker-plain colored"></i><span class="sb-name">Docker</span></div>
-        <div class="skill-bubble cat-dev"><i class="devicon-ubuntu-plain colored"></i><span class="sb-name">Linux</span></div>
-        <div class="skill-bubble cat-dev"><i class="devicon-apacheairflow-plain colored"></i><span class="sb-name">Airflow</span></div>
-        <div class="skill-bubble cat-dev"><i class="fas fa-vials" style="color:#0194e2"></i><span class="sb-name">MLflow</span></div>
-        <div class="skill-bubble cat-dev"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
-        <div class="skill-bubble cat-dev"><i class="devicon-apachespark-plain colored"></i><span class="sb-name">PySpark</span></div>
-        <div class="skill-bubble cat-dev"><i class="fas fa-microchip" style="color:#76b900"></i><span class="sb-name">GPU / HPC</span></div>
-
-        <!-- Visualization & Deployment -->
-        <div class="skill-bubble cat-viz"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
-        <div class="skill-bubble cat-viz"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
-        <div class="skill-bubble cat-viz"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
-        <div class="skill-bubble cat-viz"><i class="fas fa-th" style="color:#e97627"></i><span class="sb-name">Tableau</span></div>
-        <div class="skill-bubble cat-viz"><i class="fas fa-chart-bar" style="color:#f2c811"></i><span class="sb-name">Power BI</span></div>
-        <div class="skill-bubble cat-viz"><i class="devicon-flask-original colored"></i><span class="sb-name">Flask</span></div>
-        <div class="skill-bubble cat-viz"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
-
-        </div><!-- /sbb-grid -->
-
-        <div class="sbb-legend">
-          <span><i class="sbb-legend-dot" style="background:#4f8ef7"></i>ML / Deep Learning</span>
-          <span><i class="sbb-legend-dot" style="background:#f59e0b"></i>GenAI / LLM</span>
-          <span><i class="sbb-legend-dot" style="background:#06b6d4"></i>Statistics</span>
-          <span><i class="sbb-legend-dot" style="background:#7c3aed"></i>DevOps &amp; Tools</span>
-          <span><i class="sbb-legend-dot" style="background:#22c55e"></i>Viz &amp; Deploy</span>
+        <!-- 1 · ML & Deep Learning -->
+        <div class="sbb-cat-group cat-ml">
+          <div class="sbb-cat-label"><i class="fas fa-brain"></i> ML &amp; Deep Learning</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
+            <div class="skill-bubble"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
+            <div class="skill-bubble"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
+            <div class="skill-bubble"><i class="devicon-scikitlearn-plain colored"></i><span class="sb-name">Scikit-learn</span></div>
+            <div class="skill-bubble"><i class="fas fa-tree" style="color:#3db346"></i><span class="sb-name">XGBoost</span></div>
+            <div class="skill-bubble"><i class="fas fa-table" style="color:#4dabcf"></i><span class="sb-name">Pandas</span></div>
+          </div>
         </div>
+
+        <!-- 2 · GenAI & LLM -->
+        <div class="sbb-cat-group cat-llm">
+          <div class="sbb-cat-label"><i class="fas fa-magic"></i> GenAI &amp; LLM</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-smile" style="color:#ffd21e"></i><span class="sb-name">HuggingFace</span></div>
+            <div class="skill-bubble"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
+            <div class="skill-bubble"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
+            <div class="skill-bubble"><i class="fas fa-search" style="color:#4f8ef7"></i><span class="sb-name">RAG / FAISS</span></div>
+            <div class="skill-bubble"><i class="fas fa-sliders-h" style="color:#f59e0b"></i><span class="sb-name">Fine-Tuning</span></div>
+            <div class="skill-bubble"><i class="fas fa-robot" style="color:#ec4899"></i><span class="sb-name">Agentic AI</span></div>
+          </div>
+        </div>
+
+        <!-- 3 · Statistics & Analytics -->
+        <div class="sbb-cat-group cat-stats">
+          <div class="sbb-cat-label"><i class="fas fa-chart-bar"></i> Statistics &amp; Analytics</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-registered" style="color:#276dc3"></i><span class="sb-name">R / Shiny</span></div>
+            <div class="skill-bubble"><i class="fas fa-infinity" style="color:#8caae6"></i><span class="sb-name">SciPy</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#006699"></i><span class="sb-name">SPSS</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-area" style="color:#1a5ca8"></i><span class="sb-name">STATA</span></div>
+            <div class="skill-bubble"><i class="fas fa-database" style="color:#336791"></i><span class="sb-name">SQL</span></div>
+          </div>
+        </div>
+
+        <!-- 4 · DevOps & MLOps -->
+        <div class="sbb-cat-group cat-dev">
+          <div class="sbb-cat-label"><i class="fas fa-cogs"></i> DevOps &amp; MLOps</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="devicon-github-original colored"></i><span class="sb-name">GitHub</span></div>
+            <div class="skill-bubble"><i class="devicon-docker-plain colored"></i><span class="sb-name">Docker</span></div>
+            <div class="skill-bubble"><i class="devicon-ubuntu-plain colored"></i><span class="sb-name">Linux</span></div>
+            <div class="skill-bubble"><i class="fas fa-vials" style="color:#0194e2"></i><span class="sb-name">MLflow</span></div>
+            <div class="skill-bubble"><i class="devicon-apacheairflow-plain colored"></i><span class="sb-name">Airflow</span></div>
+            <div class="skill-bubble"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
+          </div>
+        </div>
+
+        <!-- 5 · Visualization & BI -->
+        <div class="sbb-cat-group cat-viz">
+          <div class="sbb-cat-label"><i class="fas fa-chart-pie"></i> Visualization &amp; BI</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
+            <div class="skill-bubble"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
+            <div class="skill-bubble"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
+            <div class="skill-bubble"><i class="fas fa-th" style="color:#e97627"></i><span class="sb-name">Tableau</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#f2c811"></i><span class="sb-name">Power BI</span></div>
+            <div class="skill-bubble"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
+          </div>
+        </div>
+
+        <!-- 6 · Data Engineering & Compute -->
+        <div class="sbb-cat-group cat-eng">
+          <div class="sbb-cat-label"><i class="fas fa-server"></i> Data Engineering &amp; Compute</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-border-all" style="color:#4dabcf"></i><span class="sb-name">NumPy</span></div>
+            <div class="skill-bubble"><i class="devicon-apachespark-plain colored"></i><span class="sb-name">PySpark</span></div>
+            <div class="skill-bubble"><i class="devicon-flask-original colored"></i><span class="sb-name">Flask</span></div>
+            <div class="skill-bubble"><i class="fas fa-server" style="color:#76b900"></i><span class="sb-name">GPU / HPC</span></div>
+            <div class="skill-bubble"><i class="fas fa-code-branch" style="color:#6366f1"></i><span class="sb-name">ONNX</span></div>
+            <div class="skill-bubble"><i class="fas fa-comment-dots" style="color:#06b6d4"></i><span class="sb-name">Prompting</span></div>
+          </div>
+        </div>
+
       </div><!-- /skill-bubble-box -->
 
     </div>
@@ -1983,17 +2006,14 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') { modal.class
 
 /* ─── SKILL WAVE DELAYS ─── */
 (function(){
-  const grid=document.getElementById('skill-bubble-box');
-  if(!grid) return;
-  const bubbles=Array.from(grid.querySelectorAll('.skill-bubble'));
-  /* stagger delay: left-to-right wave, wrapping by column position */
-  const cols=Math.round(grid.clientWidth/92)||8;
-  bubbles.forEach((b,i)=>{
-    const col=i%cols, row=Math.floor(i/cols);
-    const delay=((col+row)*0.12).toFixed(2);
-    b.style.animationDelay=delay+'s';
-    /* each card gets a slightly different period for organic feel */
-    b.style.animationDuration=(3.2+Math.random()*1.4).toFixed(2)+'s';
+  const box=document.getElementById('skill-bubble-box');
+  if(!box) return;
+  /* stagger left-to-right within each category row */
+  box.querySelectorAll('.sbb-cat-items').forEach((row,rowIdx)=>{
+    Array.from(row.querySelectorAll('.skill-bubble')).forEach((b,col)=>{
+      b.style.animationDelay=(col*0.14 + rowIdx*0.08).toFixed(2)+'s';
+      b.style.animationDuration=(3.0+Math.random()*1.4).toFixed(2)+'s';
+    });
   });
 })();
 
