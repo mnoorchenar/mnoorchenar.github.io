@@ -543,26 +543,42 @@ section{padding:90px 0}
 .about-stat-num{font-size:2em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
 .about-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
 
+/* ── ABOUT EXTRAS ── */
+.about-interests{margin-top:20px}
+.about-int-title{font-size:.7em;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.about-int-title::before{content:'';flex:1;height:1px;background:var(--glass-border)}
+.about-int-tags{display:flex;flex-wrap:wrap;gap:7px}
+.about-int-tag{display:inline-flex;align-items:center;gap:5px;font-size:.75em;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid;cursor:default}
+.about-int-tag.t-llm{color:#f59e0b;border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.07)}
+.about-int-tag.t-xai{color:#4f8ef7;border-color:rgba(79,142,247,.32);background:rgba(79,142,247,.07)}
+.about-int-tag.t-rep{color:#06b6d4;border-color:rgba(6,182,212,.32);background:rgba(6,182,212,.07)}
+.about-int-tag.t-ts {color:#22c55e;border-color:rgba(34,197,94,.32);background:rgba(34,197,94,.07)}
+.about-quickstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.about-qs{background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;padding:11px 6px 9px;text-align:center;transition:.28s}
+.about-qs:hover{background:var(--card-hover-bg);border-color:var(--card-hover-border);transform:translateY(-2px)}
+.about-qs-num{font-size:1.25em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.about-qs-lbl{font-size:.58em;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;line-height:1.3}
+
 /* ── SKILL WAVE GRID ── */
 @keyframes sb-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .skill-bubble-box{
   width:100%;border-radius:var(--radius);
   background:var(--glass);border:1px solid var(--glass-border);
-  padding:14px;display:flex;flex-direction:column;gap:7px;
+  padding:11px;display:flex;flex-direction:column;gap:5px;
 }
 /* ── category row group ── */
-.sbb-cat-group{border-radius:10px;padding:9px 11px 10px;border:1px solid transparent;transition:border-color .3s}
+.sbb-cat-group{border-radius:9px;padding:7px 10px 8px;border:1px solid transparent;transition:border-color .3s}
 .sbb-cat-label{
-  font-size:.6em;font-weight:800;text-transform:uppercase;
-  letter-spacing:.1em;margin-bottom:7px;
+  font-size:.68em;font-weight:800;text-transform:uppercase;
+  letter-spacing:.09em;margin-bottom:6px;
   display:flex;align-items:center;gap:6px;
 }
 .sbb-cat-label i{font-size:1em}
-.sbb-cat-items{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.sbb-cat-items{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
 /* ── individual bubble ── */
 .skill-bubble{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:5px;padding:11px 4px 9px;
+  gap:4px;padding:9px 3px 8px;
   border-radius:9px;background:var(--glass);border:1px solid transparent;
   cursor:default;user-select:none;
   animation:sb-float 3.4s ease-in-out infinite;
@@ -576,11 +592,11 @@ section{padding:90px 0}
 }
 .skill-bubble:hover::before{transform:translateX(120%)}
 .skill-bubble:hover{animation-play-state:paused;transform:translateY(-4px) scale(1.09);z-index:5}
-.skill-bubble i{font-size:1.38em;line-height:1;pointer-events:none}
+.skill-bubble i{font-size:1.3em;line-height:1;pointer-events:none}
 .skill-bubble .sb-name{
-  font-size:.5em;font-weight:700;text-align:center;
+  font-size:.62em;font-weight:700;text-align:center;
   color:var(--muted);line-height:1.2;
-  width:62px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  width:66px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;
 }
 /* ── ML & Deep Learning (blue) ── */
@@ -1022,7 +1038,7 @@ footer::before{
     <div class="stat-divider"></div>
     <div class="stat"><div class="stat-num" data-target="7" data-suffix="+">0</div><div class="stat-label">Roles Held</div></div>
     <div class="stat-divider"></div>
-    <div class="stat"><div class="stat-num" data-prefix="$" data-target="10" data-suffix="K">0</div><div class="stat-label">Scholarship</div></div>
+    <div class="stat"><div class="stat-num" data-prefix="$" data-target="11" data-suffix="K">0</div><div class="stat-label">Scholarships</div></div>
     <div class="stat-divider"></div>
     <div class="stat"><div class="stat-num" data-target="71">0</div><div class="stat-label">Citations</div></div>
     <div class="stat-divider"></div>
@@ -1041,79 +1057,96 @@ footer::before{
     </div>
     <div class="about-inner fade-up">
       <div class="about-text">
-        <p>I'm a Machine Learning researcher and Data Scientist specializing in <strong>deep learning, NLP, large language models (LLMs), and generative AI</strong>. My work spans the full ML lifecycle — from transformer architecture design and LLM fine-tuning, to RAG pipelines, agentic AI systems (LangGraph), knowledge distillation, ONNX deployment, and explainability — with real-world impact in healthcare and energy systems.</p>
-        <p>I pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University while teaching <strong>15 graduate-level Deep Learning courses</strong> at Fanshawe College (CNNs, RNNs, Vision Transformers, Diffusion Models, BERT, GPT, XAI) and conducting applied research at the London Health Sciences Centre on 180K+ EHR records. Recipient of the <strong>Danny Ho Graduate Scholarship ($10,000)</strong> — awarded to only two students annually across the entire Faculty of Engineering.</p>
+        <p>I'm a Machine Learning researcher and Data Scientist specializing in <strong>deep learning, NLP, large language models (LLMs), and generative AI</strong>. My work spans the full ML lifecycle — from transformer architecture design and LLM fine-tuning, to RAG pipelines, agentic AI (LangGraph), and explainable AI — with real-world impact in healthcare and energy systems.</p>
+        <p>I pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University, teach <strong>15 graduate-level Deep Learning courses</strong> at Fanshawe College, and conduct applied research at the London Health Sciences Centre on 180K+ EHR records. Recipient of the <strong>Danny Ho Software Engineering Scholarship ($10,000, 2025)</strong> and the <strong>Graduate Scholarship in Engineering and Science ($1,000, 2026)</strong> — among the most competitive awards in the Faculty of Engineering.</p>
+
+        <div class="about-interests">
+          <div class="about-int-title">Research Interests</div>
+          <div class="about-int-tags">
+            <span class="about-int-tag t-llm"><i class="fas fa-brain"></i> LLMs &amp; Generative AI</span>
+            <span class="about-int-tag t-xai"><i class="fas fa-search"></i> Explainable &amp; Trustworthy AI</span>
+            <span class="about-int-tag t-rep"><i class="fas fa-sitemap"></i> Multimodal &amp; Transformer Learning</span>
+            <span class="about-int-tag t-ts"><i class="fas fa-chart-line"></i> Time-Series &amp; Forecasting</span>
+          </div>
+        </div>
+
+        <div class="about-quickstats">
+          <div class="about-qs"><div class="about-qs-num">10+</div><div class="about-qs-lbl">Years in Data Science</div></div>
+          <div class="about-qs"><div class="about-qs-num">10+</div><div class="about-qs-lbl">Publications</div></div>
+          <div class="about-qs"><div class="about-qs-num">71</div><div class="about-qs-lbl">Citations</div></div>
+          <div class="about-qs"><div class="about-qs-num">93.75</div><div class="about-qs-lbl">PhD GPA / 100</div></div>
+        </div>
       </div>
 
       <!-- skill wave grid — 6 categories × 6 items -->
       <div class="skill-bubble-box" id="skill-bubble-box">
 
-        <!-- 1 · ML & Deep Learning -->
+        <!-- 1 · ML & Deep Learning — sorted: Python → Pandas → Scikit-learn → XGBoost → TensorFlow → PyTorch -->
         <div class="sbb-cat-group cat-ml">
           <div class="sbb-cat-label"><i class="fas fa-brain"></i> ML &amp; Deep Learning</div>
           <div class="sbb-cat-items">
             <div class="skill-bubble"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
-            <div class="skill-bubble"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
-            <div class="skill-bubble"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
+            <div class="skill-bubble"><i class="fas fa-table" style="color:#4dabcf"></i><span class="sb-name">Pandas</span></div>
             <div class="skill-bubble"><i class="devicon-scikitlearn-plain colored"></i><span class="sb-name">Scikit-learn</span></div>
             <div class="skill-bubble"><i class="fas fa-tree" style="color:#3db346"></i><span class="sb-name">XGBoost</span></div>
-            <div class="skill-bubble"><i class="fas fa-table" style="color:#4dabcf"></i><span class="sb-name">Pandas</span></div>
+            <div class="skill-bubble"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
+            <div class="skill-bubble"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
           </div>
         </div>
 
-        <!-- 2 · GenAI & LLM -->
+        <!-- 2 · GenAI & LLM — sorted: HuggingFace → RAG/FAISS → Fine-Tuning → LangChain → Agentic AI → LangGraph -->
         <div class="sbb-cat-group cat-llm">
           <div class="sbb-cat-label"><i class="fas fa-magic"></i> GenAI &amp; LLM</div>
           <div class="sbb-cat-items">
             <div class="skill-bubble"><i class="fas fa-smile" style="color:#ffd21e"></i><span class="sb-name">HuggingFace</span></div>
-            <div class="skill-bubble"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
-            <div class="skill-bubble"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
             <div class="skill-bubble"><i class="fas fa-search" style="color:#4f8ef7"></i><span class="sb-name">RAG / FAISS</span></div>
             <div class="skill-bubble"><i class="fas fa-sliders-h" style="color:#f59e0b"></i><span class="sb-name">Fine-Tuning</span></div>
+            <div class="skill-bubble"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
             <div class="skill-bubble"><i class="fas fa-robot" style="color:#ec4899"></i><span class="sb-name">Agentic AI</span></div>
+            <div class="skill-bubble"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
           </div>
         </div>
 
-        <!-- 3 · Statistics & Analytics -->
+        <!-- 3 · Statistics & Analytics — sorted: SQL → R/Shiny → SciPy → SPSS → STATA → MINITAB -->
         <div class="sbb-cat-group cat-stats">
           <div class="sbb-cat-label"><i class="fas fa-chart-bar"></i> Statistics &amp; Analytics</div>
           <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-database" style="color:#336791"></i><span class="sb-name">SQL</span></div>
             <div class="skill-bubble"><i class="fas fa-registered" style="color:#276dc3"></i><span class="sb-name">R / Shiny</span></div>
             <div class="skill-bubble"><i class="fas fa-infinity" style="color:#8caae6"></i><span class="sb-name">SciPy</span></div>
             <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#006699"></i><span class="sb-name">SPSS</span></div>
-            <div class="skill-bubble"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
             <div class="skill-bubble"><i class="fas fa-chart-area" style="color:#1a5ca8"></i><span class="sb-name">STATA</span></div>
-            <div class="skill-bubble"><i class="fas fa-database" style="color:#336791"></i><span class="sb-name">SQL</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
           </div>
         </div>
 
-        <!-- 4 · DevOps & MLOps -->
+        <!-- 4 · DevOps & MLOps — sorted: GitHub → Docker → Azure → Linux → MLflow → Airflow -->
         <div class="sbb-cat-group cat-dev">
           <div class="sbb-cat-label"><i class="fas fa-cogs"></i> DevOps &amp; MLOps</div>
           <div class="sbb-cat-items">
             <div class="skill-bubble"><i class="devicon-github-original colored"></i><span class="sb-name">GitHub</span></div>
             <div class="skill-bubble"><i class="devicon-docker-plain colored"></i><span class="sb-name">Docker</span></div>
+            <div class="skill-bubble"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
             <div class="skill-bubble"><i class="devicon-ubuntu-plain colored"></i><span class="sb-name">Linux</span></div>
             <div class="skill-bubble"><i class="fas fa-vials" style="color:#0194e2"></i><span class="sb-name">MLflow</span></div>
             <div class="skill-bubble"><i class="devicon-apacheairflow-plain colored"></i><span class="sb-name">Airflow</span></div>
-            <div class="skill-bubble"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
           </div>
         </div>
 
-        <!-- 5 · Visualization & BI -->
+        <!-- 5 · Visualization & BI — sorted: Tableau → Power BI → Plotly → Streamlit → Matplotlib → Seaborn -->
         <div class="sbb-cat-group cat-viz">
           <div class="sbb-cat-label"><i class="fas fa-chart-pie"></i> Visualization &amp; BI</div>
           <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
-            <div class="skill-bubble"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
-            <div class="skill-bubble"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
             <div class="skill-bubble"><i class="fas fa-th" style="color:#e97627"></i><span class="sb-name">Tableau</span></div>
             <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#f2c811"></i><span class="sb-name">Power BI</span></div>
+            <div class="skill-bubble"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
             <div class="skill-bubble"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
+            <div class="skill-bubble"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
+            <div class="skill-bubble"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
           </div>
         </div>
 
-        <!-- 6 · Data Engineering & Compute -->
+        <!-- 6 · Data Engineering & Compute — sorted: NumPy → PySpark → Flask → GPU/HPC → ONNX → Prompting -->
         <div class="sbb-cat-group cat-eng">
           <div class="sbb-cat-label"><i class="fas fa-server"></i> Data Engineering &amp; Compute</div>
           <div class="sbb-cat-items">
@@ -1264,7 +1297,8 @@ footer::before{
             <li>Transformer and multimodal deep learning models for clinical prediction and surgical efficiency</li>
             <li>Explainable AI (SHAP, LIME, attention) for healthcare model transparency</li>
             <li>Peer-reviewed publications in collaboration with LHSC clinical partners</li>
-            <li>Danny Ho Software Engineering Graduate Scholarship ($10,000) — May 2025</li>
+            <li>Danny Ho Software Engineering Scholarship ($10,000) — May 2025</li>
+            <li>Graduate Scholarship in Engineering and Science ($1,000) — 2026</li>
           </ul>
           <div class="hcard-tags"><span class="hcard-tag">AI</span><span class="hcard-tag">Healthcare</span><span class="hcard-tag">XAI</span><span class="hcard-tag">Transformers</span></div>
         </div>
@@ -1863,13 +1897,13 @@ footer::before{
         </div>
       </div>
       <div class="award-card fade-up">
-        <div class="award-img c6"><img src="images/honors_awards/h007.png" alt="Basic SPSS Training Workshop" onerror="this.style.display='none'"></div>
+        <div class="award-img c6"><img src="images/honors_awards/h006.png" alt="Graduate Scholarship in Engineering and Science" onerror="this.style.display='none'"></div>
         <div class="award-body">
-          <div class="award-icon">🧑‍🏫</div>
-          <div class="award-title">Basic SPSS Training Workshop</div>
-          <div class="award-org"><i class="fas fa-university"></i> Dept. of Epidemiology &amp; Biostatistics</div>
-          <div class="award-date"><i class="fas fa-calendar"></i> May 23, 2019</div>
-          <p class="award-desc">Held for beginner students on May 23, 2019. Over 30 participants attended, including students from Nursing. Practical examples were used to clarify statistical concepts.</p>
+          <div class="award-icon">🎓</div>
+          <div class="award-title">Graduate Scholarship in Engineering and Science</div>
+          <div class="award-org"><i class="fas fa-university"></i> Faculty of Engineering, Western University</div>
+          <div class="award-date"><i class="fas fa-calendar"></i> 2026 · $1,000</div>
+          <p class="award-desc">Awarded for academic excellence and research contribution within the Faculty of Engineering and Science at Western University.</p>
         </div>
       </div>
     </div>
