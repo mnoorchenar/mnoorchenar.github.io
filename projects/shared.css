@@ -378,7 +378,24 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ════════════════════════════════
-   10. UTILITIES
+   10. HERO BACKGROUND IMAGE
+════════════════════════════════ */
+/* Per-project background image — set background-image inline on the element */
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="light"] .hero-bg-img { opacity: 0.08; }
+
+
+/* ════════════════════════════════
+   11. UTILITIES
 ════════════════════════════════ */
 .grad-text {
   background: linear-gradient(135deg, var(--accent), var(--teal));
