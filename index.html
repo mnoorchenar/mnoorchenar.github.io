@@ -532,7 +532,7 @@ section{padding:90px 0}
 
 /* ── ABOUT ── */
 #about{background:var(--body-bg)}
-.about-inner{display:grid;grid-template-columns:2fr 3fr;gap:44px;align-items:start}
+.about-inner{display:block;max-width:820px;margin:0 auto}
 .about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.78}
 .about-text p strong{color:var(--text)}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -811,7 +811,6 @@ footer::before{
 ══════════════════════════════════════════ */
 @media(max-width:1024px){
   .hcard{grid-template-columns:200px 1fr}
-  .about-inner{grid-template-columns:1fr}
   .sbb-cat-items{grid-template-columns:repeat(6,1fr)}
   .awards-grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -1069,101 +1068,11 @@ footer::before{
             <span class="about-int-tag t-ts"><i class="fas fa-chart-line"></i> Time-Series &amp; Forecasting</span>
           </div>
         </div>
-
-        <div class="about-quickstats">
-          <div class="about-qs"><div class="about-qs-num">10+</div><div class="about-qs-lbl">Years in Data Science</div></div>
-          <div class="about-qs"><div class="about-qs-num">10+</div><div class="about-qs-lbl">Publications</div></div>
-          <div class="about-qs"><div class="about-qs-num">71</div><div class="about-qs-lbl">Citations</div></div>
-          <div class="about-qs"><div class="about-qs-num">93.75</div><div class="about-qs-lbl">PhD GPA / 100</div></div>
-        </div>
       </div>
-
-      <!-- skill wave grid — 6 categories × 6 items -->
-      <div class="skill-bubble-box" id="skill-bubble-box">
-
-        <!-- 1 · ML & Deep Learning — sorted: Python → Pandas → Scikit-learn → XGBoost → TensorFlow → PyTorch -->
-        <div class="sbb-cat-group cat-ml">
-          <div class="sbb-cat-label"><i class="fas fa-brain"></i> ML &amp; Deep Learning</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
-            <div class="skill-bubble"><i class="fas fa-table" style="color:#4dabcf"></i><span class="sb-name">Pandas</span></div>
-            <div class="skill-bubble"><i class="devicon-scikitlearn-plain colored"></i><span class="sb-name">Scikit-learn</span></div>
-            <div class="skill-bubble"><i class="fas fa-tree" style="color:#3db346"></i><span class="sb-name">XGBoost</span></div>
-            <div class="skill-bubble"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
-            <div class="skill-bubble"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
-          </div>
-        </div>
-
-        <!-- 2 · GenAI & LLM — sorted: HuggingFace → RAG/FAISS → Fine-Tuning → LangChain → Agentic AI → LangGraph -->
-        <div class="sbb-cat-group cat-llm">
-          <div class="sbb-cat-label"><i class="fas fa-magic"></i> GenAI &amp; LLM</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="fas fa-smile" style="color:#ffd21e"></i><span class="sb-name">HuggingFace</span></div>
-            <div class="skill-bubble"><i class="fas fa-search" style="color:#4f8ef7"></i><span class="sb-name">RAG / FAISS</span></div>
-            <div class="skill-bubble"><i class="fas fa-sliders-h" style="color:#f59e0b"></i><span class="sb-name">Fine-Tuning</span></div>
-            <div class="skill-bubble"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
-            <div class="skill-bubble"><i class="fas fa-robot" style="color:#ec4899"></i><span class="sb-name">Agentic AI</span></div>
-            <div class="skill-bubble"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
-          </div>
-        </div>
-
-        <!-- 3 · Statistics & Analytics — sorted: SQL → R/Shiny → SciPy → SPSS → STATA → MINITAB -->
-        <div class="sbb-cat-group cat-stats">
-          <div class="sbb-cat-label"><i class="fas fa-chart-bar"></i> Statistics &amp; Analytics</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="fas fa-database" style="color:#336791"></i><span class="sb-name">SQL</span></div>
-            <div class="skill-bubble"><i class="fas fa-registered" style="color:#276dc3"></i><span class="sb-name">R / Shiny</span></div>
-            <div class="skill-bubble"><i class="fas fa-infinity" style="color:#8caae6"></i><span class="sb-name">SciPy</span></div>
-            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#006699"></i><span class="sb-name">SPSS</span></div>
-            <div class="skill-bubble"><i class="fas fa-chart-area" style="color:#1a5ca8"></i><span class="sb-name">STATA</span></div>
-            <div class="skill-bubble"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
-          </div>
-        </div>
-
-        <!-- 4 · DevOps & MLOps — sorted: GitHub → Docker → Azure → Linux → MLflow → Airflow -->
-        <div class="sbb-cat-group cat-dev">
-          <div class="sbb-cat-label"><i class="fas fa-cogs"></i> DevOps &amp; MLOps</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="devicon-github-original colored"></i><span class="sb-name">GitHub</span></div>
-            <div class="skill-bubble"><i class="devicon-docker-plain colored"></i><span class="sb-name">Docker</span></div>
-            <div class="skill-bubble"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
-            <div class="skill-bubble"><i class="devicon-ubuntu-plain colored"></i><span class="sb-name">Linux</span></div>
-            <div class="skill-bubble"><i class="fas fa-vials" style="color:#0194e2"></i><span class="sb-name">MLflow</span></div>
-            <div class="skill-bubble"><i class="devicon-apacheairflow-plain colored"></i><span class="sb-name">Airflow</span></div>
-          </div>
-        </div>
-
-        <!-- 5 · Visualization & BI — sorted: Tableau → Power BI → Plotly → Streamlit → Matplotlib → Seaborn -->
-        <div class="sbb-cat-group cat-viz">
-          <div class="sbb-cat-label"><i class="fas fa-chart-pie"></i> Visualization &amp; BI</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="fas fa-th" style="color:#e97627"></i><span class="sb-name">Tableau</span></div>
-            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#f2c811"></i><span class="sb-name">Power BI</span></div>
-            <div class="skill-bubble"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
-            <div class="skill-bubble"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
-            <div class="skill-bubble"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
-            <div class="skill-bubble"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
-          </div>
-        </div>
-
-        <!-- 6 · Data Engineering & Compute — sorted: NumPy → PySpark → Flask → GPU/HPC → ONNX → Prompting -->
-        <div class="sbb-cat-group cat-eng">
-          <div class="sbb-cat-label"><i class="fas fa-server"></i> Data Engineering &amp; Compute</div>
-          <div class="sbb-cat-items">
-            <div class="skill-bubble"><i class="fas fa-border-all" style="color:#4dabcf"></i><span class="sb-name">NumPy</span></div>
-            <div class="skill-bubble"><i class="devicon-apachespark-plain colored"></i><span class="sb-name">PySpark</span></div>
-            <div class="skill-bubble"><i class="devicon-flask-original colored"></i><span class="sb-name">Flask</span></div>
-            <div class="skill-bubble"><i class="fas fa-server" style="color:#76b900"></i><span class="sb-name">GPU / HPC</span></div>
-            <div class="skill-bubble"><i class="fas fa-code-branch" style="color:#6366f1"></i><span class="sb-name">ONNX</span></div>
-            <div class="skill-bubble"><i class="fas fa-comment-dots" style="color:#06b6d4"></i><span class="sb-name">Prompting</span></div>
-          </div>
-        </div>
-
-      </div><!-- /skill-bubble-box -->
-
     </div>
   </div>
 </section>
+
 
 <!-- EXPERIENCE -->
 <section id="experience" style="background:var(--section-alt)">
@@ -1456,385 +1365,93 @@ footer::before{
       <p class="section-desc">Deep expertise in ML, deep learning, NLP, LLMs, and generative AI — backed by rigorous statistical foundations</p>
     </div>
 
-    <div class="skills-cat-grid fade-up">
+    <div class="fade-up">
+      <div class="skill-bubble-box" id="skill-bubble-box">
 
-      <!-- ══ ROW 1 — full width ══ -->
-
-      <!-- Languages & Libraries -->
-      <div class="skill-category full-width">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon blue"><i class="fas fa-code"></i></div>
-          <span class="skill-cat-title">Languages &amp; Libraries</span>
-          <span class="skill-cat-count">11 tools</span>
+        <!-- 1 · ML & Deep Learning -->
+        <div class="sbb-cat-group cat-ml">
+          <div class="sbb-cat-label"><i class="fas fa-brain"></i> ML &amp; Deep Learning</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
+            <div class="skill-bubble"><i class="fas fa-table" style="color:#4dabcf"></i><span class="sb-name">Pandas</span></div>
+            <div class="skill-bubble"><i class="devicon-scikitlearn-plain colored"></i><span class="sb-name">Scikit-learn</span></div>
+            <div class="skill-bubble"><i class="fas fa-tree" style="color:#3db346"></i><span class="sb-name">XGBoost</span></div>
+            <div class="skill-bubble"><i class="devicon-tensorflow-original colored"></i><span class="sb-name">TensorFlow</span></div>
+            <div class="skill-bubble"><i class="devicon-pytorch-original colored"></i><span class="sb-name">PyTorch</span></div>
+          </div>
         </div>
-        <div class="skill-badges">
 
-          <div class="skill-badge">
-            <i class="devicon-python-plain colored"></i>
-            <span class="skill-badge-name">Python</span>
-            <span class="skill-badge-yrs">6+ yrs</span>
+        <!-- 2 · GenAI & LLM -->
+        <div class="sbb-cat-group cat-llm">
+          <div class="sbb-cat-label"><i class="fas fa-magic"></i> GenAI &amp; LLM</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-smile" style="color:#ffd21e"></i><span class="sb-name">HuggingFace</span></div>
+            <div class="skill-bubble"><i class="fas fa-search" style="color:#4f8ef7"></i><span class="sb-name">RAG / FAISS</span></div>
+            <div class="skill-bubble"><i class="fas fa-sliders-h" style="color:#f59e0b"></i><span class="sb-name">Fine-Tuning</span></div>
+            <div class="skill-bubble"><i class="fas fa-link" style="color:#1c7c6c"></i><span class="sb-name">LangChain</span></div>
+            <div class="skill-bubble"><i class="fas fa-robot" style="color:#ec4899"></i><span class="sb-name">Agentic AI</span></div>
+            <div class="skill-bubble"><i class="fas fa-project-diagram" style="color:#7c3aed"></i><span class="sb-name">LangGraph</span></div>
           </div>
-
-          <div class="skill-badge">
-            <i class="devicon-tensorflow-original colored"></i>
-            <span class="skill-badge-name">TensorFlow / Keras</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-pytorch-original colored"></i>
-            <span class="skill-badge-name">PyTorch</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-scikitlearn-plain colored"></i>
-            <span class="skill-badge-name">Scikit-learn</span>
-            <span class="skill-badge-yrs">5+ yrs</span>
-          </div>
-
-          <!-- Pandas -->
-          <div class="skill-badge">
-            <i class="fas fa-table" style="color:#150458"></i>
-            <span class="skill-badge-name">Pandas</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <!-- NumPy -->
-          <div class="skill-badge">
-            <i class="fas fa-border-all" style="color:#4dabcf"></i>
-            <span class="skill-badge-name">NumPy</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <!-- SciPy: no devicon → fas fa-infinity matches the math/scientific nature -->
-          <div class="skill-badge">
-            <i class="fas fa-infinity" style="color:#8caae6"></i>
-            <span class="skill-badge-name">SciPy / statsmodels</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <!-- XGBoost: no devicon → fas fa-tree fits gradient boosted trees -->
-          <div class="skill-badge">
-            <i class="fas fa-tree" style="color:#3db346"></i>
-            <span class="skill-badge-name">XGBoost</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
-          </div>
-
-          <!-- R / R Shiny / R Markdown -->
-          <div class="skill-badge">
-            <i class="fas fa-registered" style="color:#276dc3"></i>
-            <span class="skill-badge-name">R / R Shiny / R Markdown</span>
-            <span class="skill-badge-yrs">10+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-postgresql-plain colored"></i>
-            <span class="skill-badge-name">SQL</span>
-            <span class="skill-badge-yrs">4+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-apachespark-plain colored"></i>
-            <span class="skill-badge-name">PySpark</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
         </div>
-      </div>
 
-      <!-- ══ ROW 2 ══ -->
-
-      <!-- DevOps & Tooling -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon purple"><i class="fas fa-cogs"></i></div>
-          <span class="skill-cat-title">DevOps &amp; Tooling</span>
-          <span class="skill-cat-count">6 tools</span>
+        <!-- 3 · Statistics & Analytics -->
+        <div class="sbb-cat-group cat-stats">
+          <div class="sbb-cat-label"><i class="fas fa-chart-bar"></i> Statistics &amp; Analytics</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-database" style="color:#336791"></i><span class="sb-name">SQL</span></div>
+            <div class="skill-bubble"><i class="fas fa-registered" style="color:#276dc3"></i><span class="sb-name">R / Shiny</span></div>
+            <div class="skill-bubble"><i class="fas fa-infinity" style="color:#8caae6"></i><span class="sb-name">SciPy</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#006699"></i><span class="sb-name">SPSS</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-area" style="color:#1a5ca8"></i><span class="sb-name">STATA</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-line" style="color:#00a651"></i><span class="sb-name">MINITAB</span></div>
+          </div>
         </div>
-        <div class="skill-badges">
 
-          <div class="skill-badge">
-            <i class="devicon-github-original colored"></i>
-            <span class="skill-badge-name">GitHub</span>
-            <span class="skill-badge-yrs">5+ yrs</span>
+        <!-- 4 · DevOps & MLOps -->
+        <div class="sbb-cat-group cat-dev">
+          <div class="sbb-cat-label"><i class="fas fa-cogs"></i> DevOps &amp; MLOps</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="devicon-github-original colored"></i><span class="sb-name">GitHub</span></div>
+            <div class="skill-bubble"><i class="devicon-docker-plain colored"></i><span class="sb-name">Docker</span></div>
+            <div class="skill-bubble"><i class="devicon-azure-plain colored"></i><span class="sb-name">Azure</span></div>
+            <div class="skill-bubble"><i class="devicon-ubuntu-plain colored"></i><span class="sb-name">Linux</span></div>
+            <div class="skill-bubble"><i class="fas fa-vials" style="color:#0194e2"></i><span class="sb-name">MLflow</span></div>
+            <div class="skill-bubble"><i class="devicon-apacheairflow-plain colored"></i><span class="sb-name">Airflow</span></div>
           </div>
-
-          <div class="skill-badge">
-            <i class="devicon-docker-plain colored"></i>
-            <span class="skill-badge-name">Docker</span>
-            <span class="skill-badge-yrs">2+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-ubuntu-plain colored"></i>
-            <span class="skill-badge-name">Linux (Ubuntu)</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-apacheairflow-plain colored"></i>
-            <span class="skill-badge-name">Apache Airflow</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- MLflow: no devicon → fas fa-vials fits experiment tracking -->
-          <div class="skill-badge">
-            <i class="fas fa-vials" style="color:#0194e2"></i>
-            <span class="skill-badge-name">MLflow</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-jira-plain colored"></i>
-            <span class="skill-badge-name">Jira</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
         </div>
-      </div>
 
-      <!-- GenAI & LLM Tools -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon gold"><i class="fas fa-magic"></i></div>
-          <span class="skill-cat-title">GenAI &amp; LLM Tools</span>
-          <span class="skill-cat-count">9 tools</span>
+        <!-- 5 · Visualization & BI -->
+        <div class="sbb-cat-group cat-viz">
+          <div class="sbb-cat-label"><i class="fas fa-chart-pie"></i> Visualization &amp; BI</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-th" style="color:#e97627"></i><span class="sb-name">Tableau</span></div>
+            <div class="skill-bubble"><i class="fas fa-chart-bar" style="color:#f2c811"></i><span class="sb-name">Power BI</span></div>
+            <div class="skill-bubble"><i class="devicon-plotly-plain colored"></i><span class="sb-name">Plotly</span></div>
+            <div class="skill-bubble"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
+            <div class="skill-bubble"><i class="devicon-matplotlib-plain colored"></i><span class="sb-name">Matplotlib</span></div>
+            <div class="skill-bubble"><i class="fas fa-water" style="color:#4c72b0"></i><span class="sb-name">Seaborn</span></div>
+          </div>
         </div>
-        <div class="skill-badges">
 
-          <!-- Hugging Face -->
-          <div class="skill-badge">
-            <i class="fas fa-smile" style="color:#ffd21e"></i>
-            <span class="skill-badge-name">Hugging Face</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
+        <!-- 6 · Data Engineering & Compute -->
+        <div class="sbb-cat-group cat-eng">
+          <div class="sbb-cat-label"><i class="fas fa-server"></i> Data Engineering &amp; Compute</div>
+          <div class="sbb-cat-items">
+            <div class="skill-bubble"><i class="fas fa-border-all" style="color:#4dabcf"></i><span class="sb-name">NumPy</span></div>
+            <div class="skill-bubble"><i class="devicon-apachespark-plain colored"></i><span class="sb-name">PySpark</span></div>
+            <div class="skill-bubble"><i class="devicon-flask-original colored"></i><span class="sb-name">Flask</span></div>
+            <div class="skill-bubble"><i class="fas fa-server" style="color:#76b900"></i><span class="sb-name">GPU / HPC</span></div>
+            <div class="skill-bubble"><i class="fas fa-code-branch" style="color:#6366f1"></i><span class="sb-name">ONNX</span></div>
+            <div class="skill-bubble"><i class="fas fa-comment-dots" style="color:#06b6d4"></i><span class="sb-name">Prompting</span></div>
           </div>
-
-          <!-- LangChain -->
-          <div class="skill-badge">
-            <i class="fas fa-link" style="color:#1c7c6c"></i>
-            <span class="skill-badge-name">LangChain</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- LangGraph -->
-          <div class="skill-badge">
-            <i class="fas fa-project-diagram" style="color:#7c3aed"></i>
-            <span class="skill-badge-name">LangGraph</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- RAG & FAISS -->
-          <div class="skill-badge">
-            <i class="fas fa-search" style="color:#4f8ef7"></i>
-            <span class="skill-badge-name">RAG &amp; FAISS</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- LLM Fine-Tuning -->
-          <div class="skill-badge">
-            <i class="fas fa-sliders-h" style="color:#f59e0b"></i>
-            <span class="skill-badge-name">LLM Fine-Tuning</span>
-            <span class="skill-badge-yrs">2+ yrs</span>
-          </div>
-
-          <!-- Prompt Engineering -->
-          <div class="skill-badge">
-            <i class="fas fa-terminal" style="color:#06b6d4"></i>
-            <span class="skill-badge-name">Prompt Engineering</span>
-            <span class="skill-badge-yrs">2+ yrs</span>
-          </div>
-
-          <!-- Knowledge Distillation -->
-          <div class="skill-badge">
-            <i class="fas fa-compress-arrows-alt" style="color:#34d399"></i>
-            <span class="skill-badge-name">Knowledge Distillation</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- ONNX Quantization -->
-          <div class="skill-badge">
-            <i class="fas fa-microchip" style="color:#6366f1"></i>
-            <span class="skill-badge-name">ONNX Quantization</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- Agentic AI -->
-          <div class="skill-badge">
-            <i class="fas fa-robot" style="color:#ec4899"></i>
-            <span class="skill-badge-name">Agentic AI</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
         </div>
-      </div>
 
-      <!-- ══ ROW 3 ══ -->
-
-      <!-- Statistical Tools -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon teal"><i class="fas fa-chart-bar"></i></div>
-          <span class="skill-cat-title">Statistical Tools</span>
-          <span class="skill-cat-count">3 tools</span>
-        </div>
-        <div class="skill-badges">
-
-          <!-- SPSS: no devicon → fa-chart-bar in IBM blue -->
-          <div class="skill-badge">
-            <i class="fas fa-chart-bar" style="color:#006699"></i>
-            <span class="skill-badge-name">SPSS</span>
-            <span class="skill-badge-yrs">10+ yrs</span>
-          </div>
-
-          <!-- MINITAB: no devicon → fa-chart-line in Minitab green -->
-          <div class="skill-badge">
-            <i class="fas fa-chart-line" style="color:#00a651"></i>
-            <span class="skill-badge-name">MINITAB</span>
-            <span class="skill-badge-yrs">10+ yrs</span>
-          </div>
-
-          <!-- STATA: no devicon → fa-chart-area in Stata blue -->
-          <div class="skill-badge">
-            <i class="fas fa-chart-area" style="color:#1a5ca8"></i>
-            <span class="skill-badge-name">STATA</span>
-            <span class="skill-badge-yrs">2+ yrs</span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Visualization & Deployment -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon green"><i class="fas fa-chart-pie"></i></div>
-          <span class="skill-cat-title">Visualization &amp; Deployment</span>
-          <span class="skill-cat-count">7 tools</span>
-        </div>
-        <div class="skill-badges">
-
-          <!-- Tableau -->
-			<div class="skill-badge">
-			  <i class="fas fa-th" style="color:#e97627"></i>
-			  <span class="skill-badge-name">Tableau</span>
-			  <span class="skill-badge-yrs">1+ yr</span>
-			</div>
-
-          <!-- Power BI: no devicon → fa-chart-bar in official Power BI yellow -->
-          <div class="skill-badge">
-            <i class="fas fa-chart-bar" style="color:#f2c811"></i>
-            <span class="skill-badge-name">Power BI</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-flask-original colored"></i>
-            <span class="skill-badge-name">Flask</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- Streamlit -->
-			<div class="skill-badge">
-			  <i class="fas fa-fire" style="color:#ff4b4b"></i>
-			  <span class="skill-badge-name">Streamlit</span>
-			  <span class="skill-badge-yrs">1+ yr</span>
-			</div>
-
-          <div class="skill-badge">
-            <i class="devicon-plotly-plain colored"></i>
-            <span class="skill-badge-name">Plotly</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
-          </div>
-
-          <div class="skill-badge">
-            <i class="devicon-matplotlib-plain colored"></i>
-            <span class="skill-badge-name">Matplotlib</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
-          </div>
-
-          <!-- Seaborn: no devicon → fa-water fits the ocean/wave name origin -->
-          <div class="skill-badge">
-            <i class="fas fa-water" style="color:#4c72b0"></i>
-            <span class="skill-badge-name">Seaborn</span>
-            <span class="skill-badge-yrs">3+ yrs</span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ══ ROW 4 — full width ══ -->
-
-      <!-- Cloud & HPC -->
-      <div class="skill-category full-width">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon red"><i class="fas fa-cloud"></i></div>
-          <span class="skill-cat-title">Cloud &amp; HPC Platforms</span>
-          <span class="skill-cat-count">2 platforms</span>
-        </div>
-        <div class="skill-badges">
-
-          <div class="skill-badge">
-            <i class="devicon-azure-plain colored"></i>
-            <span class="skill-badge-name">Microsoft Azure</span>
-            <span class="skill-badge-yrs">1+ yr</span>
-          </div>
-
-          <!-- NVIDIA: no devicon → fa-microchip in NVIDIA green -->
-          <div class="skill-badge">
-            <i class="fas fa-microchip" style="color:#76b900"></i>
-            <span class="skill-badge-name">Large-Scale GPU Computing</span>
-            <span class="skill-badge-yrs">2+ yrs</span>
-          </div>
-
-        </div>
-      </div>
-
-    </div><!-- /skills-cat-grid -->
-
-    <!-- ── Domain Tag Clouds ── -->
-    <div class="expertise-grid fade-up">
-      <div class="exp-group">
-        <h3>Biostatistics &amp; Clinical Research</h3>
-        <div class="tag-cloud">
-          <span class="tag blue">Biostatistical Methods</span>
-          <span class="tag blue">Clinical Trials Design &amp; Analysis</span>
-          <span class="tag blue">Survival Analysis</span>
-          <span class="tag blue">Longitudinal Data Analysis</span>
-          <span class="tag blue">Medical Image Analysis</span>
-          <span class="tag blue">Epidemiological Methods</span>
-        </div>
-      </div>
-      <div class="exp-group">
-        <h3>Machine Learning &amp; AI</h3>
-        <div class="tag-cloud">
-          <span class="tag purple">Machine Learning</span>
-          <span class="tag purple">Deep Learning</span>
-          <span class="tag purple">Large Language Models (LLMs)</span>
-          <span class="tag purple">Natural Language Processing</span>
-          <span class="tag purple">Generative AI</span>
-          <span class="tag purple">Transformer Architectures</span>
-          <span class="tag purple">LLM Fine-Tuning &amp; RAG</span>
-          <span class="tag purple">Agentic AI Systems</span>
-          <span class="tag purple">Explainable AI (XAI)</span>
-          <span class="tag purple">Multimodal Fusion</span>
-          <span class="tag purple">Computer Vision</span>
-          <span class="tag purple">Time-Series Forecasting</span>
-          <span class="tag purple">Anomaly Detection</span>
-        </div>
-      </div>
-      <div class="exp-group">
-        <h3>Computational &amp; Genomic Research</h3>
-        <div class="tag-cloud">
-          <span class="tag teal">Statistical Genetics &amp; Genomics</span>
-          <span class="tag teal">Bioinformatics</span>
-          <span class="tag teal">Multi-Omics Analysis</span>
-          <span class="tag teal">Genotype–Phenotype Association</span>
-        </div>
-      </div>
+      </div><!-- /skill-bubble-box -->
     </div>
 
   </div>
 </section>
+
 
 
 <!-- AWARDS -->
