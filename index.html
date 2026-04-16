@@ -532,7 +532,7 @@ section{padding:90px 0}
 
 /* ── ABOUT ── */
 #about{background:var(--body-bg)}
-.about-inner{display:grid;grid-template-columns:1fr 400px;gap:52px;align-items:start}
+.about-inner{display:flex;flex-direction:column;gap:36px}
 .about-text p{color:var(--muted);margin-bottom:14px;font-size:.95em;line-height:1.78}
 .about-text p strong{color:var(--text)}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -543,59 +543,76 @@ section{padding:90px 0}
 .about-stat-num{font-size:2em;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:6px}
 .about-stat-label{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
 
-/* ── SKILL BUBBLE BOX ── */
+/* ── SKILL WAVE GRID ── */
+@keyframes sb-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-9px)}
+}
 .skill-bubble-box{
-  position:relative;width:100%;height:420px;
+  width:100%;
   border-radius:var(--radius);
   background:var(--glass);
   border:1px solid var(--glass-border);
-  overflow:hidden;
+  padding:22px 20px 14px;
 }
 .sbb-legend{
-  position:absolute;bottom:0;left:0;right:0;
-  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
-  padding:7px 10px;
-  background:linear-gradient(0deg,var(--navy2) 60%,transparent);
-  z-index:30;pointer-events:none;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
+  margin-top:16px;padding-top:12px;
+  border-top:1px solid var(--glass-border);
 }
 .sbb-legend span{
-  display:flex;align-items:center;gap:4px;
-  font-size:.6em;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.05em;
+  display:flex;align-items:center;gap:5px;
+  font-size:.68em;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;
 }
-.sbb-legend-dot{
-  width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;
+.sbb-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.sbb-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(82px,1fr));
+  gap:10px;
 }
 .skill-bubble{
-  position:absolute;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;width:68px;height:68px;
+  gap:6px;padding:14px 6px 12px;
   border-radius:12px;
   background:var(--glass);
   border:1px solid var(--glass-border);
   cursor:default;user-select:none;
-  transition:transform .18s,box-shadow .18s,border-color .18s;
-  z-index:1;
+  animation:sb-float 3.4s ease-in-out infinite;
+  transition:box-shadow .22s,border-color .22s,background .22s;
+  position:relative;overflow:hidden;
 }
-.skill-bubble i{font-size:1.35em;line-height:1;pointer-events:none}
+/* shimmer sweep on hover */
+.skill-bubble::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);
+  transform:translateX(-100%);transition:transform .45s;
+}
+.skill-bubble:hover::before{transform:translateX(100%)}
+.skill-bubble:hover{animation-play-state:paused;transform:translateY(-5px) scale(1.07)}
+.skill-bubble i{font-size:1.5em;line-height:1;pointer-events:none}
 .skill-bubble .sb-name{
-  font-size:.47em;font-weight:700;text-align:center;
-  color:var(--muted);line-height:1.2;
-  width:62px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:.58em;font-weight:700;text-align:center;
+  color:var(--muted);line-height:1.25;
+  width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;
 }
-.skill-bubble:hover{transform:scale(1.22)!important;z-index:25}
-/* category glow colours */
-.skill-bubble.cat-ml  {border-color:rgba(79,142,247,.25)}
-.skill-bubble.cat-ml:hover  {border-color:rgba(79,142,247,.9);box-shadow:0 0 18px rgba(79,142,247,.45)}
-.skill-bubble.cat-llm {border-color:rgba(245,158,11,.25)}
-.skill-bubble.cat-llm:hover {border-color:rgba(245,158,11,.9);box-shadow:0 0 18px rgba(245,158,11,.45)}
-.skill-bubble.cat-stats{border-color:rgba(6,182,212,.25)}
-.skill-bubble.cat-stats:hover{border-color:rgba(6,182,212,.9);box-shadow:0 0 18px rgba(6,182,212,.45)}
-.skill-bubble.cat-dev {border-color:rgba(124,58,237,.25)}
-.skill-bubble.cat-dev:hover {border-color:rgba(124,58,237,.9);box-shadow:0 0 18px rgba(124,58,237,.45)}
-.skill-bubble.cat-viz {border-color:rgba(34,197,94,.25)}
-.skill-bubble.cat-viz:hover {border-color:rgba(34,197,94,.9);box-shadow:0 0 18px rgba(34,197,94,.45)}
+/* category accent + glow */
+.skill-bubble.cat-ml   {border-color:rgba(79,142,247,.28)}
+.skill-bubble.cat-ml::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(79,142,247,.6)}
+.skill-bubble.cat-ml:hover{border-color:rgba(79,142,247,.8);box-shadow:0 8px 24px rgba(79,142,247,.3);background:rgba(79,142,247,.06)}
+.skill-bubble.cat-llm  {border-color:rgba(245,158,11,.28)}
+.skill-bubble.cat-llm::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(245,158,11,.6)}
+.skill-bubble.cat-llm:hover{border-color:rgba(245,158,11,.8);box-shadow:0 8px 24px rgba(245,158,11,.3);background:rgba(245,158,11,.06)}
+.skill-bubble.cat-stats{border-color:rgba(6,182,212,.28)}
+.skill-bubble.cat-stats::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(6,182,212,.6)}
+.skill-bubble.cat-stats:hover{border-color:rgba(6,182,212,.8);box-shadow:0 8px 24px rgba(6,182,212,.3);background:rgba(6,182,212,.06)}
+.skill-bubble.cat-dev  {border-color:rgba(124,58,237,.28)}
+.skill-bubble.cat-dev::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(124,58,237,.6)}
+.skill-bubble.cat-dev:hover{border-color:rgba(124,58,237,.8);box-shadow:0 8px 24px rgba(124,58,237,.3);background:rgba(124,58,237,.06)}
+.skill-bubble.cat-viz  {border-color:rgba(34,197,94,.28)}
+.skill-bubble.cat-viz::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:rgba(34,197,94,.6)}
+.skill-bubble.cat-viz:hover{border-color:rgba(34,197,94,.8);box-shadow:0 8px 24px rgba(34,197,94,.3);background:rgba(34,197,94,.06)}
 
 /* ── AWARDS ── */
 #awards{background:var(--body-bg)}
@@ -778,8 +795,6 @@ footer::before{
 ══════════════════════════════════════════ */
 @media(max-width:1024px){
   .hcard{grid-template-columns:200px 1fr}
-  .about-inner{grid-template-columns:1fr}
-  .skill-bubble-box{height:340px}
   .awards-grid{grid-template-columns:repeat(2,1fr)}
 }
 
@@ -1028,8 +1043,9 @@ footer::before{
         <p>I pursue a <strong>Ph.D. in Computer Engineering</strong> at Western University while teaching <strong>15 graduate-level Deep Learning courses</strong> at Fanshawe College (CNNs, RNNs, Vision Transformers, Diffusion Models, BERT, GPT, XAI) and conducting applied research at the London Health Sciences Centre on 180K+ EHR records. Recipient of the <strong>Danny Ho Graduate Scholarship ($10,000)</strong> — awarded to only two students annually across the entire Faculty of Engineering.</p>
       </div>
 
-      <!-- floating skill bubbles -->
-      <div class="skill-bubble-box" id="skill-bubble-box">
+      <!-- skill wave grid -->
+      <div class="skill-bubble-box">
+        <div class="sbb-grid" id="skill-bubble-box">
 
         <!-- ML / Deep Learning -->
         <div class="skill-bubble cat-ml"><i class="devicon-python-plain colored"></i><span class="sb-name">Python</span></div>
@@ -1078,15 +1094,16 @@ footer::before{
         <div class="skill-bubble cat-viz"><i class="devicon-flask-original colored"></i><span class="sb-name">Flask</span></div>
         <div class="skill-bubble cat-viz"><i class="fas fa-fire" style="color:#ff4b4b"></i><span class="sb-name">Streamlit</span></div>
 
-        <!-- colour legend -->
+        </div><!-- /sbb-grid -->
+
         <div class="sbb-legend">
-          <span><i class="sbb-legend-dot" style="background:#4f8ef7"></i>ML / DL</span>
+          <span><i class="sbb-legend-dot" style="background:#4f8ef7"></i>ML / Deep Learning</span>
           <span><i class="sbb-legend-dot" style="background:#f59e0b"></i>GenAI / LLM</span>
           <span><i class="sbb-legend-dot" style="background:#06b6d4"></i>Statistics</span>
-          <span><i class="sbb-legend-dot" style="background:#7c3aed"></i>DevOps</span>
+          <span><i class="sbb-legend-dot" style="background:#7c3aed"></i>DevOps &amp; Tools</span>
           <span><i class="sbb-legend-dot" style="background:#22c55e"></i>Viz &amp; Deploy</span>
         </div>
-      </div>
+      </div><!-- /skill-bubble-box -->
 
     </div>
   </div>
@@ -1964,55 +1981,20 @@ closeBtn.addEventListener('click', () => modal.classList.remove('active'));
 modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('active'); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') { modal.classList.remove('active'); closeDrawer(); } });
 
-/* ─── SKILL BUBBLE FLOAT ─── */
+/* ─── SKILL WAVE DELAYS ─── */
 (function(){
-  const box=document.getElementById('skill-bubble-box');
-  if(!box) return;
-  const BW=68,BH=68;
-  const bubbles=Array.from(box.querySelectorAll('.skill-bubble'));
-  const state=[];
-
-  function init(){
-    const W=box.clientWidth, H=box.clientHeight;
-    bubbles.forEach((b,i)=>{
-      if(!state[i]){
-        const spd=0.28+Math.random()*0.32;
-        const ang=Math.random()*Math.PI*2;
-        state[i]={
-          x:Math.random()*(W-BW),
-          y:Math.random()*(H-BH-24),
-          vx:Math.cos(ang)*spd,
-          vy:Math.sin(ang)*spd
-        };
-      }
-      b.style.left=state[i].x+'px';
-      b.style.top =state[i].y+'px';
-    });
-  }
-
-  function tick(){
-    const W=box.clientWidth, H=box.clientHeight, floor=H-BH-28;
-    bubbles.forEach((b,i)=>{
-      if(b._paused) return;
-      const s=state[i];
-      s.x+=s.vx; s.y+=s.vy;
-      if(s.x<=0)       { s.x=0;       s.vx= Math.abs(s.vx); }
-      if(s.y<=0)       { s.y=0;       s.vy= Math.abs(s.vy); }
-      if(s.x+BW>=W)    { s.x=W-BW;   s.vx=-Math.abs(s.vx); }
-      if(s.y>=floor)   { s.y=floor;   s.vy=-Math.abs(s.vy); }
-      b.style.left=s.x+'px';
-      b.style.top =s.y+'px';
-    });
-    requestAnimationFrame(tick);
-  }
-
-  bubbles.forEach(b=>{
-    b.addEventListener('mouseenter',()=>{ b._paused=true; });
-    b.addEventListener('mouseleave',()=>{ b._paused=false; });
+  const grid=document.getElementById('skill-bubble-box');
+  if(!grid) return;
+  const bubbles=Array.from(grid.querySelectorAll('.skill-bubble'));
+  /* stagger delay: left-to-right wave, wrapping by column position */
+  const cols=Math.round(grid.clientWidth/92)||8;
+  bubbles.forEach((b,i)=>{
+    const col=i%cols, row=Math.floor(i/cols);
+    const delay=((col+row)*0.12).toFixed(2);
+    b.style.animationDelay=delay+'s';
+    /* each card gets a slightly different period for organic feel */
+    b.style.animationDuration=(3.2+Math.random()*1.4).toFixed(2)+'s';
   });
-
-  setTimeout(()=>{ init(); tick(); },250);
-  window.addEventListener('resize',()=>{ init(); });
 })();
 
 /* ─── TYPING ANIMATION ─── */
