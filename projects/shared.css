@@ -383,8 +383,8 @@ a { color: inherit; text-decoration: none; }
 .sidebar-proj-img-card { padding: 0 !important; overflow: hidden; }
 .sidebar-proj-img {
   width: 100%; display: block;
-  height: 190px; object-fit: cover;
-  border-radius: var(--radius);
+  height: 160px; object-fit: cover;
+  object-position: center top;
 }
 
 
