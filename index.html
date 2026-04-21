@@ -1,6 +1,6 @@
 <!-- This is main index.html -->
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1606,7 +1606,7 @@ const allToggles = [
   { btn: document.getElementById('themeToggle2'),      lbl: document.getElementById('toggleLabel2') },
   { btn: document.getElementById('themeToggleMobile'), lbl: document.getElementById('toggleLabelMobile') },
 ];
-const savedTheme = localStorage.getItem('mn-theme') || 'dark';
+const savedTheme = localStorage.getItem('mn-theme') || 'light';
 html.setAttribute('data-theme', savedTheme);
 allToggles.forEach(t => { if(t.lbl) t.lbl.textContent = savedTheme === 'dark' ? 'Light' : 'Dark'; });
 

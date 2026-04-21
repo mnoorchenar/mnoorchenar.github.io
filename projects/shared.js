@@ -9,7 +9,7 @@
    ▶ THEME FLICKER: also add this ONE line to every page's <head>
      BEFORE any <link rel="stylesheet">:
        <script>document.documentElement.setAttribute('data-theme',
-         localStorage.getItem('mn-theme') || 'dark')</script>
+         localStorage.getItem('mn-theme') || 'light')</script>
 
    Optionally on <body>:
      data-footer-note="Surgical Endoscopy · DOI 10.1007/..."
@@ -84,7 +84,7 @@
          (before first paint, before fragments load)
   ───────────────────────────────────────────*/
   const html  = document.documentElement;
-  const saved = localStorage.getItem('mn-theme') || 'dark';
+  const saved = localStorage.getItem('mn-theme') || 'light';
   html.setAttribute('data-theme', saved);
 
 
