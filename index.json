@@ -6,6 +6,10 @@
       {
         "name": "CNN Architecture — Layer Ordering & Dimension Problems",
         "html": "CNN/01. CNN Architecture — Layer Ordering & Dimension Problems.html"
+      },
+      {
+        "name": "CNN Parameter Counting — Section 1 Mastering Parameter Calculation Across 10 Architectures",
+        "html": "CNN/02. CNN Parameter Counting — Section 1 Mastering Parameter Calculation Across 10 Architectures.html"
       }
     ],
     "subfolders": []
