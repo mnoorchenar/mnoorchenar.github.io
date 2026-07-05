@@ -562,7 +562,7 @@ function openViewer(href, name, folderName) {
   viewerIframe.src = href;
   viewer.classList.add('open');
   document.body.style.overflow = 'hidden';
-  history.pushState({ viewer: true }, '', '');
+  history.pushState({ viewer: true, href, name, folderName }, '', '#' + encodeURIComponent(href));
 }
 
 function closeViewer() {
@@ -687,6 +687,11 @@ fetch('index.json')
     renderCategories(data);
     searchIndex = buildIndex(data);
     setTimeout(() => document.getElementById('stats-bar').classList.add('visible'), 120);
+    if (location.hash) {
+      const href = decodeURIComponent(location.hash.slice(1));
+      const entry = searchIndex.find(f => f.html === href);
+      if (entry) openViewer(entry.html, entry.name, entry.cat);
+    }
   })
   .catch(() => {
     document.getElementById('category-grid').innerHTML = `
