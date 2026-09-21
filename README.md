@@ -8,7 +8,7 @@ For inquiries regarding usage, licensing, or permissions, please contact mohamma
 # 👋 Hi, I'm Mohammad Noorchenarboo!
 
 🎯 **Biostatistician | Senior Data Scientist | AI Researcher**  
-📍 Ontario, Canada | ✉️ mnoorchenarboo@gmail.com
+📍 Toronto, Ontario, Canada | ✉️ mnoorchenarboo@gmail.com
 
 ---
 
