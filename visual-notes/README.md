@@ -1,10 +1,10 @@
-# Visual Notes
+# Cheat Sheets
 
-Picture-only concept summaries / cheat sheets, browsed as a zoomable slideshow.
+Concept summaries / cheat sheets, browsed as a slideshow. Each item can be a picture (zoomable) or a full HTML page (rendered full-size, scrolls internally).
 
 ## Adding a new section
 
-1. Create a folder for the images: `visual-notes/images/<section-id>/` (e.g. `python-basics`), and drop the image files in it (`01.png`, `02.png`, …).
+1. Create a folder for the items: `visual-notes/images/<section-id>/` (e.g. `python-basics`), and drop the image or `.html` files in it (`01.png`, `02.html`, …).
 2. Add an entry to `sections.json`:
 
 ```json

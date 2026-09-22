@@ -3,7 +3,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Visual Notes · Mohammad Noorchenarboo</title>
+<title>Cheat Sheets · Mohammad Noorchenarboo</title>
 <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'light')</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -53,7 +53,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 <body>
 
 <div class="vwr-topbar">
-  <a href="index.html" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Visual Notes</span></a>
+  <a href="index.html" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Cheat Sheets</span></a>
   <div class="vwr-title"><span id="vwrTitle">Loading…</span><span class="vwr-caption" id="vwrCaption"></span></div>
   <div class="vwr-nav-group">
     <button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous item"><i class="fas fa-chevron-left"></i></button>
@@ -256,18 +256,18 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   fetch('sections.json').then(r => r.json()).then(data => {
     const section = (data.sections || []).find(s => s.id === sectionId);
     if (!section || !(section.images || []).length) {
-      showMsg('<i class="fas fa-image"></i><div>This section isn\'t available yet.</div><a href="index.html">← Back to Visual Notes</a>');
+      showMsg('<i class="fas fa-image"></i><div>This section isn\'t available yet.</div><a href="index.html">← Back to Cheat Sheets</a>');
       return;
     }
     images = section.images;
     captions = section.captions || [];
     document.getElementById('vwrTitle').textContent = section.title;
-    document.title = section.title + ' · Visual Notes';
+    document.title = section.title + ' · Cheat Sheets';
     render();
     setTimeout(() => hint.classList.add('show'), 300);
     setTimeout(() => hint.classList.remove('show'), 3500);
   }).catch(() => {
-    showMsg('<i class="fas fa-triangle-exclamation"></i><div>Couldn\'t load this section.</div><a href="index.html">← Back to Visual Notes</a>');
+    showMsg('<i class="fas fa-triangle-exclamation"></i><div>Couldn\'t load this section.</div><a href="index.html">← Back to Cheat Sheets</a>');
   });
 })();
 </script>
