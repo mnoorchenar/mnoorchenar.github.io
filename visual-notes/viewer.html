@@ -21,8 +21,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 .vwr-stage{position:absolute;top:60px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
 .vwr-stage.zoomed{cursor:grab}
 .vwr-stage:active{cursor:grabbing}
+.vwr-stage.vwr-doc-mode{touch-action:auto;cursor:default}
 #vwrImg{max-width:92vw;max-height:calc(88vh - 60px);user-select:none;-webkit-user-drag:none;will-change:transform;transition:transform .12s ease-out;box-shadow:0 20px 60px rgba(0,0,0,.35);border-radius:6px}
 #vwrImg.dragging{transition:none}
+#vwrFrame{width:92vw;height:calc(88vh - 60px);max-width:1100px;border:none;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.35);background:#fff}
 
 .vwr-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:9;width:46px;height:46px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1em;backdrop-filter:blur(6px)}
 .vwr-arrow:hover{background:var(--card-hover-bg,rgba(245,158,11,.15))}
@@ -57,6 +59,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 
 <div class="vwr-stage" id="vwrStage">
   <img id="vwrImg" alt="" draggable="false">
+  <iframe id="vwrFrame" title="" style="display:none"></iframe>
 </div>
 
 <button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
@@ -77,8 +80,12 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   const sectionId = params.get('s');
   const stage = document.getElementById('vwrStage');
   const img = document.getElementById('vwrImg');
+  const frame = document.getElementById('vwrFrame');
+  const zoombar = document.querySelector('.vwr-zoombar');
   const msg = document.getElementById('vwrMsg');
   const hint = document.getElementById('vwrHint');
+
+  const isDoc = src => /\.html?($|\?)/i.test(src);
 
   let images = [], captions = [], idx = 0, scale = 1, tx = 0, ty = 0;
   let dragging = false, dragStartX = 0, dragStartY = 0, dragOrigX = 0, dragOrigY = 0;
@@ -97,7 +104,20 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
     document.getElementById('vwrPrev').disabled = idx <= 0;
     document.getElementById('vwrNext').disabled = idx >= total - 1;
     resetZoom(false);
-    img.src = images[idx];
+    const src = images[idx];
+    const doc = isDoc(src);
+    stage.classList.toggle('vwr-doc-mode', doc);
+    zoombar.style.display = doc ? 'none' : 'flex';
+    if (doc) {
+      img.style.display = 'none';
+      frame.style.display = 'block';
+      frame.src = src;
+    } else {
+      frame.style.display = 'none';
+      frame.src = 'about:blank';
+      img.style.display = 'block';
+      img.src = src;
+    }
     const caption = document.getElementById('vwrCaption');
     caption.textContent = captions[idx] ? ` · ${captions[idx]}` : '';
   }
@@ -151,16 +171,20 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 
   // Mouse wheel zoom
   stage.addEventListener('wheel', e => {
+    if (stage.classList.contains('vwr-doc-mode')) return;
     e.preventDefault();
     setScale(scale - e.deltaY * 0.0015 * scale);
   }, { passive: false });
 
   // Double-click to toggle zoom
-  stage.addEventListener('dblclick', () => setScale(scale > 1 ? 1 : 2.4));
+  stage.addEventListener('dblclick', () => {
+    if (stage.classList.contains('vwr-doc-mode')) return;
+    setScale(scale > 1 ? 1 : 2.4);
+  });
 
   // Mouse drag-to-pan (only when zoomed)
   stage.addEventListener('mousedown', e => {
-    if (scale <= 1) return;
+    if (stage.classList.contains('vwr-doc-mode') || scale <= 1) return;
     dragging = true;
     dragStartX = e.clientX; dragStartY = e.clientY;
     dragOrigX = tx; dragOrigY = ty;
