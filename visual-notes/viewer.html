@@ -27,10 +27,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 #vwrFrameWrap{width:92vw;height:calc(88vh - 60px);max-width:1100px;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.35);background:#fff;overflow:hidden;position:relative}
 #vwrFrame{border:none;position:absolute;top:0;left:0;transform-origin:top left;background:#fff}
 
-.vwr-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:9;width:46px;height:46px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1em;backdrop-filter:blur(6px)}
+.vwr-nav-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.vwr-arrow{width:32px;height:32px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.95em}
 .vwr-arrow:hover{background:var(--card-hover-bg,rgba(245,158,11,.15))}
-.vwr-arrow.prev{left:14px}
-.vwr-arrow.next{right:14px}
 .vwr-arrow[disabled]{opacity:.25;pointer-events:none}
 
 .vwr-zoombar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:9;display:flex;gap:8px;background:var(--bar-bg);border:1px solid var(--glass-border);border-radius:999px;padding:8px 10px;backdrop-filter:blur(8px)}
@@ -45,8 +44,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 .vwr-msg a{color:var(--gold)}
 
 @media (max-width:640px){
-  .vwr-arrow{width:38px;height:38px;font-size:.95em}
+  .vwr-arrow{width:28px;height:28px;font-size:.85em}
   .vwr-title{font-size:.85em}
+  .vwr-caption{display:none}
 }
 </style>
 </head>
@@ -55,7 +55,11 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 <div class="vwr-topbar">
   <a href="index.html" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Visual Notes</span></a>
   <div class="vwr-title"><span id="vwrTitle">Loading…</span><span class="vwr-caption" id="vwrCaption"></span></div>
-  <div class="vwr-counter" id="vwrCounter"></div>
+  <div class="vwr-nav-group">
+    <button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous item"><i class="fas fa-chevron-left"></i></button>
+    <div class="vwr-counter" id="vwrCounter"></div>
+    <button class="vwr-arrow next" id="vwrNext" aria-label="Next item"><i class="fas fa-chevron-right"></i></button>
+  </div>
 </div>
 
 <div class="vwr-stage" id="vwrStage">
@@ -64,9 +68,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
     <iframe id="vwrFrame" title=""></iframe>
   </div>
 </div>
-
-<button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
-<button class="vwr-arrow next" id="vwrNext" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
 
 <div class="vwr-zoombar">
   <button id="vwrZoomOut" aria-label="Zoom out"><i class="fas fa-minus"></i></button>
