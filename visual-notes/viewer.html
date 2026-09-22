@@ -1,0 +1,242 @@
+<!-- This is visual-notes/viewer.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visual Notes · Mohammad Noorchenarboo</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'light')</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23070d1f'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Segoe UI,system-ui,sans-serif' font-weight='900' font-size='26' fill='url(%23g)'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root,[data-theme="dark"]{--body-bg:#070d1f;--text:#e2e8f0;--muted:#8892a4;--gold:#f59e0b;--glass:rgba(255,255,255,0.06);--glass-border:rgba(255,255,255,0.12);--bar-bg:rgba(7,13,31,.72)}
+[data-theme="light"]{--body-bg:#eef1f8;--text:#1e2635;--muted:#5b6578;--gold:#b45309;--glass:rgba(20,30,60,0.06);--glass-border:rgba(20,30,60,0.14);--bar-bg:rgba(238,241,248,.8)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
+
+.vwr-topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:var(--bar-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--glass-border)}
+.vwr-back{color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:600;font-size:.95em;white-space:nowrap}
+.vwr-title{flex:1;text-align:center;font-weight:700;font-size:.95em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px}
+.vwr-counter{color:var(--muted);font-size:.85em;white-space:nowrap}
+
+.vwr-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+.vwr-stage.zoomed{cursor:grab}
+.vwr-stage:active{cursor:grabbing}
+#vwrImg{max-width:92vw;max-height:88vh;user-select:none;-webkit-user-drag:none;will-change:transform;transition:transform .12s ease-out;box-shadow:0 20px 60px rgba(0,0,0,.35);border-radius:6px}
+#vwrImg.dragging{transition:none}
+
+.vwr-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:9;width:46px;height:46px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1em;backdrop-filter:blur(6px)}
+.vwr-arrow:hover{background:var(--card-hover-bg,rgba(245,158,11,.15))}
+.vwr-arrow.prev{left:14px}
+.vwr-arrow.next{right:14px}
+.vwr-arrow[disabled]{opacity:.25;pointer-events:none}
+
+.vwr-zoombar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:9;display:flex;gap:8px;background:var(--bar-bg);border:1px solid var(--glass-border);border-radius:999px;padding:8px 10px;backdrop-filter:blur(8px)}
+.vwr-zoombar button{width:38px;height:38px;border-radius:50%;border:none;background:var(--glass);color:var(--text);cursor:pointer;font-size:1em}
+.vwr-zoombar button:hover{background:rgba(245,158,11,.2)}
+.vwr-hint{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:9;color:var(--muted);font-size:.78em;background:var(--bar-bg);padding:5px 12px;border-radius:999px;opacity:0;transition:opacity .4s;pointer-events:none}
+.vwr-hint.show{opacity:1}
+
+.vwr-msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);text-align:center;padding:20px}
+.vwr-msg i{font-size:2.2em;color:var(--gold);opacity:.7}
+.vwr-msg a{color:var(--gold)}
+
+@media (max-width:640px){
+  .vwr-arrow{width:38px;height:38px;font-size:.95em}
+  .vwr-title{font-size:.85em}
+}
+</style>
+</head>
+<body>
+
+<div class="vwr-topbar">
+  <a href="index.html" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Visual Notes</span></a>
+  <div class="vwr-title" id="vwrTitle">Loading…</div>
+  <div class="vwr-counter" id="vwrCounter"></div>
+</div>
+
+<div class="vwr-stage" id="vwrStage">
+  <img id="vwrImg" alt="" draggable="false">
+</div>
+
+<button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+<button class="vwr-arrow next" id="vwrNext" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+
+<div class="vwr-zoombar">
+  <button id="vwrZoomOut" aria-label="Zoom out"><i class="fas fa-minus"></i></button>
+  <button id="vwrZoomReset" aria-label="Reset zoom"><i class="fas fa-expand"></i></button>
+  <button id="vwrZoomIn" aria-label="Zoom in"><i class="fas fa-plus"></i></button>
+</div>
+<div class="vwr-hint" id="vwrHint">Use ← → to navigate · scroll or pinch to zoom</div>
+
+<div class="vwr-msg" id="vwrMsg" style="display:none"></div>
+
+<script>
+(function(){
+  const params = new URLSearchParams(location.search);
+  const sectionId = params.get('s');
+  const stage = document.getElementById('vwrStage');
+  const img = document.getElementById('vwrImg');
+  const msg = document.getElementById('vwrMsg');
+  const hint = document.getElementById('vwrHint');
+
+  let images = [], idx = 0, scale = 1, tx = 0, ty = 0;
+  let dragging = false, dragStartX = 0, dragStartY = 0, dragOrigX = 0, dragOrigY = 0;
+  let pinchStartDist = 0, pinchStartScale = 1;
+
+  function showMsg(html) {
+    msg.innerHTML = html;
+    msg.style.display = 'flex';
+    stage.style.display = 'none';
+    document.querySelectorAll('.vwr-arrow,.vwr-zoombar').forEach(el => el.style.display = 'none');
+  }
+
+  function render() {
+    const total = images.length;
+    document.getElementById('vwrCounter').textContent = total ? `${idx + 1} / ${total}` : '';
+    document.getElementById('vwrPrev').disabled = idx <= 0;
+    document.getElementById('vwrNext').disabled = idx >= total - 1;
+    resetZoom(false);
+    img.src = images[idx];
+  }
+
+  function applyTransform(withTransition) {
+    img.classList.toggle('dragging', !withTransition);
+    img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+  }
+
+  function clampPan() {
+    const rect = img.getBoundingClientRect();
+    const maxX = Math.max(0, (rect.width - stage.clientWidth) / 2 + 40);
+    const maxY = Math.max(0, (rect.height - stage.clientHeight) / 2 + 40);
+    tx = Math.max(-maxX, Math.min(maxX, tx));
+    ty = Math.max(-maxY, Math.min(maxY, ty));
+  }
+
+  function setScale(next) {
+    scale = Math.max(1, Math.min(5, next));
+    if (scale === 1) { tx = 0; ty = 0; }
+    clampPan();
+    applyTransform(true);
+  }
+
+  function resetZoom(withTransition) {
+    scale = 1; tx = 0; ty = 0;
+    applyTransform(withTransition !== false);
+  }
+
+  function go(delta) {
+    const next = idx + delta;
+    if (next < 0 || next >= images.length) return;
+    idx = next;
+    render();
+  }
+
+  document.getElementById('vwrPrev').addEventListener('click', () => go(-1));
+  document.getElementById('vwrNext').addEventListener('click', () => go(1));
+  document.getElementById('vwrZoomIn').addEventListener('click', () => setScale(scale + 0.6));
+  document.getElementById('vwrZoomOut').addEventListener('click', () => setScale(scale - 0.6));
+  document.getElementById('vwrZoomReset').addEventListener('click', () => resetZoom(true));
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') go(-1);
+    else if (e.key === 'ArrowRight') go(1);
+    else if (e.key === '+' || e.key === '=') setScale(scale + 0.6);
+    else if (e.key === '-') setScale(scale - 0.6);
+    else if (e.key === '0') resetZoom(true);
+    else if (e.key === 'Escape') { if (scale > 1) resetZoom(true); }
+  });
+
+  // Mouse wheel zoom
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    setScale(scale - e.deltaY * 0.0015 * scale);
+  }, { passive: false });
+
+  // Double-click to toggle zoom
+  stage.addEventListener('dblclick', () => setScale(scale > 1 ? 1 : 2.4));
+
+  // Mouse drag-to-pan (only when zoomed)
+  stage.addEventListener('mousedown', e => {
+    if (scale <= 1) return;
+    dragging = true;
+    dragStartX = e.clientX; dragStartY = e.clientY;
+    dragOrigX = tx; dragOrigY = ty;
+  });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    tx = dragOrigX + (e.clientX - dragStartX);
+    ty = dragOrigY + (e.clientY - dragStartY);
+    applyTransform(false);
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    clampPan();
+    applyTransform(true);
+  });
+
+  // Touch: swipe to navigate, drag to pan, pinch to zoom
+  let touchStartX = 0, touchStartY = 0, swiping = false;
+
+  stage.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      pinchStartDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      pinchStartScale = scale;
+      swiping = false;
+    } else if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      dragOrigX = tx; dragOrigY = ty;
+      swiping = scale <= 1;
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setScale(pinchStartScale * (dist / pinchStartDist));
+    } else if (e.touches.length === 1) {
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      if (scale > 1) {
+        e.preventDefault();
+        tx = dragOrigX + dx; ty = dragOrigY + dy;
+        applyTransform(false);
+      }
+    }
+  }, { passive: false });
+
+  stage.addEventListener('touchend', e => {
+    if (scale > 1) { clampPan(); applyTransform(true); return; }
+    if (!swiping) return;
+    const dx = (e.changedTouches[0]?.clientX || touchStartX) - touchStartX;
+    if (Math.abs(dx) > 60) go(dx > 0 ? -1 : 1);
+  });
+
+  // Load manifest
+  fetch('sections.json').then(r => r.json()).then(data => {
+    const section = (data.sections || []).find(s => s.id === sectionId);
+    if (!section || !(section.images || []).length) {
+      showMsg('<i class="fas fa-image"></i><div>This section isn\'t available yet.</div><a href="index.html">← Back to Visual Notes</a>');
+      return;
+    }
+    images = section.images;
+    document.getElementById('vwrTitle').textContent = section.title;
+    document.title = section.title + ' · Visual Notes';
+    render();
+    setTimeout(() => hint.classList.add('show'), 300);
+    setTimeout(() => hint.classList.remove('show'), 3500);
+  }).catch(() => {
+    showMsg('<i class="fas fa-triangle-exclamation"></i><div>Couldn\'t load this section.</div><a href="index.html">← Back to Visual Notes</a>');
+  });
+})();
+</script>
+</body>
+</html>
