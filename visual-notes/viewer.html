@@ -18,10 +18,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 .vwr-title{flex:1;text-align:center;font-weight:700;font-size:.95em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px}
 .vwr-counter{color:var(--muted);font-size:.85em;white-space:nowrap}
 
-.vwr-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+.vwr-stage{position:absolute;top:60px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
 .vwr-stage.zoomed{cursor:grab}
 .vwr-stage:active{cursor:grabbing}
-#vwrImg{max-width:92vw;max-height:88vh;user-select:none;-webkit-user-drag:none;will-change:transform;transition:transform .12s ease-out;box-shadow:0 20px 60px rgba(0,0,0,.35);border-radius:6px}
+#vwrImg{max-width:92vw;max-height:calc(88vh - 60px);user-select:none;-webkit-user-drag:none;will-change:transform;transition:transform .12s ease-out;box-shadow:0 20px 60px rgba(0,0,0,.35);border-radius:6px}
 #vwrImg.dragging{transition:none}
 
 .vwr-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:9;width:46px;height:46px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1em;backdrop-filter:blur(6px)}
