@@ -1,3 +1,34 @@
 {
-  "sections": []
+  "sections": [
+    {
+      "id": "001-python",
+      "title": "Python",
+      "description": "Core Python concepts, one idea per picture",
+      "icon": "fa-brands fa-python",
+      "images": [
+        "images/001-python/01.png",
+        "images/001-python/02.png",
+        "images/001-python/03.png",
+        "images/001-python/04.png",
+        "images/001-python/05.png",
+        "images/001-python/06.png",
+        "images/001-python/07.png",
+        "images/001-python/08.png",
+        "images/001-python/09.png",
+        "images/001-python/10.png"
+      ],
+      "captions": [
+        "Python Variables and Type Conversion",
+        "Python Arithmetic Operations, Conditionals, and Loops",
+        "Python Functions, *args, **kwargs, Nested Functions, and Error Handling",
+        "Python Classes and Object-Oriented Programming",
+        "Python Lists",
+        "Python Strings",
+        "Python Dictionaries",
+        "Python Sets",
+        "Python Tuples",
+        "Python Pointers and References"
+      ]
+    }
+  ]
 }

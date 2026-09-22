@@ -35,6 +35,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 .vwr-zoombar button:hover{background:rgba(245,158,11,.2)}
 .vwr-hint{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:9;color:var(--muted);font-size:.78em;background:var(--bar-bg);padding:5px 12px;border-radius:999px;opacity:0;transition:opacity .4s;pointer-events:none}
 .vwr-hint.show{opacity:1}
+.vwr-caption{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:9;color:var(--text);font-size:.9em;font-weight:600;background:var(--bar-bg);padding:6px 16px;border-radius:999px;max-width:88vw;text-align:center;backdrop-filter:blur(8px);border:1px solid var(--glass-border)}
 
 .vwr-msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);text-align:center;padding:20px}
 .vwr-msg i{font-size:2.2em;color:var(--gold);opacity:.7}
@@ -67,6 +68,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   <button id="vwrZoomIn" aria-label="Zoom in"><i class="fas fa-plus"></i></button>
 </div>
 <div class="vwr-hint" id="vwrHint">Use ← → to navigate · scroll or pinch to zoom</div>
+<div class="vwr-caption" id="vwrCaption" style="display:none"></div>
 
 <div class="vwr-msg" id="vwrMsg" style="display:none"></div>
 
@@ -79,7 +81,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   const msg = document.getElementById('vwrMsg');
   const hint = document.getElementById('vwrHint');
 
-  let images = [], idx = 0, scale = 1, tx = 0, ty = 0;
+  let images = [], captions = [], idx = 0, scale = 1, tx = 0, ty = 0;
   let dragging = false, dragStartX = 0, dragStartY = 0, dragOrigX = 0, dragOrigY = 0;
   let pinchStartDist = 0, pinchStartScale = 1;
 
@@ -97,6 +99,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
     document.getElementById('vwrNext').disabled = idx >= total - 1;
     resetZoom(false);
     img.src = images[idx];
+    const caption = document.getElementById('vwrCaption');
+    if (captions[idx]) {
+      caption.textContent = captions[idx];
+      caption.style.display = 'block';
+    } else {
+      caption.style.display = 'none';
+    }
   }
 
   function applyTransform(withTransition) {
@@ -228,6 +237,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
       return;
     }
     images = section.images;
+    captions = section.captions || [];
     document.getElementById('vwrTitle').textContent = section.title;
     document.title = section.title + ' · Visual Notes';
     render();

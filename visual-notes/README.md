@@ -14,15 +14,22 @@ Picture-only concept summaries / cheat sheets, browsed as a zoomable slideshow.
       "id": "python-basics",
       "title": "Python Cheat Sheets",
       "description": "Syntax, data structures, and idioms",
-      "cover": "images/python-basics/01.png",
+      "icon": "fa-brands fa-python",
       "images": [
         "images/python-basics/01.png",
         "images/python-basics/02.png"
+      ],
+      "captions": [
+        "Variables and Type Conversion",
+        "Arithmetic, Conditionals, and Loops"
       ]
     }
   ]
 }
 ```
+
+- `icon` (optional): a Font Awesome class shown on the hub card instead of a cover thumbnail — handy for a language/topic mark (e.g. `fa-brands fa-python`, `fa-brands fa-js`). If omitted, falls back to `cover` (an image path), then a generic icon.
+- `captions` (optional): one string per image, shown as an overlay in the slideshow. Must line up positionally with `images`.
 
 3. Commit and push. The hub page (`index.html`) picks up new sections automatically; no other code changes needed.
 
