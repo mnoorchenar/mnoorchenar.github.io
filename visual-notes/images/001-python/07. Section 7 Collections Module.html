@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-y: auto;
+  height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { right: 12px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; right: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 7 Collections Module</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Section 7 Collections Module</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#section-7-collections-module" id="toc-section-7-collections-module">Section 7: Collections Module</a>
+<ul>
+<li><a href="#counter" id="toc-counter">7.1 Counter</a></li>
+<li><a href="#deque" id="toc-deque">7.2 deque</a></li>
+<li><a href="#defaultdict" id="toc-defaultdict">7.3 defaultdict</a></li>
+<li><a href="#namedtuple" id="toc-namedtuple">7.4 namedtuple</a></li>
+<li><a href="#ordereddict" id="toc-ordereddict">7.5 OrderedDict</a></li>
+</ul></li>
+</ul>
+</nav>
+<h2 id="section-7-collections-module">Section 7: Collections Module</h2>
+<p>The <code>collections</code> module provides specialized container
+types that extend the built-in <code>list</code>, <code>dict</code>, and
+<code>tuple</code> — each solving a common pattern more efficiently or
+more conveniently than doing it manually.</p>
+<h3 id="counter">7.1 Counter</h3>
+<p><code>Counter</code> is a dict subclass built specifically for
+counting hashable objects — the standard tool for frequency-count
+problems.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Counter(<span class="st">&quot;hello&quot;</span>)               <span class="co"># Counter({&#39;l&#39;: 2, &#39;h&#39;: 1, &#39;e&#39;: 1, &#39;o&#39;: 1})</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Counter([<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>])       <span class="co"># Counter({3: 3, 1: 2, 2: 1})</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Counter({<span class="st">&quot;a&quot;</span>: <span class="dv">3</span>, <span class="st">&quot;b&quot;</span>: <span class="dv">1</span>})         <span class="co"># build directly from an existing dict</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>c[<span class="st">&quot;l&quot;</span>]                           <span class="co"># 2 — access like a normal dict</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>c[<span class="st">&quot;z&quot;</span>]                           <span class="co"># 0 — missing key returns 0, NOT KeyError (key difference vs dict)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>c.most_common()                   <span class="co"># [(&#39;l&#39;, 2), (&#39;h&#39;, 1), (&#39;e&#39;, 1), (&#39;o&#39;, 1)] — sorted by count, descending</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>c.most_common(<span class="dv">2</span>)                  <span class="co"># top 2 most common: [(&#39;l&#39;, 2), (&#39;h&#39;, 1)]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># arithmetic between Counters</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">=</span> Counter([<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>])</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>c2 <span class="op">=</span> Counter([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>])</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">+</span> c2                          <span class="co"># Counter({1: 3, 2: 3}) — add counts</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">-</span> c2                          <span class="co"># Counter({1: 1}) — subtract counts, drops zero/negative results</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">&amp;</span> c2                          <span class="co"># Counter({1: 1, 2: 1}) — min of each count (intersection)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">|</span> c2                          <span class="co"># Counter({1: 2, 2: 2}) — max of each count (union)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>c.update([<span class="dv">1</span>, <span class="dv">4</span>])                  <span class="co"># add more counts in place</span></span></code></pre></div>
+<h3 id="deque">7.2 deque</h3>
+<p><code>deque</code> (double-ended queue) supports O(1) appends/pops
+from <em>both</em> ends, unlike a list, where operations at the front
+are O(n). It’s the correct structure for queues, and for sliding-window
+/ BFS problems.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> deque([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>d.append(<span class="dv">4</span>)                      <span class="co"># add to right end — O(1)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>d.appendleft(<span class="dv">0</span>)                   <span class="co"># add to left end — O(1)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>d.pop()                          <span class="co"># remove &amp; return from right end — O(1)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>d.popleft()                       <span class="co"># remove &amp; return from left end — O(1)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d.extend([<span class="dv">5</span>, <span class="dv">6</span>])                  <span class="co"># extend on the right</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>d.extendleft([<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>])              <span class="co"># extend on the left (note: reverses input order)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>d.rotate(<span class="dv">1</span>)                       <span class="co"># rotate right by 1: last element moves to front</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>d.rotate(<span class="op">-</span><span class="dv">1</span>)                      <span class="co"># rotate left by 1</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>deque(maxlen<span class="op">=</span><span class="dv">3</span>)                    <span class="co"># fixed-size deque — auto-drops from the opposite end when full</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># common use: BFS queue</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bfs(start):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">=</span> deque([start])</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> queue.popleft()      <span class="co"># O(1) — this is why deque beats list.pop(0) (O(n)) for BFS</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># process node, then queue.append(neighbor) for neighbors</span></span></code></pre></div>
+<h3 id="defaultdict">7.3 defaultdict</h3>
+<p><code>defaultdict</code> is a dict that auto-creates a default value
+for missing keys instead of raising <code>KeyError</code> — eliminates
+repetitive <code>if key not in d</code> checks, especially useful for
+building adjacency lists (graphs) and grouping items.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> defaultdict(<span class="bu">int</span>)               <span class="co"># missing keys default to 0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>d[<span class="st">&quot;a&quot;</span>] <span class="op">+=</span> <span class="dv">1</span>                       <span class="co"># no KeyError, works immediately: d = {&quot;a&quot;: 1}</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> defaultdict(<span class="bu">list</span>)              <span class="co"># missing keys default to an empty list</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>d[<span class="st">&quot;group1&quot;</span>].append(<span class="st">&quot;x&quot;</span>)            <span class="co"># d = {&quot;group1&quot;: [&quot;x&quot;]}, no need to initialize first</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> defaultdict(<span class="bu">set</span>)               <span class="co"># missing keys default to an empty set</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># common use: building a graph adjacency list</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> [(<span class="dv">1</span>, <span class="dv">2</span>), (<span class="dv">1</span>, <span class="dv">3</span>), (<span class="dv">2</span>, <span class="dv">3</span>)]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u, v <span class="kw">in</span> edges:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    graph[u].append(v)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    graph[v].append(u)             <span class="co"># undirected graph</span></span></code></pre></div>
+<h3 id="namedtuple">7.4 namedtuple</h3>
+<p><code>namedtuple</code> creates a lightweight, immutable class with
+named fields — like a tuple, but you can access fields by name instead
+of only by index, which makes code more readable (useful for
+representing coordinates, intervals, or simple records).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> namedtuple</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Point <span class="op">=</span> namedtuple(<span class="st">&quot;Point&quot;</span>, [<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> Point(<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p.x                              <span class="co"># 3 — access by name</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p[<span class="dv">0</span>]                              <span class="co"># 3 — still works by index too, since it&#39;s a tuple under the hood</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> p                          <span class="co"># unpacking still works</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>p._replace(x<span class="op">=</span><span class="dv">10</span>)                   <span class="co"># Point(x=10, y=4) — returns a NEW namedtuple (immutable, can&#39;t mutate in place)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>p._asdict()                        <span class="co"># {&#39;x&#39;: 3, &#39;y&#39;: 4} — convert to a regular dict</span></span></code></pre></div>
+<h3 id="ordereddict">7.5 OrderedDict</h3>
+<p>Since Python 3.7, regular dicts already preserve insertion order, so
+<code>OrderedDict</code> is rarely needed today — but it’s still useful
+when you specifically need to detect or manipulate order
+(e.g. reordering existing entries), which a regular dict doesn’t support
+directly.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>od <span class="op">=</span> OrderedDict()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>od[<span class="st">&quot;a&quot;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>od[<span class="st">&quot;b&quot;</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>od.move_to_end(<span class="st">&quot;a&quot;</span>)                <span class="co"># moves &quot;a&quot; to the end — regular dict has no equivalent</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>od.move_to_end(<span class="st">&quot;a&quot;</span>, last<span class="op">=</span><span class="va">False</span>)     <span class="co"># moves &quot;a&quot; to the front</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># common use: implementing an LRU cache manually (though functools.lru_cache is usually easier)</span></span></code></pre></div>
+<hr />
+<p>Ready for Section 8 (Heaps &amp; Priority Queues) whenever you say
+go.</p>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+    sidebar.appendChild(toc);
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    const scrollY = mainContent.scrollTop + 80;
+    let active = null;
+    tocLinks.forEach(a => {
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.offsetTop <= scrollY) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  mainContent.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>
