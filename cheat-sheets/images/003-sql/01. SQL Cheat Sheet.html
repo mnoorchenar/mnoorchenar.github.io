@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-y: auto;
+  height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { right: 12px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; right: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SQL Cheat Sheet</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SQL Cheat Sheet</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sql-cheat-sheet" id="toc-sql-cheat-sheet">SQL Cheat
+Sheet</a></li>
+<li><a href="#query-fundamentals" id="toc-query-fundamentals">1. Query
+Fundamentals</a>
+<ul>
+<li><a href="#anatomy-of-a-query-and-logical-execution-order" id="toc-anatomy-of-a-query-and-logical-execution-order">1.1 Anatomy of a
+Query and Logical Execution Order</a></li>
+<li><a href="#select-essentials" id="toc-select-essentials">1.2 SELECT
+Essentials</a></li>
+<li><a href="#sorting-and-limiting" id="toc-sorting-and-limiting">1.3
+Sorting and Limiting</a></li>
+</ul></li>
+<li><a href="#filtering-and-operators" id="toc-filtering-and-operators">2. Filtering and Operators</a>
+<ul>
+<li><a href="#comparison-and-logical-operators" id="toc-comparison-and-logical-operators">2.1 Comparison and Logical
+Operators</a></li>
+<li><a href="#ranges-membership-and-pattern-matching" id="toc-ranges-membership-and-pattern-matching">2.2 Ranges, Membership,
+and Pattern Matching</a></li>
+<li><a href="#null-logic" id="toc-null-logic">2.3 NULL Logic</a></li>
+</ul></li>
+<li><a href="#joins" id="toc-joins">3. Joins</a>
+<ul>
+<li><a href="#inner-and-outer-joins" id="toc-inner-and-outer-joins">3.1
+Inner and Outer Joins</a></li>
+<li><a href="#special-join-patterns" id="toc-special-join-patterns">3.2
+Special Join Patterns</a></li>
+<li><a href="#join-pitfalls" id="toc-join-pitfalls">3.3 Join
+Pitfalls</a></li>
+</ul></li>
+<li><a href="#aggregation-and-grouping" id="toc-aggregation-and-grouping">4. Aggregation and Grouping</a>
+<ul>
+<li><a href="#aggregate-functions" id="toc-aggregate-functions">4.1
+Aggregate Functions</a></li>
+<li><a href="#group-by-and-having" id="toc-group-by-and-having">4.2
+GROUP BY and HAVING</a></li>
+<li><a href="#advanced-grouping" id="toc-advanced-grouping">4.3 Advanced
+Grouping</a></li>
+</ul></li>
+<li><a href="#subqueries-ctes-and-set-operations" id="toc-subqueries-ctes-and-set-operations">5. Subqueries, CTEs, and Set
+Operations</a>
+<ul>
+<li><a href="#subqueries" id="toc-subqueries">5.1 Subqueries</a></li>
+<li><a href="#common-table-expressions" id="toc-common-table-expressions">5.2 Common Table Expressions</a></li>
+<li><a href="#set-operations" id="toc-set-operations">5.3 Set
+Operations</a></li>
+</ul></li>
+<li><a href="#window-functions" id="toc-window-functions">6. Window
+Functions</a>
+<ul>
+<li><a href="#window-syntax" id="toc-window-syntax">6.1 Window
+Syntax</a></li>
+<li><a href="#ranking-and-offset-functions" id="toc-ranking-and-offset-functions">6.2 Ranking and Offset
+Functions</a></li>
+<li><a href="#frames-and-common-patterns" id="toc-frames-and-common-patterns">6.3 Frames and Common
+Patterns</a></li>
+</ul></li>
+<li><a href="#data-modification-and-transactions" id="toc-data-modification-and-transactions">7. Data Modification and
+Transactions</a>
+<ul>
+<li><a href="#insert-update-delete" id="toc-insert-update-delete">7.1
+INSERT, UPDATE, DELETE</a></li>
+<li><a href="#upserts-and-returning-data" id="toc-upserts-and-returning-data">7.2 Upserts and Returning
+Data</a></li>
+<li><a href="#transactions" id="toc-transactions">7.3
+Transactions</a></li>
+</ul></li>
+<li><a href="#schema-definition-and-views" id="toc-schema-definition-and-views">8. Schema Definition and Views</a>
+<ul>
+<li><a href="#creating-tables-and-data-types" id="toc-creating-tables-and-data-types">8.1 Creating Tables and Data
+Types</a></li>
+<li><a href="#constraints-and-keys" id="toc-constraints-and-keys">8.2
+Constraints and Keys</a></li>
+<li><a href="#altering-schema-and-views" id="toc-altering-schema-and-views">8.3 Altering Schema and
+Views</a></li>
+</ul></li>
+<li><a href="#indexes-and-query-performance" id="toc-indexes-and-query-performance">9. Indexes and Query
+Performance</a>
+<ul>
+<li><a href="#index-fundamentals" id="toc-index-fundamentals">9.1 Index
+Fundamentals</a></li>
+<li><a href="#reading-execution-plans" id="toc-reading-execution-plans">9.2 Reading Execution Plans</a></li>
+<li><a href="#writing-fast-queries" id="toc-writing-fast-queries">9.3
+Writing Fast Queries</a></li>
+</ul></li>
+<li><a href="#functions-gotchas-and-dialect-differences" id="toc-functions-gotchas-and-dialect-differences">10. Functions,
+Gotchas, and Dialect Differences</a>
+<ul>
+<li><a href="#string-functions-across-engines" id="toc-string-functions-across-engines">10.1 String Functions Across
+Engines</a></li>
+<li><a href="#date-and-time-functions-across-engines" id="toc-date-and-time-functions-across-engines">10.2 Date and Time
+Functions Across Engines</a></li>
+<li><a href="#common-gotchas" id="toc-common-gotchas">10.3 Common
+Gotchas</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="sql-cheat-sheet">SQL Cheat Sheet</h1>
+<h1 id="query-fundamentals">1. Query Fundamentals</h1>
+<h2 id="anatomy-of-a-query-and-logical-execution-order">1.1 Anatomy of a
+Query and Logical Execution Order</h2>
+<p>SQL queries are written in one order but executed in a different
+logical order. This matters because it explains what is visible where —
+for example, why a column alias defined in SELECT cannot be used in
+WHERE, but can be used in ORDER BY.</p>
+<table>
+<thead>
+<tr>
+<th>Written order</th>
+<th>Logical execution order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT</td>
+<td>1. FROM (and JOINs)</td>
+</tr>
+<tr>
+<td>FROM</td>
+<td>2. WHERE</td>
+</tr>
+<tr>
+<td>WHERE</td>
+<td>3. GROUP BY</td>
+</tr>
+<tr>
+<td>GROUP BY</td>
+<td>4. HAVING</td>
+</tr>
+<tr>
+<td>HAVING</td>
+<td>5. SELECT (including aliases and window functions)</td>
+</tr>
+<tr>
+<td>ORDER BY</td>
+<td>6. ORDER BY</td>
+</tr>
+<tr>
+<td>LIMIT</td>
+<td>7. LIMIT / OFFSET</td>
+</tr>
+</tbody>
+</table>
+<p>The practical consequence: WHERE runs before SELECT, so it cannot
+reference a SELECT alias. HAVING runs after grouping, so it can filter
+on aggregates. ORDER BY runs last, so it can use SELECT aliases and even
+column positions.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- WHERE cannot see the alias &#39;total&#39;, because WHERE runs before SELECT</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> price <span class="op">*</span> quantity <span class="kw">AS</span> total</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> price <span class="op">*</span> quantity <span class="op">&gt;</span> <span class="dv">100</span>; <span class="co">-- must repeat the expression, not &quot;total&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- ORDER BY can use the alias, since it runs after SELECT</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> price <span class="op">*</span> quantity <span class="kw">AS</span> total</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> total <span class="kw">DESC</span>;</span></code></pre></div>
+<h2 id="select-essentials">1.2 SELECT Essentials</h2>
+<p><strong>Columns and expressions.</strong> SELECT can list columns,
+literal values, arithmetic expressions, function calls, or a mix, each
+optionally renamed with an alias.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id, first_name <span class="op">||</span> <span class="st">&#39; &#39;</span> <span class="op">||</span> last_name <span class="kw">AS</span> full_name, price <span class="op">*</span> <span class="fl">1.1</span> <span class="kw">AS</span> price_with_tax</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers;</span></code></pre></div>
+<p><strong>Aliases.</strong> Column aliases use AS (optional in most
+dialects, required in Oracle for table aliases in some contexts). Table
+aliases shorten references in joins and are required for derived tables
+and self-joins.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.customer_id, c.name <span class="kw">AS</span> customer_name</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers <span class="kw">AS</span> c;</span></code></pre></div>
+<p><strong>DISTINCT.</strong> Removes duplicate rows from the result
+set, evaluated across all selected columns together, not per column.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> country <span class="kw">FROM</span> customers; <span class="co">-- unique countries only</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> country, city <span class="kw">FROM</span> customers; <span class="co">-- unique combinations, not unique per column</span></span></code></pre></div>
+<p><strong>CASE expressions.</strong> SQL’s inline conditional logic,
+usable anywhere an expression is allowed (SELECT, WHERE, ORDER BY, GROUP
+BY).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_id,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="cf">CASE</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           <span class="cf">WHEN</span> total <span class="op">&gt;</span> <span class="dv">1000</span> <span class="cf">THEN</span> <span class="st">&#39;large&#39;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>           <span class="cf">WHEN</span> total <span class="op">&gt;</span> <span class="dv">100</span> <span class="cf">THEN</span> <span class="st">&#39;medium&#39;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           <span class="cf">ELSE</span> <span class="st">&#39;small&#39;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="cf">END</span> <span class="kw">AS</span> order_size</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders;</span></code></pre></div>
+<p>A shorthand form exists when comparing one expression against several
+values:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="cf">CASE</span> status <span class="cf">WHEN</span> <span class="st">&#39;A&#39;</span> <span class="cf">THEN</span> <span class="st">&#39;active&#39;</span> <span class="cf">WHEN</span> <span class="st">&#39;I&#39;</span> <span class="cf">THEN</span> <span class="st">&#39;inactive&#39;</span> <span class="cf">ELSE</span> <span class="st">&#39;unknown&#39;</span> <span class="cf">END</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> accounts;</span></code></pre></div>
+<h2 id="sorting-and-limiting">1.3 Sorting and Limiting</h2>
+<p><strong>ORDER BY</strong> sorts the result set. Default direction is
+ascending (ASC); use DESC for descending. Multiple keys are evaluated
+left to right.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name, department, salary</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> department <span class="kw">ASC</span>, salary <span class="kw">DESC</span>;</span></code></pre></div>
+<p><strong>NULL placement in sorting</strong> differs by engine:
+PostgreSQL and Oracle treat NULL as larger than any value by default
+(NULLs last in ASC order), while MySQL and SQL Server treat NULL as
+smaller than any value (NULLs first in ASC order). Control it explicitly
+rather than relying on the default.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name, commission</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> commission <span class="kw">DESC</span> <span class="kw">NULLS</span> <span class="fu">LAST</span>; <span class="co">-- PostgreSQL, Oracle syntax</span></span></code></pre></div>
+<p>MySQL and SQL Server lack NULLS FIRST/LAST syntax; the common
+workaround is an ISNULL/COALESCE trick:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name, commission</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="cf">CASE</span> <span class="cf">WHEN</span> commission <span class="kw">IS</span> <span class="kw">NULL</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>, commission <span class="kw">DESC</span>; <span class="co">-- portable equivalent</span></span></code></pre></div>
+<p><strong>Limiting rows.</strong> Syntax varies significantly by
+dialect.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Goal</th>
+<th>PostgreSQL / MySQL / SQLite</th>
+<th>SQL Server</th>
+<th>Oracle (12c+)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First N rows</td>
+<td><code>LIMIT 10</code></td>
+<td><code>TOP 10</code> (in SELECT clause)</td>
+<td><code>FETCH FIRST 10 ROWS ONLY</code></td>
+</tr>
+<tr>
+<td>Skip then take</td>
+<td><code>LIMIT 10 OFFSET 20</code></td>
+<td><code>OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY</code></td>
+<td><code>OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / MySQL / SQLite</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">ORDER</span> <span class="kw">BY</span> price <span class="kw">DESC</span> <span class="kw">LIMIT</span> <span class="dv">10</span> OFFSET <span class="dv">20</span>;</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">ORDER</span> <span class="kw">BY</span> price <span class="kw">DESC</span> OFFSET <span class="dv">20</span> <span class="kw">ROWS</span> FETCH <span class="kw">NEXT</span> <span class="dv">10</span> <span class="kw">ROWS</span> <span class="kw">ONLY</span>;</span></code></pre></div>
+<p><strong>Pagination pattern.</strong> LIMIT/OFFSET is simple but gets
+slower as OFFSET grows, since the database still scans and discards the
+skipped rows. For large tables, keyset pagination (also called seek
+pagination) is faster because it uses an indexed WHERE condition instead
+of OFFSET.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Offset pagination: simple but slow on large offsets</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">ORDER</span> <span class="kw">BY</span> order_id <span class="kw">LIMIT</span> <span class="dv">20</span> OFFSET <span class="dv">10000</span>;</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Keyset pagination: fast, uses the last seen id from the previous page</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> order_id <span class="op">&gt;</span> <span class="dv">10000</span> <span class="kw">ORDER</span> <span class="kw">BY</span> order_id <span class="kw">LIMIT</span> <span class="dv">20</span>;</span></code></pre></div>
+<hr />
+<h1 id="filtering-and-operators">2. Filtering and Operators</h1>
+<h2 id="comparison-and-logical-operators">2.1 Comparison and Logical
+Operators</h2>
+<p><strong>Comparison operators</strong> test equality or ordering
+between two values.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>=</code></td>
+<td>Equal to</td>
+</tr>
+<tr>
+<td><code>&lt;&gt;</code> or <code>!=</code></td>
+<td>Not equal to (<code>&lt;&gt;</code> is ANSI standard; both work in
+most engines)</td>
+</tr>
+<tr>
+<td><code>&lt;</code>, <code>&gt;</code></td>
+<td>Less than, greater than</td>
+</tr>
+<tr>
+<td><code>&lt;=</code>, <code>&gt;=</code></td>
+<td>Less than or equal, greater than or equal</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Logical operators</strong> combine or negate conditions. AND
+has higher precedence than OR, so mixing them without parentheses is a
+common source of bugs — always parenthesize explicitly when combining
+AND and OR.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Ambiguous to a reader, and easy to get wrong: does NOT bind to just the first condition?</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span> <span class="kw">OR</span> status <span class="op">=</span> <span class="st">&#39;pending&#39;</span> <span class="kw">AND</span> total <span class="op">&gt;</span> <span class="dv">100</span>;</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Explicit and unambiguous</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span> <span class="kw">OR</span> (status <span class="op">=</span> <span class="st">&#39;pending&#39;</span> <span class="kw">AND</span> total <span class="op">&gt;</span> <span class="dv">100</span>);</span></code></pre></div>
+<p><strong>Operator precedence</strong>, from highest to lowest:
+arithmetic (<code>*</code>, <code>/</code>, <code>+</code>,
+<code>-</code>), comparison operators, <code>NOT</code>,
+<code>AND</code>, <code>OR</code>. When in doubt, add parentheses rather
+than relying on memorized precedence.</p>
+<h2 id="ranges-membership-and-pattern-matching">2.2 Ranges, Membership,
+and Pattern Matching</h2>
+<p><strong>BETWEEN</strong> tests an inclusive range on both ends.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> order_date <span class="kw">BETWEEN</span> <span class="st">&#39;2026-01-01&#39;</span> <span class="kw">AND</span> <span class="st">&#39;2026-01-31&#39;</span>; <span class="co">-- includes both boundary dates</span></span></code></pre></div>
+<p><strong>IN</strong> tests membership in a list or subquery, as a
+readable alternative to a chain of OR conditions.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> employees <span class="kw">WHERE</span> department <span class="kw">IN</span> (<span class="st">&#39;sales&#39;</span>, <span class="st">&#39;marketing&#39;</span>, <span class="st">&#39;support&#39;</span>);</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="kw">IN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> vip_customers);</span></code></pre></div>
+<p><strong>LIKE / ILIKE</strong> do pattern matching using wildcards:
+<code>%</code> matches any sequence of characters (including none), and
+<code>_</code> matches exactly one character. LIKE is case-sensitive in
+most engines except MySQL (where case sensitivity depends on collation)
+and SQLite (case-insensitive for ASCII by default). ILIKE is a
+PostgreSQL-specific case-insensitive variant.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="st">&#39;Apple%&#39;</span>; <span class="co">-- starts with &quot;Apple&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="st">&#39;%phone%&#39;</span>; <span class="co">-- contains &quot;phone&quot; anywhere</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">WHERE</span> code <span class="kw">LIKE</span> <span class="st">&#39;A_23&#39;</span>; <span class="co">-- &quot;A&quot; + any one character + &quot;23&quot;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> products <span class="kw">WHERE</span> name ILIKE <span class="st">&#39;%iphone%&#39;</span>; <span class="co">-- PostgreSQL only, case-insensitive</span></span></code></pre></div>
+<p><strong>Regular expressions</strong> offer more powerful pattern
+matching but syntax is dialect-specific.</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Operator / function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>~</code> (match), <code>~*</code> (case-insensitive
+match)</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>REGEXP</code> or <code>RLIKE</code></td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>no native operator; requires CLR or LIKE workarounds</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td><code>REGEXP</code> (requires an extension to be loaded)</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> email ~ <span class="st">&#39;^[a-z]+@[a-z]+\.com$&#39;</span>; <span class="co">-- PostgreSQL</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> email REGEXP <span class="st">&#39;^[a-z]+@[a-z]+</span><span class="ch">\\</span><span class="st">.com$&#39;</span>; <span class="co">-- MySQL</span></span></code></pre></div>
+<h2 id="null-logic">2.3 NULL Logic</h2>
+<p>NULL represents an unknown or missing value, and it behaves
+differently from any ordinary value. This is one of the most common
+sources of SQL bugs.</p>
+<p><strong>Three-valued logic.</strong> Every condition evaluates to
+TRUE, FALSE, or UNKNOWN. Any comparison involving NULL — including
+<code>NULL = NULL</code> — evaluates to UNKNOWN, not TRUE. Rows where a
+WHERE condition evaluates to UNKNOWN are excluded from the result,
+exactly as if it were FALSE.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> employees <span class="kw">WHERE</span> commission <span class="op">=</span> <span class="kw">NULL</span>; <span class="co">-- always returns zero rows, this is a bug</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> employees <span class="kw">WHERE</span> commission <span class="kw">IS</span> <span class="kw">NULL</span>; <span class="co">-- correct way to test for NULL</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> employees <span class="kw">WHERE</span> commission <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span>; <span class="co">-- correct way to test for non-NULL</span></span></code></pre></div>
+<p><strong>Truth table for AND/OR with UNKNOWN:</strong></p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A AND B</th>
+<th>A OR B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TRUE</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>UNKNOWN</td>
+<td>FALSE</td>
+<td>UNKNOWN</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>COALESCE</strong> returns the first non-NULL value from a
+list of expressions, commonly used to supply a default.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name, <span class="fu">COALESCE</span>(phone, mobile, <span class="st">&#39;no contact&#39;</span>) <span class="kw">AS</span> contact <span class="kw">FROM</span> customers; <span class="co">-- falls back through the list</span></span></code></pre></div>
+<p><strong>NULLIF</strong> returns NULL if two expressions are equal,
+otherwise returns the first expression — often used to avoid division by
+zero.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> revenue <span class="op">/</span> <span class="fu">NULLIF</span>(units_sold, <span class="dv">0</span>) <span class="kw">AS</span> revenue_per_unit <span class="kw">FROM</span> sales; <span class="co">-- avoids a divide-by-zero error</span></span></code></pre></div>
+<p><strong>NULL and aggregates.</strong> Aggregate functions like SUM,
+AVG, COUNT(column) ignore NULLs rather than treating them as zero;
+COUNT(*) counts all rows regardless of NULLs. This is covered further in
+section 4.</p>
+<hr />
+<h1 id="joins">3. Joins</h1>
+<h2 id="inner-and-outer-joins">3.1 Inner and Outer Joins</h2>
+<p>Joins combine rows from two or more tables based on a related
+condition. The four core types differ in which unmatched rows they
+keep.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Join type</th>
+<th>Keeps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INNER JOIN</td>
+<td>Only rows with a match in both tables</td>
+</tr>
+<tr>
+<td>LEFT JOIN</td>
+<td>All rows from the left table, plus matches from the right (NULL
+where no match)</td>
+</tr>
+<tr>
+<td>RIGHT JOIN</td>
+<td>All rows from the right table, plus matches from the left (NULL
+where no match)</td>
+</tr>
+<tr>
+<td>FULL JOIN</td>
+<td>All rows from both tables, matched where possible, NULL where
+not</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- INNER JOIN: only customers who have placed at least one order</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- LEFT JOIN: every customer, with NULL order_id if they have no orders</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">-- RIGHT JOIN: every order, with NULL name if the customer record is missing</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="kw">RIGHT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- FULL JOIN: every customer and every order, matched where possible</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="kw">FULL</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span></code></pre></div>
+<p>Note: MySQL does not support FULL JOIN directly. The common
+workaround is a UNION of a LEFT JOIN and a RIGHT JOIN.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL FULL JOIN workaround</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id <span class="kw">FROM</span> customers c <span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id <span class="kw">FROM</span> customers c <span class="kw">RIGHT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span></code></pre></div>
+<p>RIGHT JOIN is rarely used in practice since any RIGHT JOIN can be
+rewritten as a LEFT JOIN by swapping the table order; many style guides
+prefer LEFT JOIN exclusively for consistency.</p>
+<h2 id="special-join-patterns">3.2 Special Join Patterns</h2>
+<p><strong>CROSS JOIN</strong> produces the Cartesian product: every row
+from the first table paired with every row from the second. Useful for
+generating combinations, dangerous by accident (it multiplies row counts
+fast).</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> s.<span class="kw">size</span>, c.color <span class="kw">FROM</span> sizes s <span class="kw">CROSS</span> <span class="kw">JOIN</span> colors c; <span class="co">-- every size/color combination</span></span></code></pre></div>
+<p><strong>Self joins</strong> join a table to itself, typically to
+compare rows within the same table, such as employees to their managers.
+Table aliases are required to distinguish the two references.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> e.name <span class="kw">AS</span> employee, m.name <span class="kw">AS</span> manager</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees e</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> employees m <span class="kw">ON</span> e.manager_id <span class="op">=</span> m.employee_id;</span></code></pre></div>
+<p><strong>Semi joins and anti joins</strong> filter rows in one table
+based on existence (or non-existence) of a match in another, without
+actually pulling columns from the second table. SQL has no dedicated
+SEMI JOIN or ANTI JOIN keyword; these are expressed with EXISTS / NOT
+EXISTS or IN / NOT IN.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Semi join: customers who have placed at least one order (no order columns returned)</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name <span class="kw">FROM</span> customers c</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id);</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Anti join: customers who have never placed an order</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name <span class="kw">FROM</span> customers c</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id);</span></code></pre></div>
+<p><strong>USING vs ON.</strong> ON allows any join condition and
+differing column names. USING is shorthand for equi-joins on identically
+named columns, and it also collapses the duplicate column in the
+output.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders o <span class="kw">JOIN</span> customers c <span class="kw">ON</span> o.customer_id <span class="op">=</span> c.customer_id; <span class="co">-- customer_id appears twice</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">JOIN</span> customers <span class="kw">USING</span> (customer_id); <span class="co">-- customer_id appears once</span></span></code></pre></div>
+<p><strong>NATURAL JOIN</strong> automatically joins on all columns
+sharing the same name in both tables. It is concise but risky: adding a
+new shared column name later silently changes the join behavior, so most
+style guides discourage it in production code.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">NATURAL</span> <span class="kw">JOIN</span> customers; <span class="co">-- joins on every identically named column</span></span></code></pre></div>
+<p><strong>LATERAL joins (PostgreSQL) / CROSS APPLY (SQL
+Server)</strong> allow a subquery on the right side to reference columns
+from tables on the left side of the join — something an ordinary join
+cannot do. Commonly used for “top N per group” queries.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL: latest 3 orders per customer</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id, o.order_date</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> <span class="kw">JOIN</span> LATERAL (</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> order_id, order_date <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_date <span class="kw">DESC</span> <span class="kw">LIMIT</span> <span class="dv">3</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>) o;</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server equivalent</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id, o.order_date</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> APPLY (</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> TOP <span class="dv">3</span> order_id, order_date <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_date <span class="kw">DESC</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>) o;</span></code></pre></div>
+<h2 id="join-pitfalls">3.3 Join Pitfalls</h2>
+<p><strong>Row multiplication.</strong> When the join key is not unique
+on one or both sides, the result can contain far more rows than either
+input table. This is the single most common cause of inflated aggregate
+totals after a join.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- If a customer has 3 orders and each order has 4 line items, this join produces 12 rows for that customer,</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- and a naive SUM(order.total) grouped by customer will overcount by a factor of 4.</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.customer_id, o.total, li.line_item_id</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> line_items li <span class="kw">ON</span> o.order_id <span class="op">=</span> li.order_id;</span></code></pre></div>
+<p><strong>Filtering in ON vs WHERE for outer joins.</strong> This is a
+classic gotcha. Putting a filter on the right-hand table in the ON
+clause preserves the outer join’s behavior; putting it in WHERE
+effectively turns the outer join into an inner join, because unmatched
+rows have NULL and fail the WHERE condition.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Correct: keeps all customers, only showing shipped orders where they exist</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id <span class="kw">AND</span> o.status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span>;</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Incorrect: silently becomes an inner join, dropping customers with no shipped order</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, o.order_id</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o <span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span>;</span></code></pre></div>
+<p><strong>Duplicate handling.</strong> After a join that multiplies
+rows, DISTINCT or pre-aggregation (aggregating one side before joining)
+are the two common fixes, and pre-aggregation is usually the more
+correct and efficient choice.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pre-aggregate orders before joining, avoiding row multiplication entirely</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.customer_id, o.order_count</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> (<span class="kw">SELECT</span> customer_id, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> order_count <span class="kw">FROM</span> orders <span class="kw">GROUP</span> <span class="kw">BY</span> customer_id) o</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> c.customer_id <span class="op">=</span> o.customer_id;</span></code></pre></div>
+<hr />
+<h1 id="aggregation-and-grouping">4. Aggregation and Grouping</h1>
+<h2 id="aggregate-functions">4.1 Aggregate Functions</h2>
+<p>Aggregate functions collapse multiple rows into a single summary
+value.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>COUNT(*)</code></td>
+<td>Number of rows, regardless of NULLs</td>
+</tr>
+<tr>
+<td><code>COUNT(column)</code></td>
+<td>Number of non-NULL values in that column</td>
+</tr>
+<tr>
+<td><code>COUNT(DISTINCT column)</code></td>
+<td>Number of distinct non-NULL values</td>
+</tr>
+<tr>
+<td><code>SUM(column)</code></td>
+<td>Total of non-NULL values</td>
+</tr>
+<tr>
+<td><code>AVG(column)</code></td>
+<td>Average of non-NULL values</td>
+</tr>
+<tr>
+<td><code>MIN(column)</code> / <code>MAX(column)</code></td>
+<td>Smallest / largest value, NULLs ignored</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb31"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> total_rows, <span class="fu">COUNT</span>(discount) <span class="kw">AS</span> rows_with_discount, <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> customer_id) <span class="kw">AS</span> unique_customers,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total) <span class="kw">AS</span> revenue, <span class="fu">AVG</span>(total) <span class="kw">AS</span> avg_order_value, <span class="fu">MAX</span>(order_date) <span class="kw">AS</span> most_recent_order</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders;</span></code></pre></div>
+<p><code>COUNT(*)</code> vs <code>COUNT(column)</code> is a frequent
+source of confusion: if a column has NULLs, <code>COUNT(column)</code>
+will return a smaller number than <code>COUNT(*)</code>, since NULLs are
+simply skipped.</p>
+<p><strong>DISTINCT inside aggregates</strong> counts or aggregates only
+unique values.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> product_id) <span class="kw">AS</span> unique_products_sold <span class="kw">FROM</span> order_items;</span></code></pre></div>
+<p><strong>String aggregation</strong> concatenates grouped text values
+into one string. Syntax varies sharply across engines.</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>STRING_AGG(column, separator)</code></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>GROUP_CONCAT(column SEPARATOR separator)</code></td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td><code>STRING_AGG(column, separator)</code> (2017+)</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td><code>GROUP_CONCAT(column, separator)</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb33"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / SQL Server 2017+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id, STRING_AGG(product_name, <span class="st">&#39;, &#39;</span>) <span class="kw">AS</span> products</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_items <span class="kw">GROUP</span> <span class="kw">BY</span> customer_id;</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id, GROUP_CONCAT(product_name SEPARATOR <span class="st">&#39;, &#39;</span>) <span class="kw">AS</span> products</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_items <span class="kw">GROUP</span> <span class="kw">BY</span> customer_id;</span></code></pre></div>
+<h2 id="group-by-and-having">4.2 GROUP BY and HAVING</h2>
+<p><strong>GROUP BY</strong> partitions rows into groups sharing the
+same values in the specified columns, and aggregate functions then
+compute one result per group. Every column in SELECT that is not itself
+aggregated must appear in GROUP BY (strictly enforced in PostgreSQL and
+SQL Server; MySQL allows exceptions by default, which can produce
+nondeterministic results).</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> department, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> headcount, <span class="fu">AVG</span>(salary) <span class="kw">AS</span> avg_salary</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> department;</span></code></pre></div>
+<p><strong>WHERE vs HAVING.</strong> WHERE filters individual rows
+before grouping happens; HAVING filters entire groups after aggregation.
+A condition on an aggregate function must go in HAVING, because the
+aggregate does not exist yet at the point WHERE is evaluated.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- WHERE filters rows first (only active employees are considered)</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- HAVING filters groups after aggregation (only departments with more than 5 people)</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> department, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> headcount</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;active&#39;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> department</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;</span> <span class="dv">5</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Common mistake: aggregate function in WHERE, this is invalid SQL</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> department, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;</span> <span class="dv">5</span> <span class="co">-- error: aggregate functions are not allowed in WHERE</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> department;</span></code></pre></div>
+<h2 id="advanced-grouping">4.3 Advanced Grouping</h2>
+<p><strong>ROLLUP</strong> produces subtotal rows for a hierarchy of
+groupings, plus a grand total, in a single query.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Produces: subtotal per (region, product), subtotal per region, and one grand total row</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> region, product, <span class="fu">SUM</span>(sales) <span class="kw">AS</span> total_sales</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales_data</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ROLLUP</span> (region, product);</span></code></pre></div>
+<p><strong>CUBE</strong> produces subtotals for every possible
+combination of the grouped columns, not just a hierarchy.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Produces: (region, product), (region, all products), (all regions, product), and grand total</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> region, product, <span class="fu">SUM</span>(sales) <span class="kw">AS</span> total_sales</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales_data</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">CUBE</span> (region, product);</span></code></pre></div>
+<p><strong>GROUPING SETS</strong> lets you specify exactly which
+combinations of groupings you want, when ROLLUP or CUBE would produce
+more than needed.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> region, product, <span class="fu">SUM</span>(sales) <span class="kw">AS</span> total_sales</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales_data</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="fu">GROUPING</span> SETS ((region, product), (region), ());</span></code></pre></div>
+<p>MySQL supports ROLLUP (as <code>WITH ROLLUP</code> appended after
+GROUP BY) but not CUBE or GROUPING SETS directly.</p>
+<p><strong>Conditional aggregation and pivoting with
+CASE/FILTER.</strong> Turning row values into columns (“pivoting”)
+without a dedicated PIVOT keyword — standard SQL does this by wrapping
+aggregates in CASE expressions.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pivot order counts by status into columns, portable across all major engines</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">END</span>) <span class="kw">AS</span> shipped_count,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> status <span class="op">=</span> <span class="st">&#39;cancelled&#39;</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">END</span>) <span class="kw">AS</span> cancelled_count</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_id;</span></code></pre></div>
+<p>PostgreSQL offers a cleaner syntax for the same pattern using the
+<code>FILTER</code> clause.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL-only shorthand, equivalent to the CASE version above</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;shipped&#39;</span>) <span class="kw">AS</span> shipped_count,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;cancelled&#39;</span>) <span class="kw">AS</span> cancelled_count</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_id;</span></code></pre></div>
+<hr />
+<h1 id="subqueries-ctes-and-set-operations">5. Subqueries, CTEs, and Set
+Operations</h1>
+<h2 id="subqueries">5.1 Subqueries</h2>
+<p>A subquery is a query nested inside another query. It can return a
+single value (scalar), a single row of multiple columns, or a full table
+of rows, and each shape is usable only in certain contexts.</p>
+<p><strong>Scalar subqueries</strong> return exactly one row and one
+column, and can be used anywhere a single value is expected.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name, salary, (<span class="kw">SELECT</span> <span class="fu">AVG</span>(salary) <span class="kw">FROM</span> employees) <span class="kw">AS</span> company_avg</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees;</span></code></pre></div>
+<p><strong>Row subqueries</strong> return a single row with multiple
+columns, comparable against a row constructor.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> (customer_id, order_date) <span class="op">=</span> (<span class="kw">SELECT</span> customer_id, <span class="fu">MAX</span>(order_date) <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">42</span>);</span></code></pre></div>
+<p><strong>Table subqueries</strong> return multiple rows and columns,
+used in FROM (as a derived table) or with IN/EXISTS.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> department, avg_salary</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> department, <span class="fu">AVG</span>(salary) <span class="kw">AS</span> avg_salary <span class="kw">FROM</span> employees <span class="kw">GROUP</span> <span class="kw">BY</span> department) <span class="kw">AS</span> dept_avg</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> avg_salary <span class="op">&gt;</span> <span class="dv">60000</span>;</span></code></pre></div>
+<p><strong>Correlated subqueries</strong> reference a column from the
+outer query, so they are re-evaluated once per outer row rather than
+once overall. This makes them powerful but potentially slow on large
+tables, since a naive engine may execute the subquery row by row.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- For each employee, find whether their salary is above their own department&#39;s average</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> e.name, e.salary, e.department</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees e</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> e.salary <span class="op">&gt;</span> (<span class="kw">SELECT</span> <span class="fu">AVG</span>(e2.salary) <span class="kw">FROM</span> employees e2 <span class="kw">WHERE</span> e2.department <span class="op">=</span> e.department);</span></code></pre></div>
+<p><strong>EXISTS vs IN vs JOIN.</strong> All three can express “rows
+that have a match elsewhere,” but they behave differently, especially
+with NULLs and duplicates.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JOIN</code></td>
+<td>Returns columns from both tables; duplicates rows if the match is
+not unique</td>
+</tr>
+<tr>
+<td><code>IN (subquery)</code></td>
+<td>Simple membership test; can behave unexpectedly if the subquery
+result contains NULL</td>
+</tr>
+<tr>
+<td><code>EXISTS (subquery)</code></td>
+<td>Tests only for presence of a matching row; stops at the first match,
+unaffected by NULLs in the subquery</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb46"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- IN: dangerous if the subquery can return NULL, since &quot;x NOT IN (list containing NULL)&quot; is always UNKNOWN</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers <span class="kw">WHERE</span> customer_id <span class="kw">IN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> orders);</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- EXISTS: safer and often faster, unaffected by NULLs in the subquery</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers c <span class="kw">WHERE</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id);</span></code></pre></div>
+<p>The NOT IN with NULL pitfall deserves special attention, and is
+covered again in section 10.3.</p>
+<h2 id="common-table-expressions">5.2 Common Table Expressions</h2>
+<p><strong>WITH syntax.</strong> A CTE names a subquery so it can be
+referenced later in the same statement, improving readability over
+deeply nested subqueries.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> high_value_orders <span class="kw">AS</span> (</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> customer_id, total <span class="kw">FROM</span> orders <span class="kw">WHERE</span> total <span class="op">&gt;</span> <span class="dv">1000</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.name, h.total</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> high_value_orders h <span class="kw">ON</span> c.customer_id <span class="op">=</span> h.customer_id;</span></code></pre></div>
+<p><strong>Chaining CTEs.</strong> Multiple CTEs can be defined in one
+WITH clause, each able to reference the ones defined before it.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> regional_sales <span class="kw">AS</span> (</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> region, <span class="fu">SUM</span>(sales) <span class="kw">AS</span> total_sales <span class="kw">FROM</span> sales_data <span class="kw">GROUP</span> <span class="kw">BY</span> region</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>top_regions <span class="kw">AS</span> (</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> region <span class="kw">FROM</span> regional_sales <span class="kw">WHERE</span> total_sales <span class="op">&gt;</span> <span class="dv">100000</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> sales_data <span class="kw">WHERE</span> region <span class="kw">IN</span> (<span class="kw">SELECT</span> region <span class="kw">FROM</span> top_regions);</span></code></pre></div>
+<p><strong>Recursive CTEs.</strong> Used for hierarchical data (org
+charts, category trees) or generating sequences. They consist of an
+anchor member (base case) and a recursive member (repeated step) joined
+by UNION ALL.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Hierarchy: find all employees under a given manager, at any depth</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> RECURSIVE org_chart <span class="kw">AS</span> (</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> employee_id, manager_id, name, <span class="dv">1</span> <span class="kw">AS</span> <span class="fu">depth</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> employees</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> employee_id <span class="op">=</span> <span class="dv">1</span> <span class="co">-- anchor: the starting manager</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> e.employee_id, e.manager_id, e.name, oc.<span class="fu">depth</span> <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> employees e</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> org_chart oc <span class="kw">ON</span> e.manager_id <span class="op">=</span> oc.employee_id <span class="co">-- recursive step</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> org_chart;</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Generating a series: all dates in January 2026</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> RECURSIVE date_series <span class="kw">AS</span> (</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="dt">DATE</span> <span class="st">&#39;2026-01-01&#39;</span> <span class="kw">AS</span> d</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> d <span class="op">+</span> <span class="dv">1</span> <span class="kw">FROM</span> date_series <span class="kw">WHERE</span> d <span class="op">&lt;</span> <span class="dt">DATE</span> <span class="st">&#39;2026-01-31&#39;</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> date_series;</span></code></pre></div>
+<p>Note: MySQL requires <code>WITH RECURSIVE</code> (same as
+PostgreSQL); SQL Server uses plain <code>WITH</code> without the
+RECURSIVE keyword but the same anchor/recursive structure; SQLite
+supports <code>WITH RECURSIVE</code> as well. Many engines also offer a
+dedicated series generator as a simpler alternative, such as
+PostgreSQL’s <code>generate_series()</code>.</p>
+<h2 id="set-operations">5.3 Set Operations</h2>
+<p>Set operations combine the results of two or more SELECT statements.
+All participating queries must have the same number of columns, with
+compatible data types in corresponding positions.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UNION</code></td>
+<td>Rows from both queries, duplicates removed</td>
+</tr>
+<tr>
+<td><code>UNION ALL</code></td>
+<td>Rows from both queries, duplicates kept</td>
+</tr>
+<tr>
+<td><code>INTERSECT</code></td>
+<td>Only rows present in both queries</td>
+</tr>
+<tr>
+<td><code>EXCEPT</code> (or <code>MINUS</code> in Oracle)</td>
+<td>Rows in the first query but not the second</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb51"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- UNION ALL is preferred over UNION when duplicates are not a concern, since UNION forces a deduplication pass</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> online_orders</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> store_orders;</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- INTERSECT: customers who ordered both online and in-store</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> online_orders</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="kw">INTERSECT</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> store_orders;</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="co">-- EXCEPT: customers who ordered online but never in-store</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> online_orders</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="kw">EXCEPT</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> store_orders;</span></code></pre></div>
+<p>MySQL added native INTERSECT and EXCEPT support only in version
+8.0.31+; earlier versions require workarounds using JOIN or NOT
+IN/EXISTS. Oracle uses the keyword MINUS instead of EXCEPT.</p>
+<p><strong>Column compatibility rules.</strong> The column names in the
+final result come from the first query only; later queries’ column names
+are ignored. Column order matters — types are matched positionally, not
+by name.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Result columns are named &quot;id&quot; and &quot;label&quot;, taken from the first SELECT, even though the second uses different names</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id <span class="kw">AS</span> <span class="kw">id</span>, name <span class="kw">AS</span> <span class="kw">label</span> <span class="kw">FROM</span> customers</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> product_id, product_name <span class="kw">FROM</span> products;</span></code></pre></div>
+<hr />
+<h1 id="window-functions">6. Window Functions</h1>
+<h2 id="window-syntax">6.1 Window Syntax</h2>
+<p>Window functions perform calculations across a set of rows related to
+the current row, without collapsing those rows into a single output row
+the way GROUP BY does. Every row keeps its identity, and the calculation
+appears as an additional column.</p>
+<p><strong>OVER, PARTITION BY, ORDER BY.</strong> The OVER clause
+defines the window. PARTITION BY divides rows into groups, similar to
+GROUP BY, but each row is still returned individually. ORDER BY within
+OVER defines the sequence used for ranking, running totals, and offset
+functions.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> employee_id, department, salary,</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">AVG</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> department) <span class="kw">AS</span> dept_avg_salary</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees;</span></code></pre></div>
+<p>Every employee row is still returned, but each now carries its
+department’s average alongside it — something GROUP BY alone cannot do
+without a separate join back to the original rows.</p>
+<p><strong>How windows differ from GROUP BY.</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>GROUP BY</th>
+<th>Window function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row count in output</td>
+<td>One row per group</td>
+<td>One row per input row</td>
+</tr>
+<tr>
+<td>Access to non-aggregated columns</td>
+<td>Only grouped columns</td>
+<td>All original columns remain</td>
+</tr>
+<tr>
+<td>Can combine multiple granularities</td>
+<td>Requires separate queries or joins</td>
+<td>Yes, in a single SELECT</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb54"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Compare each employee&#39;s salary to the department average, in one query, no join or subquery needed</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> employee_id, department, salary,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>       salary <span class="op">-</span> <span class="fu">AVG</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> department) <span class="kw">AS</span> diff_from_dept_avg</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees;</span></code></pre></div>
+<h2 id="ranking-and-offset-functions">6.2 Ranking and Offset
+Functions</h2>
+<p><strong>Ranking functions</strong> assign a position to each row
+within its partition, based on the ORDER BY inside OVER.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Behavior on ties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ROW_NUMBER()</code></td>
+<td>Assigns a unique, arbitrary sequential number even to tied rows</td>
+</tr>
+<tr>
+<td><code>RANK()</code></td>
+<td>Tied rows get the same rank; the next rank skips ahead (1, 1,
+3)</td>
+</tr>
+<tr>
+<td><code>DENSE_RANK()</code></td>
+<td>Tied rows get the same rank; the next rank does not skip (1, 1,
+2)</td>
+</tr>
+<tr>
+<td><code>NTILE(n)</code></td>
+<td>Divides rows into n roughly equal buckets</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb55"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> employee_id, department, salary,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> department <span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> row_num,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> department <span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> <span class="fu">rank</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">DENSE_RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> department <span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> <span class="fu">dense_rank</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees;</span></code></pre></div>
+<p><strong>Offset functions</strong> look at values from other rows
+relative to the current one, within the same ordered window.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LAG(column, n)</code></td>
+<td>Value from n rows before the current row</td>
+</tr>
+<tr>
+<td><code>LEAD(column, n)</code></td>
+<td>Value from n rows after the current row</td>
+</tr>
+<tr>
+<td><code>FIRST_VALUE(column)</code></td>
+<td>First value in the window frame</td>
+</tr>
+<tr>
+<td><code>LAST_VALUE(column)</code></td>
+<td>Last value in the window frame (frame-sensitive, see 6.3)</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb56"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Compare each month&#39;s revenue to the previous and next month</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">month</span>, revenue,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">LAG</span>(revenue, <span class="dv">1</span>) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dt">month</span>) <span class="kw">AS</span> prev_month_revenue,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">LEAD</span>(revenue, <span class="dv">1</span>) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dt">month</span>) <span class="kw">AS</span> next_month_revenue</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> monthly_sales;</span></code></pre></div>
+<h2 id="frames-and-common-patterns">6.3 Frames and Common Patterns</h2>
+<p><strong>ROWS vs RANGE.</strong> The frame clause narrows the window
+further, to a subset of rows around the current one. ROWS counts
+physical rows; RANGE groups by logical value, treating rows with equal
+ORDER BY values as a single peer group. This distinction matters most
+when there are ties in the ORDER BY column.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- ROWS: exactly the 2 preceding physical rows plus the current row</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_date, revenue,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> order_date <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="dv">2</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>) <span class="kw">AS</span> rolling_3day_total</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> daily_sales;</span></code></pre></div>
+<p>Default frame behavior differs by presence of ORDER BY: with ORDER BY
+and no explicit frame, most engines default to
+<code>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>. This
+default is why <code>LAST_VALUE</code> often surprisingly returns the
+current row’s value rather than the true last row — the frame stops at
+the current row unless widened explicitly.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Common gotcha: LAST_VALUE with the default frame returns the current row, not the actual last row</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_date, revenue,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">LAST_VALUE</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> order_date) <span class="kw">AS</span> wrong_last_value, <span class="co">-- returns current row&#39;s value</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">LAST_VALUE</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> order_date</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>           <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="kw">UNBOUNDED</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">UNBOUNDED</span> <span class="kw">FOLLOWING</span>) <span class="kw">AS</span> correct_last_value</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> daily_sales;</span></code></pre></div>
+<p><strong>Running totals.</strong></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_date, revenue,</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> order_date <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="kw">UNBOUNDED</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>) <span class="kw">AS</span> running_total</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> daily_sales;</span></code></pre></div>
+<p><strong>Moving averages.</strong></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_date, revenue,</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">AVG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> order_date <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="dv">6</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>) <span class="kw">AS</span> moving_avg_7day</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> daily_sales;</span></code></pre></div>
+<p><strong>Top-N per group.</strong> A very common use of ROW_NUMBER:
+filtering to the top N rows within each partition. Note that window
+functions cannot be used directly in WHERE, since WHERE executes before
+window functions in logical order, so this pattern requires a CTE or
+subquery.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ranked_orders <span class="kw">AS</span> (</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> customer_id, order_id, total,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> customer_id <span class="kw">ORDER</span> <span class="kw">BY</span> total <span class="kw">DESC</span>) <span class="kw">AS</span> rn</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> orders</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> ranked_orders <span class="kw">WHERE</span> rn <span class="op">&lt;=</span> <span class="dv">3</span>; <span class="co">-- top 3 orders per customer</span></span></code></pre></div>
+<p><strong>Deduplication.</strong> The same ROW_NUMBER pattern removes
+duplicate rows, keeping one representative row per key based on a chosen
+tiebreaker.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> deduped <span class="kw">AS</span> (</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">*</span>, <span class="fu">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> email <span class="kw">ORDER</span> <span class="kw">BY</span> created_at <span class="kw">DESC</span>) <span class="kw">AS</span> rn</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> users</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> deduped <span class="kw">WHERE</span> rn <span class="op">=</span> <span class="dv">1</span>; <span class="co">-- keeps only the most recently created row per email</span></span></code></pre></div>
+<p>MySQL and SQLite support window functions since MySQL 8.0 and SQLite
+3.25, respectively; earlier versions require workarounds using
+self-joins or variables.</p>
+<hr />
+<h1 id="data-modification-and-transactions">7. Data Modification and
+Transactions</h1>
+<h2 id="insert-update-delete">7.1 INSERT, UPDATE, DELETE</h2>
+<p><strong>Multi-row inserts</strong> add several rows in a single
+statement, more efficient than one INSERT per row.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> products (name, price, <span class="kw">category</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">&#39;Widget&#39;</span>, <span class="fl">9.99</span>, <span class="st">&#39;tools&#39;</span>), (<span class="st">&#39;Gadget&#39;</span>, <span class="fl">19.99</span>, <span class="st">&#39;electronics&#39;</span>), (<span class="st">&#39;Gizmo&#39;</span>, <span class="fl">14.99</span>, <span class="st">&#39;tools&#39;</span>);</span></code></pre></div>
+<p><strong>INSERT…SELECT</strong> copies rows from a query result
+directly into a table, without needing to pull data out and back in.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> archived_orders (order_id, customer_id, total, order_date)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_id, customer_id, total, order_date <span class="kw">FROM</span> orders <span class="kw">WHERE</span> order_date <span class="op">&lt;</span> <span class="st">&#39;2020-01-01&#39;</span>;</span></code></pre></div>
+<p><strong>UPDATE and DELETE with joins.</strong> Standard SQL restricts
+UPDATE and DELETE to a single table, but most engines allow referencing
+other tables to determine which rows to affect, with differing
+syntax.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL: UPDATE ... FROM</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> orders o</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> status <span class="op">=</span> <span class="st">&#39;flagged&#39;</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers c</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id <span class="kw">AND</span> c.is_fraud_suspect <span class="op">=</span> <span class="kw">TRUE</span>;</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL: multi-table UPDATE with JOIN</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> orders o</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> customers c <span class="kw">ON</span> o.customer_id <span class="op">=</span> c.customer_id</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> o.status <span class="op">=</span> <span class="st">&#39;flagged&#39;</span></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.is_fraud_suspect <span class="op">=</span> <span class="kw">TRUE</span>;</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server: UPDATE ... FROM ... JOIN</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> o</span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> o.status <span class="op">=</span> <span class="st">&#39;flagged&#39;</span></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orders o</span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> customers c <span class="kw">ON</span> o.customer_id <span class="op">=</span> c.customer_id</span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.is_fraud_suspect <span class="op">=</span> <span class="kw">TRUE</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- DELETE using a subquery, portable across all major engines</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> orders</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_id <span class="kw">IN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> customers <span class="kw">WHERE</span> is_fraud_suspect <span class="op">=</span> <span class="kw">TRUE</span>);</span></code></pre></div>
+<p><strong>TRUNCATE vs DELETE.</strong> Both remove rows, but they
+behave very differently.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>DELETE</th>
+<th>TRUNCATE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WHERE clause</td>
+<td>Supported, can remove a subset</td>
+<td>Not supported, always removes all rows</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Slower, logs each row removal</td>
+<td>Much faster, deallocates pages</td>
+</tr>
+<tr>
+<td>Triggers</td>
+<td>Fires row-level triggers</td>
+<td>Usually does not fire row-level triggers</td>
+</tr>
+<tr>
+<td>Rollback</td>
+<td>Fully transactional in all major engines</td>
+<td>Transactional in PostgreSQL and SQL Server; auto-commits in MySQL
+(InnoDB)</td>
+</tr>
+<tr>
+<td>Identity/auto-increment reset</td>
+<td>Preserved</td>
+<td>Typically reset to its starting value</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb67"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> logs <span class="kw">WHERE</span> created_at <span class="op">&lt;</span> <span class="st">&#39;2025-01-01&#39;</span>; <span class="co">-- removes only old rows</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="kw">TRUNCATE</span> <span class="kw">TABLE</span> temp_staging; <span class="co">-- removes everything, fast, resets identity</span></span></code></pre></div>
+<h2 id="upserts-and-returning-data">7.2 Upserts and Returning Data</h2>
+<p><strong>Upserts</strong> insert a row, or update it instead if a
+conflicting key already exists. Syntax is heavily dialect-specific.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / SQLite: ON CONFLICT</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> inventory (product_id, quantity)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">101</span>, <span class="dv">50</span>)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> CONFLICT (product_id) DO <span class="kw">UPDATE</span> <span class="kw">SET</span> quantity <span class="op">=</span> inventory.quantity <span class="op">+</span> EXCLUDED.quantity;</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL: ON DUPLICATE KEY UPDATE</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> inventory (product_id, quantity)</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">101</span>, <span class="dv">50</span>)</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> DUPLICATE <span class="kw">KEY</span> <span class="kw">UPDATE</span> quantity <span class="op">=</span> quantity <span class="op">+</span> <span class="kw">VALUES</span>(quantity);</span></code></pre></div>
+<p><strong>MERGE</strong> is the ANSI-standard statement for combining
+insert, update, and delete logic based on a match condition, available
+in SQL Server, Oracle, and PostgreSQL (15+).</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="kw">MERGE</span> <span class="kw">INTO</span> inventory <span class="kw">AS</span> target</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> (<span class="kw">SELECT</span> <span class="dv">101</span> <span class="kw">AS</span> product_id, <span class="dv">50</span> <span class="kw">AS</span> quantity) <span class="kw">AS</span> <span class="kw">source</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> target.product_id <span class="op">=</span> <span class="kw">source</span>.product_id</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> MATCHED <span class="cf">THEN</span> <span class="kw">UPDATE</span> <span class="kw">SET</span> target.quantity <span class="op">=</span> target.quantity <span class="op">+</span> <span class="kw">source</span>.quantity</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> <span class="kw">NOT</span> MATCHED <span class="cf">THEN</span> <span class="kw">INSERT</span> (product_id, quantity) <span class="kw">VALUES</span> (<span class="kw">source</span>.product_id, <span class="kw">source</span>.quantity);</span></code></pre></div>
+<p><strong>RETURNING / OUTPUT.</strong> Retrieves values from the
+affected rows immediately, without a separate SELECT. Useful for getting
+a generated ID right after an insert.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / SQLite: RETURNING</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> customers (name, email) <span class="kw">VALUES</span> (<span class="st">&#39;Ana Silva&#39;</span>, <span class="st">&#39;ana@example.com&#39;</span>) <span class="kw">RETURNING</span> customer_id;</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server: OUTPUT</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> customers (name, email) OUTPUT inserted.customer_id <span class="kw">VALUES</span> (<span class="st">&#39;Ana Silva&#39;</span>, <span class="st">&#39;ana@example.com&#39;</span>);</span></code></pre></div>
+<p>MySQL has no equivalent to RETURNING/OUTPUT for INSERT; the common
+approach is a separate call to retrieve the last generated ID, such as
+<code>LAST_INSERT_ID()</code>.</p>
+<h2 id="transactions">7.3 Transactions</h2>
+<p><strong>BEGIN/COMMIT/ROLLBACK.</strong> A transaction groups multiple
+statements so they succeed or fail as a unit. COMMIT makes changes
+permanent; ROLLBACK undoes everything since the transaction began.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">-</span> <span class="dv">100</span> <span class="kw">WHERE</span> account_id <span class="op">=</span> <span class="dv">1</span>;</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">+</span> <span class="dv">100</span> <span class="kw">WHERE</span> account_id <span class="op">=</span> <span class="dv">2</span>;</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="kw">COMMIT</span>; <span class="co">-- both updates become permanent together, or neither does</span></span></code></pre></div>
+<p>MySQL and SQL Server use <code>START TRANSACTION</code> or
+<code>BEGIN TRANSACTION</code> respectively; PostgreSQL and SQLite use
+<code>BEGIN</code>. Most engines auto-commit each statement by default
+unless a transaction is explicitly started.</p>
+<p><strong>Savepoints</strong> mark a point within a transaction that
+can be rolled back to, without discarding the entire transaction.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">-</span> <span class="dv">100</span> <span class="kw">WHERE</span> account_id <span class="op">=</span> <span class="dv">1</span>;</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SAVEPOINT</span> before_bonus;</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">+</span> <span class="dv">10</span> <span class="kw">WHERE</span> account_id <span class="op">=</span> <span class="dv">1</span>; <span class="co">-- a bonus that turns out to be wrong</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ROLLBACK</span> <span class="kw">TO</span> <span class="kw">SAVEPOINT</span> before_bonus; <span class="co">-- undoes just the bonus update, keeps the first one</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="kw">COMMIT</span>;</span></code></pre></div>
+<p><strong>ACID</strong> describes the guarantees a transaction should
+provide.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Property</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Atomicity</td>
+<td>All statements in the transaction succeed, or none do</td>
+</tr>
+<tr>
+<td>Consistency</td>
+<td>The database moves from one valid state to another, respecting
+constraints</td>
+</tr>
+<tr>
+<td>Isolation</td>
+<td>Concurrent transactions do not see each other’s uncommitted
+changes</td>
+</tr>
+<tr>
+<td>Durability</td>
+<td>Once committed, changes survive even a system crash</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Isolation levels and anomalies.</strong> Isolation is
+tunable, trading consistency guarantees for performance. Lower levels
+allow more concurrency but risk seeing inconsistent data.</p>
+<table>
+<thead>
+<tr>
+<th>Isolation level</th>
+<th>Dirty read</th>
+<th>Non-repeatable read</th>
+<th>Phantom read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read Uncommitted</td>
+<td>Possible</td>
+<td>Possible</td>
+<td>Possible</td>
+</tr>
+<tr>
+<td>Read Committed</td>
+<td>Prevented</td>
+<td>Possible</td>
+<td>Possible</td>
+</tr>
+<tr>
+<td>Repeatable Read</td>
+<td>Prevented</td>
+<td>Prevented</td>
+<td>Possible</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>Prevented</td>
+<td>Prevented</td>
+<td>Prevented</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Dirty read</strong>: reading a row that another transaction
+has changed but not yet committed.</li>
+<li><strong>Non-repeatable read</strong>: re-reading the same row within
+a transaction and getting a different value because another transaction
+committed a change in between.</li>
+<li><strong>Phantom read</strong>: re-running the same query and getting
+different rows because another transaction inserted or deleted matching
+rows in between.</li>
+</ul>
+<div class="sourceCode" id="cb73"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / SQL Server / MySQL</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TRANSACTION</span> <span class="kw">ISOLATION</span> <span class="kw">LEVEL</span> <span class="kw">SERIALIZABLE</span>;</span></code></pre></div>
+<p>PostgreSQL defaults to Read Committed; MySQL (InnoDB) defaults to
+Repeatable Read; SQL Server defaults to Read Committed. SQLite is fully
+serializable by default due to its locking model.</p>
+<hr />
+<h1 id="schema-definition-and-views">8. Schema Definition and Views</h1>
+<h2 id="creating-tables-and-data-types">8.1 Creating Tables and Data
+Types</h2>
+<p><strong>CREATE TABLE</strong> defines a new table’s columns, types,
+and constraints.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> employees (</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    employee_id <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    name <span class="dt">VARCHAR</span>(<span class="dv">100</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    hire_date <span class="dt">DATE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    salary <span class="dt">NUMERIC</span>(<span class="dv">10</span>, <span class="dv">2</span>),</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    department_id <span class="dt">INT</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>Core data types by category.</strong> Names and available
+precision vary by engine, but the categories map fairly
+consistently.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Category</th>
+<th>PostgreSQL</th>
+<th>MySQL</th>
+<th>SQL Server</th>
+<th>SQLite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integer</td>
+<td><code>INTEGER</code>, <code>BIGINT</code>,
+<code>SMALLINT</code></td>
+<td><code>INT</code>, <code>BIGINT</code>, <code>SMALLINT</code></td>
+<td><code>INT</code>, <code>BIGINT</code>, <code>SMALLINT</code></td>
+<td><code>INTEGER</code> (dynamic typing)</td>
+</tr>
+<tr>
+<td>Exact decimal</td>
+<td><code>NUMERIC(p, s)</code></td>
+<td><code>DECIMAL(p, s)</code></td>
+<td><code>DECIMAL(p, s)</code></td>
+<td><code>NUMERIC</code> (stored flexibly)</td>
+</tr>
+<tr>
+<td>Floating point</td>
+<td><code>REAL</code>, <code>DOUBLE PRECISION</code></td>
+<td><code>FLOAT</code>, <code>DOUBLE</code></td>
+<td><code>REAL</code>, <code>FLOAT</code></td>
+<td><code>REAL</code></td>
+</tr>
+<tr>
+<td>Variable text</td>
+<td><code>VARCHAR(n)</code>, <code>TEXT</code></td>
+<td><code>VARCHAR(n)</code>, <code>TEXT</code></td>
+<td><code>VARCHAR(n)</code>, <code>NVARCHAR(n)</code></td>
+<td><code>TEXT</code></td>
+</tr>
+<tr>
+<td>Date/time</td>
+<td><code>DATE</code>, <code>TIMESTAMP</code>,
+<code>TIMESTAMPTZ</code></td>
+<td><code>DATE</code>, <code>DATETIME</code>,
+<code>TIMESTAMP</code></td>
+<td><code>DATE</code>, <code>DATETIME2</code></td>
+<td><code>TEXT</code> or <code>NUMERIC</code> (no native type)</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>BOOLEAN</code></td>
+<td><code>TINYINT(1)</code> (no true boolean)</td>
+<td><code>BIT</code></td>
+<td><code>INTEGER</code> (0 or 1)</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td><code>JSON</code>, <code>JSONB</code></td>
+<td><code>JSON</code></td>
+<td><code>NVARCHAR</code> + JSON functions</td>
+<td><code>TEXT</code> + JSON1 extension</td>
+</tr>
+</tbody>
+</table>
+<p>Use <code>NUMERIC</code>/<code>DECIMAL</code> rather than
+floating-point types for money and other values where exact precision
+matters, since floating-point types can introduce rounding errors.</p>
+<p><strong>Identity / auto-increment columns</strong> generate
+sequential values automatically, commonly used for primary keys.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL (modern, SQL-standard syntax)</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (order_id <span class="dt">INT</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY <span class="kw">PRIMARY</span> <span class="kw">KEY</span>, <span class="op">..</span>.);</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (order_id <span class="dt">INT</span> AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>, <span class="op">..</span>.);</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server</span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (order_id <span class="dt">INT</span> IDENTITY(<span class="dv">1</span>,<span class="dv">1</span>) <span class="kw">PRIMARY</span> <span class="kw">KEY</span>, <span class="op">..</span>.);</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQLite</span></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (order_id <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span> AUTOINCREMENT, <span class="op">..</span>.); <span class="co">-- plain INTEGER PRIMARY KEY already auto-increments</span></span></code></pre></div>
+<h2 id="constraints-and-keys">8.2 Constraints and Keys</h2>
+<p><strong>PRIMARY KEY</strong> uniquely identifies each row; a table
+can have only one, though it may span multiple columns (a composite
+key).</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> order_items (</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    order_id <span class="dt">INT</span>,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    product_id <span class="dt">INT</span>,</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>    quantity <span class="dt">INT</span>,</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">PRIMARY</span> <span class="kw">KEY</span> (order_id, product_id) <span class="co">-- composite primary key</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>FOREIGN KEY</strong> enforces that a column’s values must
+exist in another table’s referenced column, maintaining referential
+integrity. <code>ON DELETE</code>/<code>ON UPDATE</code> actions control
+what happens to dependent rows when the referenced row changes.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CASCADE</code></td>
+<td>Automatically apply the same delete/update to dependent rows</td>
+</tr>
+<tr>
+<td><code>SET NULL</code></td>
+<td>Set the foreign key column to NULL</td>
+</tr>
+<tr>
+<td><code>RESTRICT</code> / <code>NO ACTION</code></td>
+<td>Reject the operation if dependent rows exist</td>
+</tr>
+<tr>
+<td><code>SET DEFAULT</code></td>
+<td>Set the foreign key column to its default value</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb77"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    order_id <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    customer_id <span class="dt">INT</span>,</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (customer_id) <span class="kw">REFERENCES</span> customers(customer_id) <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span> <span class="kw">ON</span> <span class="kw">UPDATE</span> <span class="kw">RESTRICT</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>UNIQUE</strong> ensures all values in a column (or set of
+columns) are distinct, allowing multiple NULLs in most engines (since
+NULL is not considered equal to another NULL).</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> users (email <span class="dt">VARCHAR</span>(<span class="dv">255</span>) <span class="kw">UNIQUE</span>, <span class="op">..</span>.);</span></code></pre></div>
+<p><strong>CHECK</strong> enforces an arbitrary boolean condition on
+column values.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> products (price <span class="dt">NUMERIC</span>(<span class="dv">10</span>, <span class="dv">2</span>) <span class="kw">CHECK</span> (price <span class="op">&gt;</span> <span class="dv">0</span>), <span class="op">..</span>.);</span></code></pre></div>
+<p>Note: MySQL silently ignored CHECK constraints before version 8.0.16;
+verify engine version if relying on this.</p>
+<p><strong>NOT NULL</strong> requires a value to be present.
+<strong>DEFAULT</strong> supplies a value automatically when none is
+given.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>    order_id <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    status <span class="dt">VARCHAR</span>(<span class="dv">20</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="st">&#39;pending&#39;</span>,</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    created_at <span class="dt">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="fu">CURRENT_TIMESTAMP</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h2 id="altering-schema-and-views">8.3 Altering Schema and Views</h2>
+<p><strong>ALTER / DROP.</strong> ALTER TABLE modifies an existing
+table’s structure; DROP TABLE removes it entirely.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> employees <span class="kw">ADD</span> <span class="kw">COLUMN</span> phone <span class="dt">VARCHAR</span>(<span class="dv">20</span>);</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> employees <span class="kw">DROP</span> <span class="kw">COLUMN</span> phone;</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> employees <span class="kw">ALTER</span> <span class="kw">COLUMN</span> salary <span class="kw">TYPE</span> <span class="dt">NUMERIC</span>(<span class="dv">12</span>, <span class="dv">2</span>); <span class="co">-- PostgreSQL syntax</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> employees <span class="kw">MODIFY</span> <span class="kw">COLUMN</span> salary <span class="dt">DECIMAL</span>(<span class="dv">12</span>, <span class="dv">2</span>); <span class="co">-- MySQL syntax</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> employees; <span class="co">-- fails if other tables reference it via foreign key, unless CASCADE is used</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> employees <span class="kw">CASCADE</span>; <span class="co">-- also drops dependent objects, use with caution</span></span></code></pre></div>
+<p><strong>Renaming</strong> objects also varies by engine.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> employees <span class="kw">RENAME</span> <span class="kw">TO</span> staff;</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> staff <span class="kw">RENAME</span> <span class="kw">COLUMN</span> phone <span class="kw">TO</span> phone_number;</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a><span class="kw">RENAME</span> <span class="kw">TABLE</span> employees <span class="kw">TO</span> staff;</span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> staff <span class="kw">CHANGE</span> phone phone_number <span class="dt">VARCHAR</span>(<span class="dv">20</span>);</span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQL Server</span></span>
+<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a><span class="kw">EXEC</span> sp_rename <span class="st">&#39;employees&#39;</span>, <span class="st">&#39;staff&#39;</span>;</span></code></pre></div>
+<p><strong>Views</strong> are stored queries that behave like virtual
+tables, useful for encapsulating complex logic or restricting access to
+specific columns/rows.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">VIEW</span> active_customers <span class="kw">AS</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id, name, email <span class="kw">FROM</span> customers <span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;active&#39;</span>;</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> active_customers <span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="st">&#39;A%&#39;</span>; <span class="co">-- queries the view like any table</span></span></code></pre></div>
+<p><strong>Updatable views.</strong> A view is updatable (supports
+INSERT/UPDATE/DELETE through it) only if it meets certain conditions: it
+must be based on a single table, contain no aggregates, GROUP BY,
+DISTINCT, or set operations, and select all NOT NULL columns without a
+default. Views violating these rules are read-only unless the engine
+provides special support (such as PostgreSQL’s <code>INSTEAD OF</code>
+triggers).</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> active_customers <span class="kw">SET</span> email <span class="op">=</span> <span class="st">&#39;new@example.com&#39;</span> <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">5</span>; <span class="co">-- works if the view is simple enough</span></span></code></pre></div>
+<p><strong>Materialized views</strong> store the query’s result
+physically on disk, rather than recomputing it on every access. This
+trades freshness for speed, and requires manual or scheduled
+refreshing.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL / Oracle</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">MATERIALIZED</span> <span class="kw">VIEW</span> sales_summary <span class="kw">AS</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> region, <span class="fu">SUM</span>(sales) <span class="kw">AS</span> total_sales <span class="kw">FROM</span> sales_data <span class="kw">GROUP</span> <span class="kw">BY</span> region;</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a><span class="kw">REFRESH</span> <span class="kw">MATERIALIZED</span> <span class="kw">VIEW</span> sales_summary; <span class="co">-- must be run explicitly to pick up new data</span></span></code></pre></div>
+<p>MySQL has no native materialized view; common workarounds are a
+regular table refreshed by a scheduled event, or a manually managed
+summary table.</p>
+<hr />
+<h1 id="indexes-and-query-performance">9. Indexes and Query
+Performance</h1>
+<h2 id="index-fundamentals">9.1 Index Fundamentals</h2>
+<p>An index is a separate data structure that lets the database find
+rows without scanning the entire table, at the cost of extra storage and
+slower writes (since the index must be updated on every insert, update,
+or delete).</p>
+<p><strong>Index types.</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Type</th>
+<th>Best for</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B-tree</td>
+<td>Range queries, equality, sorting (<code>&lt;</code>,
+<code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code>)</td>
+<td>The default index type in nearly every engine</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>Pure equality lookups (<code>=</code>) only</td>
+<td>Cannot support range queries or sorting</td>
+</tr>
+<tr>
+<td>Bitmap</td>
+<td>Low-cardinality columns (few distinct values), common in data
+warehouses</td>
+<td>Native mainly in Oracle; PostgreSQL builds bitmaps dynamically at
+query time</td>
+</tr>
+<tr>
+<td>GIN / GiST (PostgreSQL)</td>
+<td>Full-text search, arrays, JSONB, geometric data</td>
+<td>Specialized, not general-purpose</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb86"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_orders_customer_id <span class="kw">ON</span> orders (customer_id); <span class="co">-- B-tree by default in most engines</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_orders_status_hash <span class="kw">ON</span> orders <span class="kw">USING</span> <span class="kw">HASH</span> (status); <span class="co">-- PostgreSQL hash index syntax</span></span></code></pre></div>
+<p><strong>Composite index column order</strong> matters: a multi-column
+index is only efficiently searchable using its leftmost columns first,
+similar to how a phone book sorted by (last name, first name) is not
+useful for looking someone up by first name alone.</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_orders_customer_date <span class="kw">ON</span> orders (customer_id, order_date);</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- Uses the index efficiently: filters on the leftmost column, or both columns together</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">42</span>;</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">42</span> <span class="kw">AND</span> order_date <span class="op">&gt;</span> <span class="st">&#39;2026-01-01&#39;</span>;</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Cannot use this index efficiently: skips the leftmost column</span></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> order_date <span class="op">&gt;</span> <span class="st">&#39;2026-01-01&#39;</span>;</span></code></pre></div>
+<p><strong>Covering indexes</strong> include all the columns a query
+needs, letting the engine answer the query directly from the index
+without touching the table itself (an “index-only scan”).</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL: INCLUDE adds columns to the index for coverage without making them part of the search key</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_orders_covering <span class="kw">ON</span> orders (customer_id) INCLUDE (order_date, total);</span></code></pre></div>
+<p><strong>Partial indexes</strong> cover only a subset of rows matching
+a condition, useful when queries consistently filter on a specific value
+and the full-table index would be wasteful.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL: only indexes pending orders, much smaller than a full index if most orders are not pending</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_pending_orders <span class="kw">ON</span> orders (order_date) <span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;pending&#39;</span>;</span></code></pre></div>
+<p>MySQL does not support partial indexes; SQL Server offers an
+equivalent called a filtered index with similar syntax
+(<code>CREATE INDEX ... WHERE ...</code>).</p>
+<h2 id="reading-execution-plans">9.2 Reading Execution Plans</h2>
+<p><strong>EXPLAIN / EXPLAIN ANALYZE</strong> shows how the database
+engine intends to execute a query (or, with ANALYZE, actually executes
+it and reports real timing and row counts).</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">42</span>; <span class="co">-- shows the planned execution strategy</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="op">=</span> <span class="dv">42</span>; <span class="co">-- actually runs the query and reports real stats</span></span></code></pre></div>
+<p>SQL Server uses <code>SET STATISTICS IO, TIME ON</code> alongside
+execution plans, or the graphical “Show Execution Plan” in SQL Server
+Management Studio, rather than an ANALYZE keyword.</p>
+<p><strong>Scan types.</strong> The plan reveals how each table is
+accessed.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Scan type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential / table scan</td>
+<td>Reads every row in the table; fine for small tables, expensive for
+large ones</td>
+</tr>
+<tr>
+<td>Index scan</td>
+<td>Reads through an index in order, then fetches matching rows</td>
+</tr>
+<tr>
+<td>Index-only scan</td>
+<td>Answers the query entirely from the index, no table access
+needed</td>
+</tr>
+<tr>
+<td>Index seek</td>
+<td>Jumps directly to matching rows using the index, without scanning
+it</td>
+</tr>
+</tbody>
+</table>
+<p>A sequential scan on a large table where an index scan or seek was
+expected is usually a sign of a missing index, an unusable index (see
+9.3), or the optimizer deciding a scan is cheaper (common when the query
+needs a large fraction of the table anyway).</p>
+<p><strong>Join algorithms.</strong> The plan also shows how the engine
+physically executes each join.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Best when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nested loop</td>
+<td>One side is small, or a good index exists on the join key</td>
+</tr>
+<tr>
+<td>Hash join</td>
+<td>Both sides are large and unsorted, no useful index on the join
+key</td>
+</tr>
+<tr>
+<td>Merge join</td>
+<td>Both sides are already sorted on the join key (often because of an
+index)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="writing-fast-queries">9.3 Writing Fast Queries</h2>
+<p><strong>Sargability</strong> (“Search ARGument ABLE”) describes
+whether a condition can actually use an index. A condition is sargable
+if it compares a column directly to a value or expression, without
+wrapping the column itself in a function or transformation.</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Not sargable: wrapping the indexed column in a function prevents the index from being used</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> <span class="dt">YEAR</span>(order_date) <span class="op">=</span> <span class="dv">2026</span>;</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Sargable: an equivalent range condition, can use an index on order_date</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> order_date <span class="op">&gt;=</span> <span class="st">&#39;2026-01-01&#39;</span> <span class="kw">AND</span> order_date <span class="op">&lt;</span> <span class="st">&#39;2027-01-01&#39;</span>;</span></code></pre></div>
+<p><strong>Functions on indexed columns.</strong> The same principle
+applies broadly: any function applied to a column in a WHERE clause
+typically disables index use for that column, unless a matching
+functional/expression index is created.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Not sargable</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> <span class="fu">LOWER</span>(email) <span class="op">=</span> <span class="st">&#39;ana@example.com&#39;</span>;</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Option 1: rewrite to avoid the function on the column, if possible</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="op">=</span> <span class="st">&#39;ana@example.com&#39;</span>; <span class="co">-- relies on consistent casing at insert time</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Option 2: create an expression index matching the function used</span></span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_users_lower_email <span class="kw">ON</span> users (<span class="fu">LOWER</span>(email)); <span class="co">-- PostgreSQL syntax</span></span></code></pre></div>
+<p><strong>SELECT *</strong>. Retrieving all columns when only a few are
+needed increases I/O, prevents covering-index optimizations, and can
+break application code silently if columns are added or reordered later.
+Naming only the needed columns is generally preferred.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_id, name, email <span class="kw">FROM</span> customers <span class="kw">WHERE</span> status <span class="op">=</span> <span class="st">&#39;active&#39;</span>; <span class="co">-- preferred over SELECT *</span></span></code></pre></div>
+<p><strong>N+1 patterns.</strong> Running one query to fetch a list,
+then one additional query per row to fetch related data, produces N+1
+total queries instead of a single join or batched IN query. This is
+primarily an application-level anti-pattern (common with ORMs) rather
+than a raw SQL syntax issue, but it is worth recognizing.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- N+1 pattern: one query per customer to fetch their orders, issued from application code in a loop</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- SELECT * FROM orders WHERE customer_id = 1;</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- SELECT * FROM orders WHERE customer_id = 2;</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- ... repeated N times</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Fixed: a single query fetching all needed orders at once</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="kw">IN</span> (<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>);</span></code></pre></div>
+<p><strong>When indexes hurt.</strong> Indexes are not free. Every
+additional index slows down INSERT, UPDATE, and DELETE, since each one
+must also be updated. Indexing a low-cardinality column (few distinct
+values, like a boolean flag) rarely helps, since the optimizer often
+finds a sequential scan cheaper than jumping through an index that
+doesn’t narrow the result much. Over-indexing a write-heavy table is a
+common performance mistake in the opposite direction from under-indexing
+a read-heavy one.</p>
+<hr />
+<h1 id="functions-gotchas-and-dialect-differences">10. Functions,
+Gotchas, and Dialect Differences</h1>
+<h2 id="string-functions-across-engines">10.1 String Functions Across
+Engines</h2>
+<p>String function names are one of the least standardized areas of
+SQL.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Operation</th>
+<th>PostgreSQL</th>
+<th>MySQL</th>
+<th>SQL Server</th>
+<th>SQLite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concatenation</td>
+<td><code>\|\|</code> or <code>CONCAT()</code></td>
+<td><code>CONCAT()</code></td>
+<td><code>+</code> or <code>CONCAT()</code></td>
+<td><code>\|\|</code></td>
+</tr>
+<tr>
+<td>Substring</td>
+<td><code>SUBSTRING(s, start, len)</code></td>
+<td><code>SUBSTRING(s, start, len)</code></td>
+<td><code>SUBSTRING(s, start, len)</code></td>
+<td><code>SUBSTR(s, start, len)</code></td>
+</tr>
+<tr>
+<td>Trim whitespace</td>
+<td><code>TRIM(s)</code></td>
+<td><code>TRIM(s)</code></td>
+<td><code>TRIM(s)</code> (2017+)</td>
+<td><code>TRIM(s)</code></td>
+</tr>
+<tr>
+<td>Upper / lower case</td>
+<td><code>UPPER(s)</code>, <code>LOWER(s)</code></td>
+<td><code>UPPER(s)</code>, <code>LOWER(s)</code></td>
+<td><code>UPPER(s)</code>, <code>LOWER(s)</code></td>
+<td><code>UPPER(s)</code>, <code>LOWER(s)</code></td>
+</tr>
+<tr>
+<td>Replace</td>
+<td><code>REPLACE(s, old, new)</code></td>
+<td><code>REPLACE(s, old, new)</code></td>
+<td><code>REPLACE(s, old, new)</code></td>
+<td><code>REPLACE(s, old, new)</code></td>
+</tr>
+<tr>
+<td>String length</td>
+<td><code>LENGTH(s)</code> or <code>CHAR_LENGTH(s)</code></td>
+<td><code>LENGTH(s)</code> (bytes) or <code>CHAR_LENGTH(s)</code>
+(chars)</td>
+<td><code>LEN(s)</code></td>
+<td><code>LENGTH(s)</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb95"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Concatenation, showing the split between the || operator and the CONCAT() function</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> first_name <span class="op">||</span> <span class="st">&#39; &#39;</span> <span class="op">||</span> last_name <span class="kw">FROM</span> customers; <span class="co">-- PostgreSQL, SQLite</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CONCAT</span>(first_name, <span class="st">&#39; &#39;</span>, last_name) <span class="kw">FROM</span> customers; <span class="co">-- MySQL, portable everywhere</span></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> first_name <span class="op">+</span> <span class="st">&#39; &#39;</span> <span class="op">+</span> last_name <span class="kw">FROM</span> customers; <span class="co">-- SQL Server, fails if any value is NULL</span></span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Substring</span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> SUBSTRING(email, <span class="dv">1</span>, <span class="dv">5</span>) <span class="kw">FROM</span> customers; <span class="co">-- PostgreSQL, MySQL, SQL Server</span></span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">SUBSTR</span>(email, <span class="dv">1</span>, <span class="dv">5</span>) <span class="kw">FROM</span> customers; <span class="co">-- SQLite (also accepted in most other engines as an alias)</span></span></code></pre></div>
+<p>Note that <code>LENGTH()</code> in MySQL returns byte length, not
+character length, which differs for multi-byte (UTF-8) strings;
+<code>CHAR_LENGTH()</code> returns the character count.</p>
+<h2 id="date-and-time-functions-across-engines">10.2 Date and Time
+Functions Across Engines</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Operation</th>
+<th>PostgreSQL</th>
+<th>MySQL</th>
+<th>SQL Server</th>
+<th>SQLite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Current date/time</td>
+<td><code>CURRENT_DATE</code>, <code>NOW()</code></td>
+<td><code>CURDATE()</code>, <code>NOW()</code></td>
+<td><code>GETDATE()</code>, <code>SYSDATETIME()</code></td>
+<td><code>DATE(&#39;now&#39;)</code>, <code>DATETIME(&#39;now&#39;)</code></td>
+</tr>
+<tr>
+<td>Extract part</td>
+<td><code>EXTRACT(YEAR FROM d)</code></td>
+<td><code>YEAR(d)</code>, <code>MONTH(d)</code></td>
+<td><code>DATEPART(year, d)</code></td>
+<td><code>strftime(&#39;%Y&#39;, d)</code></td>
+</tr>
+<tr>
+<td>Add/subtract interval</td>
+<td><code>d + INTERVAL &#39;1 day&#39;</code></td>
+<td><code>DATE_ADD(d, INTERVAL 1 DAY)</code></td>
+<td><code>DATEADD(day, 1, d)</code></td>
+<td><code>DATE(d, &#39;+1 day&#39;)</code></td>
+</tr>
+<tr>
+<td>Difference between dates</td>
+<td><code>d2 - d1</code></td>
+<td><code>DATEDIFF(d2, d1)</code></td>
+<td><code>DATEDIFF(day, d1, d2)</code></td>
+<td><code>JULIANDAY(d2) - JULIANDAY(d1)</code></td>
+</tr>
+<tr>
+<td>Truncate to period</td>
+<td><code>DATE_TRUNC(&#39;month&#39;, d)</code></td>
+<td><code>DATE_FORMAT(d, &#39;%Y-%m-01&#39;)</code></td>
+<td><code>DATETRUNC(month, d)</code> (2022+)</td>
+<td><code>strftime(&#39;%Y-%m-01&#39;, d)</code></td>
+</tr>
+<tr>
+<td>Format for display</td>
+<td><code>TO_CHAR(d, &#39;YYYY-MM-DD&#39;)</code></td>
+<td><code>DATE_FORMAT(d, &#39;%Y-%m-%d&#39;)</code></td>
+<td><code>FORMAT(d, &#39;yyyy-MM-dd&#39;)</code></td>
+<td><code>strftime(&#39;%Y-%m-%d&#39;, d)</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb96"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Adding one month to today&#39;s date</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CURRENT_DATE</span> <span class="op">+</span> <span class="dt">INTERVAL</span> <span class="st">&#39;1 month&#39;</span>; <span class="co">-- PostgreSQL</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_ADD(CURDATE(), <span class="dt">INTERVAL</span> <span class="dv">1</span> <span class="dt">MONTH</span>); <span class="co">-- MySQL</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATEADD(<span class="dt">month</span>, <span class="dv">1</span>, GETDATE()); <span class="co">-- SQL Server</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">DATE</span>(<span class="st">&#39;now&#39;</span>, <span class="st">&#39;+1 month&#39;</span>); <span class="co">-- SQLite</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Truncating a timestamp to the first of its month, useful for monthly grouping</span></span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_TRUNC(<span class="st">&#39;month&#39;</span>, order_date) <span class="kw">AS</span> <span class="dt">month</span>, <span class="fu">SUM</span>(total) <span class="kw">FROM</span> orders <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">month</span>; <span class="co">-- PostgreSQL</span></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_FORMAT(order_date, <span class="st">&#39;%Y-%m-01&#39;</span>) <span class="kw">AS</span> <span class="dt">month</span>, <span class="fu">SUM</span>(total) <span class="kw">FROM</span> orders <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">month</span>; <span class="co">-- MySQL</span></span></code></pre></div>
+<p>SQLite has no dedicated date/time storage type; dates are stored as
+text, real, or integer, and all date logic runs through its
+<code>strftime</code>/<code>date</code>/<code>datetime</code>
+functions.</p>
+<h2 id="common-gotchas">10.3 Common Gotchas</h2>
+<p><strong>Type casting.</strong> Implicit conversions between types can
+silently succeed with unexpected results, or fail depending on the
+engine. Explicit casting is safer.</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span>(price <span class="kw">AS</span> <span class="dt">INTEGER</span>) <span class="kw">FROM</span> products; <span class="co">-- ANSI standard, works everywhere</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> price:<span class="ch">:INTEGER</span> <span class="kw">FROM</span> products; <span class="co">-- PostgreSQL shorthand</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CONVERT</span>(<span class="dt">INT</span>, price) <span class="kw">FROM</span> products; <span class="co">-- SQL Server alternative syntax</span></span></code></pre></div>
+<p><strong>Integer division.</strong> Dividing two integers truncates
+the decimal portion in most engines rather than returning a fractional
+result, which is a frequent source of subtly wrong calculations.</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dv">7</span> <span class="op">/</span> <span class="dv">2</span>; <span class="co">-- returns 3 in PostgreSQL, MySQL, SQL Server; integer division truncates</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fl">7.0</span> <span class="op">/</span> <span class="dv">2</span>; <span class="co">-- returns 3.5, casting one operand to a decimal forces decimal division</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dv">7</span> <span class="op">/</span> <span class="fl">2.0</span> <span class="kw">AS</span> result; <span class="co">-- also 3.5, same fix</span></span></code></pre></div>
+<p><strong>NULL in NOT IN.</strong> If a subquery or list used with
+<code>NOT IN</code> contains even one NULL, the entire condition
+evaluates to UNKNOWN for every row, silently returning zero rows. This
+is one of the most common and dangerous SQL bugs.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- If any order has a NULL customer_id, this returns zero rows, even if matches clearly exist</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers <span class="kw">WHERE</span> customer_id <span class="kw">NOT</span> <span class="kw">IN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> orders);</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Fix 1: filter out NULLs explicitly in the subquery</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers</span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_id <span class="kw">NOT</span> <span class="kw">IN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> orders <span class="kw">WHERE</span> customer_id <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span>);</span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- Fix 2: use NOT EXISTS instead, which is unaffected by NULLs in the subquery</span></span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers c</span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> orders o <span class="kw">WHERE</span> o.customer_id <span class="op">=</span> c.customer_id);</span></code></pre></div>
+<p><strong>Empty string vs NULL.</strong> Most engines treat an empty
+string <code>&#39;&#39;</code> as a distinct value from NULL. Oracle is the
+notable exception: it treats an empty string as NULL for VARCHAR
+columns, which can break logic written for other engines.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers <span class="kw">WHERE</span> middle_name <span class="op">=</span> <span class="st">&#39;&#39;</span>; <span class="co">-- matches rows with an empty string, not NULL, in most engines</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers <span class="kw">WHERE</span> middle_name <span class="kw">IS</span> <span class="kw">NULL</span>; <span class="co">-- a separate condition in most engines, but equivalent to the above in Oracle</span></span></code></pre></div>
+<p><strong>Case sensitivity.</strong> String comparison case sensitivity
+depends on the engine’s default collation, not the SQL standard.
+PostgreSQL and SQL Server are typically case-sensitive by default for
+<code>=</code> comparisons (SQL Server depends on the database
+collation, often case-insensitive); MySQL is case-insensitive by default
+with the common <code>utf8mb4_general_ci</code>/<code>_0900_ai_ci</code>
+collations; SQLite is case-sensitive for <code>=</code> but
+case-insensitive for ASCII characters with <code>LIKE</code>.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">&#39;Ana&#39;</span> <span class="op">=</span> <span class="st">&#39;ana&#39;</span>; <span class="co">-- FALSE in PostgreSQL by default, TRUE in MySQL by default (collation-dependent)</span></span></code></pre></div>
+<p><strong>Quoting identifiers.</strong> Unquoted identifiers are folded
+to a default case by the engine, and quoting preserves exact case while
+also allowing reserved words or special characters as names. Quote
+characters differ by engine.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Quote character</th>
+<th>Default case folding for unquoted identifiers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>&quot;double quotes&quot;</code></td>
+<td>Lowercase</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>`backticks`</code></td>
+<td>Case-sensitive on Linux (filesystem-dependent), case-insensitive on
+Windows</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td><code>[square brackets]</code> or <code>&quot;double quotes&quot;</code></td>
+<td>Case-insensitive by default collation</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td><code>&quot;double quotes&quot;</code> or <code>`backticks`</code></td>
+<td>Case-sensitive</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb102"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="ot">&quot;Orders&quot;</span> (<span class="kw">id</span> <span class="dt">INT</span>); <span class="co">-- PostgreSQL: creates a table literally named &quot;Orders&quot;, case preserved</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Orders; <span class="co">-- fails: unquoted &quot;Orders&quot; folds to lowercase &quot;orders&quot;, which does not exist</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> <span class="ot">&quot;Orders&quot;</span>; <span class="co">-- works: quotes preserve the exact case used at creation</span></span></code></pre></div>
+<hr />
+<p>That completes all 10 sections of the cheat sheet. Let me know if
+you’d like any section revised, expanded, or reorganized, or if you’d
+like the whole thing assembled into one continuous reference now that
+every part has been reviewed.</p>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+    sidebar.appendChild(toc);
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    const scrollY = mainContent.scrollTop + 80;
+    let active = null;
+    tocLinks.forEach(a => {
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.offsetTop <= scrollY) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  mainContent.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

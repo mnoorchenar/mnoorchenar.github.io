@@ -3,37 +3,37 @@
     {
       "id": "001-python",
       "title": "Python",
-      "description": "Core Python concepts, one topic per cheat sheet",
+      "description": "Core Python programming concepts",
       "icon": "fa-brands fa-python",
       "images": [
-        "images/001-python/01. Section 1 Data Types & Operators.html",
-        "images/001-python/02. Section 2 Core Data Structures.html",
-        "images/001-python/03. Section 3 Functions.html",
-        "images/001-python/04. Section 4 Object-Oriented Programming.html",
-        "images/001-python/05. Section 5 Error Handling.html",
-        "images/001-python/06. Section 6 Built-in Functions.html",
-        "images/001-python/07. Section 7 Collections Module.html",
-        "images/001-python/08. Section 8 Heaps & Priority Queues.html",
-        "images/001-python/09. Section 9 Sorting & Searching.html",
-        "images/001-python/10. Section 10 Common Algorithmic Patterns.html",
-        "images/001-python/11. Section 11 Trees & Graphs.html",
-        "images/001-python/12. Section 12 Backtracking & Dynamic Programming.html",
-        "images/001-python/13. Section 13 Math & Bit Manipulation.html"
+        "images/001-python/01. Python Fundamental Programming CheatSheet.html"
       ],
       "captions": [
-        "Data Types & Operators",
-        "Core Data Structures",
-        "Functions",
-        "Object-Oriented Programming",
-        "Error Handling",
-        "Built-in Functions",
-        "Collections Module",
-        "Heaps & Priority Queues",
-        "Sorting & Searching",
-        "Common Algorithmic Patterns",
-        "Trees & Graphs",
-        "Backtracking & Dynamic Programming",
-        "Math & Bit Manipulation"
+        "Python Fundamental Programming Cheat Sheet"
+      ]
+    },
+    {
+      "id": "002-pandas",
+      "title": "Pandas",
+      "description": "Data manipulation with the Pandas library",
+      "icon": "fa-solid fa-table",
+      "images": [
+        "images/002-pandas/01. Pandas Library Comprehensive CheatSheet.html"
+      ],
+      "captions": [
+        "Pandas Library Comprehensive Cheat Sheet"
+      ]
+    },
+    {
+      "id": "003-sql",
+      "title": "SQL",
+      "description": "Querying and managing relational databases",
+      "icon": "fa-solid fa-database",
+      "images": [
+        "images/003-sql/01. SQL Cheat Sheet.html"
+      ],
+      "captions": [
+        "SQL Cheat Sheet"
       ]
     }
   ]
