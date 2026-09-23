@@ -4,7 +4,7 @@ Concept summaries / cheat sheets, browsed as a slideshow. Each item can be a pic
 
 ## Adding a new section
 
-1. Create a folder for the items: `visual-notes/images/<section-id>/` (e.g. `python-basics`), and drop the image or `.html` files in it (`01.png`, `02.html`, …).
+1. Create a folder for the items: `cheat-sheets/images/<section-id>/` (e.g. `python-basics`), and drop the image or `.html` files in it (`01.png`, `02.html`, …).
 2. Add an entry to `sections.json`:
 
 ```json
