@@ -35,6 +35,30 @@
       "captions": [
         "SQL Cheat Sheet"
       ]
+    },
+    {
+      "id": "LLM",
+      "title": "LLM",
+      "description": "Large language model concepts, by subtopic",
+      "icon": "fa-solid fa-brain",
+      "subsections": [
+        {
+          "id": "RAG",
+          "title": "RAG",
+          "description": "Retrieval-Augmented Generation",
+          "icon": "fa-solid fa-magnifying-glass",
+          "images": [
+            "images/LLM/RAG/01.png",
+            "images/LLM/RAG/02.png",
+            "images/LLM/RAG/03.png"
+          ],
+          "captions": [
+            "RAG Overview",
+            "RAG Pipeline",
+            "RAG Concepts"
+          ]
+        }
+      ]
     }
   ]
 }

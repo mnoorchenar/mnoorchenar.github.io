@@ -1,4 +1,4 @@
-<!-- This is cheat-sheets/index.html -->
+<!-- This is cheat-sheets/category.html -->
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -34,7 +34,11 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
 [data-theme="dark"] .theme-toggle .toggle-sun{display:none}
 [data-theme="dark"] .theme-toggle .toggle-moon{display:inline;color:var(--toggle-clr)}
 
-.vn-hero{max-width:1100px;margin:0 auto;padding:28px 28px 8px;text-align:center}
+.vn-crumb{max-width:1100px;margin:0 auto;padding:0 28px}
+.vn-crumb a{color:var(--muted);text-decoration:none;font-size:.85em}
+.vn-crumb a:hover{color:var(--accent)}
+
+.vn-hero{max-width:1100px;margin:0 auto;padding:20px 28px 8px;text-align:center}
 .vn-hero h1{font-size:2.1em;margin:0 0 10px;background:linear-gradient(90deg,var(--gold),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .vn-hero p{color:var(--muted);max-width:640px;margin:0 auto;line-height:1.6}
 
@@ -66,18 +70,20 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
   </button>
 </nav>
 
+<div class="vn-crumb"><a href="index.html">← Cheat Sheets</a></div>
+
 <div class="vn-hero">
-  <h1>Cheat Sheets</h1>
-  <p>Quick visual summaries and cheat sheets — one concept per picture. Browse a section as a slideshow: use the arrow keys, swipe on touch, or zoom in for detail.</p>
+  <h1 id="vnHeading">Loading…</h1>
+  <p id="vnDesc"></p>
 </div>
 
 <div class="vn-grid" id="vnGrid"></div>
 <div class="vn-empty" id="vnEmpty" style="display:none">
   <i class="fas fa-layer-group"></i>
-  New sections are on the way — check back soon.
+  <span id="vnEmptyText">This category isn't available yet.</span>
 </div>
 
-<div class="vn-footer"><a href="/">← Back to Home</a></div>
+<div class="vn-footer"><a href="index.html">← Back to Cheat Sheets</a></div>
 
 <script>
 (function(){
@@ -89,36 +95,45 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
     localStorage.setItem('mn-theme', next);
   });
 
+  const params = new URLSearchParams(location.search);
+  const sectionId = params.get('s');
+
   fetch('sections.json').then(r => r.json()).then(data => {
-    const sections = data.sections || [];
+    const section = (data.sections || []).find(s => s.id === sectionId);
+    const subs = section && section.subsections || [];
     const grid = document.getElementById('vnGrid');
-    if (!sections.length) {
+
+    if (!section || !subs.length) {
+      document.getElementById('vnHeading').textContent = 'Not found';
       document.getElementById('vnEmpty').style.display = 'block';
       return;
     }
-    sections.forEach(s => {
-      const hasSub = (s.subsections || []).length > 0;
+
+    document.getElementById('vnHeading').textContent = section.title;
+    document.getElementById('vnDesc').textContent = section.description || '';
+    document.title = section.title + ' · Cheat Sheets';
+
+    subs.forEach(sub => {
       const a = document.createElement('a');
       a.className = 'vn-card';
-      a.href = hasSub
-        ? `category.html?s=${encodeURIComponent(s.id)}`
-        : `viewer.html?s=${encodeURIComponent(s.id)}`;
-      const count = hasSub ? s.subsections.length : (s.images || []).length;
-      const countLabel = hasSub ? `categor${count === 1 ? 'y' : 'ies'}` : `note${count === 1 ? '' : 's'}`;
-      const coverContent = s.icon
-        ? `<i class="${s.icon} vn-topic-icon"></i>`
-        : s.cover
-          ? `<img src="${s.cover}" alt="${s.title}" loading="lazy">`
+      a.href = `viewer.html?s=${encodeURIComponent(section.id)}&sub=${encodeURIComponent(sub.id)}`;
+      const count = (sub.images || []).length;
+      const coverContent = sub.icon
+        ? `<i class="${sub.icon} vn-topic-icon"></i>`
+        : sub.cover
+          ? `<img src="${sub.cover}" alt="${sub.title}" loading="lazy">`
           : '<i class="fas fa-image"></i>';
       a.innerHTML = `
         <div class="vn-card-cover">${coverContent}</div>
         <div class="vn-card-body">
-          <div class="vn-card-title">${s.title}</div>
-          <div class="vn-card-meta">${count} ${countLabel}${s.description ? ' · ' + s.description : ''}</div>
+          <div class="vn-card-title">${sub.title}</div>
+          <div class="vn-card-meta">${count} note${count === 1 ? '' : 's'}${sub.description ? ' · ' + sub.description : ''}</div>
         </div>`;
       grid.appendChild(a);
     });
   }).catch(() => {
+    document.getElementById('vnHeading').textContent = 'Error';
+    document.getElementById('vnEmptyText').textContent = "Couldn't load this category.";
     document.getElementById('vnEmpty').style.display = 'block';
   });
 })();

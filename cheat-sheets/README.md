@@ -34,3 +34,28 @@ Concept summaries / cheat sheets, browsed as a slideshow. Each item can be a pic
 3. Commit and push. The hub page (`index.html`) picks up new sections automatically; no other code changes needed.
 
 Each section opens in `viewer.html?s=<section-id>` — a full-screen slideshow with arrow-key/swipe navigation and pinch/scroll/double-click zoom.
+
+## Sections with subcategories
+
+A section can group its items into subcategories instead of a flat `images` list. Use `subsections` (same shape as a top-level section: `id`, `title`, `description`, `icon`, `images`, `captions`) instead of `images`/`captions`:
+
+```json
+{
+  "id": "LLM",
+  "title": "LLM",
+  "description": "Large language model concepts, by subtopic",
+  "icon": "fa-solid fa-brain",
+  "subsections": [
+    {
+      "id": "RAG",
+      "title": "RAG",
+      "description": "Retrieval-Augmented Generation",
+      "icon": "fa-solid fa-magnifying-glass",
+      "images": ["images/LLM/RAG/01.png", "images/LLM/RAG/02.png"],
+      "captions": ["RAG Overview", "RAG Pipeline"]
+    }
+  ]
+}
+```
+
+On the hub, a section with `subsections` opens `category.html?s=<section-id>` — a grid of its subcategories — instead of going straight to the slideshow. Picking a subcategory opens `viewer.html?s=<section-id>&sub=<subsection-id>`.

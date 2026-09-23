@@ -82,6 +82,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 (function(){
   const params = new URLSearchParams(location.search);
   const sectionId = params.get('s');
+  const subId = params.get('sub');
   const stage = document.getElementById('vwrStage');
   const img = document.getElementById('vwrImg');
   const frame = document.getElementById('vwrFrame');
@@ -255,19 +256,30 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   // Load manifest
   fetch('sections.json').then(r => r.json()).then(data => {
     const section = (data.sections || []).find(s => s.id === sectionId);
-    if (!section || !(section.images || []).length) {
-      showMsg('<i class="fas fa-image"></i><div>This section isn\'t available yet.</div><a href="index.html">← Back to Cheat Sheets</a>');
+    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : 'index.html';
+    const backLabel = subId ? (section ? section.title : 'Category') : 'Cheat Sheets';
+    document.querySelector('.vwr-back').setAttribute('href', backHref);
+    document.getElementById('vwrBackLabel').textContent = backLabel;
+
+    const target = subId
+      ? (section && (section.subsections || []).find(sub => sub.id === subId))
+      : section;
+
+    if (!target || !(target.images || []).length) {
+      showMsg(`<i class="fas fa-image"></i><div>This section isn't available yet.</div><a href="${backHref}">← Back</a>`);
       return;
     }
-    images = section.images;
-    captions = section.captions || [];
-    document.getElementById('vwrTitle').textContent = section.title;
-    document.title = section.title + ' · Cheat Sheets';
+    images = target.images;
+    captions = target.captions || [];
+    const title = subId && section ? `${section.title} · ${target.title}` : target.title;
+    document.getElementById('vwrTitle').textContent = title;
+    document.title = title + ' · Cheat Sheets';
     render();
     setTimeout(() => hint.classList.add('show'), 300);
     setTimeout(() => hint.classList.remove('show'), 3500);
   }).catch(() => {
-    showMsg('<i class="fas fa-triangle-exclamation"></i><div>Couldn\'t load this section.</div><a href="index.html">← Back to Cheat Sheets</a>');
+    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : 'index.html';
+    showMsg(`<i class="fas fa-triangle-exclamation"></i><div>Couldn't load this section.</div><a href="${backHref}">← Back</a>`);
   });
 })();
 </script>
