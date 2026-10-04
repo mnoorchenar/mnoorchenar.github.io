@@ -53,7 +53,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
 <body>
 
 <div class="vwr-topbar">
-  <a href="index.html" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Cheat Sheets</span></a>
+  <a href="/" class="vwr-back"><i class="fas fa-arrow-left"></i> <span id="vwrBackLabel">Home</span></a>
   <div class="vwr-title"><span id="vwrTitle">Loading…</span><span class="vwr-caption" id="vwrCaption"></span></div>
   <div class="vwr-nav-group">
     <button class="vwr-arrow prev" id="vwrPrev" aria-label="Previous item"><i class="fas fa-chevron-left"></i></button>
@@ -256,8 +256,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
   // Load manifest
   fetch('sections.json').then(r => r.json()).then(data => {
     const section = (data.sections || []).find(s => s.id === sectionId);
-    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : 'index.html';
-    const backLabel = subId ? (section ? section.title : 'Category') : 'Cheat Sheets';
+    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : '/';
+    const backLabel = subId ? (section ? section.title : 'Category') : 'Home';
     document.querySelector('.vwr-back').setAttribute('href', backHref);
     document.getElementById('vwrBackLabel').textContent = backLabel;
 
@@ -278,7 +278,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--body-bg);color:v
     setTimeout(() => hint.classList.add('show'), 300);
     setTimeout(() => hint.classList.remove('show'), 3500);
   }).catch(() => {
-    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : 'index.html';
+    const backHref = subId ? `category.html?s=${encodeURIComponent(sectionId)}` : '/';
     showMsg(`<i class="fas fa-triangle-exclamation"></i><div>Couldn't load this section.</div><a href="${backHref}">← Back</a>`);
   });
 })();

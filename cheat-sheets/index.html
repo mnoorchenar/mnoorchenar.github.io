@@ -29,6 +29,12 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
 .vn-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:1100px;margin:0 auto}
 .vn-logo{color:var(--text);text-decoration:none;font-weight:800;font-size:1.05em;display:flex;align-items:center;gap:8px}
 .vn-logo i{color:var(--gold)}
+.vn-search{flex:1;max-width:360px;margin:0 16px;position:relative}
+.vn-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85em;pointer-events:none}
+.vn-search input{width:100%;background:var(--toggle-bg);border:1px solid var(--toggle-bdr);color:var(--text);border-radius:999px;padding:8px 14px 8px 34px;font-size:.88em;outline:none;font-family:inherit}
+.vn-search input:focus{border-color:var(--accent)}
+.vn-search input::placeholder{color:var(--muted)}
+@media (max-width:640px){.vn-nav{flex-wrap:wrap;gap:10px}.vn-search{order:3;flex-basis:100%;max-width:none;margin:0}}
 .theme-toggle{display:flex;align-items:center;gap:6px;background:var(--toggle-bg);border:1px solid var(--toggle-bdr);color:var(--text);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:.85em}
 .theme-toggle .toggle-moon{display:none}
 [data-theme="dark"] .theme-toggle .toggle-sun{display:none}
@@ -60,6 +66,10 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
 
 <nav class="vn-nav">
   <a href="/" class="vn-logo"><i class="fas fa-images"></i> Cheat Sheets</a>
+  <div class="vn-search">
+    <i class="fas fa-search"></i>
+    <input type="search" id="vnSearch" placeholder="Search cheat sheets…" aria-label="Search cheat sheets" autocomplete="off">
+  </div>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
     <span class="toggle-sun">☀️ Light</span>
     <span class="toggle-moon">🌙 Dark</span>
@@ -74,7 +84,7 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
 <div class="vn-grid" id="vnGrid"></div>
 <div class="vn-empty" id="vnEmpty" style="display:none">
   <i class="fas fa-layer-group"></i>
-  New sections are on the way — check back soon.
+  <span id="vnEmptyText">New sections are on the way — check back soon.</span>
 </div>
 
 <div class="vn-footer"><a href="/">← Back to Home</a></div>
@@ -89,38 +99,67 @@ body{margin:0;background:var(--body-bg);color:var(--text);font-family:'Segoe UI'
     localStorage.setItem('mn-theme', next);
   });
 
-  fetch('sections.json').then(r => r.json()).then(data => {
-    const sections = data.sections || [];
-    const grid = document.getElementById('vnGrid');
-    if (!sections.length) {
-      document.getElementById('vnEmpty').style.display = 'block';
-      return;
+  const grid = document.getElementById('vnGrid');
+  const empty = document.getElementById('vnEmpty');
+  const emptyText = document.getElementById('vnEmptyText');
+  const input = document.getElementById('vnSearch');
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let entries = [];
+
+  function cardHtml(e) {
+    const cover = e.icon
+      ? `<i class="${esc(e.icon)} vn-topic-icon"></i>`
+      : e.cover ? `<img src="${esc(e.cover)}" alt="${esc(e.title)}" loading="lazy">` : '<i class="fas fa-image"></i>';
+    return `<a class="vn-card" href="${e.href}">
+      <div class="vn-card-cover">${cover}</div>
+      <div class="vn-card-body">
+        <div class="vn-card-title">${esc(e.title)}</div>
+        <div class="vn-card-meta">${esc(e.meta)}</div>
+      </div></a>`;
+  }
+
+  function render() {
+    const terms = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+    const list = terms.length
+      ? entries.filter(e => terms.every(t => e.haystack.includes(t)))
+      : entries.filter(e => !e.parent);
+    grid.innerHTML = list.map(cardHtml).join('');
+    if (!list.length && entries.length) {
+      emptyText.textContent = `No cheat sheets match “${input.value.trim()}”.`;
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = entries.length ? 'none' : 'block';
     }
-    sections.forEach(s => {
-      const hasSub = (s.subsections || []).length > 0;
-      const a = document.createElement('a');
-      a.className = 'vn-card';
-      a.href = hasSub
-        ? `category.html?s=${encodeURIComponent(s.id)}`
-        : `viewer.html?s=${encodeURIComponent(s.id)}`;
-      const count = hasSub ? s.subsections.length : (s.images || []).length;
-      const countLabel = hasSub ? `categor${count === 1 ? 'y' : 'ies'}` : `note${count === 1 ? '' : 's'}`;
-      const coverContent = s.icon
-        ? `<i class="${s.icon} vn-topic-icon"></i>`
-        : s.cover
-          ? `<img src="${s.cover}" alt="${s.title}" loading="lazy">`
-          : '<i class="fas fa-image"></i>';
-      a.innerHTML = `
-        <div class="vn-card-cover">${coverContent}</div>
-        <div class="vn-card-body">
-          <div class="vn-card-title">${s.title}</div>
-          <div class="vn-card-meta">${count} ${countLabel}${s.description ? ' · ' + s.description : ''}</div>
-        </div>`;
-      grid.appendChild(a);
+  }
+
+  input.addEventListener('input', render);
+
+  fetch('sections.json').then(r => r.json()).then(data => {
+    (data.sections || []).forEach(s => {
+      const subs = s.subsections || [];
+      const count = subs.length ? subs.length : (s.images || []).length;
+      const label = subs.length ? `categor${count === 1 ? 'y' : 'ies'}` : `note${count === 1 ? '' : 's'}`;
+      entries.push({
+        title: s.title,
+        meta: `${count} ${label}${s.description ? ' · ' + s.description : ''}`,
+        icon: s.icon, cover: s.cover,
+        href: (subs.length ? 'category.html' : 'viewer.html') + `?s=${encodeURIComponent(s.id)}`,
+        haystack: [s.title, s.description, s.id, ...(s.captions || []), ...subs.map(x => x.title)].join(' ').toLowerCase()
+      });
+      subs.forEach(sub => {
+        const n = (sub.images || []).length;
+        entries.push({
+          parent: s.id,
+          title: `${s.title} · ${sub.title}`,
+          meta: `${n} note${n === 1 ? '' : 's'}${sub.description ? ' · ' + sub.description : ''}`,
+          icon: sub.icon, cover: sub.cover,
+          href: `viewer.html?s=${encodeURIComponent(s.id)}&sub=${encodeURIComponent(sub.id)}`,
+          haystack: [s.title, sub.title, sub.description, sub.id, ...(sub.captions || [])].join(' ').toLowerCase()
+        });
+      });
     });
-  }).catch(() => {
-    document.getElementById('vnEmpty').style.display = 'block';
-  });
+    render();
+  }).catch(() => { empty.style.display = 'block'; });
 })();
 </script>
 </body>
