@@ -59,6 +59,36 @@
           ]
         }
       ]
+    },
+    {
+      "id": "English",
+      "title": "English Templates",
+      "description": "CELPIP exam templates, by section",
+      "icon": "fa-solid fa-language",
+      "subsections": [
+        {
+          "id": "Writing",
+          "title": "Writing",
+          "description": "CELPIP Writing Tasks 1 & 2",
+          "icon": "fa-solid fa-pen",
+          "images": [
+            "images/English/Writing/01. CELPIP Writing Task 1 Email.html",
+            "images/English/Writing/02. CELPIP Writing Task 2 Survey Response.html"
+          ],
+          "captions": [
+            "CELPIP Writing Task 1: Email",
+            "CELPIP Writing Task 2: Survey Response"
+          ]
+        },
+        {
+          "id": "Speaking",
+          "title": "Speaking",
+          "description": "CELPIP Speaking Tasks",
+          "icon": "fa-solid fa-microphone",
+          "images": [],
+          "captions": []
+        }
+      ]
     }
   ]
 }
