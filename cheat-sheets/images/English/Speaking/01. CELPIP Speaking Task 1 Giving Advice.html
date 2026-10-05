@@ -1,0 +1,3873 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 1 Giving Advice</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 1 Giving Advice</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-1-giving-advice" id="toc-celpip-speaking-task-1-giving-advice">CELPIP Speaking Task 1:
+Giving Advice</a></li>
+<li><a href="#moving-housing-and-new-places" id="toc-moving-housing-and-new-places">1 Moving, Housing, and New
+Places</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#settling-into-a-new-city" id="toc-settling-into-a-new-city">1.1 Settling Into a New City</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#downtown-vs-suburbs" id="toc-downtown-vs-suburbs">1.2
+Downtown vs Suburbs</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#moving-abroad" id="toc-moving-abroad">1.3 Moving
+Abroad</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#living-with-roommates" id="toc-living-with-roommates">1.4
+Living With Roommates</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#buying-a-house" id="toc-buying-a-house">1.5 Buying a
+House</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#work-and-career" id="toc-work-and-career">2 Work and
+Career</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#choosing-between-job-offers" id="toc-choosing-between-job-offers">2.1 Choosing Between Job Offers</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#interview-tomorrow" id="toc-interview-tomorrow">2.2
+Interview Tomorrow</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#quitting-to-start-a-business" id="toc-quitting-to-start-a-business">2.3 Quitting to Start a
+Business</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#overwork-and-exhaustion" id="toc-overwork-and-exhaustion">2.4 Overwork and Exhaustion</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#starting-a-new-job" id="toc-starting-a-new-job">2.5
+Starting a New Job</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#presentation-nerves" id="toc-presentation-nerves">2.6
+Presentation Nerves</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#education-and-study" id="toc-education-and-study">3
+Education and Study</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#choosing-a-program" id="toc-choosing-a-program">3.1
+Choosing a Program</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#exam-preparation" id="toc-exam-preparation">3.2 Exam
+Preparation</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#improving-english" id="toc-improving-english">3.3
+Improving English</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#work-and-study" id="toc-work-and-study">3.4 Work and
+Study</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#taking-a-gap-year" id="toc-taking-a-gap-year">3.5 Taking a
+Gap Year</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#health-fitness-and-wellbeing" id="toc-health-fitness-and-wellbeing">4 Health, Fitness, and
+Wellbeing</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#getting-in-shape" id="toc-getting-in-shape">4.1 Getting in
+Shape</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#coping-with-stress" id="toc-coping-with-stress">4.2 Coping
+With Stress</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#sleeping-better" id="toc-sleeping-better">4.3 Sleeping
+Better</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#eating-healthier" id="toc-eating-healthier">4.4 Eating
+Healthier</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+<li><a href="#quitting-a-bad-habit" id="toc-quitting-a-bad-habit">4.5
+Quitting a Bad Habit</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#newcomers-and-life-in-canada" id="toc-newcomers-and-life-in-canada">5 Newcomers and Life in Canada</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#finding-a-first-job" id="toc-finding-a-first-job">5.1
+Finding a First Job</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+<li><a href="#preparing-for-winter" id="toc-preparing-for-winter">5.2
+Preparing for Winter</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#getting-a-drivers-licence" id="toc-getting-a-drivers-licence">5.3 Getting a Driver’s Licence</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#using-public-transit" id="toc-using-public-transit">5.4
+Using Public Transit</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#feeling-homesick" id="toc-feeling-homesick">5.5 Feeling
+Homesick</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#money-shopping-and-big-purchases" id="toc-money-shopping-and-big-purchases">6 Money, Shopping, and Big
+Purchases</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#saving-for-a-vacation" id="toc-saving-for-a-vacation">6.1
+Saving for a Vacation</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#new-vs-used-car" id="toc-new-vs-used-car">6.2 New vs Used
+Car</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#buying-a-laptop" id="toc-buying-a-laptop">6.3 Buying a
+Laptop</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#budgeting-small-purchases" id="toc-budgeting-small-purchases">6.4 Budgeting Small Purchases</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+<li><a href="#spending-a-bonus" id="toc-spending-a-bonus">6.5 Spending a
+Bonus</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#travel-and-free-time" id="toc-travel-and-free-time">7
+Travel and Free Time</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#visiting-a-city" id="toc-visiting-a-city">7.1 Visiting a
+City</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+<li><a href="#choosing-a-hobby" id="toc-choosing-a-hobby">7.2 Choosing a
+Hobby</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#bored-weekend" id="toc-bored-weekend">7.3 Bored
+Weekend</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#travelling-alone" id="toc-travelling-alone">7.4 Travelling
+Alone</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#pets-home-and-learning-new-skills" id="toc-pets-home-and-learning-new-skills">8 Pets, Home, and Learning
+New Skills</a>
+<ul>
+<li><a href="#general-template-7" id="toc-general-template-7">General
+Template</a></li>
+<li><a href="#adopting-a-dog" id="toc-adopting-a-dog">8.1 Adopting a
+Dog</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#organizing-a-small-apartment" id="toc-organizing-a-small-apartment">8.2 Organizing a Small
+Apartment</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#learning-to-cook" id="toc-learning-to-cook">8.3 Learning
+to Cook</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+<li><a href="#learning-to-swim" id="toc-learning-to-swim">8.4 Learning
+to Swim</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#balcony-garden" id="toc-balcony-garden">8.5 Balcony
+Garden</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#family-friends-and-social-situations" id="toc-family-friends-and-social-situations">9 Family, Friends, and
+Social Situations</a>
+<ul>
+<li><a href="#general-template-8" id="toc-general-template-8">General
+Template</a></li>
+<li><a href="#surprise-party" id="toc-surprise-party">9.1 Surprise
+Party</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fixing-an-argument" id="toc-fixing-an-argument">9.2 Fixing
+an Argument</a>
+<ul>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+</ul></li>
+<li><a href="#hosting-guests" id="toc-hosting-guests">9.3 Hosting
+Guests</a>
+<ul>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+</ul></li>
+<li><a href="#farewell-gift" id="toc-farewell-gift">9.4 Farewell
+Gift</a>
+<ul>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+</ul></li>
+<li><a href="#meeting-new-people" id="toc-meeting-new-people">9.5
+Meeting New People</a>
+<ul>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-1-giving-advice">CELPIP Speaking Task 1:
+Giving Advice</h1>
+<h1 id="moving-housing-and-new-places">1 Moving, Housing, and New
+Places</h1>
+<p>Topics: moving to a new city or country, choosing an apartment,
+adjusting to a new neighbourhood, living with roommates, buying a
+home.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="settling-into-a-new-city">1.1 Settling Into a New City</h2>
+<p>Your friend is moving to a new city for work and does not know anyone
+there. Give advice on how to settle in and make friends.</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would focus on
+joining groups in the first month. <span class="conn">First of
+all</span>, find a hobby club or a sports team, because it’s the fastest
+way to <span class="vocab">meet like-minded people</span>. <span class="conn">Also</span>, say yes to invitations from your coworkers,
+even if you feel tired. Small <span class="vocab">social
+gatherings</span> like lunch or after-work coffee can turn into real
+friendships.</p>
+<p><span class="tpl">Another thing you could do is</span> explore your
+<span class="vocab">neighbourhood</span> on foot. Visit the local cafés
+and parks, and you’ll soon start to recognize familiar faces. <span class="conn">On top of that</span>, you could <span class="vocab">volunteer</span> on weekends, which is a great way to
+<span class="vocab">build a support network</span>.</p>
+<p><span class="conn">However</span>, be patient with yourself. It takes
+time to <span class="vocab">settle in</span>, so don’t get discouraged
+if it feels lonely at first.</p>
+<p><span class="tpl">I’m sure that</span> in a few months you’ll feel
+right at home. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meet like-minded people</td>
+<td>meet others with similar interests</td>
+<td>A book club is a good place to meet like-minded people.</td>
+</tr>
+<tr>
+<td>social gatherings</td>
+<td>informal events where people meet</td>
+<td>I try to attend social gatherings to make new friends.</td>
+</tr>
+<tr>
+<td>neighbourhood</td>
+<td>the area around where you live</td>
+<td>Our neighbourhood has a lovely park.</td>
+</tr>
+<tr>
+<td>build a support network</td>
+<td>create a group of people who help you</td>
+<td>It took her a year to build a support network in Canada.</td>
+</tr>
+<tr>
+<td>settle in</td>
+<td>become comfortable in a new place</td>
+<td>It took me a few weeks to settle in.</td>
+</tr>
+<tr>
+<td>volunteer</td>
+<td>work without pay to help others</td>
+<td>I volunteer at the food bank on Saturdays.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="downtown-vs-suburbs">1.2 Downtown vs Suburbs</h2>
+<p>Your cousin is looking for an apartment. Advise whether to rent near
+downtown or in the suburbs.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">Well, in my opinion</span>, it depends on your
+daily routine. <span class="conn">First of all</span>, if you work
+downtown, I’d rent near the city centre. You’ll save time and money on
+your <span class="vocab">commute</span>, and you’ll have restaurants and
+shops <span class="vocab">within walking distance</span>.</p>
+<p><span class="conn">On the other hand</span>, the <span class="vocab">suburbs</span> offer more space for a lower price. If you
+want a quiet street and a bigger place, that could be a better <span class="vocab">value for money</span>. Just remember that you’ll probably
+need a car or a long bus ride.</p>
+<p><span class="tpl">Another thing you could do is</span> visit both
+areas at different times of the day. Check the noise, the traffic, and
+the <span class="vocab">amenities</span> nearby, like groceries and
+parks. <span class="conn">Also</span>, set a clear <span class="vocab">rental budget</span> before you start, so you don’t fall
+in love with a place you can’t afford.</p>
+<p><span class="tpl">If I were you</span>, I’d choose the area that
+matches my lifestyle, not just the lowest rent. <span class="tpl">I’m
+sure you’ll find something great</span>.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commute</td>
+<td>the daily trip between home and work</td>
+<td>My commute takes forty minutes by train.</td>
+</tr>
+<tr>
+<td>value for money</td>
+<td>good quality for the price paid</td>
+<td>This apartment is excellent value for money.</td>
+</tr>
+<tr>
+<td>amenities</td>
+<td>useful facilities near a home</td>
+<td>The building has amenities like a gym and a laundry room.</td>
+</tr>
+<tr>
+<td>rental budget</td>
+<td>the amount you can spend on rent</td>
+<td>Our rental budget is 1,500 dollars a month.</td>
+</tr>
+<tr>
+<td>within walking distance</td>
+<td>close enough to reach on foot</td>
+<td>The subway is within walking distance.</td>
+</tr>
+<tr>
+<td>suburbs</td>
+<td>residential areas outside the city centre</td>
+<td>They moved to the suburbs for a bigger yard.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="moving-abroad">1.3 Moving Abroad</h2>
+<p>Your friend is moving abroad for the first time. Give advice on how
+to prepare.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start preparing
+at least two months in advance. <span class="conn">First of all</span>,
+check your <span class="vocab">visa</span> and all your documents, and
+make copies of everything. Losing a passport abroad is a real
+nightmare.</p>
+<p><span class="conn">Next</span>, learn about the <span class="vocab">cost of living</span> in your new city, so you can make a
+realistic budget. <span class="tpl">Another thing you could do is</span>
+research housing early and book a <span class="vocab">short-term</span>
+place for the first few weeks. That way, you can look for a permanent
+apartment without pressure.</p>
+<p><span class="conn">On top of that</span>, learn a few basic phrases
+in the local language and read about the <span class="vocab">local
+customs</span>. It helps you avoid <span class="vocab">culture
+shock</span>, or at least makes it easier to adapt.</p>
+<p><span class="conn">However</span>, don’t try to plan every detail.
+Leave some room for surprises. <span class="tpl">I’m sure that</span> it
+will be an amazing adventure. <span class="tpl">Good luck, and let me
+know how it goes</span>.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>visa</td>
+<td>official permission to enter or live in a country</td>
+<td>She applied for a student visa.</td>
+</tr>
+<tr>
+<td>cost of living</td>
+<td>the money needed for daily expenses</td>
+<td>The cost of living is high in big cities.</td>
+</tr>
+<tr>
+<td>culture shock</td>
+<td>confusion felt in an unfamiliar culture</td>
+<td>He felt culture shock during his first week abroad.</td>
+</tr>
+<tr>
+<td>short-term</td>
+<td>lasting only a brief time</td>
+<td>We booked a short-term rental for the first month.</td>
+</tr>
+<tr>
+<td>local customs</td>
+<td>traditional habits of a place</td>
+<td>It’s polite to learn the local customs before you travel.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="living-with-roommates">1.4 Living With Roommates</h2>
+<p>Your coworker is about to live with roommates for the first time.
+Give advice for a good living arrangement.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+talk openly with my roommates before moving in. <span class="conn">First
+of all</span>, agree on the basic <span class="vocab">house
+rules</span>, like quiet hours, guests, and cleaning. It’s much easier
+to set expectations at the start than to fix problems later.</p>
+<p><span class="tpl">Another thing you could do is</span> make a simple
+<span class="vocab">chore chart</span> and a plan for <span class="vocab">splitting the bills</span>. <span class="conn">For
+example</span>, you can use an app to share costs for rent, internet,
+and groceries, so nobody feels treated unfairly.</p>
+<p><span class="conn">Also</span>, respect each other’s <span class="vocab">personal space</span>. Even good friends need time alone.
+<span class="conn">On top of that</span>, if something bothers you,
+speak up politely right away instead of letting <span class="vocab">resentment</span> build up.</p>
+<p><span class="conn">However</span>, don’t expect to become best
+friends with everyone. A friendly, <span class="vocab">considerate</span> relationship is enough. <span class="tpl">I’m sure that</span> it will work out well. <span class="tpl">Good luck</span>!</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>house rules</td>
+<td>agreed guidelines for shared living</td>
+<td>Our house rules include no loud music after 10 p.m.</td>
+</tr>
+<tr>
+<td>splitting the bills</td>
+<td>sharing the cost of expenses</td>
+<td>Splitting the bills equally keeps things simple.</td>
+</tr>
+<tr>
+<td>personal space</td>
+<td>privacy and room to be alone</td>
+<td>Everyone needs some personal space at home.</td>
+</tr>
+<tr>
+<td>resentment</td>
+<td>bitter feelings about unfair treatment</td>
+<td>Resentment grows when chores are not shared.</td>
+</tr>
+<tr>
+<td>considerate</td>
+<td>thoughtful about other people’s feelings</td>
+<td>He is a considerate roommate who always cleans up.</td>
+</tr>
+<tr>
+<td>chore chart</td>
+<td>a schedule showing who does which household task</td>
+<td>We hung a chore chart on the fridge.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="buying-a-house">1.5 Buying a House</h2>
+<p>Your friend wants to buy a house but is unsure about the cost. Give
+advice on what to consider.</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would look at the
+full picture before deciding. <span class="conn">First of all</span>,
+figure out how much you can afford. Don’t think only about the <span class="vocab">down payment</span>. Consider your monthly <span class="vocab">mortgage</span> payments, property taxes, insurance, and
+repairs.</p>
+<p><span class="tpl">Another thing you could do is</span> talk to a bank
+or a <span class="vocab">mortgage broker</span> to get <span class="vocab">pre-approved</span>. That way, you’ll know your real
+budget and avoid wasting time on houses that are too expensive.</p>
+<p><span class="conn">On top of that</span>, keep an <span class="vocab">emergency fund</span>. <span class="conn">For
+example</span>, a broken furnace or a leaking roof can cost thousands of
+dollars, and as an owner, it’s your responsibility.</p>
+<p><span class="conn">On the other hand</span>, renting for another year
+or two might be smart if your income isn’t <span class="vocab">stable</span> yet. There’s no need to rush.</p>
+<p><span class="tpl">I’m sure that</span> you’ll make the right choice
+if you take your time. <span class="tpl">Good luck, and let me know how
+it goes</span>.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>down payment</td>
+<td>the first lump sum paid when buying a home</td>
+<td>They saved for five years for the down payment.</td>
+</tr>
+<tr>
+<td>mortgage</td>
+<td>a loan used to buy property</td>
+<td>Our mortgage is paid monthly.</td>
+</tr>
+<tr>
+<td>mortgage broker</td>
+<td>a person who helps you find a home loan</td>
+<td>A mortgage broker compared several rates for us.</td>
+</tr>
+<tr>
+<td>pre-approved</td>
+<td>officially cleared in advance for a loan</td>
+<td>We got pre-approved before visiting open houses.</td>
+</tr>
+<tr>
+<td>stable</td>
+<td>steady and not likely to change</td>
+<td>She wants a stable job before buying a house.</td>
+</tr>
+<tr>
+<td>emergency fund</td>
+<td>savings kept for unexpected costs</td>
+<td>An emergency fund helped when the car broke down.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="work-and-career">2 Work and Career</h1>
+<p>Topics: changing jobs, job interviews, starting a business, working
+with difficult colleagues, balancing work and life.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="choosing-between-job-offers">2.1 Choosing Between Job
+Offers</h2>
+<p>Your friend has two job offers, one with higher pay and one with
+better work-life balance. Give advice on which to choose.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would think carefully
+about what matters most right now. <span class="conn">First of
+all</span>, ask yourself whether the extra money is really necessary. If
+you have <span class="vocab">financial obligations</span>, like rent or
+a loan, the higher salary might be the safer choice.</p>
+<p><span class="conn">On the other hand</span>, a good <span class="vocab">work-life balance</span> protects your health and your
+relationships. Money can’t buy back the time you lose to stress and long
+hours.</p>
+<p><span class="tpl">Another thing you could do is</span> talk to
+current employees at both companies. Ask about the <span class="vocab">workload</span>, the team, and the chances of <span class="vocab">career growth</span>. <span class="conn">Also</span>,
+write a list of pros and cons, which makes the decision much
+clearer.</p>
+<p><span class="conn">Personally</span>, I’d <span class="vocab">lean
+toward</span> the balanced job if the pay is enough to live comfortably.
+You can always <span class="vocab">negotiate</span> a raise later.</p>
+<p><span class="tpl">I’m sure that</span> you’ll make a wise choice.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>financial obligations</td>
+<td>money you must pay regularly</td>
+<td>He has financial obligations like a mortgage.</td>
+</tr>
+<tr>
+<td>work-life balance</td>
+<td>a healthy split between work and personal time</td>
+<td>This company values work-life balance.</td>
+</tr>
+<tr>
+<td>workload</td>
+<td>the amount of work a person has</td>
+<td>My workload doubled after the merger.</td>
+</tr>
+<tr>
+<td>career growth</td>
+<td>chances to advance in your job</td>
+<td>The firm offers great career growth.</td>
+</tr>
+<tr>
+<td>negotiate</td>
+<td>discuss to reach an agreement</td>
+<td>She negotiated a higher salary.</td>
+</tr>
+<tr>
+<td>lean toward</td>
+<td>tend to prefer</td>
+<td>I lean toward the second offer.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="interview-tomorrow">2.2 Interview Tomorrow</h2>
+<p>Your friend has a job interview tomorrow and is nervous. Give advice
+on how to prepare.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would stay calm and
+use tonight wisely. <span class="conn">First of all</span>, research the
+company. Read its website and understand its products and values, so you
+can show real interest.</p>
+<p><span class="tpl">Another thing you could do is</span> practise
+answering common questions out loud, like “Tell me about yourself” or
+“Why should we hire you?” Prepare two or three examples of your <span class="vocab">achievements</span>, and use specific numbers if you can.
+<span class="conn">Also</span>, prepare a couple of questions to ask the
+<span class="vocab">interviewer</span>, because it shows you’re <span class="vocab">enthusiastic</span>.</p>
+<p><span class="conn">On top of that</span>, lay out your clothes and
+plan your route, so you arrive ten minutes early. Then get a good
+night’s sleep.</p>
+<p><span class="conn">However</span>, don’t worry about being perfect.
+Interviewers just want to see a confident, honest person. Take a deep
+breath and smile.</p>
+<p><span class="tpl">I’m sure that</span> you’ll do great. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>achievements</td>
+<td>things you have successfully done</td>
+<td>List your achievements on your résumé.</td>
+</tr>
+<tr>
+<td>interviewer</td>
+<td>the person who asks questions in an interview</td>
+<td>The interviewer was very friendly.</td>
+</tr>
+<tr>
+<td>enthusiastic</td>
+<td>showing strong interest</td>
+<td>She was enthusiastic about the role.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quitting-to-start-a-business">2.3 Quitting to Start a
+Business</h2>
+<p>Your colleague is thinking of quitting a stable job to start a
+business. Give advice.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+not rush into it. <span class="conn">First of all</span>, test your idea
+before you quit. Start the business part-time on evenings and weekends,
+so you can see if there is real <span class="vocab">demand</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> build a <span class="vocab">financial cushion</span>. Most new businesses take a long
+time to <span class="vocab">make a profit</span>, so I’d save at least
+six months of living expenses. <span class="conn">Also</span>, write a
+clear <span class="vocab">business plan</span> with your costs,
+customers, and goals.</p>
+<p><span class="conn">On top of that</span>, talk to people who have
+already done it. They can warn you about mistakes and give you useful
+contacts.</p>
+<p><span class="conn">On the other hand</span>, if you’ve prepared well,
+taking a <span class="vocab">calculated risk</span> can be rewarding.
+Many people regret not trying more than failing.</p>
+<p><span class="tpl">I’m sure that</span> with good planning you can
+succeed. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>demand</td>
+<td>the desire of customers to buy something</td>
+<td>There is strong demand for healthy snacks.</td>
+</tr>
+<tr>
+<td>financial cushion</td>
+<td>savings that protect you in hard times</td>
+<td>A financial cushion reduces stress.</td>
+</tr>
+<tr>
+<td>business plan</td>
+<td>a document describing goals and finances</td>
+<td>The bank asked for my business plan.</td>
+</tr>
+<tr>
+<td>calculated risk</td>
+<td>a risk taken after careful thought</td>
+<td>Opening a shop was a calculated risk.</td>
+</tr>
+<tr>
+<td>make a profit</td>
+<td>earn more than you spend</td>
+<td>The café made a profit in its second year.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="overwork-and-exhaustion">2.4 Overwork and Exhaustion</h2>
+<p>Your friend works too many hours and is exhausted. Give advice on how
+to manage the workload.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would make some
+changes before burning out. <span class="conn">First of all</span>, list
+all your tasks and decide which ones are truly urgent. Learn to <span class="vocab">prioritize</span>, so you focus on what really
+matters.</p>
+<p><span class="tpl">Another thing you could do is</span> talk to your
+manager. Explain that your <span class="vocab">workload</span> is too
+heavy and suggest solutions, like <span class="vocab">delegating</span>
+some tasks or adjusting deadlines. Most bosses would rather solve a
+problem early than lose a tired employee.</p>
+<p><span class="conn">Also</span>, set clear <span class="vocab">boundaries</span>. For example, turn off work emails after
+7 p.m. and take a real lunch break. <span class="conn">On top of
+that</span>, make time for exercise and sleep, because rest actually
+improves your <span class="vocab">productivity</span>.</p>
+<p><span class="conn">However</span>, be patient. Changing habits takes
+a few weeks.</p>
+<p><span class="tpl">I’m sure that</span> you’ll feel much better soon.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prioritize</td>
+<td>decide what is most important</td>
+<td>You need to prioritize your tasks.</td>
+</tr>
+<tr>
+<td>workload</td>
+<td>the amount of work to do</td>
+<td>A heavy workload can cause stress.</td>
+</tr>
+<tr>
+<td>delegating</td>
+<td>give a task to someone else</td>
+<td>Good managers delegate tasks.</td>
+</tr>
+<tr>
+<td>boundaries</td>
+<td>limits you set to protect your time</td>
+<td>Set boundaries between work and home.</td>
+</tr>
+<tr>
+<td>productivity</td>
+<td>how much work you get done</td>
+<td>Rest improves productivity.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="starting-a-new-job">2.5 Starting a New Job</h2>
+<p>Your friend is starting a new job next week. Give advice on making a
+good first impression.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would focus on being
+friendly and prepared. <span class="conn">First of all</span>, arrive a
+little early on the first day and dress appropriately. Being on time
+shows that you’re <span class="vocab">reliable</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> introduce
+yourself to everyone with a smile and learn people’s names. <span class="conn">Also</span>, listen more than you talk during the first
+weeks. Take notes, ask questions, and show that you’re eager to
+learn.</p>
+<p><span class="conn">On top of that</span>, be <span class="vocab">proactive</span>. If you finish a task, ask what else you
+can help with. Small <span class="vocab">initiatives</span> like that
+get noticed quickly.</p>
+<p><span class="conn">However</span>, don’t try to impress everyone at
+once or pretend to know everything. Being honest about what you don’t
+know builds trust.</p>
+<p><span class="tpl">I’m sure that</span> you’ll <span class="vocab">fit
+in</span> well. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reliable</td>
+<td>able to be trusted</td>
+<td>She is a reliable team member.</td>
+</tr>
+<tr>
+<td>proactive</td>
+<td>taking action before being asked</td>
+<td>A proactive employee solves problems early.</td>
+</tr>
+<tr>
+<td>initiatives</td>
+<td>the ability to start things on your own</td>
+<td>He showed great initiative.</td>
+</tr>
+<tr>
+<td>fit in</td>
+<td>feel part of a group</td>
+<td>I quickly fit in with my new coworkers.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="presentation-nerves">2.6 Presentation Nerves</h2>
+<p>Your coworker is nervous about giving a presentation to the whole
+team. Give advice on how to prepare and stay calm.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+prepare early and practise a lot. <span class="conn">First of
+all</span>, organize your ideas into three clear points, with a short
+introduction and a strong ending. A simple structure is easier to
+remember.</p>
+<p><span class="tpl">Another thing you could do is</span> <span class="vocab">rehearse</span> in front of a friend or a mirror, and time
+yourself. Practice builds <span class="vocab">confidence</span>, and
+you’ll be less likely to freeze on the day.</p>
+<p><span class="conn">Also</span>, use short slides with pictures, not
+long paragraphs. <span class="conn">On top of that</span>, take slow,
+deep breaths before you start, and speak at a <span class="vocab">steady
+pace</span>. If you feel nervous, remember that the <span class="vocab">audience</span> wants you to succeed.</p>
+<p><span class="conn">However</span>, don’t memorize every word. If you
+forget something, just keep going calmly. Nobody will notice.</p>
+<p><span class="tpl">I’m sure that</span> you’ll deliver a great
+presentation. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>confidence</td>
+<td>belief in your own ability</td>
+<td>Practice gives you confidence.</td>
+</tr>
+<tr>
+<td>rehearse</td>
+<td>practise before the real event</td>
+<td>We rehearsed the speech twice.</td>
+</tr>
+<tr>
+<td>steady pace</td>
+<td>a calm, even speed</td>
+<td>Speak at a steady pace.</td>
+</tr>
+<tr>
+<td>audience</td>
+<td>the people listening</td>
+<td>The audience applauded warmly.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="education-and-study">3 Education and Study</h1>
+<p>Topics: choosing a program, studying for exams, learning a language,
+balancing school and work, time management.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="choosing-a-program">3.1 Choosing a Program</h2>
+<p>Your friend is choosing a university program and cannot decide
+between two. Give advice.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would take my time
+and look at the facts. <span class="conn">First of all</span>, think
+about your <span class="vocab">passion</span>. You’ll spend years
+studying this subject, so choose the one that really interests you.</p>
+<p><span class="tpl">Another thing you could do is</span> research the
+<span class="vocab">career prospects</span> of each program. Check the
+<span class="vocab">job market</span>, the average salary, and what
+graduates actually do. <span class="conn">Also</span>, talk to students
+or <span class="vocab">alumni</span>, who can tell you what the courses
+are really like.</p>
+<p><span class="conn">On top of that</span>, look at the cost, the
+location, and whether the program offers <span class="vocab">co-op
+placements</span>, because practical experience helps a lot when you
+look for work.</p>
+<p><span class="conn">However</span>, don’t worry too much about making
+the “perfect” choice. Many people change direction later, and skills
+transfer between fields.</p>
+<p><span class="tpl">I’m sure that</span> you’ll choose well. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>passion</td>
+<td>a strong interest or enthusiasm</td>
+<td>Music is her passion.</td>
+</tr>
+<tr>
+<td>career prospects</td>
+<td>chances of finding good work in a field</td>
+<td>Nursing has excellent career prospects.</td>
+</tr>
+<tr>
+<td>job market</td>
+<td>the demand for workers</td>
+<td>The job market for engineers is strong.</td>
+</tr>
+<tr>
+<td>alumni</td>
+<td>former students of a school</td>
+<td>Alumni often help new graduates.</td>
+</tr>
+<tr>
+<td>co-op placements</td>
+<td>a paid work term during studies</td>
+<td>His co-op placement led to a full-time job.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exam-preparation">3.2 Exam Preparation</h2>
+<p>Your friend is preparing for an important exam. Give advice on how to
+study effectively.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start by making
+a realistic study plan. <span class="conn">First of all</span>, divide
+the material into small parts and give each day a clear goal. This keeps
+you from feeling <span class="vocab">overwhelmed</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> practise with
+<span class="vocab">past exam papers</span>. It helps you understand the
+format and manage your time. <span class="conn">Also</span>, don’t just
+reread your notes. Try <span class="vocab">active recall</span>, like
+testing yourself or explaining the topic to a friend.</p>
+<p><span class="conn">On top of that</span>, take short breaks every
+hour and avoid <span class="vocab">cramming</span> the night before.
+Sleep, healthy food, and a bit of exercise help your memory more than
+extra hours of studying.</p>
+<p><span class="conn">However</span>, be careful with <span class="vocab">distractions</span>. Put your phone in another room while
+you study.</p>
+<p><span class="tpl">I’m sure that</span> you’ll do well if you stay
+<span class="vocab">consistent</span>. <span class="tpl">Good luck, and
+let me know how it goes</span>.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overwhelmed</td>
+<td>feeling there is too much to handle</td>
+<td>I felt overwhelmed by all the homework.</td>
+</tr>
+<tr>
+<td>active recall</td>
+<td>testing yourself from memory</td>
+<td>Active recall improves learning.</td>
+</tr>
+<tr>
+<td>cramming</td>
+<td>studying a lot at the last minute</td>
+<td>Cramming rarely works.</td>
+</tr>
+<tr>
+<td>past exam papers</td>
+<td>old tests used for practice</td>
+<td>I solved ten past exam papers.</td>
+</tr>
+<tr>
+<td>distractions</td>
+<td>something that takes your attention away</td>
+<td>Social media is a big distraction.</td>
+</tr>
+<tr>
+<td>consistent</td>
+<td>doing something regularly</td>
+<td>Be consistent with your study schedule.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="improving-english">3.3 Improving English</h2>
+<p>Your cousin wants to improve their English quickly. Give advice on
+the best methods.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would make English
+part of my daily life. <span class="conn">First of all</span>, practise
+speaking every day, even for ten minutes. Find a <span class="vocab">language exchange</span> partner or join a conversation
+club, because speaking is the fastest way to gain <span class="vocab">fluency</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> <span class="vocab">immerse yourself</span> in the language. Watch movies with
+English <span class="vocab">subtitles</span>, listen to podcasts, and
+read short articles about topics you like. <span class="conn">Also</span>, write down new words in a notebook and use
+them in sentences the same day.</p>
+<p><span class="conn">On top of that</span>, don’t be afraid of
+mistakes. <span class="vocab">Making mistakes</span> is how everyone
+learns, and native speakers appreciate the effort.</p>
+<p><span class="conn">However</span>, be realistic. Progress takes time,
+so celebrate small improvements.</p>
+<p><span class="tpl">I’m sure that</span> you’ll see a big difference in
+a few months. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>language exchange</td>
+<td>meeting someone to practise each other’s language</td>
+<td>I do a language exchange every Sunday.</td>
+</tr>
+<tr>
+<td>fluency</td>
+<td>the ability to speak smoothly</td>
+<td>Her fluency improved after living abroad.</td>
+</tr>
+<tr>
+<td>making mistakes</td>
+<td>getting things wrong while learning</td>
+<td>Making mistakes is part of learning.</td>
+</tr>
+<tr>
+<td>immerse yourself</td>
+<td>become fully surrounded by something</td>
+<td>Immerse yourself in the language to learn faster.</td>
+</tr>
+<tr>
+<td>subtitles</td>
+<td>translated text shown on a screen</td>
+<td>I use subtitles to follow the dialogue.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="work-and-study">3.4 Work and Study</h2>
+<p>Your friend is working part-time while studying and falling behind.
+Give advice on managing both.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+take control of my schedule. <span class="conn">First of all</span>, use
+a calendar or planner to write down your classes, <span class="vocab">work shifts</span>, and <span class="vocab">deadlines</span>. Seeing everything in one place makes it
+easier to plan.</p>
+<p><span class="tpl">Another thing you could do is</span> talk to your
+boss about your exam periods. Many employers are flexible if you ask
+early. <span class="conn">Also</span>, speak with your professors. If
+you explain your situation, they may give you an extension or extra
+help.</p>
+<p><span class="conn">On top of that</span>, use small gaps in your day,
+like bus rides or breaks, for light studying. And set aside one evening
+a week to rest.</p>
+<p><span class="conn">However</span>, if you’re still struggling,
+consider reducing your work hours for a while. Your education should be
+the <span class="vocab">priority</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll catch up soon. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deadlines</td>
+<td>the final time to finish something</td>
+<td>The deadline is Friday at noon.</td>
+</tr>
+<tr>
+<td>priority</td>
+<td>something most important</td>
+<td>Health should be your top priority.</td>
+</tr>
+<tr>
+<td>work shifts</td>
+<td>a scheduled period of work</td>
+<td>I have a night shift on Tuesday.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="taking-a-gap-year">3.5 Taking a Gap Year</h2>
+<p>Your friend is unsure whether to take a gap year. Give advice.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would decide based on
+a clear purpose. <span class="conn">First of all</span>, ask yourself
+why you want the break. If you’re exhausted and need time to <span class="vocab">recharge</span>, or you want to travel, work, or
+volunteer, a <span class="vocab">gap year</span> can be very
+valuable.</p>
+<p><span class="tpl">Another thing you could do is</span> make a
+concrete plan for the year. <span class="conn">For example</span>, save
+money through a job, learn a new skill, or gain <span class="vocab">work
+experience</span> in your field. That way, you’ll come back more <span class="vocab">mature</span> and more focused.</p>
+<p><span class="conn">On the other hand</span>, if the plan is vague,
+you may waste the year or lose <span class="vocab">momentum</span>. Some
+people find it harder to return to school after a long pause.</p>
+<p><span class="conn">Also</span>, check whether your university allows
+you to <span class="vocab">defer</span> your place.</p>
+<p><span class="tpl">I’m sure that</span> you’ll make the right call.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>work experience</td>
+<td>skills gained from jobs</td>
+<td>Work experience helps your résumé.</td>
+</tr>
+<tr>
+<td>mature</td>
+<td>emotionally developed, sensible</td>
+<td>Travelling made him more mature.</td>
+</tr>
+<tr>
+<td>momentum</td>
+<td>the energy that keeps progress going</td>
+<td>She lost momentum during the break.</td>
+</tr>
+<tr>
+<td>defer</td>
+<td>postpone to a later date</td>
+<td>I deferred my admission by a year.</td>
+</tr>
+<tr>
+<td>gap year</td>
+<td>a year off between school stages</td>
+<td>Many students take a gap year to travel.</td>
+</tr>
+<tr>
+<td>recharge</td>
+<td>rest to regain energy</td>
+<td>I need a week to recharge.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="health-fitness-and-wellbeing">4 Health, Fitness, and
+Wellbeing</h1>
+<p>Topics: starting to exercise, healthy eating, handling stress, sleep,
+quitting bad habits.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="getting-in-shape">4.1 Getting in Shape</h2>
+<p>Your friend wants to get in shape but has no time. Give advice on how
+to start.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start small and
+be realistic. <span class="conn">First of all</span>, you don’t need a
+two-hour gym session. Even fifteen or twenty minutes of exercise a day
+can make a real difference. Try a quick workout at home before work, or
+a brisk walk during your lunch break.</p>
+<p><span class="tpl">Another thing you could do is</span> build movement
+into your routine. <span class="conn">For example</span>, take the
+stairs, get off the bus one stop early, or bike to work. These little
+habits <span class="vocab">add up</span> over time.</p>
+<p><span class="conn">Also</span>, schedule your exercise like a
+meeting, so you don’t skip it. <span class="conn">On top of that</span>,
+find a workout partner, because it keeps you <span class="vocab">motivated</span> and <span class="vocab">accountable</span>.</p>
+<p><span class="conn">However</span>, don’t push too hard in the
+beginning. <span class="vocab">Overdoing it</span> can lead to
+injuries.</p>
+<p><span class="tpl">I’m sure that</span> you’ll feel stronger within a
+month. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>add up</td>
+<td>gradually become a large total</td>
+<td>Small savings add up quickly.</td>
+</tr>
+<tr>
+<td>motivated</td>
+<td>feeling eager to do something</td>
+<td>She stays motivated by tracking her progress.</td>
+</tr>
+<tr>
+<td>accountable</td>
+<td>responsible for doing what you promised</td>
+<td>A partner keeps you accountable.</td>
+</tr>
+<tr>
+<td>overdoing it</td>
+<td>do too much</td>
+<td>Don’t overdo it on your first day.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="coping-with-stress">4.2 Coping With Stress</h2>
+<p>Your coworker is under a lot of stress. Give advice on how to relax
+and cope.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+take stress seriously and act early. <span class="conn">First of
+all</span>, take short breaks during the day. Step outside, stretch, or
+practise some deep breathing. Even five minutes can help you <span class="vocab">recharge</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> talk to
+someone you trust, like a friend, a family member, or a counsellor.
+Sharing your worries makes them feel lighter. <span class="conn">Also</span>, make a list of your tasks and tackle them one
+at a time, so you don’t feel <span class="vocab">overwhelmed</span>.</p>
+<p><span class="conn">On top of that</span>, take care of your body.
+Regular exercise, healthy meals, and enough sleep are powerful ways to
+<span class="vocab">reduce stress</span>. Find a hobby that helps you
+<span class="vocab">unwind</span>, like music or gardening.</p>
+<p><span class="conn">However</span>, if the stress doesn’t go away,
+consider speaking to a doctor.</p>
+<p><span class="tpl">I’m sure that</span> things will improve soon.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>recharge</td>
+<td>restore your energy</td>
+<td>A weekend away helped me recharge.</td>
+</tr>
+<tr>
+<td>overwhelmed</td>
+<td>feeling there is too much to handle</td>
+<td>I felt overwhelmed by my schedule.</td>
+</tr>
+<tr>
+<td>reduce stress</td>
+<td>lower feelings of pressure</td>
+<td>Yoga helps me reduce stress.</td>
+</tr>
+<tr>
+<td>unwind</td>
+<td>relax after a tense time</td>
+<td>I unwind by reading in the evening.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sleeping-better">4.3 Sleeping Better</h2>
+<p>Your friend sleeps poorly because of a busy schedule. Give advice on
+improving sleep.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would build a regular
+bedtime routine. <span class="conn">First of all</span>, go to bed and
+wake up at the same time every day, even on weekends. This helps your
+body set a steady <span class="vocab">sleep schedule</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> avoid screens
+for at least an hour before bed. The blue light from phones can keep
+your brain alert. Read a book or listen to calm music instead. <span class="conn">Also</span>, avoid coffee after mid-afternoon and heavy
+meals late at night.</p>
+<p><span class="conn">On top of that</span>, make your bedroom dark,
+quiet, and cool. <span class="conn">For example</span>, use thick
+curtains or earplugs if there’s noise. A comfortable <span class="vocab">mattress</span> also matters.</p>
+<p><span class="conn">However</span>, don’t expect results overnight. It
+may take a couple of weeks to <span class="vocab">get into the
+habit</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll sleep much better soon.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sleep schedule</td>
+<td>the times you go to bed and wake up</td>
+<td>A steady sleep schedule improves energy.</td>
+</tr>
+<tr>
+<td>mattress</td>
+<td>the soft part of a bed you lie on</td>
+<td>We bought a firmer mattress.</td>
+</tr>
+<tr>
+<td>get into the habit</td>
+<td>start doing something regularly</td>
+<td>I got into the habit of walking every night.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="eating-healthier">4.4 Eating Healthier</h2>
+<p>Your friend wants to eat healthier but loves fast food. Give
+advice.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would not cut out
+everything at once. <span class="conn">First of all</span>, make small
+swaps. <span class="conn">For example</span>, replace soft drinks with
+water, and choose a grilled chicken sandwich instead of a burger. Small
+changes are easier to <span class="vocab">stick to</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> cook at home a
+few times a week. You can prepare simple meals with vegetables, lean
+protein, and whole grains. It’s cheaper, and you control the <span class="vocab">portion size</span>. <span class="conn">Also</span>, keep
+healthy snacks like fruit or nuts nearby, so you’re not tempted by <span class="vocab">junk food</span>.</p>
+<p><span class="conn">On top of that</span>, allow yourself a treat once
+a week. A <span class="vocab">balanced diet</span> doesn’t mean you can
+never enjoy fast food.</p>
+<p><span class="conn">However</span>, be patient with yourself. Habits
+take time to change.</p>
+<p><span class="tpl">I’m sure that</span> you’ll feel healthier and more
+energetic. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stick to</td>
+<td>continue following</td>
+<td>It’s hard to stick to a strict diet.</td>
+</tr>
+<tr>
+<td>portion size</td>
+<td>the amount of food served</td>
+<td>Smaller portion sizes help control calories.</td>
+</tr>
+<tr>
+<td>junk food</td>
+<td>unhealthy, processed food</td>
+<td>Junk food is high in sugar and salt.</td>
+</tr>
+<tr>
+<td>balanced diet</td>
+<td>eating a healthy mix of foods</td>
+<td>A balanced diet includes fruit and vegetables.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quitting-a-bad-habit">4.5 Quitting a Bad Habit</h2>
+<p>Your friend wants to quit a bad habit, such as spending too much time
+on the phone. Give advice.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+begin by understanding the habit. <span class="conn">First of
+all</span>, check how many hours you actually spend on your phone. Most
+phones have a <span class="vocab">screen time</span> feature, and the
+number is often surprising.</p>
+<p><span class="tpl">Another thing you could do is</span> set clear
+limits. <span class="conn">For example</span>, turn off <span class="vocab">notifications</span> for social media, and keep your phone
+in another room when you work or sleep. <span class="conn">Also</span>,
+replace the habit with something positive, like reading, walking, or
+calling a friend.</p>
+<p><span class="conn">On top of that</span>, tell someone about your
+goal. A friend can encourage you and <span class="vocab">hold you
+accountable</span>.</p>
+<p><span class="conn">However</span>, don’t be too hard on yourself if
+you slip. Breaking a habit takes time, and one <span class="vocab">setback</span> doesn’t mean failure. Just start again the
+next day.</p>
+<p><span class="tpl">I’m sure that</span> you can do it. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>screen time</td>
+<td>the time spent using devices</td>
+<td>My screen time dropped by two hours.</td>
+</tr>
+<tr>
+<td>notifications</td>
+<td>alerts that appear on a device</td>
+<td>I turned off all notifications at night.</td>
+</tr>
+<tr>
+<td>hold you accountable</td>
+<td>make you responsible for your actions</td>
+<td>My sister holds me accountable for my goals.</td>
+</tr>
+<tr>
+<td>setback</td>
+<td>a problem that delays progress</td>
+<td>A cold was a small setback in my training.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="newcomers-and-life-in-canada">5 Newcomers and Life in
+Canada</h1>
+<p>Topics: finding a first job, winter, driving, banking, public
+transit, making friends as a newcomer.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="finding-a-first-job">5.1 Finding a First Job</h2>
+<p>Your friend just immigrated to Canada and is looking for a first job.
+Give advice on how to find one.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start by
+preparing a Canadian-style résumé. <span class="conn">First of
+all</span>, keep it short, focus on your skills, and tailor it to each
+job. Ask a friend or an employment centre to check it for you.</p>
+<p><span class="tpl">Another thing you could do is</span> use <span class="vocab">networking</span>. Many jobs in Canada are never
+advertised, so talk to people, attend job fairs, and create a profile on
+LinkedIn. <span class="conn">Also</span>, look for <span class="vocab">settlement services</span> that offer free workshops and
+<span class="vocab">mentorship</span> programs for newcomers.</p>
+<p><span class="conn">On top of that</span>, consider getting <span class="vocab">Canadian experience</span> through volunteering or a short
+contract. It builds <span class="vocab">references</span> and shows
+employers that you understand the local workplace.</p>
+<p><span class="conn">However</span>, be patient. The first job might
+not be in your field, but it can be a stepping stone.</p>
+<p><span class="tpl">I’m sure that</span> your hard work will pay off.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>networking</td>
+<td>meeting people to find opportunities</td>
+<td>Networking helped me find my job.</td>
+</tr>
+<tr>
+<td>settlement services</td>
+<td>organizations that help newcomers</td>
+<td>Settlement services offer language classes.</td>
+</tr>
+<tr>
+<td>mentorship</td>
+<td>guidance from an experienced person</td>
+<td>Her mentorship program changed my career.</td>
+</tr>
+<tr>
+<td>Canadian experience</td>
+<td>work history in Canada</td>
+<td>Many employers ask for Canadian experience.</td>
+</tr>
+<tr>
+<td>references</td>
+<td>people who can speak well of you to employers</td>
+<td>I listed two references on my résumé.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="preparing-for-winter">5.2 Preparing for Winter</h2>
+<p>Your cousin is arriving in Canada in December and has never seen a
+real winter. Give advice on how to prepare.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would shop for proper
+winter gear before arriving, or right after. <span class="conn">First of
+all</span>, buy a warm parka, insulated boots with good grip, gloves, a
+hat, and a scarf. Remember that wearing several thin <span class="vocab">layers</span> is better than one heavy coat.</p>
+<p><span class="tpl">Another thing you could do is</span> check the
+weather forecast every morning. <span class="conn">For example</span>,
+when it says minus twenty, you’ll need to cover your face and ears to
+avoid <span class="vocab">frostbite</span>.</p>
+<p><span class="conn">Also</span>, walk carefully on <span class="vocab">icy</span> sidewalks and wear shoes with good traction.
+<span class="conn">On top of that</span>, drink warm drinks and eat
+well, because your body needs more energy in the cold.</p>
+<p><span class="conn">However</span>, don’t stay indoors all season. Try
+skating, skiing, or a winter festival. Winter can be beautiful and fun
+when you’re dressed appropriately.</p>
+<p><span class="tpl">I’m sure that</span> you’ll enjoy it. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>layers</td>
+<td>separate pieces of clothing worn together</td>
+<td>Dress in layers when it’s cold.</td>
+</tr>
+<tr>
+<td>frostbite</td>
+<td>skin damage caused by extreme cold</td>
+<td>Frostbite can hurt your fingers and nose.</td>
+</tr>
+<tr>
+<td>icy</td>
+<td>covered with ice</td>
+<td>The icy road was dangerous.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="getting-a-drivers-licence">5.3 Getting a Driver’s Licence</h2>
+<p>Your friend wants to get a driver’s licence and learn to drive. Give
+advice on how to go about it.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would take it step by
+step. <span class="conn">First of all</span>, study the official
+driver’s handbook and take the <span class="vocab">written test</span>
+to get your <span class="vocab">learner’s permit</span>. Online practice
+tests are very helpful.</p>
+<p><span class="tpl">Another thing you could do is</span> sign up with a
+certified <span class="vocab">driving school</span>. A professional
+instructor will teach you the rules and good habits from the start, and
+some schools may even lower your insurance costs. <span class="conn">Also</span>, practise with an experienced friend or
+relative in quiet parking lots before you try busy roads.</p>
+<p><span class="conn">On top of that</span>, drive in different
+conditions, like rain, night, and highways, so you feel prepared for the
+<span class="vocab">road test</span>.</p>
+<p><span class="conn">However</span>, don’t be discouraged if you feel
+nervous. Everyone does at first, and you can retake the test if
+needed.</p>
+<p><span class="tpl">I’m sure that</span> you’ll get your licence soon.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>written test</td>
+<td>an exam on paper or computer about road rules</td>
+<td>I passed the written test on my first try.</td>
+</tr>
+<tr>
+<td>learner’s permit</td>
+<td>a licence allowing practice with a licensed driver</td>
+<td>You need a learner’s permit before driving lessons.</td>
+</tr>
+<tr>
+<td>driving school</td>
+<td>a business that teaches people to drive</td>
+<td>He took lessons at a driving school.</td>
+</tr>
+<tr>
+<td>road test</td>
+<td>a driving exam done in a car</td>
+<td>The road test lasted twenty minutes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="using-public-transit">5.4 Using Public Transit</h2>
+<p>Your friend is new to the country and does not understand how public
+transit works. Give advice on getting around.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would begin with a
+good transit app. <span class="conn">First of all</span>, download one
+that shows routes, <span class="vocab">schedules</span>, and live bus
+locations. Google Maps works well, and you can plan your trip in
+seconds.</p>
+<p><span class="tpl">Another thing you could do is</span> get a
+reloadable transit card. It’s cheaper than paying cash each time, and in
+many cities you can <span class="vocab">transfer</span> between buses
+and trains for free within a couple of hours. <span class="conn">Also</span>, check the monthly pass, which saves money if
+you travel daily.</p>
+<p><span class="conn">On top of that</span>, avoid <span class="vocab">rush hour</span> if you can, because buses get very
+crowded. Learn the main stops near your home and workplace, and ask
+drivers if you’re unsure. Most people are happy to help.</p>
+<p><span class="conn">However</span>, always leave a little extra time,
+since delays can happen in winter.</p>
+<p><span class="tpl">I’m sure that</span> you’ll get used to it in no
+time. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>schedules</td>
+<td>a timetable of departures</td>
+<td>Check the schedule before you leave.</td>
+</tr>
+<tr>
+<td>transfer</td>
+<td>change from one vehicle to another</td>
+<td>You can transfer to the subway at Union Station.</td>
+</tr>
+<tr>
+<td>rush hour</td>
+<td>the busiest travel time of the day</td>
+<td>Rush hour starts at 7:30 a.m.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feeling-homesick">5.5 Feeling Homesick</h2>
+<p>Your neighbour, who recently arrived, feels lonely and homesick. Give
+advice on adjusting to life in a new country.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would remind myself
+that these feelings are completely normal. <span class="conn">First of
+all</span>, stay connected with your family by video calls. Hearing
+familiar voices helps ease <span class="vocab">homesickness</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> build a new
+routine and make friends. Join a community centre, a language class, or
+a cultural group where you can meet people from your own background and
+from other communities. <span class="conn">Also</span>, explore your
+<span class="vocab">surroundings</span>, like parks, libraries, and
+local festivals, so the city starts to feel familiar.</p>
+<p><span class="conn">On top of that</span>, cook dishes from home.
+Sharing your food with neighbours is a wonderful way to <span class="vocab">break the ice</span>.</p>
+<p><span class="conn">However</span>, give yourself time. <span class="vocab">Adjusting</span> to a new culture is a gradual process,
+and some days will be harder than others.</p>
+<p><span class="tpl">I’m sure that</span> you’ll soon feel at home.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>homesickness</td>
+<td>sadness from missing home</td>
+<td>Homesickness hit me during the holidays.</td>
+</tr>
+<tr>
+<td>surroundings</td>
+<td>the area around you</td>
+<td>I’m still learning about my new surroundings.</td>
+</tr>
+<tr>
+<td>break the ice</td>
+<td>start a friendly conversation</td>
+<td>A joke can break the ice.</td>
+</tr>
+<tr>
+<td>adjusting</td>
+<td>get used to new conditions</td>
+<td>It took her months to adjust to the climate.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="money-shopping-and-big-purchases">6 Money, Shopping, and Big
+Purchases</h1>
+<p>Topics: saving money, buying a car or phone, budgeting, investing,
+shopping online.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="saving-for-a-vacation">6.1 Saving for a Vacation</h2>
+<p>Your friend wants to save money for a vacation. Give advice on how to
+do it.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would set a clear
+goal first. <span class="conn">First of all</span>, find out how much
+the trip will cost, including flights, hotels, and food, and divide that
+amount by the number of months you have. That gives you a monthly <span class="vocab">savings target</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> open a
+separate account just for the vacation, and set up an <span class="vocab">automatic transfer</span> each payday. If the money is out
+of sight, you won’t be tempted to spend it. <span class="conn">Also</span>, <span class="vocab">cut back on</span> small
+expenses, such as takeout coffee or unused subscriptions. They quietly
+add up.</p>
+<p><span class="conn">On top of that</span>, look for deals and travel
+in the off-season, when flights and hotels are cheaper.</p>
+<p><span class="conn">However</span>, don’t make your life miserable
+while saving. Allow yourself a small budget for fun.</p>
+<p><span class="tpl">I’m sure that</span> you’ll reach your goal. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>savings target</td>
+<td>the amount you aim to save</td>
+<td>Our savings target is 200 dollars a month.</td>
+</tr>
+<tr>
+<td>automatic transfer</td>
+<td>a scheduled move of money between accounts</td>
+<td>An automatic transfer makes saving easy.</td>
+</tr>
+<tr>
+<td>cut back on</td>
+<td>spend or use less of</td>
+<td>I cut back on eating out.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-vs-used-car">6.2 New vs Used Car</h2>
+<p>Your friend is deciding between a new and a used car. Give
+advice.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+weigh the pros and cons carefully. <span class="conn">First of
+all</span>, a new car comes with a <span class="vocab">warranty</span>
+and the latest safety features, and you don’t worry about hidden
+problems. <span class="conn">However</span>, it loses value very
+quickly, and the price and insurance are higher.</p>
+<p><span class="conn">On the other hand</span>, a used car is much
+cheaper, and the <span class="vocab">depreciation</span> is slower. If
+you choose a reliable model with low mileage, it can be <span class="vocab">great value</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> ask a trusted
+mechanic to inspect any used car before you buy it, and check its <span class="vocab">service history</span>. <span class="conn">Also</span>,
+think about your budget, including gas, maintenance, and insurance, not
+just the price tag.</p>
+<p><span class="conn">Personally</span>, I’d go for a two- or
+three-year-old car, because it offers a good balance.</p>
+<p><span class="tpl">I’m sure that</span> you’ll find the right one.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>warranty</td>
+<td>a company’s promise to repair a product</td>
+<td>The car has a three-year warranty.</td>
+</tr>
+<tr>
+<td>depreciation</td>
+<td>the loss in value over time</td>
+<td>Depreciation is highest in the first year.</td>
+</tr>
+<tr>
+<td>great value</td>
+<td>very good quality for the price</td>
+<td>This laptop is great value.</td>
+</tr>
+<tr>
+<td>service history</td>
+<td>a record of past repairs and maintenance</td>
+<td>The seller showed me the service history.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="buying-a-laptop">6.3 Buying a Laptop</h2>
+<p>Your cousin is buying a laptop and has a limited budget. Give advice
+on what to look for.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would first decide
+what I need the laptop for. <span class="conn">First of all</span>, if
+you only browse, write documents, and watch videos, you don’t need an
+expensive model. Games or video editing would require a stronger <span class="vocab">processor</span> and more memory.</p>
+<p><span class="tpl">Another thing you could do is</span> compare
+several models online and read <span class="vocab">customer
+reviews</span>. Look for at least eight gigabytes of memory and a fast
+<span class="vocab">solid-state drive</span>, because that makes the
+laptop quick and smooth. <span class="conn">Also</span>, check the <span class="vocab">battery life</span>, especially if you carry it to school
+or work.</p>
+<p><span class="conn">On top of that</span>, watch for sales events and
+student discounts, or consider a <span class="vocab">refurbished</span>
+model from a trusted seller, which can save a lot of money.</p>
+<p><span class="conn">However</span>, don’t buy the cheapest one just
+because of the price. A bad laptop will cost you more in the long
+run.</p>
+<p><span class="tpl">I’m sure that</span> you’ll find a good one. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>processor</td>
+<td>the part that runs a computer’s tasks</td>
+<td>A faster processor handles heavy programs.</td>
+</tr>
+<tr>
+<td>customer reviews</td>
+<td>opinions written by buyers</td>
+<td>Customer reviews helped me choose.</td>
+</tr>
+<tr>
+<td>solid-state drive</td>
+<td>a fast type of computer storage</td>
+<td>A solid-state drive starts the laptop in seconds.</td>
+</tr>
+<tr>
+<td>battery life</td>
+<td>how long a device runs without charging</td>
+<td>The battery life is ten hours.</td>
+</tr>
+<tr>
+<td>refurbished</td>
+<td>repaired and restored to good condition</td>
+<td>I bought a refurbished tablet.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="budgeting-small-purchases">6.4 Budgeting Small Purchases</h2>
+<p>Your friend spends too much on small purchases. Give advice on
+budgeting.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start by
+tracking every expense for one month. <span class="conn">First of
+all</span>, use an app or a notebook to record what you spend. You’ll
+probably be surprised by how many small purchases <span class="vocab">drain</span> your wallet.</p>
+<p><span class="tpl">Another thing you could do is</span> create a
+simple <span class="vocab">budget</span> with categories like rent,
+food, transport, and fun. Give yourself a fixed monthly amount for <span class="vocab">discretionary spending</span>, and stop when it’s gone.
+<span class="conn">Also</span>, wait twenty-four hours before buying
+anything that isn’t essential. Often you’ll realize you didn’t need it,
+and that stops <span class="vocab">impulse buying</span>.</p>
+<p><span class="conn">On top of that</span>, pay with cash for small
+things, because it feels more real than tapping a card.</p>
+<p><span class="conn">However</span>, don’t be too strict. A budget with
+some fun money is easier to follow.</p>
+<p><span class="tpl">I’m sure that</span> you’ll save more soon. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drain</td>
+<td>slowly use up</td>
+<td>Subscriptions drain my bank account.</td>
+</tr>
+<tr>
+<td>budget</td>
+<td>a plan for spending money</td>
+<td>We made a monthly budget.</td>
+</tr>
+<tr>
+<td>discretionary spending</td>
+<td>money spent on non-essentials</td>
+<td>Discretionary spending includes movies and snacks.</td>
+</tr>
+<tr>
+<td>impulse buying</td>
+<td>buying without planning</td>
+<td>Impulse buying is common in stores.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="spending-a-bonus">6.5 Spending a Bonus</h2>
+<p>Your friend received a bonus and is unsure whether to save or spend
+it. Give advice.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would split the bonus
+into a few parts. <span class="conn">First of all</span>, if you have
+any <span class="vocab">high-interest debt</span>, like a credit card
+balance, use a good portion of the money to pay it off. That’s a
+guaranteed return.</p>
+<p><span class="tpl">Another thing you could do is</span> put some of it
+into an <span class="vocab">emergency fund</span>, ideally enough to
+cover three to six months of expenses. <span class="conn">Also</span>,
+consider investing a small amount for the long term, such as in a
+retirement account.</p>
+<p><span class="conn">On top of that</span>, you’ve earned this money,
+so it’s fine to enjoy a little. Spend ten percent on something special,
+like a nice dinner or a short trip.</p>
+<p><span class="conn">However</span>, avoid spending the whole bonus on
+things you’ll forget in a month. A bit of <span class="vocab">discipline</span> now can bring <span class="vocab">financial security</span> later.</p>
+<p><span class="tpl">I’m sure that</span> you’ll make a smart decision.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>high-interest debt</td>
+<td>borrowed money with costly extra charges</td>
+<td>Pay off high-interest debt first.</td>
+</tr>
+<tr>
+<td>emergency fund</td>
+<td>savings for unexpected costs</td>
+<td>An emergency fund covers sudden repairs.</td>
+</tr>
+<tr>
+<td>discipline</td>
+<td>the ability to control yourself</td>
+<td>Saving takes discipline.</td>
+</tr>
+<tr>
+<td>financial security</td>
+<td>a stable money situation</td>
+<td>Her job gives her financial security.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="travel-and-free-time">7 Travel and Free Time</h1>
+<p>Topics: planning a trip, visiting a new place, hobbies, spending a
+weekend, making use of free time.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="visiting-a-city">7.1 Visiting a City</h2>
+<p>Your friend is planning a trip to a city you know well. Give advice
+on what to do and see.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would mix famous
+attractions with local experiences. <span class="conn">First of
+all</span>, visit the main <span class="vocab">landmarks</span>, like
+the old town square and the art museum. Go early in the morning to avoid
+the crowds.</p>
+<p><span class="tpl">Another thing you could do is</span> wander through
+the local markets and neighbourhood cafés. That’s where you’ll find the
+best food and the real <span class="vocab">atmosphere</span> of the
+city. <span class="conn">Also</span>, try the <span class="vocab">local
+cuisine</span>. I’d recommend the seafood restaurants near the harbour.
+They’re affordable and delicious.</p>
+<p><span class="conn">On top of that</span>, take a walking tour with a
+local guide. You’ll hear stories you won’t find in a guidebook.</p>
+<p><span class="conn">However</span>, don’t try to see everything. Leave
+some free time to relax and explore at your own pace.</p>
+<p><span class="tpl">I’m sure that</span> you’ll have a fantastic trip.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>landmarks</td>
+<td>famous buildings or places</td>
+<td>We visited all the famous landmarks.</td>
+</tr>
+<tr>
+<td>atmosphere</td>
+<td>the feeling of a place</td>
+<td>The café has a cozy atmosphere.</td>
+</tr>
+<tr>
+<td>local cuisine</td>
+<td>traditional food of an area</td>
+<td>I love trying the local cuisine.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="choosing-a-hobby">7.2 Choosing a Hobby</h2>
+<p>Your friend wants to take up a new hobby. Give advice on how to
+choose one.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+think about what I enjoy. <span class="conn">First of all</span>, make a
+list of activities that interest you, like painting, hiking, or playing
+an instrument. Ask yourself whether you prefer something creative,
+active, or relaxing.</p>
+<p><span class="tpl">Another thing you could do is</span> try a few
+activities before committing. Many community centres offer <span class="vocab">trial classes</span> for a small fee, or you can watch
+free tutorials online. <span class="conn">Also</span>, consider your
+budget and schedule, because some hobbies need expensive equipment or a
+lot of time.</p>
+<p><span class="conn">On top of that</span>, choose a hobby that
+connects you with other people, like a <span class="vocab">club</span>
+or a team. It’s a good way to make friends and stay motivated.</p>
+<p><span class="conn">However</span>, don’t give up too quickly. Every
+hobby feels hard at first, and you need patience to see <span class="vocab">progress</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll find something you
+love. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trial classes</td>
+<td>a short first lesson to test an activity</td>
+<td>I joined a trial class for pottery.</td>
+</tr>
+<tr>
+<td>club</td>
+<td>a group of people with a shared interest</td>
+<td>She joined a running club.</td>
+</tr>
+<tr>
+<td>progress</td>
+<td>improvement over time</td>
+<td>I’m making progress on the guitar.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bored-weekend">7.3 Bored Weekend</h2>
+<p>Your friend has a free weekend and is bored. Give advice on how to
+spend it.</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would plan something
+that gets me out of the house. <span class="conn">First of all</span>,
+if the weather is nice, go for a hike or a bike ride. <span class="vocab">Spending time outdoors</span> is a great way to clear your
+head.</p>
+<p><span class="tpl">Another thing you could do is</span> get social.
+Invite a few friends over for a board game night or a potluck dinner.
+<span class="conn">Also</span>, check your city’s event calendar. There
+are often free festivals, concerts, or art shows on weekends.</p>
+<p><span class="conn">On top of that</span>, you could try something
+new, like a cooking class or a visit to a museum you’ve never been to.
+If you prefer a quiet weekend, <span class="vocab">catch up on</span> a
+good book or a series you’ve been meaning to watch.</p>
+<p><span class="conn">However</span>, avoid spending the whole weekend
+scrolling on your phone. It’s easy to waste time and end up feeling
+<span class="vocab">unproductive</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll have a great time.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spending time outdoors</td>
+<td>being outside in nature</td>
+<td>Spending time outdoors improves my mood.</td>
+</tr>
+<tr>
+<td>catch up on</td>
+<td>do something you have not had time for</td>
+<td>I need to catch up on sleep.</td>
+</tr>
+<tr>
+<td>unproductive</td>
+<td>not achieving much</td>
+<td>I felt unproductive after a lazy day.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="travelling-alone">7.4 Travelling Alone</h2>
+<p>Your friend is travelling alone for the first time. Give advice on
+staying safe and enjoying the trip.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would prepare well
+and stay aware. <span class="conn">First of all</span>, share your <span class="vocab">itinerary</span> with family or a friend, and check in
+with them regularly. Book your first night’s accommodation in advance,
+so you arrive with a clear plan.</p>
+<p><span class="tpl">Another thing you could do is</span> research the
+area. Learn which neighbourhoods are safe, and avoid walking alone at
+night in unfamiliar places. <span class="conn">Also</span>, keep your
+valuables secure. Use a <span class="vocab">money belt</span> or a bag
+with zippers, and keep copies of your documents.</p>
+<p><span class="conn">On top of that</span>, stay in hostels or join
+group tours. They’re a wonderful way to meet other travellers and <span class="vocab">share experiences</span>.</p>
+<p><span class="conn">However</span>, trust your instincts. If a
+situation feels wrong, leave immediately. Being cautious doesn’t mean
+you can’t be <span class="vocab">adventurous</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll love the freedom of
+travelling solo. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>itinerary</td>
+<td>a detailed travel plan</td>
+<td>Our itinerary included three cities.</td>
+</tr>
+<tr>
+<td>money belt</td>
+<td>a hidden pouch for carrying money</td>
+<td>He wore a money belt under his shirt.</td>
+</tr>
+<tr>
+<td>share experiences</td>
+<td>tell others about what you did</td>
+<td>We shared experiences over dinner.</td>
+</tr>
+<tr>
+<td>adventurous</td>
+<td>willing to try new and exciting things</td>
+<td>She is adventurous and loves hiking.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="pets-home-and-learning-new-skills">8 Pets, Home, and Learning
+New Skills</h1>
+<p>Topics: adopting a pet, organizing a home, cooking, learning to swim
+or drive, gardening.</p>
+<h2 id="general-template-7">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="adopting-a-dog">8.1 Adopting a Dog</h2>
+<p>Your friend wants to adopt a dog but works long hours. Give advice on
+whether it is a good idea and how to prepare.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+think very carefully before adopting. <span class="conn">First of
+all</span>, dogs need daily exercise, attention, and company. If you’re
+away ten hours a day, a dog may feel lonely and become <span class="vocab">anxious</span>.</p>
+<p><span class="conn">However</span>, it isn’t impossible. <span class="tpl">Another thing you could do is</span> hire a dog walker or
+use a <span class="vocab">daycare</span> while you’re at work. <span class="conn">Also</span>, you might choose an older, calmer dog, which
+usually needs less exercise than a puppy.</p>
+<p><span class="conn">On top of that</span>, prepare your budget. Food,
+vet bills, and supplies can be expensive. Visit a local shelter and talk
+to the staff about which breed fits your lifestyle.</p>
+<p><span class="conn">On the other hand</span>, if your schedule can’t
+change, a cat might be a better <span class="vocab">companion</span>,
+since cats are more independent.</p>
+<p><span class="tpl">I’m sure that</span> you’ll make the best choice
+for you and the animal. <span class="tpl">Good luck, and let me know how
+it goes</span>.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>anxious</td>
+<td>worried and uneasy</td>
+<td>The puppy gets anxious when alone.</td>
+</tr>
+<tr>
+<td>daycare</td>
+<td>a place that looks after pets or children during the day</td>
+<td>Our dog goes to daycare on weekdays.</td>
+</tr>
+<tr>
+<td>companion</td>
+<td>someone or something that keeps you company</td>
+<td>A dog is a loyal companion.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="organizing-a-small-apartment">8.2 Organizing a Small
+Apartment</h2>
+<p>Your friend just moved into a small apartment and it feels cluttered.
+Give advice on organizing the space.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start by
+getting rid of what I don’t need. <span class="conn">First of
+all</span>, go through your belongings and <span class="vocab">declutter</span>. Donate or sell clothes, books, and
+gadgets you haven’t used in a year. Less stuff means more room.</p>
+<p><span class="tpl">Another thing you could do is</span> use vertical
+space. Put up shelves, hooks, and hanging organizers on the walls, so
+the floor stays clear. <span class="conn">Also</span>, choose <span class="vocab">multi-purpose furniture</span>, like a bed with drawers
+underneath or a sofa that turns into a bed. These pieces are perfect for
+<span class="vocab">small spaces</span>.</p>
+<p><span class="conn">On top of that</span>, give everything a home. Use
+baskets and labelled boxes, so you always know where things are, and
+tidy up for five minutes every evening.</p>
+<p><span class="conn">However</span>, don’t buy too many storage items.
+That can create more <span class="vocab">clutter</span>.</p>
+<p><span class="tpl">I’m sure that</span> your apartment will feel much
+bigger soon. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>declutter</td>
+<td>remove things you don’t need</td>
+<td>I decluttered my closet last weekend.</td>
+</tr>
+<tr>
+<td>multi-purpose furniture</td>
+<td>furniture that has more than one use</td>
+<td>Multi-purpose furniture saves space.</td>
+</tr>
+<tr>
+<td>small spaces</td>
+<td>limited living areas</td>
+<td>Light colours make small spaces look bigger.</td>
+</tr>
+<tr>
+<td>clutter</td>
+<td>a messy collection of things</td>
+<td>Clutter makes it hard to relax.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="learning-to-cook">8.3 Learning to Cook</h2>
+<p>Your friend wants to learn how to cook but has never tried. Give
+advice on how to start.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start with
+simple, easy recipes. <span class="conn">First of all</span>, choose
+three or four basic dishes, like pasta, scrambled eggs, and a stir-fry.
+They need few <span class="vocab">ingredients</span> and teach you the
+fundamentals.</p>
+<p><span class="tpl">Another thing you could do is</span> watch cooking
+videos online. Seeing the steps makes everything clearer. <span class="conn">Also</span>, follow the recipe exactly the first few times
+and measure everything, because cooking takes <span class="vocab">precision</span> when you’re a beginner.</p>
+<p><span class="conn">On top of that</span>, invest in a few good tools,
+such as a sharp knife, a non-stick pan, and a cutting board. <span class="conn">For example</span>, a sharp knife makes preparing
+vegetables faster and safer.</p>
+<p><span class="conn">However</span>, don’t be discouraged if a dish
+fails. Even great chefs burn food sometimes. Every mistake helps you
+<span class="vocab">improve your technique</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll be cooking delicious
+meals soon. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ingredients</td>
+<td>the foods used to make a dish</td>
+<td>The recipe needs only five ingredients.</td>
+</tr>
+<tr>
+<td>precision</td>
+<td>exactness and care</td>
+<td>Baking requires precision.</td>
+</tr>
+<tr>
+<td>improve your technique</td>
+<td>get better at the way you do something</td>
+<td>Practice helps you improve your technique.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="learning-to-swim">8.4 Learning to Swim</h2>
+<p>Your cousin wants to learn to swim as an adult and feels embarrassed.
+Give advice.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would not feel
+embarrassed at all. <span class="conn">First of all</span>, many adults
+learn to swim, and instructors see it all the time. Nobody at the pool
+is judging you. They’re too busy <span class="vocab">focusing on</span>
+their own swimming.</p>
+<p><span class="tpl">Another thing you could do is</span> sign up for an
+adult beginner class. You’ll be with people at the same level, and the
+instructor will teach you <span class="vocab">step by step</span>. <span class="conn">Also</span>, if you feel shy, book a few private lessons
+first to build your <span class="vocab">confidence</span>.</p>
+<p><span class="conn">On top of that</span>, start in the shallow end
+and practise floating and breathing before trying to swim. Goggles can
+make you feel more comfortable in the water.</p>
+<p><span class="conn">However</span>, be patient with yourself. It can
+take weeks before you feel natural in the water, and that’s perfectly
+normal.</p>
+<p><span class="tpl">I’m sure that</span> you’ll be swimming confidently
+before long. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>focusing on</td>
+<td>give your attention to</td>
+<td>Focus on your breathing.</td>
+</tr>
+<tr>
+<td>step by step</td>
+<td>one stage at a time</td>
+<td>She taught me step by step.</td>
+</tr>
+<tr>
+<td>confidence</td>
+<td>belief in your own ability</td>
+<td>Lessons built my confidence.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="balcony-garden">8.5 Balcony Garden</h2>
+<p>Your friend wants to start a small vegetable garden on a balcony.
+Give advice.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would begin by
+checking how much sunlight the balcony gets. <span class="conn">First of
+all</span>, most vegetables need at least six hours of sun a day. If
+your balcony is shady, choose plants like lettuce or herbs, which <span class="vocab">tolerate</span> less light.</p>
+<p><span class="tpl">Another thing you could do is</span> start with
+easy plants, such as tomatoes, basil, and green onions. They’re <span class="vocab">low-maintenance</span> and give you quick results. <span class="conn">Also</span>, use large containers with good <span class="vocab">drainage</span>, and fill them with quality potting
+soil.</p>
+<p><span class="conn">On top of that</span>, water regularly but not too
+much, since too much water can <span class="vocab">rot</span> the roots.
+Check the soil with your finger first.</p>
+<p><span class="conn">However</span>, remember that wind and heat can be
+strong on balconies, so protect your plants and check the rules in your
+building.</p>
+<p><span class="tpl">I’m sure that</span> you’ll enjoy fresh vegetables
+soon. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tolerate</td>
+<td>be able to endure</td>
+<td>Herbs tolerate partial shade.</td>
+</tr>
+<tr>
+<td>low-maintenance</td>
+<td>needing little care</td>
+<td>Cacti are low-maintenance plants.</td>
+</tr>
+<tr>
+<td>drainage</td>
+<td>the way water flows out</td>
+<td>Good drainage prevents root problems.</td>
+</tr>
+<tr>
+<td>rot</td>
+<td>decay and go bad</td>
+<td>Overwatering makes roots rot.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="family-friends-and-social-situations">9 Family, Friends, and
+Social Situations</h1>
+<p>Topics: planning an event, resolving a conflict, hosting guests,
+gifts, meeting new people.</p>
+<h2 id="general-template-8">General Template</h2>
+<p><span class="tpl">Well, if I were you</span>, I would [main advice].
+<span class="conn">First of all</span>, [advice 1 and a short
+reason].</p>
+<p><span class="tpl">Another thing you could do is</span> [advice 2].
+<span class="conn">On top of that</span>, [advice 3 or a quick
+example].</p>
+<p><span class="conn">However</span>, [one warning or a tip to stay
+realistic].</p>
+<p><span class="tpl">I’m sure that</span> [positive result]. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h2 id="surprise-party">9.1 Surprise Party</h2>
+<p>Your friend is organizing a surprise birthday party. Give advice on
+how to plan it.</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would start planning
+early and keep it secret. <span class="conn">First of all</span>, choose
+a date and a venue that suit the guest of honour. Ask a close friend or
+family member to help you <span class="vocab">coordinate</span>, and
+create a private group chat for the guests.</p>
+<p><span class="tpl">Another thing you could do is</span> make a guest
+list and send invitations at least two weeks ahead. Remind everyone not
+to mention the party. <span class="conn">Also</span>, plan a believable
+story to get the birthday person to the venue, like a casual dinner.</p>
+<p><span class="conn">On top of that</span>, arrange the food, cake, and
+decorations in advance. Pick music and a few <span class="vocab">activities</span> that the person enjoys, so the party
+feels personal.</p>
+<p><span class="conn">However</span>, have a backup plan in case someone
+spoils the surprise. A little <span class="vocab">flexibility</span>
+goes a long way.</p>
+<p><span class="tpl">I’m sure that</span> it will be a day to remember.
+<span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>coordinate</td>
+<td>organize people or tasks to work together</td>
+<td>My sister helped me coordinate the party.</td>
+</tr>
+<tr>
+<td>activities</td>
+<td>things to do for fun</td>
+<td>We planned games and other activities.</td>
+</tr>
+<tr>
+<td>flexibility</td>
+<td>the ability to adapt to change</td>
+<td>Flexibility is key when planning events.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fixing-an-argument">9.2 Fixing an Argument</h2>
+<p>Your friend had an argument with a close friend. Give advice on how
+to fix it.</p>
+<h3 id="sample-41">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+reach out first. <span class="conn">First of all</span>, give yourselves
+a little time to calm down, because it’s hard to have a <span class="vocab">constructive</span> conversation when you’re angry. Then
+call or meet in person, since text messages can easily be
+misunderstood.</p>
+<p><span class="tpl">Another thing you could do is</span> start with an
+apology for your part in the argument. <span class="conn">Even if</span>
+you think you were mostly right, saying sorry shows that the friendship
+matters more than winning. <span class="conn">Also</span>, listen
+carefully to their side without interrupting. Try to understand how they
+feel.</p>
+<p><span class="conn">On top of that</span>, avoid blaming and use
+phrases like “I felt hurt when…” instead of “You always…”. That keeps
+the discussion from becoming <span class="vocab">defensive</span>.</p>
+<p><span class="conn">However</span>, if it doesn’t work immediately,
+don’t give up. Real friends are worth the effort to <span class="vocab">make up</span>.</p>
+<p><span class="tpl">I’m sure that</span> you’ll fix things soon. <span class="tpl">Good luck, and let me know how it goes</span>.</p>
+<h3 id="vocabulary-41">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>constructive</td>
+<td>helpful and aimed at improvement</td>
+<td>We had a constructive discussion.</td>
+</tr>
+<tr>
+<td>defensive</td>
+<td>protecting yourself from criticism</td>
+<td>He became defensive when I mentioned it.</td>
+</tr>
+<tr>
+<td>make up</td>
+<td>become friends again after a fight</td>
+<td>They made up after a week.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hosting-guests">9.3 Hosting Guests</h2>
+<p>Your friend is hosting guests for the first time. Give advice on how
+to prepare.</p>
+<h3 id="sample-42">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would plan everything
+a few days ahead. <span class="conn">First of all</span>, ask your
+guests about <span class="vocab">dietary restrictions</span>, like
+allergies or vegetarian diets, so everyone can enjoy the meal. Choose a
+simple menu that you can prepare in advance.</p>
+<p><span class="tpl">Another thing you could do is</span> tidy and clean
+your home the day before. Set up a comfortable seating area, and prepare
+some drinks and snacks for when people arrive. <span class="conn">Also</span>, put on soft background music to create a warm
+<span class="vocab">ambiance</span>.</p>
+<p><span class="conn">On top of that</span>, think of a few conversation
+topics or a simple game in case there are quiet moments. Don’t forget to
+<span class="vocab">greet</span> each guest warmly at the door.</p>
+<p><span class="conn">However</span>, don’t stress about perfection.
+Guests care more about your company than a perfect dinner.</p>
+<p><span class="tpl">I’m sure that</span> everyone will have a wonderful
+time. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-42">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dietary restrictions</td>
+<td>foods a person cannot or will not eat</td>
+<td>I asked about dietary restrictions before cooking.</td>
+</tr>
+<tr>
+<td>ambiance</td>
+<td>the mood of a place</td>
+<td>Candles gave the room a cozy ambiance.</td>
+</tr>
+<tr>
+<td>greet</td>
+<td>welcome with words or a gesture</td>
+<td>She greeted us with a hug.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="farewell-gift">9.4 Farewell Gift</h2>
+<p>Your friend does not know what gift to buy for a coworker’s farewell.
+Give advice.</p>
+<h3 id="sample-43">Sample</h3>
+<p><span class="tpl">Well, if I were you</span>, I would choose
+something thoughtful rather than expensive. <span class="conn">First of
+all</span>, think about the coworker’s interests. If they love coffee, a
+nice mug and a bag of quality beans would be perfect. A <span class="vocab">personalized</span> gift always feels special.</p>
+<p><span class="tpl">Another thing you could do is</span> organize a
+group gift. Ask the rest of the team to chip in a small amount, so you
+can buy something more <span class="vocab">meaningful</span>, like a
+gift card for a favourite restaurant. <span class="conn">Also</span>,
+have everyone sign a card with a short, warm message. It’s a <span class="vocab">keepsake</span> they’ll treasure.</p>
+<p><span class="conn">On top of that</span>, if the coworker is moving
+to a new city, a small book about your hometown or a photo album from
+the team would be a lovely <span class="vocab">memento</span>.</p>
+<p><span class="conn">However</span>, avoid anything too personal or too
+costly, because it could make them uncomfortable.</p>
+<p><span class="tpl">I’m sure that</span> they’ll appreciate the
+gesture. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-43">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>personalized</td>
+<td>made specially for one person</td>
+<td>She gave me a personalized notebook.</td>
+</tr>
+<tr>
+<td>meaningful</td>
+<td>having real importance</td>
+<td>It was a meaningful gift.</td>
+</tr>
+<tr>
+<td>keepsake</td>
+<td>an item kept to remember someone or something</td>
+<td>The card is a keepsake from my old team.</td>
+</tr>
+<tr>
+<td>memento</td>
+<td>an object that reminds you of an event</td>
+<td>This photo is a memento of our trip.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="meeting-new-people">9.5 Meeting New People</h2>
+<p>Your friend is shy and wants to meet new people. Give advice.</p>
+<h3 id="sample-44">Sample</h3>
+<p><span class="tpl">Well, if I were in your position</span>, I would
+start with small steps. <span class="conn">First of all</span>, join an
+activity that matches your interests, like a book club, a language
+class, or a volunteer group. You’ll already have something to talk
+about, and that makes it easier to <span class="vocab">strike up a
+conversation</span>.</p>
+<p><span class="tpl">Another thing you could do is</span> set a small
+goal, such as talking to one new person at every event. <span class="conn">Also</span>, ask open questions, like “What brought you
+here?” People love sharing about themselves, and you won’t have to do
+all the talking.</p>
+<p><span class="conn">On top of that</span>, practise <span class="vocab">positive self-talk</span>. Remind yourself that most
+people feel a little nervous in social situations, and many of them will
+be happy you started talking.</p>
+<p><span class="conn">However</span>, don’t force yourself to be someone
+you’re not. Being a good listener is a <span class="vocab">valuable</span> quality.</p>
+<p><span class="tpl">I’m sure that</span> your confidence will grow
+soon. <span class="tpl">Good luck, and let me know how it
+goes</span>.</p>
+<h3 id="vocabulary-44">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>strike up a conversation</td>
+<td>start talking to someone</td>
+<td>I struck up a conversation with my neighbour.</td>
+</tr>
+<tr>
+<td>positive self-talk</td>
+<td>encouraging thoughts about yourself</td>
+<td>Positive self-talk reduces anxiety.</td>
+</tr>
+<tr>
+<td>valuable</td>
+<td>very useful or important</td>
+<td>Honesty is a valuable trait.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

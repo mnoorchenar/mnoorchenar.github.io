@@ -1,0 +1,3125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 6 Difficult Situation</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 6 Difficult Situation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-6-difficult-situation" id="toc-celpip-speaking-task-6-difficult-situation">CELPIP Speaking Task
+6: Difficult Situation</a></li>
+<li><a href="#neighbours-and-housing-problems" id="toc-neighbours-and-housing-problems">1 Neighbours and Housing
+Problems</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#loud-music" id="toc-loud-music">1.1 Loud Music</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#barking-dog" id="toc-barking-dog">1.2 Barking Dog</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#parked-in-your-space" id="toc-parked-in-your-space">1.3
+Parked in Your Space</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#broken-heater" id="toc-broken-heater">1.4 Broken
+Heater</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#dirty-kitchen" id="toc-dirty-kitchen">1.5 Dirty
+Kitchen</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#workplace-situations" id="toc-workplace-situations">2
+Workplace Situations</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#late-coworker" id="toc-late-coworker">2.1 Late
+Coworker</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#day-off-request" id="toc-day-off-request">2.2 Day Off
+Request</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#teammate-not-helping" id="toc-teammate-not-helping">2.3
+Teammate Not Helping</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#mistake-in-report" id="toc-mistake-in-report">2.4 Mistake
+in Report</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#borrowed-equipment" id="toc-borrowed-equipment">2.5
+Borrowed Equipment</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#customer-service-and-purchases" id="toc-customer-service-and-purchases">3 Customer Service and
+Purchases</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#faulty-phone" id="toc-faulty-phone">3.1 Faulty Phone</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#wrong-restaurant-order" id="toc-wrong-restaurant-order">3.2 Wrong Restaurant Order</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#noisy-hotel-room" id="toc-noisy-hotel-room">3.3 Noisy
+Hotel Room</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#late-package" id="toc-late-package">3.4 Late Package</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#extra-bill-charge" id="toc-extra-bill-charge">3.5 Extra
+Bill Charge</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#friends-family-and-social-conflicts" id="toc-friends-family-and-social-conflicts">4 Friends, Family, and
+Social Conflicts</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#damaged-car" id="toc-damaged-car">4.1 Damaged Car</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cancelled-plans" id="toc-cancelled-plans">4.2 Cancelled
+Plans</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#uninvited-guests" id="toc-uninvited-guests">4.3 Uninvited
+Guests</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#refusing-a-loan" id="toc-refusing-a-loan">4.4 Refusing a
+Loan</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unwanted-advice" id="toc-unwanted-advice">4.5 Unwanted
+Advice</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#apologies-and-explaining-your-mistake" id="toc-apologies-and-explaining-your-mistake">5 Apologies and
+Explaining Your Mistake</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#broken-vase" id="toc-broken-vase">5.1 Broken Vase</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#forgotten-meeting" id="toc-forgotten-meeting">5.2
+Forgotten Meeting</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+<li><a href="#missed-deadline" id="toc-missed-deadline">5.3 Missed
+Deadline</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#rude-in-a-meeting" id="toc-rude-in-a-meeting">5.4 Rude in
+a Meeting</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cancelling-a-dinner" id="toc-cancelling-a-dinner">5.5
+Cancelling a Dinner</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#travel-and-transportation-problems" id="toc-travel-and-transportation-problems">6 Travel and Transportation
+Problems</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#cancelled-flight" id="toc-cancelled-flight">6.1 Cancelled
+Flight</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#lost-luggage" id="toc-lost-luggage">6.2 Lost Luggage</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#taxi-overcharge" id="toc-taxi-overcharge">6.3 Taxi
+Overcharge</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#delayed-train" id="toc-delayed-train">6.4 Delayed
+Train</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#seat-mix-up" id="toc-seat-mix-up">6.5 Seat Mix-Up</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#school-and-community-situations" id="toc-school-and-community-situations">7 School and Community
+Situations</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#unfair-grade" id="toc-unfair-grade">7.1 Unfair Grade</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+<li><a href="#extension-request" id="toc-extension-request">7.2
+Extension Request</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+<li><a href="#noisy-library" id="toc-noisy-library">7.3 Noisy
+Library</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#loud-street-festival" id="toc-loud-street-festival">7.4
+Loud Street Festival</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#class-schedule-change" id="toc-class-schedule-change">7.5
+Class Schedule Change</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#services-utilities-and-polite-refusals" id="toc-services-utilities-and-polite-refusals">8 Services, Utilities,
+and Polite Refusals</a>
+<ul>
+<li><a href="#general-template-7" id="toc-general-template-7">General
+Template</a></li>
+<li><a href="#internet-outage" id="toc-internet-outage">8.1 Internet
+Outage</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unfinished-renovation" id="toc-unfinished-renovation">8.2
+Unfinished Renovation</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unknown-bank-charge" id="toc-unknown-bank-charge">8.3
+Unknown Bank Charge</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+<li><a href="#gym-cancellation" id="toc-gym-cancellation">8.4 Gym
+Cancellation</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#declining-weekend-work" id="toc-declining-weekend-work">8.5 Declining Weekend Work</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+</ul></li>
+<li><a href="#working-from-home" id="toc-working-from-home">8.6 Working
+From Home</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-6-difficult-situation">CELPIP Speaking Task
+6: Difficult Situation</h1>
+<h1 id="neighbours-and-housing-problems">1 Neighbours and Housing
+Problems</h1>
+<p>Topics: noise, parking, pets, maintenance, shared spaces, a
+landlord’s rules.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>. <span class="tpl">I wanted to talk to you about</span> [the problem].</p>
+<p><span class="conn">The thing is</span>, [explain the problem and how
+it affects you]. <span class="tpl">I understand that</span> [show
+empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request or
+solution]. <span class="conn">In that case</span>, [the benefit for both
+sides].</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h2 id="loud-music">1.1 Loud Music</h2>
+<p>Your neighbour plays loud music late at night. Talk to them politely
+and ask them to stop.</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>. <span class="tpl">I wanted to talk to you about</span> the music at night.</p>
+<p><span class="conn">The thing is</span>, I’ve been hearing it until
+around two in the morning for the past few days, and I have to get up
+early for work. It’s been hard to get enough sleep. <span class="tpl">I
+understand that</span> you enjoy music, and I’m not against it at
+all.</p>
+<p><span class="conn">That’s why</span> I was wondering if you could
+turn the <span class="vocab">volume</span> down after ten o’clock, or
+use headphones. <span class="conn">In that case</span>, we’d both be
+happy, and I wouldn’t have to <span class="vocab">file a
+complaint</span> with the building manager, which I’d rather avoid.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+really <span class="vocab">appreciate</span> it.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file a complaint</td>
+<td>make an official report about a problem</td>
+<td>I filed a complaint about the noise.</td>
+</tr>
+<tr>
+<td>appreciate</td>
+<td>be thankful for</td>
+<td>I appreciate your help.</td>
+</tr>
+<tr>
+<td>volume</td>
+<td>how loud a sound is</td>
+<td>Please keep the volume low at night.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="barking-dog">1.2 Barking Dog</h2>
+<p>Your neighbour’s dog barks all day. Talk to your neighbour about the
+problem and suggest a solution.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>. <span class="tpl">I wanted to talk to you about</span> your dog, Max.</p>
+<p><span class="conn">The thing is</span>, he barks for hours while
+you’re at work, and I work from home, so it’s hard for me to
+concentrate. <span class="tpl">I understand that</span> he’s probably
+lonely or bored, and I love dogs, so I don’t blame him.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest a few ideas.
+You could leave him with a chew toy, or hire a dog walker to take him
+out at lunchtime. <span class="conn">In that case</span>, he’d be tired
+and calm, and the barking would <span class="vocab">decrease</span> a
+lot. I’d be happy to help you find a <span class="vocab">reliable</span>
+walker.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m sure we can <span class="vocab">work this out</span>.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>decrease</td>
+<td>become less</td>
+<td>Noise will decrease.</td>
+</tr>
+<tr>
+<td>reliable</td>
+<td>dependable</td>
+<td>A reliable service.</td>
+</tr>
+<tr>
+<td>work this out</td>
+<td>solve a problem together</td>
+<td>We’ll work this out.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="parked-in-your-space">1.3 Parked in Your Space</h2>
+<p>A neighbour often parks in your space. Speak to them and ask them to
+stop.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>. <span class="tpl">I wanted to talk to you about</span> the parking space in
+front of building B.</p>
+<p><span class="conn">The thing is</span>, the spot with my apartment
+number on it has been taken several times this week, and I’ve had to
+park far away and carry my groceries a long way. <span class="tpl">I
+understand that</span> you might have made a mistake, or visitors may
+have used it.</p>
+<p><span class="conn">That’s why</span> I’d really appreciate it if you
+could use your own <span class="vocab">assigned</span> space from now
+on. <span class="conn">In that case</span>, we won’t have any <span class="vocab">misunderstandings</span>, and I won’t need to ask the
+management to <span class="vocab">tow</span> any vehicles, which I’d
+prefer not to do.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+Have a great day!</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assigned</td>
+<td>given to a particular person</td>
+<td>An assigned seat.</td>
+</tr>
+<tr>
+<td>misunderstandings</td>
+<td>confusion between people</td>
+<td>There were misunderstandings.</td>
+</tr>
+<tr>
+<td>tow</td>
+<td>pull a vehicle away</td>
+<td>They towed my car.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="broken-heater">1.4 Broken Heater</h2>
+<p>Your landlord has not fixed a broken heater for weeks. Call them and
+ask for urgent repairs.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">Hello, I hope I’m not disturbing you</span>. <span class="tpl">I’m calling about</span> the heater in my apartment.</p>
+<p><span class="conn">The thing is</span>, it stopped working three
+weeks ago, and I’ve already left two messages. The temperature is
+dropping below zero at night, and my family has been using <span class="vocab">space heaters</span>, which isn’t safe. <span class="tpl">I understand that</span> you’re busy, and I know repairs can
+take time.</p>
+<p><span class="conn">That’s why</span> I’m asking you to send a
+technician within the next two days. <span class="conn">In that
+case</span>, the problem will be solved, and I won’t have to <span class="vocab">escalate</span> the issue to the housing authority, since
+a landlord is <span class="vocab">legally responsible</span> for
+heating.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+Please call me back with a time.</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>space heaters</td>
+<td>small portable heating devices</td>
+<td>Space heaters can be a fire risk.</td>
+</tr>
+<tr>
+<td>escalate</td>
+<td>take a problem to a higher level</td>
+<td>I had to escalate the complaint.</td>
+</tr>
+<tr>
+<td>legally responsible</td>
+<td>required by law to do something</td>
+<td>The owner is legally responsible.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dirty-kitchen">1.5 Dirty Kitchen</h2>
+<p>Your roommate leaves the kitchen dirty. Talk to them and suggest a
+cleaning schedule.</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>. <span class="tpl">I wanted to talk to you about</span> the kitchen.</p>
+<p><span class="conn">The thing is</span>, there have been dirty dishes
+in the sink for several days, and it’s starting to smell. I feel a
+little <span class="vocab">uncomfortable</span> cooking there. <span class="tpl">I understand that</span> you’ve been very busy with exams,
+and I’m not blaming you.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest a simple
+<span class="vocab">cleaning schedule</span>. We could take turns each
+week, so everybody has <span class="vocab">clear
+responsibilities</span>. <span class="conn">In that case</span>, the
+kitchen would stay tidy, and we’d avoid any tension.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. If
+it’s easier, we can make a chart together this evening.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uncomfortable</td>
+<td>not at ease</td>
+<td>I feel uncomfortable.</td>
+</tr>
+<tr>
+<td>cleaning schedule</td>
+<td>a plan for who cleans and when</td>
+<td>We made a cleaning schedule.</td>
+</tr>
+<tr>
+<td>clear responsibilities</td>
+<td>well-defined duties</td>
+<td>Everyone has clear responsibilities.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="workplace-situations">2 Workplace Situations</h1>
+<p>Topics: a coworker issue, a deadline, asking for time off, a change
+in schedule, shared tasks, a boss.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> [the problem].</p>
+<p><span class="conn">The thing is</span>, [explain the problem and how
+it affects the team]. <span class="tpl">I understand that</span> [show
+empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request or
+solution]. <span class="conn">In that case</span>, [the benefit for both
+sides].</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h2 id="late-coworker">2.1 Late Coworker</h2>
+<p>A coworker often arrives late to team meetings. Talk to them and ask
+them to be on time.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> our team meetings.</p>
+<p><span class="conn">The thing is</span>, you’ve arrived about ten
+minutes late for the last few meetings, and we’ve had to repeat
+information. It slows everybody down. <span class="tpl">I understand
+that</span> you have a lot on your plate, and your schedule is busy.</p>
+<p><span class="conn">That’s why</span> I’d like to ask you to join on
+time, or let us know if something comes up. <span class="conn">In that
+case</span>, we could <span class="vocab">rearrange</span> the order of
+topics, and everyone would stay <span class="vocab">on the same
+page</span>. If the time doesn’t suit you, we could also move the
+meeting to the afternoon.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+<span class="vocab">value</span> your work, and I just want us to run
+smoothly.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rearrange</td>
+<td>change the order or plan</td>
+<td>Let’s rearrange the agenda.</td>
+</tr>
+<tr>
+<td>on the same page</td>
+<td>sharing the same understanding</td>
+<td>We’re on the same page.</td>
+</tr>
+<tr>
+<td>value</td>
+<td>think highly of</td>
+<td>I value your help.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="day-off-request">2.2 Day Off Request</h2>
+<p>You need to ask your manager for a day off at a busy time. Explain
+your reason and offer a solution.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> taking a day off next
+Friday.</p>
+<p><span class="conn">The thing is</span>, I know it’s a busy period,
+with the project deadline coming up. <span class="conn">However</span>,
+my sister is getting married that day, and I really can’t miss it. <span class="tpl">I understand that</span> the timing isn’t ideal.</p>
+<p><span class="conn">That’s why</span> I’d like to propose a solution.
+I’ll finish my main tasks by Thursday, and I’ll <span class="vocab">hand
+over</span> the rest to a colleague with clear notes. <span class="conn">In that case</span>, the team will have no <span class="vocab">disruption</span>, and I’ll be available by phone for any
+urgent question.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’ll make sure everything is <span class="vocab">covered</span>.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hand over</td>
+<td>give responsibility to someone else</td>
+<td>I handed over the files.</td>
+</tr>
+<tr>
+<td>disruption</td>
+<td>a break in normal activity</td>
+<td>There was no disruption.</td>
+</tr>
+<tr>
+<td>covered</td>
+<td>managed by someone</td>
+<td>My shift is covered.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="teammate-not-helping">2.3 Teammate Not Helping</h2>
+<p>A teammate is not doing their share of a group project. Talk to them
+about it.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> our group project.</p>
+<p><span class="conn">The thing is</span>, I’ve noticed that several of
+your tasks are still unfinished, and the deadline is next week. I’m
+worried that we won’t be able to deliver on time. <span class="tpl">I
+understand that</span> you may be <span class="vocab">overloaded</span>
+with other work.</p>
+<p><span class="conn">That’s why</span> I’d like us to review the task
+list together and see what you can realistically handle. If it’s too
+much, we can <span class="vocab">redistribute</span> some parts. <span class="conn">In that case</span>, everybody will feel the work is fair,
+and we’ll finish with a better result.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+really want us to succeed <span class="vocab">as a team</span>.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overloaded</td>
+<td>given too much work</td>
+<td>I’m overloaded this week.</td>
+</tr>
+<tr>
+<td>redistribute</td>
+<td>share out again</td>
+<td>Let’s redistribute the tasks.</td>
+</tr>
+<tr>
+<td>as a team</td>
+<td>together</td>
+<td>We’ll succeed as a team.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mistake-in-report">2.4 Mistake in Report</h2>
+<p>You made a mistake in a report your boss will present tomorrow. Tell
+your boss and explain your plan.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the sales report for
+tomorrow’s presentation.</p>
+<p><span class="conn">The thing is</span>, I found an error in the
+figures for the third quarter. I entered the wrong number, so the total
+is about five percent too high. I’m very sorry, and I <span class="vocab">take full responsibility</span>. <span class="tpl">I
+understand that</span> this is <span class="vocab">inconvenient</span>
+so close to the meeting.</p>
+<p><span class="conn">That’s why</span> I’ve already prepared a
+corrected version, and I’ll double-check every figure tonight. <span class="conn">In that case</span>, you’ll have the accurate report first
+thing in the morning, and I’ll explain the <span class="vocab">correction</span> if anyone asks.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’ll make sure it doesn’t happen again.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>take full responsibility</td>
+<td>accept blame completely</td>
+<td>I take full responsibility.</td>
+</tr>
+<tr>
+<td>inconvenient</td>
+<td>causing trouble</td>
+<td>An inconvenient time.</td>
+</tr>
+<tr>
+<td>correction</td>
+<td>a change that fixes an error</td>
+<td>A quick correction.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="borrowed-equipment">2.5 Borrowed Equipment</h2>
+<p>Your coworker keeps borrowing your equipment without asking. Speak to
+them politely.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> my stapler and
+headphones.</p>
+<p><span class="conn">The thing is</span>, I’ve noticed that they’ve
+disappeared from my desk a few times, and I only found them later at
+your desk. It’s a little frustrating, because I sometimes need them
+urgently. <span class="tpl">I understand that</span> you probably didn’t
+mean any harm, and you may have thought I wouldn’t mind.</p>
+<p><span class="conn">That’s why</span> I’d appreciate it if you could
+ask me first. <span class="conn">In that case</span>, I’d be happy to
+lend them, and we’d avoid any <span class="vocab">awkwardness</span>.
+Also, if you need your own set, I can <span class="vocab">recommend</span> where to order one.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+just want to keep <span class="vocab">a good working
+relationship</span>.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>awkwardness</td>
+<td>an uncomfortable feeling</td>
+<td>There was some awkwardness.</td>
+</tr>
+<tr>
+<td>recommend</td>
+<td>suggest as good</td>
+<td>I recommend this store.</td>
+</tr>
+<tr>
+<td>a good working relationship</td>
+<td>friendly cooperation at work</td>
+<td>We have a good working relationship.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="customer-service-and-purchases">3 Customer Service and
+Purchases</h1>
+<p>Topics: a faulty product, a wrong order, a bad meal, a refund, a
+delayed delivery, a hotel problem.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">Hello, I’m calling about</span> [the problem]. [I
+bought / ordered it on date].</p>
+<p><span class="conn">The issue is</span> [explain the problem]. <span class="tpl">I understand that</span> [show empathy].</p>
+<p><span class="conn">That’s why</span> [I would like a refund /
+replacement / correction]. <span class="conn">In that case</span>, [the
+benefit for both sides].</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h2 id="faulty-phone">3.1 Faulty Phone</h2>
+<p>You bought a phone that stopped working after two days. Call the
+store and ask for a replacement or refund.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> a phone that I
+bought from your store on Monday.</p>
+<p><span class="conn">The issue is</span>, it stopped working after two
+days. The screen went black, and it won’t turn on, even after I <span class="vocab">charged</span> it overnight. I have the receipt and the
+original box. <span class="tpl">I understand that</span> these things
+can happen, even with a good product.</p>
+<p><span class="conn">That’s why</span> I’d like a <span class="vocab">replacement</span>, or a full refund if you don’t have the
+same model in stock. <span class="conn">In that case</span>, I can come
+to the store tomorrow, and I’ll bring everything with me, including the
+<span class="vocab">warranty</span> card.</p>
+<p><span class="tpl">Thank you so much for your help</span>. I’d
+appreciate a quick solution.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>charged</td>
+<td>filled with electric power</td>
+<td>I charged the phone.</td>
+</tr>
+<tr>
+<td>replacement</td>
+<td>a new item instead of a faulty one</td>
+<td>They sent a replacement.</td>
+</tr>
+<tr>
+<td>warranty</td>
+<td>a promise to repair or replace</td>
+<td>The warranty lasts a year.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="wrong-restaurant-order">3.2 Wrong Restaurant Order</h2>
+<p>Your restaurant order arrived wrong and cold. Talk to the server and
+ask for a solution.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my order.</p>
+<p><span class="conn">The issue is</span>, I ordered the grilled
+chicken, but I received the fish, and it’s also <span class="vocab">lukewarm</span>. I’m sure it was a simple mix-up. <span class="tpl">I understand that</span> the restaurant is very busy
+tonight.</p>
+<p><span class="conn">That’s why</span> I’d like you to bring me the
+chicken, and please make sure that it’s hot. <span class="conn">In that
+case</span>, I’ll happily wait a few extra minutes. If that’s not
+possible, I’d be glad to have the dish <span class="vocab">removed</span> from the bill.</p>
+<p><span class="tpl">Thank you so much for your help</span>. I really
+<span class="vocab">appreciate</span> your quick attention.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lukewarm</td>
+<td>slightly warm</td>
+<td>The soup was lukewarm.</td>
+</tr>
+<tr>
+<td>removed</td>
+<td>taken away</td>
+<td>The item was removed.</td>
+</tr>
+<tr>
+<td>appreciate</td>
+<td>be thankful for</td>
+<td>I appreciate it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="noisy-hotel-room">3.3 Noisy Hotel Room</h2>
+<p>Your hotel room is noisy and dirty. Talk to the front desk and ask
+for a different room.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">Hello, I’m calling from room 412</span>, <span class="tpl">and I’d like to talk about</span> the condition of my
+room.</p>
+<p><span class="conn">The issue is</span>, the room is quite dirty. The
+bathroom hasn’t been cleaned, and there are stains on the sheets. <span class="conn">In addition</span>, it’s very noisy, because it faces the
+street, and I can hear the traffic all night. <span class="tpl">I
+understand that</span> the hotel is fully booked, and <span class="vocab">housekeeping</span> is busy.</p>
+<p><span class="conn">That’s why</span> I’d like to be moved to a
+quieter and cleaner room, preferably on a higher floor. <span class="conn">In that case</span>, I can pack my things right away, and
+I’m happy to wait in the lobby. I’d also like a <span class="vocab">discount</span> for the inconvenience.</p>
+<p><span class="tpl">Thank you so much for your help</span>. I’m sure
+you can <span class="vocab">sort this out</span>.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>discount</td>
+<td>a reduction in price</td>
+<td>We got a discount.</td>
+</tr>
+<tr>
+<td>sort this out</td>
+<td>solve a problem</td>
+<td>Please sort this out.</td>
+</tr>
+<tr>
+<td>housekeeping</td>
+<td>the staff who clean hotel rooms</td>
+<td>Housekeeping changes the sheets daily.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="late-package">3.4 Late Package</h2>
+<p>Your package is two weeks late. Call customer service to find out
+what happened.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> an order that I
+placed on the fifth of March.</p>
+<p><span class="conn">The issue is</span>, it was supposed to arrive
+within five days, but two weeks have passed, and I still haven’t
+received it. The <span class="vocab">tracking number</span> shows no
+movement since last Tuesday. <span class="tpl">I understand that</span>
+delays happen, especially in busy periods.</p>
+<p><span class="conn">That’s why</span> I’d like to know where the
+package is, and when I can expect it. <span class="conn">In that
+case</span>, I can plan my week. If it’s lost, I’d prefer you <span class="vocab">reship</span> the item by <span class="vocab">express
+delivery</span> at no extra charge, or refund my money.</p>
+<p><span class="tpl">Thank you so much for your help</span>. Could you
+please send me an email to confirm this?</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tracking number</td>
+<td>a code for following a parcel</td>
+<td>Enter the tracking number.</td>
+</tr>
+<tr>
+<td>reship</td>
+<td>send again</td>
+<td>They reshipped my order.</td>
+</tr>
+<tr>
+<td>express delivery</td>
+<td>faster shipping for an extra fee</td>
+<td>I paid extra for express delivery.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extra-bill-charge">3.5 Extra Bill Charge</h2>
+<p>You were charged extra on a bill. Call the company and ask for a
+correction.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> my latest phone
+bill.</p>
+<p><span class="conn">The issue is</span>, I was charged an extra thirty
+dollars labelled “service fee,” and I never agreed to it. My plan costs
+fifty dollars a month, but the total is eighty. <span class="tpl">I
+understand that</span> mistakes can occur in a large system.</p>
+<p><span class="conn">That’s why</span> I’d like you to review my
+account and remove the extra charge. <span class="conn">In that
+case</span>, I’ll pay the correct amount right away. I’d also like to
+receive a <span class="vocab">corrected</span> bill by email, and an
+explanation of how it happened.</p>
+<p><span class="tpl">Thank you so much for your help</span>. I’ve been a
+<span class="vocab">loyal customer</span> for years, and I’d like to
+<span class="vocab">keep it that way</span>.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>corrected</td>
+<td>fixed to be accurate</td>
+<td>A corrected invoice.</td>
+</tr>
+<tr>
+<td>loyal customer</td>
+<td>someone who keeps buying from a company</td>
+<td>A loyal customer for ten years.</td>
+</tr>
+<tr>
+<td>keep it that way</td>
+<td>continue a situation</td>
+<td>I want to keep it that way.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="friends-family-and-social-conflicts">4 Friends, Family, and
+Social Conflicts</h1>
+<p>Topics: a broken promise, a borrowed item, cancelling plans, a
+disagreement, an awkward request.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> [the problem].</p>
+<p><span class="conn">The thing is</span>, [explain how you feel and
+why]. <span class="tpl">I understand that</span> [show empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request or
+solution]. <span class="conn">In that case</span>, [the benefit for both
+sides].</p>
+<p><span class="tpl">Thanks for hearing me out</span>.</p>
+<h2 id="damaged-car">4.1 Damaged Car</h2>
+<p>Your friend borrowed your car and returned it with damage. Talk to
+your friend about it.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> my car.</p>
+<p><span class="conn">The thing is</span>, when you returned it
+yesterday, I noticed a <span class="vocab">dent</span> on the back door
+and a scratch on the bumper. I didn’t want to make a big deal, but I’m a
+bit upset, because I take great care of that car. <span class="tpl">I
+understand that</span> accidents happen, and I’m sure it wasn’t on
+purpose.</p>
+<p><span class="conn">That’s why</span> I’d like us to get an estimate
+from a repair shop and decide how to cover the cost. <span class="conn">In that case</span>, we can solve this fairly, and our
+friendship will stay <span class="vocab">intact</span>. Next time, I’d
+also appreciate it if you told me right away about any <span class="vocab">damage</span>.</p>
+<p><span class="tpl">Thanks for hearing me out</span>.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dent</td>
+<td>a hollow made by a hit</td>
+<td>A dent in the door.</td>
+</tr>
+<tr>
+<td>intact</td>
+<td>not damaged</td>
+<td>The friendship stayed intact.</td>
+</tr>
+<tr>
+<td>damage</td>
+<td>harm to something</td>
+<td>The storm caused damage.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cancelled-plans">4.2 Cancelled Plans</h2>
+<p>A friend cancelled plans at the last minute three times. Tell them
+how you feel.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> our plans.</p>
+<p><span class="conn">The thing is</span>, this is the third time you’ve
+cancelled at the last minute, and I’ve started to feel <span class="vocab">let down</span>. I look forward to our meetings, and I
+often rearrange my schedule to make time. <span class="tpl">I understand
+that</span> you’ve been busy and stressed lately.</p>
+<p><span class="conn">That’s why</span> I’d like us to be more <span class="vocab">realistic</span>. If you’re not sure you can come, please
+tell me a day earlier. <span class="conn">In that case</span>, I won’t
+be disappointed, and we can <span class="vocab">reschedule</span> to a
+time that suits you. Our friendship is important to me.</p>
+<p><span class="tpl">Thanks for hearing me out</span>.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>let down</td>
+<td>disappointed</td>
+<td>I felt let down.</td>
+</tr>
+<tr>
+<td>realistic</td>
+<td>sensible about what can be done</td>
+<td>Be realistic.</td>
+</tr>
+<tr>
+<td>reschedule</td>
+<td>change the time of an event</td>
+<td>Let’s reschedule.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="uninvited-guests">4.3 Uninvited Guests</h2>
+<p>Your sibling wants to bring friends to a family event you planned for
+just the family. Talk to them about it.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> Saturday’s dinner.</p>
+<p><span class="conn">The thing is</span>, I planned it as a small
+evening for the family only, because we rarely get to be together, and I
+cooked for exactly ten people. <span class="tpl">I understand
+that</span> you want your friends to meet everyone, and that’s a nice
+thought.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest another day
+for them. We could organize a <span class="vocab">casual</span> barbecue
+next weekend, and I’d gladly help. <span class="conn">In that
+case</span>, we’d have a <span class="vocab">cozy</span> family dinner
+now, and your friends would get a proper welcome later.</p>
+<p><span class="tpl">Thanks for hearing me out</span>. I hope you <span class="vocab">don’t take it the wrong way</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>casual</td>
+<td>relaxed and informal</td>
+<td>A casual dinner.</td>
+</tr>
+<tr>
+<td>cozy</td>
+<td>warm and intimate</td>
+<td>A cozy evening.</td>
+</tr>
+<tr>
+<td>don’t take it the wrong way</td>
+<td>don’t misunderstand my meaning</td>
+<td>Please don’t take it the wrong way.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="refusing-a-loan">4.4 Refusing a Loan</h2>
+<p>You must tell your friend that you cannot lend them money. Explain
+politely.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> the money you asked
+about.</p>
+<p><span class="conn">The thing is</span>, I really wish I could help,
+but I can’t lend you that amount right now. I’m saving for rent and some
+unexpected bills, and my <span class="vocab">budget</span> is tight.
+<span class="tpl">I understand that</span> you’re in a difficult
+situation, and I feel bad saying no.</p>
+<p><span class="conn">That’s why</span> I’d like to help in other ways.
+I could help you make a <span class="vocab">repayment plan</span>, or
+look for <span class="vocab">community</span> support programs. <span class="conn">In that case</span>, you’d have a real solution, and our
+friendship wouldn’t be affected by money.</p>
+<p><span class="tpl">Thanks for hearing me out</span>. I hope you
+understand.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>budget</td>
+<td>a spending plan</td>
+<td>My budget is tight.</td>
+</tr>
+<tr>
+<td>repayment plan</td>
+<td>a schedule to pay back money</td>
+<td>We made a repayment plan.</td>
+</tr>
+<tr>
+<td>community</td>
+<td>a local group</td>
+<td>Community programs help.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unwanted-advice">4.5 Unwanted Advice</h2>
+<p>A relative keeps giving you advice you do not want. Politely talk to
+them about it.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the advice you’ve been
+giving me.</p>
+<p><span class="conn">The thing is</span>, I know you care about me, and
+I truly <span class="vocab">value</span> that. <span class="conn">However</span>, I’ve been hearing a lot of suggestions
+about my job and my home, and sometimes I feel <span class="vocab">pressured</span>, because I’m an adult and I’m already
+working on these things. <span class="tpl">I understand that</span> you
+want what’s best for me.</p>
+<p><span class="conn">That’s why</span> I’d like to ask you to share
+advice only when I ask for it. <span class="conn">In that case</span>,
+I’ll feel more relaxed, and I’ll be happy to come to you when I really
+need guidance.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. It
+means a lot to me and <span class="vocab">strengthens</span> our
+relationship.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>value</td>
+<td>appreciate</td>
+<td>I value your opinion.</td>
+</tr>
+<tr>
+<td>pressured</td>
+<td>forced to do something</td>
+<td>I felt pressured.</td>
+</tr>
+<tr>
+<td>strengthens</td>
+<td>makes stronger</td>
+<td>It strengthens trust.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="apologies-and-explaining-your-mistake">5 Apologies and
+Explaining Your Mistake</h1>
+<p>Topics: breaking something, forgetting a plan, missing a deadline,
+being late, a misunderstanding.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
+<span class="tpl">I wanted to apologize for</span> [the mistake].</p>
+<p><span class="conn">The truth is</span>, [explain what happened
+honestly]. <span class="tpl">I know that</span> [show you understand
+their feelings].</p>
+<p><span class="conn">That’s why</span> [your offer to fix it]. <span class="conn">In that case</span>, [the benefit].</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>.</p>
+<h2 id="broken-vase">5.1 Broken Vase</h2>
+<p>You accidentally broke your friend’s favourite item. Call them,
+apologize, and offer a solution.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
+<span class="tpl">I wanted to apologize for</span> something that
+happened at your place.</p>
+<p><span class="conn">The truth is</span>, while I was cleaning, I
+knocked over your blue vase, and it broke into pieces. I feel terrible,
+because I know it was a gift from your grandmother. <span class="tpl">I
+know that</span> it means a lot to you, and no money can replace it.</p>
+<p><span class="conn">That’s why</span> I’d like to try to <span class="vocab">make it up to you</span>. I could look for a similar vase,
+or take it to someone who can <span class="vocab">glue</span> it back
+together. <span class="conn">In that case</span>, we might save most of
+it, and I’ll cover the cost.</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>. I hope you can
+<span class="vocab">forgive</span> me.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>make it up to you</td>
+<td>do something to repair a wrong</td>
+<td>I’ll make it up to you.</td>
+</tr>
+<tr>
+<td>glue</td>
+<td>stick together</td>
+<td>Glue the handle.</td>
+</tr>
+<tr>
+<td>forgive</td>
+<td>stop being angry about a fault</td>
+<td>Please forgive me.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="forgotten-meeting">5.2 Forgotten Meeting</h2>
+<p>You forgot to meet a friend who waited for you for an hour. Call them
+and apologize.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
+<span class="tpl">I wanted to apologize for</span> not showing up
+today.</p>
+<p><span class="conn">The truth is</span>, I completely forgot about our
+plan. I had a long day at work, and I didn’t set a reminder. I only
+realized when I saw your messages. <span class="tpl">I know that</span>
+you waited for an hour, and you must be annoyed and maybe even <span class="vocab">hurt</span>.</p>
+<p><span class="conn">That’s why</span> I’d like to take you out for
+dinner this weekend, and it’s my treat. <span class="conn">In that
+case</span>, we can finally have the chat we planned, and I’ll put it in
+my calendar with an <span class="vocab">alert</span>.</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>. It was <span class="vocab">careless</span> of me.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hurt</td>
+<td>emotionally upset</td>
+<td>I felt hurt.</td>
+</tr>
+<tr>
+<td>alert</td>
+<td>a reminder signal</td>
+<td>I set an alert.</td>
+</tr>
+<tr>
+<td>careless</td>
+<td>not paying enough attention</td>
+<td>A careless mistake.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="missed-deadline">5.3 Missed Deadline</h2>
+<p>You will miss an important deadline at work. Tell your manager and
+explain your plan.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to bother you</span>. <span class="tpl">I wanted to inform you about</span> the marketing
+report.</p>
+<p><span class="conn">The truth is</span>, I won’t be able to submit it
+by tomorrow. The data from another department arrived late, and I need
+two more days to analyze it properly. <span class="tpl">I know
+that</span> this affects your schedule, and I’m sorry for the <span class="vocab">inconvenience</span>.</p>
+<p><span class="conn">That’s why</span> I’ve made a plan. I’ll send you
+a draft tomorrow with the main findings, and I’ll <span class="vocab">finalize</span> the full report by Thursday. <span class="conn">In that case</span>, you’ll have the key points for the
+meeting, and the quality won’t suffer. I’ll also <span class="vocab">prioritize</span> this above my other tasks.</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>inconvenience</td>
+<td>trouble caused to someone</td>
+<td>Sorry for the inconvenience.</td>
+</tr>
+<tr>
+<td>finalize</td>
+<td>complete</td>
+<td>We’ll finalize the plan.</td>
+</tr>
+<tr>
+<td>prioritize</td>
+<td>put first</td>
+<td>Prioritize urgent tasks.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rude-in-a-meeting">5.4 Rude in a Meeting</h2>
+<p>You were rude to a coworker during a stressful meeting. Talk to them
+and apologize.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to apologize for</span> what happened in the
+meeting.</p>
+<p><span class="conn">The truth is</span>, I was stressed about the
+deadline, and I raised my voice at you. That was unprofessional, and you
+didn’t deserve it. <span class="tpl">I know that</span> it must have
+felt <span class="vocab">embarrassing</span>, especially in front of the
+whole team.</p>
+<p><span class="conn">That’s why</span> I’d like to say sorry sincerely.
+<span class="conn">In that case</span>, I hope we can move forward, and
+I’d like to hear your ideas on the project. If you want, we could also
+have coffee and <span class="vocab">clear the air</span>. I promise to
+stay calm and respectful in the future.</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>. I really <span class="vocab">respect</span> your work.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>embarrassing</td>
+<td>making you feel ashamed</td>
+<td>An embarrassing moment.</td>
+</tr>
+<tr>
+<td>clear the air</td>
+<td>remove bad feelings</td>
+<td>Let’s clear the air.</td>
+</tr>
+<tr>
+<td>respect</td>
+<td>admire and honour</td>
+<td>I respect her.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cancelling-a-dinner">5.5 Cancelling a Dinner</h2>
+<p>You must cancel a family dinner you agreed to host. Call your
+relative and explain.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
+<span class="tpl">I wanted to let you know about</span> Sunday’s
+dinner.</p>
+<p><span class="conn">The truth is</span>, I’m afraid I have to cancel.
+My son has a high fever, and the doctor told us to keep him at home and
+rest. I don’t want anyone else to catch it. <span class="tpl">I know
+that</span> you were looking forward to it, and you probably <span class="vocab">rearranged</span> your schedule.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest <span class="vocab">postponing</span> it to next weekend. <span class="conn">In that case</span>, everyone will be healthy, and I’ll
+cook something special to make up for it. I’ll also send everyone the
+updated date today.</p>
+<p><span class="tpl">Once again, I’m truly sorry</span>. Thank you for
+being so <span class="vocab">understanding</span>.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rearranged</td>
+<td>changed the plan or order</td>
+<td>I rearranged my day.</td>
+</tr>
+<tr>
+<td>postponing</td>
+<td>moving to a later time</td>
+<td>We’re postponing the party.</td>
+</tr>
+<tr>
+<td>understanding</td>
+<td>sympathetic</td>
+<td>You’re very understanding.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="travel-and-transportation-problems">6 Travel and Transportation
+Problems</h1>
+<p>Topics: a cancelled flight, lost luggage, an overcharge, a delayed
+train, a wrong seat.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> [the problem].</p>
+<p><span class="conn">The issue is</span>, [explain what happened and
+how it affects you]. <span class="tpl">I understand that</span> [show
+empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request]. <span class="conn">In that case</span>, [the benefit for both sides].</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h2 id="cancelled-flight">6.1 Cancelled Flight</h2>
+<p>Your flight was cancelled. Talk to the airline agent and ask for
+another flight.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my flight to
+Vancouver.</p>
+<p><span class="conn">The issue is</span>, it has just been cancelled,
+and I have an important meeting there tomorrow morning. <span class="tpl">I understand that</span> this isn’t your fault, and I know
+you’re dealing with many passengers.</p>
+<p><span class="conn">That’s why</span> I’d like to be put on the next
+available flight, even if it has a <span class="vocab">layover</span>.
+<span class="conn">In that case</span>, I could still arrive tonight. If
+that’s not possible, I’d appreciate a <span class="vocab">voucher</span>
+for a hotel and a meal, since the delay will be long. Could you also
+confirm that my luggage will be <span class="vocab">transferred</span>?</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>layover</td>
+<td>a stop between flights</td>
+<td>A three-hour layover.</td>
+</tr>
+<tr>
+<td>voucher</td>
+<td>a coupon for a service</td>
+<td>A meal voucher.</td>
+</tr>
+<tr>
+<td>transferred</td>
+<td>moved from one place to another</td>
+<td>My bags were transferred to the new flight.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lost-luggage">6.2 Lost Luggage</h2>
+<p>Your luggage did not arrive at your destination. Talk to the airline
+and ask what they will do.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my luggage.</p>
+<p><span class="conn">The issue is</span>, my suitcase didn’t come out
+on the <span class="vocab">baggage claim</span>, and everything I need
+for this trip is inside, including my medicine and work clothes. <span class="tpl">I understand that</span> bags are sometimes delayed, and I’m
+not blaming you.</p>
+<p><span class="conn">That’s why</span> I’d like to file a <span class="vocab">report</span> and know how you’ll track it. <span class="conn">In that case</span>, I can give you my hotel address, and
+you can deliver the suitcase as soon as it’s found. I’d also like to
+know whether the airline will <span class="vocab">reimburse</span> me
+for basic items I have to buy.</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baggage claim</td>
+<td>the area where you collect bags</td>
+<td>Wait at the baggage claim.</td>
+</tr>
+<tr>
+<td>report</td>
+<td>an official written account</td>
+<td>I filed a report.</td>
+</tr>
+<tr>
+<td>reimburse</td>
+<td>pay back</td>
+<td>They’ll reimburse me.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="taxi-overcharge">6.3 Taxi Overcharge</h2>
+<p>A taxi driver charged much more than the fare shown. Talk to the
+driver or the company.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> a taxi ride I took
+yesterday evening.</p>
+<p><span class="conn">The issue is</span>, the meter showed twenty-two
+dollars at the end of the trip, but the driver asked for forty, and he
+said there were extra charges. I didn’t have time to argue, so I paid.
+<span class="tpl">I understand that</span> there can be surcharges at
+night.</p>
+<p><span class="conn">That’s why</span> I’d like you to check the trip
+record and the <span class="vocab">fare</span>. <span class="conn">In
+that case</span>, if the charge was a mistake, I’d expect you to <span class="vocab">refund</span> the difference. I have the receipt and the
+<span class="vocab">licence plate number</span> of the car, and I’m
+happy to send them by email.</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fare</td>
+<td>the price of a trip</td>
+<td>The fare was twenty dollars.</td>
+</tr>
+<tr>
+<td>refund</td>
+<td>give money back</td>
+<td>Please refund me.</td>
+</tr>
+<tr>
+<td>licence plate number</td>
+<td>the official number of a vehicle or driver</td>
+<td>I noted the licence plate number.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="delayed-train">6.4 Delayed Train</h2>
+<p>Your train was delayed two hours and you missed an appointment. Ask
+the rail company for a refund.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> the 9:15 train from
+Montreal yesterday.</p>
+<p><span class="conn">The issue is</span>, it was delayed by two hours,
+and as a result, I missed an important medical appointment, which I had
+waited weeks for. <span class="tpl">I understand that</span> delays can
+happen because of weather or technical problems.</p>
+<p><span class="conn">That’s why</span> I’d like to request a full
+refund of my ticket. <span class="conn">In that case</span>, I’d
+consider the matter <span class="vocab">settled</span>. I’d also like to
+know whether there’s a <span class="vocab">compensation</span> policy
+for long delays, because I had to pay a <span class="vocab">cancellation
+fee</span> for the appointment. I can send you my ticket details.</p>
+<p><span class="tpl">Thank you so much for your help</span>.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>settled</td>
+<td>resolved</td>
+<td>The matter is settled.</td>
+</tr>
+<tr>
+<td>compensation</td>
+<td>payment for a loss</td>
+<td>They offered compensation.</td>
+</tr>
+<tr>
+<td>cancellation fee</td>
+<td>a charge for cancelling</td>
+<td>A cancellation fee applies.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="seat-mix-up">6.5 Seat Mix-Up</h2>
+<p>A passenger is sitting in the seat you reserved on a bus. Politely
+ask them to move.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I think there might be a small mix-up</span> with the
+seat.</p>
+<p><span class="conn">The issue is</span>, I reserved this seat, 14A,
+and I have my ticket here. <span class="tpl">I understand that</span>
+you might have sat here by mistake, since the numbers can be
+confusing.</p>
+<p><span class="conn">That’s why</span> I’d really appreciate it if you
+could check your ticket. <span class="conn">In that case</span>, we can
+<span class="vocab">sort it out</span> quickly. If you’d like, I can ask
+the driver to <span class="vocab">verify</span> it for both of us. And
+if your seat is nearby, we can easily <span class="vocab">swap</span>,
+and I won’t mind at all.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sort it out</td>
+<td>solve it</td>
+<td>Let’s sort it out.</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>check that something is correct</td>
+<td>The driver will verify it.</td>
+</tr>
+<tr>
+<td>swap</td>
+<td>exchange</td>
+<td>Can we swap seats?</td>
+</tr>
+</tbody>
+</table>
+<h1 id="school-and-community-situations">7 School and Community
+Situations</h1>
+<p>Topics: a grade, a school rule, a club, a neighbourhood issue, a
+public place, a request to an official.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">Excuse me, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> [the problem].</p>
+<p><span class="conn">The thing is</span>, [explain the problem and how
+it affects you]. <span class="tpl">I understand that</span> [show
+empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request or
+solution]. <span class="conn">In that case</span>, [the benefit for both
+sides].</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h2 id="unfair-grade">7.1 Unfair Grade</h2>
+<p>You think your teacher graded your assignment unfairly. Talk to the
+teacher politely.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">Excuse me, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the grade I received on
+my essay.</p>
+<p><span class="conn">The thing is</span>, I got sixty-five percent, and
+I was expecting something higher, because I followed the instructions
+carefully, and I used all the sources required. I don’t understand why
+some of my points lost marks. <span class="tpl">I understand that</span>
+you have many papers to grade, and I respect your work.</p>
+<p><span class="conn">That’s why</span> I’d like to ask if we could go
+through the <span class="vocab">marking criteria</span> together. <span class="conn">In that case</span>, I’d know what to <span class="vocab">improve</span>, and if there was an error in the <span class="vocab">calculation</span>, you could correct it.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>marking criteria</td>
+<td>the standards used to give marks</td>
+<td>Read the marking criteria.</td>
+</tr>
+<tr>
+<td>improve</td>
+<td>get better</td>
+<td>I want to improve.</td>
+</tr>
+<tr>
+<td>calculation</td>
+<td>working out numbers</td>
+<td>A calculation error.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extension-request">7.2 Extension Request</h2>
+<p>You want to ask your professor for an extension. Explain your
+situation.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">Excuse me, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the deadline for my
+research paper.</p>
+<p><span class="conn">The thing is</span>, I’ve been dealing with a
+family emergency this week, and I had to travel to take care of my
+father. As a result, I haven’t been able to complete the paper. <span class="tpl">I understand that</span> deadlines are important, and I
+don’t want to <span class="vocab">take advantage</span> of your
+flexibility.</p>
+<p><span class="conn">That’s why</span> I’d like to ask for a three-day
+<span class="vocab">extension</span>. <span class="conn">In that
+case</span>, I could submit a complete and <span class="vocab">polished</span> paper by Monday. I’ve already finished the
+outline and the research, and I can show you my progress, if you’d
+like.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>take advantage</td>
+<td>use unfairly</td>
+<td>Don’t take advantage of kindness.</td>
+</tr>
+<tr>
+<td>extension</td>
+<td>extra time</td>
+<td>He asked for an extension.</td>
+</tr>
+<tr>
+<td>polished</td>
+<td>refined and well finished</td>
+<td>A polished essay.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="noisy-library">7.3 Noisy Library</h2>
+<p>A person is talking loudly in a library. Politely ask them to be
+quiet.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I wanted to mention</span> the noise.</p>
+<p><span class="conn">The thing is</span>, I’m trying to study for an
+exam, and it’s hard to concentrate when there’s talking around. <span class="tpl">I understand that</span> you’re probably discussing
+something important, and you may not have noticed how far your voice
+carries.</p>
+<p><span class="conn">That’s why</span> I was wondering if you could
+lower your voice, or maybe move to the <span class="vocab">study
+room</span> on the second floor, where talking is allowed. <span class="conn">In that case</span>, everybody here can <span class="vocab">focus</span>, and you’ll be able to talk freely. I believe
+that room is usually <span class="vocab">vacant</span> at this time.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>study room</td>
+<td>a room for group work</td>
+<td>Book a study room.</td>
+</tr>
+<tr>
+<td>focus</td>
+<td>pay attention</td>
+<td>I can’t focus.</td>
+</tr>
+<tr>
+<td>vacant</td>
+<td>empty</td>
+<td>The room is vacant.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="loud-street-festival">7.4 Loud Street Festival</h2>
+<p>A neighbourhood event is too loud for the residents. Talk to the
+organizer and suggest a solution.</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the music at the street
+festival.</p>
+<p><span class="conn">The thing is</span>, it’s quite loud, and several
+residents, including families with babies and elderly people, are having
+trouble. It continues until eleven at night. <span class="tpl">I
+understand that</span> the festival is important for the community, and
+you’ve worked hard.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest a few small
+changes. You could lower the <span class="vocab">volume</span> after
+nine o’clock, and point the speakers away from the houses. <span class="conn">In that case</span>, people can still enjoy the event, and
+residents will <span class="vocab">cooperate</span> more next year. I’m
+also happy to <span class="vocab">volunteer</span> to help.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>volume</td>
+<td>loudness</td>
+<td>Turn down the volume.</td>
+</tr>
+<tr>
+<td>cooperate</td>
+<td>work together</td>
+<td>Let’s cooperate.</td>
+</tr>
+<tr>
+<td>volunteer</td>
+<td>offer help for free</td>
+<td>I’ll volunteer.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="class-schedule-change">7.5 Class Schedule Change</h2>
+<p>You want to ask the gym manager to change the class schedule. Explain
+your reasons.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the yoga class
+schedule.</p>
+<p><span class="conn">The thing is</span>, the class is at four in the
+afternoon, and many members, including me, are still at work then. Only
+a few people can attend, and I’ve noticed that the room is half empty.
+<span class="tpl">I understand that</span> the schedule must suit the
+instructors, too.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest moving the
+class to six o’clock in the evening. <span class="conn">In that
+case</span>, I think the number of participants would <span class="vocab">increase</span>, which would be good for the gym. I could
+also ask my coworkers to <span class="vocab">sign up</span>, and I’d be
+glad to <span class="vocab">fill out</span> a survey.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>increase</td>
+<td>grow in number</td>
+<td>Sales will increase.</td>
+</tr>
+<tr>
+<td>sign up</td>
+<td>register</td>
+<td>I signed up for the class.</td>
+</tr>
+<tr>
+<td>fill out</td>
+<td>complete a form</td>
+<td>Please fill out the form.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="services-utilities-and-polite-refusals">8 Services, Utilities,
+and Polite Refusals</h1>
+<p>Topics: internet, a contractor, a bank, a membership, declining a
+request, persuading a boss.</p>
+<h2 id="general-template-7">General Template</h2>
+<p><span class="tpl">Hello, I’m calling about</span> [the problem]. [It
+started on date].</p>
+<p><span class="conn">The issue is</span>, [explain the problem and how
+it affects you]. <span class="tpl">I understand that</span> [show
+empathy].</p>
+<p><span class="conn">That’s why</span> [your polite request or
+solution]. <span class="conn">In that case</span>, [the benefit for both
+sides].</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h2 id="internet-outage">8.1 Internet Outage</h2>
+<p>Your internet has been down for three days. Call the provider and ask
+for a solution.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> my internet
+connection.</p>
+<p><span class="conn">The issue is</span>, it has been down for three
+days, and I work from home, so I can’t attend meetings or send files.
+I’ve already restarted the modem several times. <span class="tpl">I
+understand that</span> outages sometimes happen, and I know it’s not
+your personal fault.</p>
+<p><span class="conn">That’s why</span> I’d like to ask you to send a
+<span class="vocab">technician</span> as soon as possible, ideally
+tomorrow morning. <span class="conn">In that case</span>, I could get
+back to work quickly. I’d also like a <span class="vocab">credit</span>
+on my bill for the days without service. Could you tell me the <span class="vocab">estimated</span> time for the repair?</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>credit</td>
+<td>an amount taken off a bill</td>
+<td>I received a credit.</td>
+</tr>
+<tr>
+<td>estimated</td>
+<td>roughly calculated</td>
+<td>The estimated time is two hours.</td>
+</tr>
+<tr>
+<td>technician</td>
+<td>a person trained to repair equipment</td>
+<td>A technician fixed the modem.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unfinished-renovation">8.2 Unfinished Renovation</h2>
+<p>A contractor left your kitchen unfinished and has not returned. Call
+them and ask them to finish the work.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> the kitchen
+renovation at my house.</p>
+<p><span class="conn">The issue is</span>, you stopped working two weeks
+ago, and the job is still unfinished. The countertop isn’t installed,
+and there are wires hanging from the ceiling. We can’t use the kitchen,
+and it’s affecting my family. <span class="tpl">I understand that</span>
+you may have had other projects or <span class="vocab">supply
+problems</span>.</p>
+<p><span class="conn">That’s why</span> I’d like to agree on a clear
+<span class="vocab">timeline</span> for finishing it, preferably this
+week. <span class="conn">In that case</span>, we can avoid further
+problems, and I’ll pay the <span class="vocab">remaining</span> balance
+on completion. Otherwise, I’ll have to look at options in our <span class="vocab">contract</span>.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>supply problems</td>
+<td>difficulties getting materials</td>
+<td>Supply problems delayed us.</td>
+</tr>
+<tr>
+<td>timeline</td>
+<td>a schedule of dates</td>
+<td>Give me a timeline.</td>
+</tr>
+<tr>
+<td>remaining</td>
+<td>still left</td>
+<td>The remaining payment.</td>
+</tr>
+<tr>
+<td>contract</td>
+<td>a legal agreement</td>
+<td>Check the contract.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unknown-bank-charge">8.3 Unknown Bank Charge</h2>
+<p>You see an unknown charge on your bank statement. Call the bank and
+explain the problem.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">Hello, I’m calling about</span> my credit card
+statement.</p>
+<p><span class="conn">The issue is</span>, there’s a charge of two
+hundred and fifty dollars from a company that I don’t recognize, dated
+the tenth of this month. I haven’t made any purchase there, and my card
+has been with me all the time. <span class="tpl">I understand
+that</span> you need to verify my identity first.</p>
+<p><span class="conn">That’s why</span> I’d like to report this as an
+<span class="vocab">unauthorized</span> transaction and open a <span class="vocab">dispute</span>. <span class="conn">In that case</span>,
+I’d feel safer if you could <span class="vocab">block</span> my card and
+send me a new one. Could you also let me know how long the <span class="vocab">investigation</span> will take?</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unauthorized</td>
+<td>done without permission</td>
+<td>An unauthorized payment.</td>
+</tr>
+<tr>
+<td>dispute</td>
+<td>formally challenge</td>
+<td>I’ll dispute the charge.</td>
+</tr>
+<tr>
+<td>block</td>
+<td>stop from being used</td>
+<td>Block my card.</td>
+</tr>
+<tr>
+<td>investigation</td>
+<td>a careful examination</td>
+<td>The investigation took a week.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gym-cancellation">8.4 Gym Cancellation</h2>
+<p>You want to cancel your gym membership but the staff say it is not
+possible. Talk to the manager.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">Hello, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> cancelling my
+membership.</p>
+<p><span class="conn">The issue is</span>, I’m moving to another city
+next month, so I can’t use the gym anymore. The front desk told me that
+cancelling isn’t possible, but I read my contract, and it says I can
+<span class="vocab">terminate</span> it with thirty days’ notice. <span class="tpl">I understand that</span> you need to follow company
+policy.</p>
+<p><span class="conn">That’s why</span> I’d like to submit my <span class="vocab">written notice</span> today. <span class="conn">In that
+case</span>, my last payment would be next month, and we’d <span class="vocab">part on good terms</span>. If there is a form, I can fill
+it in right now and provide proof of my new address.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>terminate</td>
+<td>end officially</td>
+<td>I’d like to terminate the contract.</td>
+</tr>
+<tr>
+<td>written notice</td>
+<td>a formal letter of intent</td>
+<td>Send a written notice.</td>
+</tr>
+<tr>
+<td>part on good terms</td>
+<td>end a relationship in a friendly way</td>
+<td>We parted on good terms.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="declining-weekend-work">8.5 Declining Weekend Work</h2>
+<p>Your manager asks you to work an extra weekend, but you have plans.
+Politely decline and suggest an alternative.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> working this
+weekend.</p>
+<p><span class="conn">The thing is</span>, I’d love to help, but I have
+a family <span class="vocab">commitment</span> that I can’t change,
+because I booked it months ago. <span class="tpl">I understand
+that</span> the project is important, and the team is under
+pressure.</p>
+<p><span class="conn">That’s why</span> I’d like to propose another
+solution. I could stay two extra hours each evening on Wednesday and
+Thursday, and finish the urgent tasks before the weekend. <span class="conn">In that case</span>, we’d meet the deadline, and nobody
+would be <span class="vocab">overworked</span>. I could also be <span class="vocab">on call</span> by phone for anything critical.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m <span class="vocab">committed</span> to the success of the
+project.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overworked</td>
+<td>working too hard</td>
+<td>The staff are overworked.</td>
+</tr>
+<tr>
+<td>on call</td>
+<td>available if needed</td>
+<td>I’m on call tonight.</td>
+</tr>
+<tr>
+<td>committed</td>
+<td>dedicated</td>
+<td>She is committed to her job.</td>
+</tr>
+<tr>
+<td>commitment</td>
+<td>a promise or duty</td>
+<td>A family commitment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="working-from-home">8.6 Working From Home</h2>
+<p>You want to convince your manager to let you work from home two days
+a week. Explain your reasons.</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> a flexible work
+arrangement.</p>
+<p><span class="conn">The thing is</span>, I’d like to work from home
+two days a week, and I believe it would benefit both of us. I spend
+three hours a day commuting, and I could use that time to work. At home,
+I also have fewer interruptions, so I’m more productive. <span class="tpl">I understand that</span> you may worry about
+communication.</p>
+<p><span class="conn">That’s why</span> I’d suggest a three-month <span class="vocab">trial</span>. <span class="conn">In that case</span>, you
+could review my results, and I’d stay <span class="vocab">available</span> by video call and email. If my
+performance drops, we can go back to the old <span class="vocab">arrangement</span>.</p>
+<p><span class="tpl">Thank you so much for your
+understanding</span>.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trial</td>
+<td>a test period</td>
+<td>A one-month trial.</td>
+</tr>
+<tr>
+<td>available</td>
+<td>free to be contacted</td>
+<td>I’m available all day.</td>
+</tr>
+<tr>
+<td>arrangement</td>
+<td>a plan or agreement</td>
+<td>A new arrangement.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3511 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 2 Personal Experience</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 2 Personal Experience</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-2-personal-experience" id="toc-celpip-speaking-task-2-personal-experience">CELPIP Speaking Task
+2: Personal Experience</a></li>
+<li><a href="#memorable-events-and-moments" id="toc-memorable-events-and-moments">1 Memorable Events and Moments</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#memorable-birthday" id="toc-memorable-birthday">1.1
+Memorable Birthday</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#feeling-proud" id="toc-feeling-proud">1.2 Feeling
+Proud</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#a-surprise" id="toc-a-surprise">1.3 A Surprise</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#best-day-of-your-life" id="toc-best-day-of-your-life">1.4
+Best Day of Your Life</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#feeling-nervous" id="toc-feeling-nervous">1.5 Feeling
+Nervous</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#trips-places-and-travel" id="toc-trips-places-and-travel">2 Trips, Places, and Travel</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#memorable-trip" id="toc-memorable-trip">2.1 Memorable
+Trip</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#a-place-to-revisit" id="toc-a-place-to-revisit">2.2 A
+Place to Revisit</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unexpected-travel-problem" id="toc-unexpected-travel-problem">2.3 Unexpected Travel Problem</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#day-trip" id="toc-day-trip">2.4 Day Trip</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#arriving-in-a-new-city" id="toc-arriving-in-a-new-city">2.5 Arriving in a New City</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#people-and-relationships" id="toc-people-and-relationships">3 People and Relationships</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#influential-person" id="toc-influential-person">3.1
+Influential Person</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#help-from-a-family-member" id="toc-help-from-a-family-member">3.2 Help From a Family Member</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#memorable-teacher" id="toc-memorable-teacher">3.3
+Memorable Teacher</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#meeting-a-friend" id="toc-meeting-a-friend">3.4 Meeting a
+Friend</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#helping-someone" id="toc-helping-someone">3.5 Helping
+Someone</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#work-school-and-achievements" id="toc-work-school-and-achievements">4 Work, School, and
+Achievements</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#first-day" id="toc-first-day">4.1 First Day</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#overcoming-a-challenge" id="toc-overcoming-a-challenge">4.2 Overcoming a Challenge</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#learning-a-new-skill" id="toc-learning-a-new-skill">4.3
+Learning a New Skill</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#proud-project" id="toc-proud-project">4.4 Proud
+Project</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#learning-from-a-mistake" id="toc-learning-from-a-mistake">4.5 Learning From a Mistake</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#childhood-traditions-and-memories" id="toc-childhood-traditions-and-memories">5 Childhood, Traditions, and
+Memories</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#childhood-memory" id="toc-childhood-memory">5.1 Childhood
+Memory</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#family-tradition" id="toc-family-tradition">5.2 Family
+Tradition</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+<li><a href="#childhood-place" id="toc-childhood-place">5.3 Childhood
+Place</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#childhood-toy" id="toc-childhood-toy">5.4 Childhood
+Toy</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#time-with-a-grandparent" id="toc-time-with-a-grandparent">5.5 Time With a Grandparent</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#everyday-life-and-hobbies" id="toc-everyday-life-and-hobbies">6 Everyday Life and Hobbies</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#meaningful-gift" id="toc-meaningful-gift">6.1 Meaningful
+Gift</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#memorable-meal" id="toc-memorable-meal">6.2 Memorable
+Meal</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#new-hobby" id="toc-new-hobby">6.3 New Hobby</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#attending-an-event" id="toc-attending-an-event">6.4
+Attending an Event</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#happy-purchase" id="toc-happy-purchase">6.5 Happy
+Purchase</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#decisions-embarrassment-and-trying-new-things" id="toc-decisions-embarrassment-and-trying-new-things">7 Decisions,
+Embarrassment, and Trying New Things</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#difficult-decision" id="toc-difficult-decision">7.1
+Difficult Decision</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+<li><a href="#embarrassing-moment" id="toc-embarrassing-moment">7.2
+Embarrassing Moment</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+<li><a href="#trying-new-food" id="toc-trying-new-food">7.3 Trying New
+Food</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#volunteering-experience" id="toc-volunteering-experience">7.4 Volunteering Experience</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#changing-your-mind" id="toc-changing-your-mind">7.5
+Changing Your Mind</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#favourites-and-present-day-preferences" id="toc-favourites-and-present-day-preferences">8 Favourites and
+Present-Day Preferences</a>
+<ul>
+<li><a href="#general-template-7" id="toc-general-template-7">General
+Template</a></li>
+<li><a href="#place-to-relax" id="toc-place-to-relax">8.1 Place to
+Relax</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#favourite-season" id="toc-favourite-season">8.2 Favourite
+Season</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#item-you-cant-live-without" id="toc-item-you-cant-live-without">8.3 Item You Can’t Live Without</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+<li><a href="#influential-book-or-movie" id="toc-influential-book-or-movie">8.4 Influential Book or Movie</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#skill-to-learn" id="toc-skill-to-learn">8.5 Skill to
+Learn</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#difficult-or-unexpected-situations" id="toc-difficult-or-unexpected-situations">9 Difficult or Unexpected
+Situations</a>
+<ul>
+<li><a href="#general-template-8" id="toc-general-template-8">General
+Template</a></li>
+<li><a href="#losing-something-important" id="toc-losing-something-important">9.1 Losing Something Important</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+<li><a href="#solving-a-problem" id="toc-solving-a-problem">9.2 Solving
+a Problem</a>
+<ul>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+</ul></li>
+<li><a href="#a-day-gone-wrong" id="toc-a-day-gone-wrong">9.3 A Day Gone
+Wrong</a>
+<ul>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+</ul></li>
+<li><a href="#help-from-a-stranger" id="toc-help-from-a-stranger">9.4
+Help From a Stranger</a>
+<ul>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+</ul></li>
+<li><a href="#being-late" id="toc-being-late">9.5 Being Late</a>
+<ul>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+</ul></li>
+<li><a href="#long-wait" id="toc-long-wait">9.6 Long Wait</a>
+<ul>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-2-personal-experience">CELPIP Speaking Task
+2: Personal Experience</h1>
+<h1 id="memorable-events-and-moments">1 Memorable Events and
+Moments</h1>
+<p>Topics: a special occasion, a celebration, a surprising event, a
+proud moment, a day you will never forget.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the event]. [It
+happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [what happened]. <span class="conn">Then</span>, [the main moment, with details and
+feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [why it was special or what
+you learned].</p>
+<h2 id="memorable-birthday">1.1 Memorable Birthday</h2>
+<p>Talk about a memorable birthday or celebration you have had. What
+happened and why was it special?</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my twenty-fifth
+birthday. It was a day I’ll never forget. I thought my friends had
+forgotten it, since nobody called me all morning.</p>
+<p><span class="conn">At first</span>, I felt a bit sad. <span class="conn">However</span>, in the evening my sister asked me to join
+her for dinner at a small restaurant. When I walked in, the lights came
+on, and about thirty friends and relatives yelled “Surprise!” There were
+balloons, a huge cake, and a <span class="vocab">banner</span> with my
+name on it.</p>
+<p><span class="conn">In the end</span>, we danced and laughed until
+midnight, and I was <span class="vocab">overjoyed</span>.</p>
+<p><span class="tpl">Looking back</span>, it was special because so many
+people had worked together just to <span class="vocab">make me feel
+valued</span>. I’ll <span class="vocab">treasure</span> that memory
+forever.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>banner</td>
+<td>a long sign with words on it</td>
+<td>They hung a banner above the door.</td>
+</tr>
+<tr>
+<td>overjoyed</td>
+<td>extremely happy</td>
+<td>She was overjoyed to see her family.</td>
+</tr>
+<tr>
+<td>make me feel valued</td>
+<td>make me feel important</td>
+<td>Their kind words made me feel valued.</td>
+</tr>
+<tr>
+<td>treasure</td>
+<td>to keep and care about deeply</td>
+<td>I treasure the photos from that day.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feeling-proud">1.2 Feeling Proud</h2>
+<p>Describe a time when you felt very proud of yourself.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the day I finished my
+first half marathon. A year earlier, I could hardly run for ten minutes,
+so I decided to <span class="vocab">challenge myself</span>.</p>
+<p><span class="conn">At first</span>, training was exhausting. I woke
+up at six every morning, and my legs were sore. <span class="conn">Then</span>, after a few months, I noticed I was getting
+stronger. On race day, the weather was cold, and I felt nervous at the
+start line. Around kilometre eighteen, I wanted to quit, but the crowd
+was <span class="vocab">cheering</span> loudly, so I kept going.</p>
+<p><span class="conn">In the end</span>, I crossed the finish line in
+two hours and ten minutes, and tears came to my eyes.</p>
+<p><span class="tpl">Looking back</span>, I felt a deep sense of <span class="vocab">accomplishment</span>. It taught me that <span class="vocab">perseverance</span> can take me further than I expect.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>challenge myself</td>
+<td>test my own abilities</td>
+<td>I like to challenge myself with new goals.</td>
+</tr>
+<tr>
+<td>cheering</td>
+<td>shouting to encourage someone</td>
+<td>The fans were cheering for the runners.</td>
+</tr>
+<tr>
+<td>accomplishment</td>
+<td>something achieved with effort</td>
+<td>Graduating was a great accomplishment.</td>
+</tr>
+<tr>
+<td>perseverance</td>
+<td>continuing despite difficulty</td>
+<td>Perseverance helped her pass the exam.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-surprise">1.3 A Surprise</h2>
+<p>Talk about a surprise you received. What was it and how did you
+feel?</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a surprise I got last
+spring. I was working late at the office, feeling tired and a little
+stressed.</p>
+<p><span class="conn">At first</span>, I thought it was a normal
+evening. <span class="conn">Then</span>, my manager walked in with a
+large envelope and said it was for me. Inside, I found a plane ticket to
+Vancouver and a note from my husband. He had secretly arranged a weekend
+trip, and my boss had helped by <span class="vocab">clearing my
+schedule</span>.</p>
+<p>I was completely <span class="vocab">speechless</span>. My heart was
+racing, and I couldn’t stop smiling.</p>
+<p><span class="conn">In the end</span>, we had a fantastic weekend by
+the ocean.</p>
+<p><span class="tpl">Looking back</span>, I was so <span class="vocab">touched</span> by his effort. It showed me how much he
+cares about me.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clearing my schedule</td>
+<td>removing my other plans to free time</td>
+<td>He helped by clearing my schedule for Friday.</td>
+</tr>
+<tr>
+<td>speechless</td>
+<td>unable to speak because of strong feelings</td>
+<td>I was speechless when I saw the gift.</td>
+</tr>
+<tr>
+<td>touched</td>
+<td>emotionally moved</td>
+<td>She was touched by the kind message.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-day-of-your-life">1.4 Best Day of Your Life</h2>
+<p>Describe the best day of your life so far.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my wedding day. It
+took place in June, in a small garden near my hometown, and the weather
+was perfect.</p>
+<p><span class="conn">At first</span>, I was extremely nervous, and my
+hands were shaking while I was getting ready. <span class="conn">Then</span>, I saw my future wife walking down the aisle in
+a beautiful white dress, and all my worries disappeared. We <span class="vocab">exchanged vows</span> in front of our families, and many
+people had tears of joy.</p>
+<p><span class="conn">After that</span>, we enjoyed a delicious dinner,
+heartfelt speeches, and dancing under the stars. It was a truly <span class="vocab">joyful</span> atmosphere.</p>
+<p><span class="tpl">Looking back</span>, it was the best day of my life
+because I was surrounded by everyone I love. It was the <span class="vocab">start of a new chapter</span>, and I’ll <span class="vocab">cherish</span> every moment.</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exchanged vows</td>
+<td>made promises to each other in a wedding</td>
+<td>They exchanged vows by the lake.</td>
+</tr>
+<tr>
+<td>joyful</td>
+<td>full of happiness</td>
+<td>The joyful crowd clapped and sang.</td>
+</tr>
+<tr>
+<td>start of a new chapter</td>
+<td>the beginning of a new stage in life</td>
+<td>Moving abroad was the start of a new chapter.</td>
+</tr>
+<tr>
+<td>cherish</td>
+<td>to value highly</td>
+<td>I cherish my childhood friends.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feeling-nervous">1.5 Feeling Nervous</h2>
+<p>Talk about a time when you were very nervous before an event.</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I gave a
+speech at my best friend’s wedding. I’d never spoken in front of so many
+people, and I was terrified.</p>
+<p><span class="conn">At first</span>, I practised for days, but when I
+stood up, my mind went blank. My palms were sweaty, and my voice was
+<span class="vocab">trembling</span>. I could see over a hundred faces
+looking at me.</p>
+<p><span class="conn">Then</span>, I took a deep breath, looked at my
+friend, and started with a funny story about our university days.
+Everyone laughed, and I relaxed immediately.</p>
+<p><span class="conn">In the end</span>, the speech went well, and
+people thanked me afterwards.</p>
+<p><span class="tpl">Looking back</span>, I learned that being nervous
+is normal, and a <span class="vocab">genuine</span> story is better than
+a perfect speech. I felt a great <span class="vocab">sense of
+relief</span>.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trembling</td>
+<td>shaking slightly</td>
+<td>His hands were trembling with fear.</td>
+</tr>
+<tr>
+<td>genuine</td>
+<td>honest and real</td>
+<td>She gave a genuine smile.</td>
+</tr>
+<tr>
+<td>sense of relief</td>
+<td>the feeling that a worry has gone</td>
+<td>I felt a sense of relief when it ended.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="trips-places-and-travel">2 Trips, Places, and Travel</h1>
+<p>Topics: a holiday, a memorable trip, a place you visited, a getaway,
+getting lost.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the trip or place].
+[It happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [arrival or first impression].
+<span class="conn">Then</span>, [the main activity or event, with
+details and feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [why it was special or what
+you learned].</p>
+<h2 id="memorable-trip">2.1 Memorable Trip</h2>
+<p>Talk about a memorable trip you have taken. Where did you go and what
+did you do?</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my trip to Banff
+National Park two summers ago. I went with three close friends, and we
+drove from Calgary.</p>
+<p><span class="conn">At first</span>, I was amazed by the <span class="vocab">breathtaking</span> mountains and the turquoise lakes.
+<span class="conn">Then</span>, we spent three days hiking, canoeing,
+and camping under the stars. One morning, we even saw a bear from a safe
+distance, which was both exciting and scary.</p>
+<p><span class="conn">After that</span>, we relaxed in the <span class="vocab">hot springs</span>, and our tired muscles felt
+wonderful.</p>
+<p><span class="tpl">Looking back</span>, it was memorable because I was
+totally <span class="vocab">disconnected from</span> the city life. I
+came home feeling <span class="vocab">refreshed</span>, and I’m already
+dreaming of going back.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>breathtaking</td>
+<td>extremely beautiful</td>
+<td>The view from the top was breathtaking.</td>
+</tr>
+<tr>
+<td>disconnected from</td>
+<td>separated from</td>
+<td>I felt disconnected from my daily stress.</td>
+</tr>
+<tr>
+<td>refreshed</td>
+<td>full of energy again</td>
+<td>I woke up refreshed after the trip.</td>
+</tr>
+<tr>
+<td>hot springs</td>
+<td>natural pools of warm water</td>
+<td>We soaked in the hot springs.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-place-to-revisit">2.2 A Place to Revisit</h2>
+<p>Describe a place that you visited and would like to go back to.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> Lisbon, the capital of
+Portugal. I spent a week there last autumn, and I fell in love with
+it.</p>
+<p><span class="conn">At first</span>, I loved the colourful buildings
+and the narrow cobblestone streets. <span class="conn">Then</span>, I
+discovered the local food. I tried fresh grilled sardines and the famous
+custard tarts, which were absolutely delicious. In the evenings, I
+listened to live music in small bars, and the people were incredibly
+<span class="vocab">welcoming</span>.</p>
+<p><span class="conn">In the end</span>, I didn’t want to leave.</p>
+<p><span class="tpl">Looking back</span>, I’d love to return because I
+only saw a small part of the city. I’d like to explore the nearby
+beaches and <span class="vocab">soak up</span> the <span class="vocab">laid-back</span> atmosphere again.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>welcoming</td>
+<td>friendly to guests</td>
+<td>The hosts were warm and welcoming.</td>
+</tr>
+<tr>
+<td>soak up</td>
+<td>enjoy and absorb</td>
+<td>I soaked up the sunshine on the beach.</td>
+</tr>
+<tr>
+<td>laid-back</td>
+<td>relaxed and easygoing</td>
+<td>It’s a laid-back town with slow mornings.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unexpected-travel-problem">2.3 Unexpected Travel Problem</h2>
+<p>Talk about a time when something unexpected happened while you were
+travelling.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I missed my
+connecting flight in Frankfurt. I was travelling to Toronto to see my
+cousin, and my first plane was delayed by an hour.</p>
+<p><span class="conn">At first</span>, I panicked when I saw the
+departure board. My next flight had already <span class="vocab">taken
+off</span>, and the airport was crowded. <span class="conn">Then</span>,
+I went to the service desk, where a friendly agent <span class="vocab">rebooked</span> me on a flight the next morning and gave
+me a hotel voucher.</p>
+<p><span class="conn">As a result</span>, I spent an evening exploring
+the old town, which I’d never planned to see.</p>
+<p><span class="tpl">Looking back</span>, it turned out to be a <span class="vocab">blessing in disguise</span>. I learned to stay calm and
+<span class="vocab">make the best of</span> unexpected situations.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>taken off</td>
+<td>left the ground, for a plane</td>
+<td>The plane had already taken off.</td>
+</tr>
+<tr>
+<td>rebooked</td>
+<td>arranged a new reservation</td>
+<td>They rebooked us on the evening train.</td>
+</tr>
+<tr>
+<td>blessing in disguise</td>
+<td>something that seems bad but turns out good</td>
+<td>The delay was a blessing in disguise.</td>
+</tr>
+<tr>
+<td>make the best of</td>
+<td>do as well as possible in a bad situation</td>
+<td>Let’s make the best of the rain.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="day-trip">2.4 Day Trip</h2>
+<p>Describe a day trip that you enjoyed with friends or family.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a day trip my family
+took to a small lake last July. We left early in the morning and packed
+sandwiches, fruit, and plenty of water.</p>
+<p><span class="conn">At first</span>, the kids were sleepy in the car,
+but they woke up as soon as we arrived. <span class="conn">Then</span>,
+we rented a paddle boat and spent two hours on the water. After that, we
+had a picnic under a big tree, and my dad grilled corn on a small <span class="vocab">portable stove</span>. The kids <span class="vocab">splashed</span> around in the shallow water until
+sunset.</p>
+<p><span class="conn">In the end</span>, everyone was tired but
+happy.</p>
+<p><span class="tpl">Looking back</span>, it was a simple day, but we
+really <span class="vocab">bonded</span> as a family, and I’ll always
+remember the peaceful scenery.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>splashed</td>
+<td>moved around in water noisily</td>
+<td>The children splashed in the pool.</td>
+</tr>
+<tr>
+<td>bonded</td>
+<td>formed a close connection</td>
+<td>The team bonded during the trip.</td>
+</tr>
+<tr>
+<td>portable stove</td>
+<td>a small cooking device that is easy to carry</td>
+<td>We boiled water on a portable stove.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="arriving-in-a-new-city">2.5 Arriving in a New City</h2>
+<p>Talk about the first time you visited a new city or country.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the first time I
+arrived in Canada, three years ago. I landed in Toronto in the middle of
+winter, and it was minus fifteen degrees, which was a shock for me.</p>
+<p><span class="conn">At first</span>, I felt lost and a little scared.
+Everything was different, from the language to the <span class="vocab">public transit</span> system. <span class="conn">Then</span>, a stranger at the subway station noticed my
+confused face and kindly helped me with my ticket and directions.</p>
+<p><span class="conn">After that</span>, I walked around downtown and
+was impressed by the <span class="vocab">diversity</span> of the people
+and the food.</p>
+<p><span class="tpl">Looking back</span>, that day was both difficult
+and exciting. It was the moment I started to <span class="vocab">adapt</span> to a new life, and I’m very grateful for
+it.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>public transit</td>
+<td>buses, trains and subways for everyone</td>
+<td>I take public transit to work.</td>
+</tr>
+<tr>
+<td>diversity</td>
+<td>a variety of different people or things</td>
+<td>Toronto is known for its diversity.</td>
+</tr>
+<tr>
+<td>adapt</td>
+<td>adjust to new conditions</td>
+<td>It took time to adapt to the climate.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="people-and-relationships">3 People and Relationships</h1>
+<p>Topics: a person who influenced you, a friend, a teacher, a family
+member, meeting someone new.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the person or event].
+[It happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [background or first impression].
+<span class="conn">Then</span>, [the main moment or what the person did,
+with details and feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [why it mattered or what you
+learned].</p>
+<h2 id="influential-person">3.1 Influential Person</h2>
+<p>Talk about a person who has had a big influence on your life.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my grandmother, who
+has had the biggest influence on my life. She raised five children on a
+small farm, and she never complained.</p>
+<p><span class="conn">At first</span>, I didn’t understand why she
+worked so hard. <span class="conn">Then</span>, as I grew up, I realized
+that her <span class="vocab">determination</span> and her kindness were
+her greatest strengths. She always told me, “Be honest and never give
+up,” and she lived by those words. When I struggled at school, she sat
+with me and encouraged me every evening.</p>
+<p><span class="conn">In the end</span>, I graduated with honours, and
+she was the proudest person in the room.</p>
+<p><span class="tpl">Looking back</span>, she taught me the value of
+hard work and <span class="vocab">humility</span>. She’s my <span class="vocab">role model</span>, and I want to be like her.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>determination</td>
+<td>firm decision to keep trying</td>
+<td>Her determination inspired us all.</td>
+</tr>
+<tr>
+<td>humility</td>
+<td>not thinking you are better than others</td>
+<td>He showed humility after winning.</td>
+</tr>
+<tr>
+<td>role model</td>
+<td>a person others want to copy</td>
+<td>My coach is a role model for me.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="help-from-a-family-member">3.2 Help From a Family Member</h2>
+<p>Describe a time when a friend or family member helped you.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time my older
+brother helped me when I lost my job. It happened two years ago, and I
+was feeling hopeless.</p>
+<p><span class="conn">At first</span>, I didn’t want to tell anyone,
+because I was embarrassed. <span class="conn">Then</span>, my brother
+noticed that I was <span class="vocab">down</span> and asked me what was
+wrong. After I explained, he invited me to stay at his place for a
+month, helped me update my résumé, and even introduced me to a friend
+who was hiring.</p>
+<p><span class="conn">In the end</span>, I got a new job within six
+weeks.</p>
+<p><span class="tpl">Looking back</span>, I’m deeply <span class="vocab">grateful</span> for his support. He showed me that family
+will always <span class="vocab">have your back</span> when times are
+tough.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>down</td>
+<td>sad or discouraged</td>
+<td>She felt down after the news.</td>
+</tr>
+<tr>
+<td>grateful</td>
+<td>thankful</td>
+<td>I’m grateful for your help.</td>
+</tr>
+<tr>
+<td>have your back</td>
+<td>protect and help you</td>
+<td>True friends have your back.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memorable-teacher">3.3 Memorable Teacher</h2>
+<p>Talk about a teacher or mentor you remember well.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> Mr. Hassan, my high
+school math teacher. I was struggling with algebra, and I was convinced
+that I was simply bad at math.</p>
+<p><span class="conn">At first</span>, I was afraid to ask questions.
+<span class="conn">Then</span>, Mr. Hassan noticed my frustration and
+offered to give me extra help after class. He explained each concept in
+a <span class="vocab">patient</span> way, using real-life examples, and
+he never made me feel stupid. He also <span class="vocab">motivated</span> me by praising even my small
+improvements.</p>
+<p><span class="conn">In the end</span>, I raised my grade from forty to
+eighty-five percent.</p>
+<p><span class="tpl">Looking back</span>, he taught me that anyone can
+learn with the right guidance. He <span class="vocab">inspired</span> me
+to become a teacher myself.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>patient</td>
+<td>calm when things take time</td>
+<td>A patient teacher explains things again.</td>
+</tr>
+<tr>
+<td>motivated</td>
+<td>encouraged to want to do something</td>
+<td>His words motivated me to study.</td>
+</tr>
+<tr>
+<td>inspired</td>
+<td>filled with the desire to do something</td>
+<td>She inspired me to travel.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="meeting-a-friend">3.4 Meeting a Friend</h2>
+<p>Describe how you met a good friend.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> how I met my best
+friend, Lena. It was the first day of university, and I knew nobody on
+campus.</p>
+<p><span class="conn">At first</span>, I sat alone in the lecture hall,
+feeling a little <span class="vocab">out of place</span>. <span class="conn">Then</span>, a girl next to me asked if she could borrow a
+pen, and we started chatting. We discovered that we both loved hiking
+and the same TV series, so we kept talking until the class ended.</p>
+<p><span class="conn">After that</span>, we had lunch together every
+day, and we <span class="vocab">hit it off</span> immediately.</p>
+<p><span class="tpl">Looking back</span>, a simple pen changed my life.
+Ten years later, we’re still <span class="vocab">inseparable</span>, and
+I’m so happy that I <span class="vocab">struck up a conversation</span>
+that day.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>out of place</td>
+<td>uncomfortable in a setting</td>
+<td>I felt out of place at the party.</td>
+</tr>
+<tr>
+<td>hit it off</td>
+<td>quickly become friends</td>
+<td>We hit it off at the first meeting.</td>
+</tr>
+<tr>
+<td>inseparable</td>
+<td>always together</td>
+<td>The two sisters are inseparable.</td>
+</tr>
+<tr>
+<td>struck up a conversation</td>
+<td>started talking</td>
+<td>He struck up a conversation on the bus.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="helping-someone">3.5 Helping Someone</h2>
+<p>Talk about a time when you helped someone else.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I helped an
+elderly neighbour with her groceries. It happened last winter after a
+heavy snowstorm.</p>
+<p><span class="conn">At first</span>, I saw her struggling to carry
+bags on an icy sidewalk. <span class="conn">Then</span>, I rushed over,
+took the bags, and walked her to her door. When we got inside, I noticed
+that her heating was broken, so I called a repair service and waited
+until a technician arrived. I also brought her a hot meal from my
+kitchen.</p>
+<p><span class="conn">In the end</span>, she thanked me with tears in
+her eyes and gave me a <span class="vocab">heartfelt</span> hug.</p>
+<p><span class="tpl">Looking back</span>, it was a small act of
+kindness, but it made me feel <span class="vocab">fulfilled</span>. I
+realized how much a little <span class="vocab">generosity</span> can
+matter.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>heartfelt</td>
+<td>sincere and deeply felt</td>
+<td>She sent a heartfelt thank-you note.</td>
+</tr>
+<tr>
+<td>fulfilled</td>
+<td>satisfied and happy about your life</td>
+<td>Volunteering makes me feel fulfilled.</td>
+</tr>
+<tr>
+<td>generosity</td>
+<td>willingness to give to others</td>
+<td>Their generosity amazed us.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="work-school-and-achievements">4 Work, School, and
+Achievements</h1>
+<p>Topics: a first day, a challenge, an accomplishment, a project,
+learning something difficult.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the experience]. [It
+happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [the situation or the
+difficulty]. <span class="conn">Then</span>, [what you did, with details
+and feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [what you learned or why it
+mattered].</p>
+<h2 id="first-day">4.1 First Day</h2>
+<p>Talk about your first day at school or work. What was it like?</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my first day at my
+current job as a graphic designer. I was both excited and anxious, so I
+arrived thirty minutes early.</p>
+<p><span class="conn">At first</span>, I felt lost. The office was big,
+and I didn’t know anybody. <span class="conn">Then</span>, my manager
+introduced me to the team, and everyone gave me a warm welcome. A
+colleague showed me around, explained the software, and invited me to
+lunch. In the afternoon, I attended a short <span class="vocab">orientation</span> and got my first small task.</p>
+<p><span class="conn">In the end</span>, I went home exhausted but very
+happy.</p>
+<p><span class="tpl">Looking back</span>, I realized that most of my
+fears were unnecessary. The team was <span class="vocab">supportive</span>, and I quickly started to feel <span class="vocab">at home</span>.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>orientation</td>
+<td>an introduction for new people</td>
+<td>The orientation lasted two hours.</td>
+</tr>
+<tr>
+<td>supportive</td>
+<td>helpful and encouraging</td>
+<td>My supportive boss answered every question.</td>
+</tr>
+<tr>
+<td>at home</td>
+<td>comfortable and relaxed in a place</td>
+<td>I finally felt at home in the new office.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="overcoming-a-challenge">4.2 Overcoming a Challenge</h2>
+<p>Describe a challenge you overcame at work or school.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a <span class="vocab">tight deadline</span> I faced at work last year. My
+manager asked me to finish a major report in just three days, and I
+normally need a week.</p>
+<p><span class="conn">At first</span>, I panicked and thought it was
+impossible. <span class="conn">Then</span>, I made a plan. I broke the
+project into small tasks, asked a colleague to help with the data, and
+worked late for two evenings. I also turned off my phone to <span class="vocab">stay focused</span>.</p>
+<p><span class="conn">In the end</span>, I submitted the report on time,
+and my manager praised the quality.</p>
+<p><span class="tpl">Looking back</span>, I learned the importance of
+<span class="vocab">time management</span> and teamwork. Now I feel more
+<span class="vocab">confident</span> about handling pressure.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tight deadline</td>
+<td>very little time to finish something</td>
+<td>We had a tight deadline for the launch.</td>
+</tr>
+<tr>
+<td>stay focused</td>
+<td>keep your attention on a task</td>
+<td>It’s hard to stay focused in a noisy room.</td>
+</tr>
+<tr>
+<td>time management</td>
+<td>the skill of using time well</td>
+<td>Good time management reduces stress.</td>
+</tr>
+<tr>
+<td>confident</td>
+<td>sure of your abilities</td>
+<td>He feels confident before exams.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="learning-a-new-skill">4.3 Learning a New Skill</h2>
+<p>Talk about a time you learned a new skill. How did you learn it?</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> how I learned to play
+the guitar. I was thirty, and I had always wanted to play but never had
+time.</p>
+<p><span class="conn">At first</span>, I watched free tutorials online.
+My fingers hurt, and my chords sounded terrible. <span class="conn">Then</span>, I signed up for weekly lessons with a local
+teacher, who corrected my mistakes and gave me simple songs to practise.
+I <span class="vocab">practised daily</span> for twenty minutes, even
+when I was tired.</p>
+<p><span class="conn">After a few months</span>, I could play my
+favourite songs, and I performed for my family on New Year’s Eve.</p>
+<p><span class="tpl">Looking back</span>, it taught me that <span class="vocab">consistency</span> matters more than talent. Learning
+something new also <span class="vocab">boosted my
+self-esteem</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>practised daily</td>
+<td>did something every day to improve</td>
+<td>I practised daily before the recital.</td>
+</tr>
+<tr>
+<td>consistency</td>
+<td>doing something regularly</td>
+<td>Consistency is the key to progress.</td>
+</tr>
+<tr>
+<td>boosted my self-esteem</td>
+<td>made me feel better about myself</td>
+<td>Winning the prize boosted my self-esteem.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="proud-project">4.4 Proud Project</h2>
+<p>Describe a project you completed that you are proud of.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a community garden
+project that I led at my university. We wanted to turn an empty lot
+behind the library into a green space.</p>
+<p><span class="conn">At first</span>, we needed permission and funding,
+so I wrote a proposal and presented it to the student council. <span class="conn">Then</span>, we <span class="vocab">recruited</span> about
+twenty volunteers. On weekends, we cleared the ground, built wooden
+planters, and planted vegetables and flowers. It was hard work, but we
+had a lot of fun.</p>
+<p><span class="conn">In the end</span>, the garden opened in May, and
+students could take fresh produce for free.</p>
+<p><span class="tpl">Looking back</span>, I’m proud of how we turned an
+idea into reality. It taught me <span class="vocab">leadership</span>
+and how to <span class="vocab">collaborate</span> with different
+people.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>recruited</td>
+<td>found people and asked them to join</td>
+<td>The club recruited new members in September.</td>
+</tr>
+<tr>
+<td>leadership</td>
+<td>the ability to guide a group</td>
+<td>She showed strong leadership.</td>
+</tr>
+<tr>
+<td>collaborate</td>
+<td>work together</td>
+<td>We collaborated on the final report.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="learning-from-a-mistake">4.5 Learning From a Mistake</h2>
+<p>Talk about a time when you made a mistake and learned from it.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a mistake I made
+during my first month at a restaurant. I was a new waiter, and I was
+trying to work quickly.</p>
+<p><span class="conn">At first</span>, everything seemed fine. <span class="conn">Then</span>, I brought a dish with peanuts to a customer
+who had told me about his allergy. Luckily, he noticed it before eating,
+but I was <span class="vocab">mortified</span>. I apologized
+immediately, and the chef quickly prepared a new meal.</p>
+<p><span class="conn">In the end</span>, my manager didn’t scold me.
+Instead, she explained the importance of <span class="vocab">double-checking</span> orders.</p>
+<p><span class="tpl">Looking back</span>, that mistake taught me to be
+more careful and to take <span class="vocab">responsibility</span>. Now
+I always confirm <span class="vocab">allergies</span> with the
+kitchen.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mortified</td>
+<td>extremely embarrassed</td>
+<td>I was mortified when I forgot his name.</td>
+</tr>
+<tr>
+<td>double-checking</td>
+<td>checking something a second time</td>
+<td>Double-checking prevents errors.</td>
+</tr>
+<tr>
+<td>responsibility</td>
+<td>a duty you are accountable for</td>
+<td>She takes responsibility for her mistakes.</td>
+</tr>
+<tr>
+<td>allergies</td>
+<td>bad reactions to certain foods or substances</td>
+<td>He has allergies to nuts.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="childhood-traditions-and-memories">5 Childhood, Traditions, and
+Memories</h1>
+<p>Topics: a childhood memory, a family tradition, a favourite holiday,
+a childhood place, growing up.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the memory or
+tradition]. [It happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [the setting or the beginning].
+<span class="conn">Then</span>, [the main moment, with details and
+feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [why it still matters to
+you].</p>
+<h2 id="childhood-memory">5.1 Childhood Memory</h2>
+<p>Talk about a favourite childhood memory.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the summers I spent at
+my grandparents’ farm. Every July, my parents drove me there, and I
+stayed for two weeks.</p>
+<p><span class="conn">At first</span>, I would run straight to the barn
+to see the animals. <span class="conn">Then</span>, I helped my
+grandfather feed the chickens and collect eggs. In the afternoons, my
+cousins and I <span class="vocab">climbed trees</span>, swam in the
+river, and picked fresh strawberries. At night, my grandmother told us
+<span class="vocab">bedtime stories</span> by the fireplace.</p>
+<p><span class="conn">In the end</span>, I always cried when it was time
+to go home.</p>
+<p><span class="tpl">Looking back</span>, those days were <span class="vocab">carefree</span> and full of laughter. I feel <span class="vocab">nostalgic</span> whenever I smell fresh hay.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>climbed trees</td>
+<td>went up trees using hands and feet</td>
+<td>We climbed trees after school.</td>
+</tr>
+<tr>
+<td>bedtime stories</td>
+<td>stories told before sleeping</td>
+<td>My mother read bedtime stories every night.</td>
+</tr>
+<tr>
+<td>carefree</td>
+<td>without worries</td>
+<td>We had a carefree childhood.</td>
+</tr>
+<tr>
+<td>nostalgic</td>
+<td>feeling warm sadness about the past</td>
+<td>Old songs make me nostalgic.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="family-tradition">5.2 Family Tradition</h2>
+<p>Describe a family tradition or holiday you enjoyed as a child.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the Eid celebration my
+family held every year. It started early in the morning, when we put on
+new clothes and went to the mosque for prayers.</p>
+<p><span class="conn">At first</span>, the house was very busy, because
+my mother and aunts had been cooking for days. <span class="conn">Then</span>, relatives from all over the city arrived, and
+the table was full of sweets and traditional dishes. The children
+received small gifts of money and ran around the garden, playing
+games.</p>
+<p><span class="conn">In the end</span>, we sat together and shared
+stories until late at night.</p>
+<p><span class="tpl">Looking back</span>, this <span class="vocab">tradition</span> taught me the value of <span class="vocab">togetherness</span>. I still <span class="vocab">keep it
+alive</span> with my own kids.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tradition</td>
+<td>a custom passed down in a family or culture</td>
+<td>Baking cookies is a family tradition.</td>
+</tr>
+<tr>
+<td>togetherness</td>
+<td>the feeling of being close to others</td>
+<td>The holiday is about togetherness.</td>
+</tr>
+<tr>
+<td>keep it alive</td>
+<td>continue a custom so it does not disappear</td>
+<td>We promised to keep it alive for our children.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="childhood-place">5.3 Childhood Place</h2>
+<p>Talk about a place from your childhood that you remember well.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the small park near my
+childhood home. It had a big <span class="vocab">oak tree</span>, a
+rusty swing set, and a sandy football field.</p>
+<p><span class="conn">At first</span>, I only went there with my mother.
+<span class="conn">Then</span>, when I turned eight, I started meeting
+my friends there every afternoon after school. We played football until
+it got dark and shared ice cream from a little cart by the gate. In
+autumn, we collected <span class="vocab">fallen leaves</span> and made
+piles to jump into.</p>
+<p><span class="conn">In the end</span>, the park became the centre of
+my social life.</p>
+<p><span class="tpl">Looking back</span>, it was a place full of <span class="vocab">innocence</span> and friendship. When I visit my hometown,
+I always walk through it and <span class="vocab">reminisce</span>.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>oak tree</td>
+<td>a large tree with acorns</td>
+<td>We sat under the old oak tree.</td>
+</tr>
+<tr>
+<td>fallen leaves</td>
+<td>leaves that have dropped from trees</td>
+<td>The path was covered with fallen leaves.</td>
+</tr>
+<tr>
+<td>innocence</td>
+<td>the simple, pure feelings of childhood</td>
+<td>I miss the innocence of those years.</td>
+</tr>
+<tr>
+<td>reminisce</td>
+<td>think or talk about happy past times</td>
+<td>We reminisce about our school days.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="childhood-toy">5.4 Childhood Toy</h2>
+<p>Describe a game, toy, or activity you loved as a child.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my favourite childhood
+toy, a set of wooden building blocks. My uncle gave them to me for my
+fifth birthday.</p>
+<p><span class="conn">At first</span>, I only stacked them into towers.
+<span class="conn">Then</span>, I began to create castles, bridges, and
+even a whole city on the living room floor. My younger sister joined me,
+and we invented stories about the people who lived there. We would play
+for hours without <span class="vocab">getting bored</span>, and my
+mother had to call us twice for dinner.</p>
+<p><span class="conn">In the end</span>, I kept the blocks until I was a
+teenager.</p>
+<p><span class="tpl">Looking back</span>, they developed my <span class="vocab">imagination</span> and my love for design. Today, I work
+as an architect, so they <span class="vocab">sparked</span> my
+career.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getting bored</td>
+<td>losing interest</td>
+<td>I never got bored of that game.</td>
+</tr>
+<tr>
+<td>imagination</td>
+<td>the ability to form ideas in the mind</td>
+<td>Children have wild imaginations.</td>
+</tr>
+<tr>
+<td>sparked</td>
+<td>started or caused</td>
+<td>The trip sparked my interest in history.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="time-with-a-grandparent">5.5 Time With a Grandparent</h2>
+<p>Talk about a time you spent with a grandparent or older relative.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> an afternoon I spent
+with my grandfather when I was twelve. He took me fishing at a quiet
+lake, which was one of his favourite <span class="vocab">pastimes</span>.</p>
+<p><span class="conn">At first</span>, I was bored, because we sat
+silently for an hour. <span class="conn">Then</span>, he began telling
+me stories about his youth, about growing up in a small village and
+walking five kilometres to school. I was <span class="vocab">fascinated</span>. Suddenly, my line moved, and with his
+help, I caught my first fish.</p>
+<p><span class="conn">In the end</span>, we cooked it over a small fire
+and ate it together.</p>
+<p><span class="tpl">Looking back</span>, that day made me appreciate
+his <span class="vocab">wisdom</span> and patience. It’s a <span class="vocab">cherished</span> memory, especially since he passed
+away.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pastimes</td>
+<td>activities done for fun</td>
+<td>Reading is her favourite pastime.</td>
+</tr>
+<tr>
+<td>fascinated</td>
+<td>very interested</td>
+<td>I was fascinated by his stories.</td>
+</tr>
+<tr>
+<td>wisdom</td>
+<td>knowledge gained from experience</td>
+<td>The elders shared their wisdom.</td>
+</tr>
+<tr>
+<td>cherished</td>
+<td>loved and valued</td>
+<td>She keeps a cherished photo of him.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="everyday-life-and-hobbies">6 Everyday Life and Hobbies</h1>
+<p>Topics: a hobby, a meal, a gift, a purchase, a movie or event, a
+sport.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the gift, meal, hobby
+or event]. [It happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [the beginning or the situation].
+<span class="conn">Then</span>, [the main part, with details and
+feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [why it mattered to you].</p>
+<h2 id="meaningful-gift">6.1 Meaningful Gift</h2>
+<p>Talk about a gift you gave or received that meant a lot.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a handmade photo album
+that my best friend gave me before I moved abroad. She presented it at
+my farewell party.</p>
+<p><span class="conn">At first</span>, I thought it was just a regular
+book. <span class="conn">Then</span>, I opened it and saw pictures of
+all our adventures over ten years, with short notes under each photo.
+Some made me laugh, and others made me <span class="vocab">tear
+up</span>. I could see how much time and effort she had put into it.</p>
+<p><span class="conn">In the end</span>, we hugged for a long time and
+both cried.</p>
+<p><span class="tpl">Looking back</span>, it was the most <span class="vocab">thoughtful</span> gift I’ve ever received. It isn’t about
+the price. It’s a <span class="vocab">sentimental</span> treasure that
+keeps us close.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tear up</td>
+<td>begin to cry a little</td>
+<td>I teared up during the speech.</td>
+</tr>
+<tr>
+<td>thoughtful</td>
+<td>showing care for others</td>
+<td>It was a thoughtful present.</td>
+</tr>
+<tr>
+<td>sentimental</td>
+<td>connected to emotions and memories</td>
+<td>The ring has sentimental value.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memorable-meal">6.2 Memorable Meal</h2>
+<p>Describe a meal you enjoyed with family or friends.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a dinner I had with my
+family last Christmas. My mother had been preparing the meal since the
+morning, and the house smelled wonderful.</p>
+<p><span class="conn">At first</span>, we all gathered in the kitchen to
+help with the final touches. <span class="conn">Then</span>, we sat at a
+long table decorated with candles. There was a roasted turkey, creamy
+mashed potatoes, and a <span class="vocab">mouth-watering</span> apple
+pie for dessert. We shared jokes and memories, and even my shy cousin
+was <span class="vocab">chatting away</span>.</p>
+<p><span class="conn">In the end</span>, we stayed at the table for
+almost three hours.</p>
+<p><span class="tpl">Looking back</span>, the food was delicious, but
+the best part was the company. That evening gave me a strong <span class="vocab">sense of belonging</span>.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mouth-watering</td>
+<td>looking or smelling very tasty</td>
+<td>The mouth-watering dessert disappeared fast.</td>
+</tr>
+<tr>
+<td>chatting away</td>
+<td>talking happily for a long time</td>
+<td>They were chatting away over coffee.</td>
+</tr>
+<tr>
+<td>sense of belonging</td>
+<td>feeling that you are part of a group</td>
+<td>Family gives me a sense of belonging.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-hobby">6.3 New Hobby</h2>
+<p>Talk about a hobby you picked up and why you enjoy it.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> photography, a hobby I
+picked up two years ago. It started when I bought a second-hand camera
+for a trip.</p>
+<p><span class="conn">At first</span>, my photos were blurry and poorly
+framed. <span class="conn">Then</span>, I began watching tutorials and
+going out every weekend to practise. I learned about lighting, <span class="vocab">composition</span>, and editing. Now I <span class="vocab">take pictures</span> of landscapes and street scenes, and
+I even post them on a small website.</p>
+<p><span class="conn">In the end</span>, a local café asked to display
+some of my work on their walls.</p>
+<p><span class="tpl">Looking back</span>, I enjoy photography because it
+helps me notice beauty in ordinary things. It’s also a great way to
+<span class="vocab">unwind</span> after a busy week.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>composition</td>
+<td>the way elements are arranged in a picture</td>
+<td>The composition of the photo is balanced.</td>
+</tr>
+<tr>
+<td>take pictures</td>
+<td>photograph</td>
+<td>I take pictures wherever I travel.</td>
+</tr>
+<tr>
+<td>unwind</td>
+<td>relax after work or stress</td>
+<td>Music helps me unwind.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="attending-an-event">6.4 Attending an Event</h2>
+<p>Describe a time when you attended a concert, game, or festival.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a music festival I
+attended last summer with my friends. It was a three-day outdoor event
+near the lake.</p>
+<p><span class="conn">At first</span>, we set up our tents and explored
+the <span class="vocab">stalls</span> selling food and crafts. <span class="conn">Then</span>, the headline band came on stage at sunset, and
+the crowd went wild. I was singing along with thousands of people, and
+the energy was <span class="vocab">electric</span>. Between the shows,
+we tried food from around the world.</p>
+<p><span class="conn">In the end</span>, we left tired, sunburned, and
+extremely happy.</p>
+<p><span class="tpl">Looking back</span>, it was an <span class="vocab">unforgettable</span> experience. Being part of such a big,
+joyful <span class="vocab">crowd</span> made me feel connected to
+strangers.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stalls</td>
+<td>small open shops at a market or event</td>
+<td>The stalls sold fresh lemonade.</td>
+</tr>
+<tr>
+<td>electric</td>
+<td>full of excitement</td>
+<td>The atmosphere in the stadium was electric.</td>
+</tr>
+<tr>
+<td>unforgettable</td>
+<td>impossible to forget</td>
+<td>It was an unforgettable night.</td>
+</tr>
+<tr>
+<td>crowd</td>
+<td>a large group of people</td>
+<td>The crowd cheered loudly.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="happy-purchase">6.5 Happy Purchase</h2>
+<p>Talk about something you bought that you were very happy with.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a pair of
+noise-cancelling headphones I bought last year. I had been commuting by
+subway for an hour each day, and the noise was exhausting.</p>
+<p><span class="conn">At first</span>, I hesitated, because they were
+quite <span class="vocab">pricey</span>. <span class="conn">Then</span>,
+I read many reviews, waited for a sale, and finally bought them. The
+first time I wore them, the loud train seemed to disappear, and I could
+enjoy my music and podcasts in peace.</p>
+<p><span class="conn">In the end</span>, I use them every single day,
+even at home.</p>
+<p><span class="tpl">Looking back</span>, it was <span class="vocab">worth every penny</span>. It improved my mood and made my
+commute much more <span class="vocab">bearable</span>.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pricey</td>
+<td>expensive</td>
+<td>The restaurant was a little pricey.</td>
+</tr>
+<tr>
+<td>worth every penny</td>
+<td>very good value for the cost</td>
+<td>The trip was worth every penny.</td>
+</tr>
+<tr>
+<td>bearable</td>
+<td>possible to tolerate</td>
+<td>Music makes the long drive bearable.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="decisions-embarrassment-and-trying-new-things">7 Decisions,
+Embarrassment, and Trying New Things</h1>
+<p>Topics: a hard decision, an embarrassing moment, new food, a new
+culture, volunteering, changing your mind.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the decision or
+experience]. [It happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [the situation and your
+feelings]. <span class="conn">Then</span>, [what you did or decided,
+with details].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [what you learned].</p>
+<h2 id="difficult-decision">7.1 Difficult Decision</h2>
+<p>Talk about a difficult decision you had to make. What did you decide
+and why?</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the hardest decision
+of my life, which was leaving my country to study in Canada. I had a
+good job and a close family, so I was <span class="vocab">torn</span>.</p>
+<p><span class="conn">At first</span>, I made a list of pros and cons.
+Staying meant security, but going meant new <span class="vocab">opportunities</span>. <span class="conn">Then</span>, I
+talked with my parents, and to my surprise, they encouraged me to follow
+my dream. After a few sleepless nights, I accepted the offer.</p>
+<p><span class="conn">In the end</span>, I moved six months later, and
+it was both sad and exciting.</p>
+<p><span class="tpl">Looking back</span>, it was the right choice. It
+required me to <span class="vocab">step out of my comfort zone</span>,
+and I’ve grown so much more independent.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>torn</td>
+<td>unable to choose between two options</td>
+<td>I was torn between two job offers.</td>
+</tr>
+<tr>
+<td>opportunities</td>
+<td>chances to do something good</td>
+<td>The city offers many opportunities.</td>
+</tr>
+<tr>
+<td>step out of my comfort zone</td>
+<td>try something unfamiliar</td>
+<td>Public speaking made me step out of my comfort zone.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="embarrassing-moment">7.2 Embarrassing Moment</h2>
+<p>Describe an embarrassing moment you can laugh about now.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> an embarrassing moment
+at a job interview. I was wearing my best suit and trying to look
+professional.</p>
+<p><span class="conn">At first</span>, everything went smoothly. <span class="conn">Then</span>, when I stood up to shake the interviewer’s
+hand, I tripped on the carpet and fell, knocking a glass of water all
+over her desk. My face turned <span class="vocab">bright red</span>, and
+I wanted the floor to <span class="vocab">swallow me up</span>. I
+apologized about ten times.</p>
+<p><span class="conn">In the end</span>, the interviewer burst out
+laughing and said it was the most memorable entrance she’d seen.
+Surprisingly, I got the job.</p>
+<p><span class="tpl">Looking back</span>, it’s now my favourite <span class="vocab">anecdote</span>. I learned that people respect <span class="vocab">a sense of humour</span>.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bright red</td>
+<td>very red in the face from embarrassment</td>
+<td>He turned bright red when they sang to him.</td>
+</tr>
+<tr>
+<td>swallow me up</td>
+<td>make me disappear</td>
+<td>I wished the ground would swallow me up.</td>
+</tr>
+<tr>
+<td>anecdote</td>
+<td>a short, amusing true story</td>
+<td>He told a funny anecdote.</td>
+</tr>
+<tr>
+<td>a sense of humour</td>
+<td>the ability to see what is funny</td>
+<td>A sense of humour helps in hard times.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trying-new-food">7.3 Trying New Food</h2>
+<p>Talk about a time you tried a new food or experienced a new
+culture.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the first time I tried
+sushi. A Japanese colleague took me to a small restaurant during my
+first year in Canada.</p>
+<p><span class="conn">At first</span>, I was <span class="vocab">hesitant</span>, because I had never eaten raw fish. <span class="conn">Then</span>, my colleague showed me how to use chopsticks
+and how to dip the sushi in soy sauce. I took a small bite of salmon,
+and the <span class="vocab">texture</span> was soft and fresh. It was
+much better than I’d imagined.</p>
+<p><span class="conn">In the end</span>, I finished the whole plate and
+ordered more.</p>
+<p><span class="tpl">Looking back</span>, I’m glad I <span class="vocab">kept an open mind</span>. Trying new foods is a delicious
+way to <span class="vocab">learn about</span> other cultures.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hesitant</td>
+<td>slow to act because of doubt</td>
+<td>He was hesitant to try the spicy soup.</td>
+</tr>
+<tr>
+<td>texture</td>
+<td>the feel of food in the mouth</td>
+<td>I like the creamy texture.</td>
+</tr>
+<tr>
+<td>kept an open mind</td>
+<td>stayed willing to accept new ideas</td>
+<td>She kept an open mind about the food.</td>
+</tr>
+<tr>
+<td>learn about</td>
+<td>discover information on</td>
+<td>We learned about their customs.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="volunteering-experience">7.4 Volunteering Experience</h2>
+<p>Describe a time you volunteered or helped your community.</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I volunteered
+at a local food bank. I went there last winter with a coworker, planning
+to help for just one Saturday.</p>
+<p><span class="conn">At first</span>, I sorted donated cans and packed
+boxes with rice, pasta, and vegetables. <span class="conn">Then</span>,
+I helped hand them out to families, and I met a single mother who
+thanked me with tears in her eyes. I realized how many people in my own
+neighbourhood were <span class="vocab">struggling</span>.</p>
+<p><span class="conn">In the end</span>, I kept going every Saturday for
+the whole season.</p>
+<p><span class="tpl">Looking back</span>, volunteering gave me a <span class="vocab">sense of purpose</span>. It’s rewarding to <span class="vocab">give back</span> to the community and to see a <span class="vocab">tangible</span> difference.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>struggling</td>
+<td>having a hard time</td>
+<td>Many families are struggling with rent.</td>
+</tr>
+<tr>
+<td>sense of purpose</td>
+<td>feeling that your life has meaning</td>
+<td>Helping others gives me a sense of purpose.</td>
+</tr>
+<tr>
+<td>give back</td>
+<td>do something good in return</td>
+<td>I want to give back to my community.</td>
+</tr>
+<tr>
+<td>tangible</td>
+<td>clear and real enough to see</td>
+<td>There was a tangible improvement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="changing-your-mind">7.5 Changing Your Mind</h2>
+<p>Talk about a time you changed your mind about something.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> how I changed my mind
+about winter sports. I grew up in a warm country, so I always believed
+that skiing was dangerous and pointless.</p>
+<p><span class="conn">At first</span>, I refused every invitation from
+my Canadian friends. <span class="conn">Then</span>, one weekend, they
+convinced me to try a beginner lesson. I fell about twenty times, and I
+was <span class="vocab">skeptical</span> the whole morning. <span class="conn">However</span>, in the afternoon, I finally glided down the
+small hill without falling, and I felt a rush of excitement.</p>
+<p><span class="conn">In the end</span>, I bought a season pass for the
+next winter.</p>
+<p><span class="tpl">Looking back</span>, I learned not to <span class="vocab">judge</span> something before I try it. It also <span class="vocab">broadened my horizons</span>.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skeptical</td>
+<td>doubting that something is good or true</td>
+<td>I was skeptical about the new diet.</td>
+</tr>
+<tr>
+<td>judge</td>
+<td>form an opinion about</td>
+<td>Don’t judge a book by its cover.</td>
+</tr>
+<tr>
+<td>broadened my horizons</td>
+<td>gave me new experiences and ideas</td>
+<td>Travel broadened my horizons.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="favourites-and-present-day-preferences">8 Favourites and
+Present-Day Preferences</h1>
+<p>Topics: a favourite place, season, item, book or movie, a skill you
+want to learn.</p>
+<h2 id="general-template-7">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [your favourite
+thing]. [Where, when, or how you know it].</p>
+<p><span class="conn">At first</span>, [what it is or how you discovered
+it]. <span class="conn">Then</span>, [what you do or feel with it, with
+details].</p>
+<p><span class="conn">In the end</span>, [the effect it has on you].</p>
+<p><span class="tpl">Looking back</span>, [why it matters to you].</p>
+<h2 id="place-to-relax">8.1 Place to Relax</h2>
+<p>Talk about your favourite place in your city to relax. Why do you
+like it?</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my favourite place to
+relax, which is a small park by the river. It’s only ten minutes from my
+apartment.</p>
+<p><span class="conn">At first</span>, I discovered it by accident,
+while looking for a quiet place to read. <span class="conn">Then</span>,
+it became my weekend routine. I bring a coffee, sit on a wooden bench,
+and watch the boats go by. There are tall trees that provide <span class="vocab">shade</span>, and the air is fresh. On warm days, I see
+families having picnics and joggers running along the <span class="vocab">riverside path</span>.</p>
+<p><span class="conn">In the end</span>, I leave feeling calm and <span class="vocab">recharged</span>.</p>
+<p><span class="tpl">Looking back</span>, I love it because it’s a <span class="vocab">tranquil</span> escape from the noise of the city.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shade</td>
+<td>a shaded area out of the sun</td>
+<td>We rested in the shade.</td>
+</tr>
+<tr>
+<td>riverside path</td>
+<td>a walking trail next to a river</td>
+<td>I jog along the riverside path.</td>
+</tr>
+<tr>
+<td>recharged</td>
+<td>refreshed with new energy</td>
+<td>The weekend left me recharged.</td>
+</tr>
+<tr>
+<td>tranquil</td>
+<td>peaceful and quiet</td>
+<td>It’s a tranquil garden.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="favourite-season">8.2 Favourite Season</h2>
+<p>Describe your favourite season and what you enjoy doing during
+it.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my favourite season,
+autumn. I love it because the weather is cool but not freezing.</p>
+<p><span class="conn">At first</span>, I enjoy the way the leaves change
+colour. The streets turn red, orange, and gold, and it looks like a
+painting. <span class="conn">Then</span>, I spend my weekends hiking in
+the forest, visiting apple orchards, and drinking warm cider. I also
+love wearing <span class="vocab">cozy</span> sweaters and watching
+harvest festivals in nearby villages.</p>
+<p><span class="conn">In the end</span>, I feel calm and thankful,
+because autumn gives me a <span class="vocab">fresh start</span> before
+winter.</p>
+<p><span class="tpl">Looking back</span>, no other season gives me such
+a <span class="vocab">serene</span> mood.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cozy</td>
+<td>warm, soft and comfortable</td>
+<td>The cozy cabin had a fireplace.</td>
+</tr>
+<tr>
+<td>fresh start</td>
+<td>a chance to begin again</td>
+<td>The new year is a fresh start.</td>
+</tr>
+<tr>
+<td>serene</td>
+<td>calm and peaceful</td>
+<td>The lake looked serene at dawn.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="item-you-cant-live-without">8.3 Item You Can’t Live Without</h2>
+<p>Talk about an item you could not live without.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my smartphone, the
+item I couldn’t live without. I got it three years ago, and now it’s
+part of my daily routine.</p>
+<p><span class="conn">At first</span>, I used it only for calls. <span class="conn">Then</span>, I started to use it for everything. I check
+maps when I travel, pay my bills, take photos, and video call my family
+overseas. It also holds my calendar and my <span class="vocab">to-do
+list</span>, so I never forget appointments. I can even learn English
+with a language app on my commute.</p>
+<p><span class="conn">In the end</span>, it saves me a lot of time.</p>
+<p><span class="tpl">Looking back</span>, I’m <span class="vocab">dependent on</span> it, but it’s also an incredibly <span class="vocab">convenient</span> tool that keeps me connected.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>to-do list</td>
+<td>a list of tasks to complete</td>
+<td>I wrote a to-do list this morning.</td>
+</tr>
+<tr>
+<td>dependent on</td>
+<td>needing something to function</td>
+<td>Many people are dependent on their phones.</td>
+</tr>
+<tr>
+<td>convenient</td>
+<td>easy and useful</td>
+<td>A convenient bus stop is near my home.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="influential-book-or-movie">8.4 Influential Book or Movie</h2>
+<p>Describe a book, movie, or show that influenced you.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a book called “The
+Alchemist,” which really influenced me. A friend recommended it when I
+was twenty, and I wasn’t sure about my future.</p>
+<p><span class="conn">At first</span>, the story seemed simple. It
+follows a young shepherd who travels across the desert to find a
+treasure. <span class="conn">Then</span>, I realized that it’s really
+about <span class="vocab">following your dreams</span> and listening to
+your heart. One line stayed with me: when you want something, the whole
+universe helps you achieve it.</p>
+<p><span class="conn">In the end</span>, it gave me the courage to
+change my major and study what I loved.</p>
+<p><span class="tpl">Looking back</span>, the book was <span class="vocab">thought-provoking</span> and <span class="vocab">life-changing</span>. I’ve read it three times since
+then.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>following your dreams</td>
+<td>working toward what you truly want</td>
+<td>She is following her dreams as an artist.</td>
+</tr>
+<tr>
+<td>thought-provoking</td>
+<td>making you think deeply</td>
+<td>It was a thought-provoking film.</td>
+</tr>
+<tr>
+<td>life-changing</td>
+<td>strongly affecting your life</td>
+<td>The trip was a life-changing experience.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="skill-to-learn">8.5 Skill to Learn</h2>
+<p>Talk about a skill you would like to learn and why.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a skill I’d love to
+learn, which is playing the piano. I’ve always loved listening to
+classical music, but I’ve never had lessons.</p>
+<p><span class="conn">At first</span>, I thought it was too late,
+because I’m over thirty. <span class="conn">Then</span>, I watched a
+video of an adult beginner who played a full song after one year, and it
+<span class="vocab">inspired</span> me. I plan to buy a keyboard and
+sign up for a weekly class. I’d start with <span class="vocab">simple
+melodies</span> and slowly move to harder pieces.</p>
+<p><span class="conn">In the end</span>, my goal is to play my favourite
+song at a family gathering.</p>
+<p><span class="tpl">Looking back</span>, I believe learning an
+instrument is <span class="vocab">rewarding</span> and good for the
+brain. It’s also a wonderful way to <span class="vocab">express
+myself</span>.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>inspired</td>
+<td>filled with the wish to do something</td>
+<td>She was inspired by her teacher.</td>
+</tr>
+<tr>
+<td>simple melodies</td>
+<td>easy tunes</td>
+<td>Beginners play simple melodies.</td>
+</tr>
+<tr>
+<td>rewarding</td>
+<td>satisfying and worthwhile</td>
+<td>Teaching is a rewarding job.</td>
+</tr>
+<tr>
+<td>express myself</td>
+<td>show my feelings or ideas</td>
+<td>Painting lets me express myself.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="difficult-or-unexpected-situations">9 Difficult or Unexpected
+Situations</h1>
+<p>Topics: an emergency, a problem solved, a lucky or unlucky day,
+losing something, getting help.</p>
+<h2 id="general-template-8">General Template</h2>
+<p><span class="tpl">Let me tell you about</span> [the situation]. [It
+happened when / where / with whom].</p>
+<p><span class="conn">At first</span>, [what went wrong]. <span class="conn">Then</span>, [what you did or who helped, with details and
+feelings].</p>
+<p><span class="conn">In the end</span>, [the result].</p>
+<p><span class="tpl">Looking back</span>, [what you learned].</p>
+<h2 id="losing-something-important">9.1 Losing Something Important</h2>
+<p>Describe a time when you lost something important. What happened?</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the day I lost my
+wallet on a crowded bus. It was last November, and I realized it was
+gone when I tried to pay for coffee.</p>
+<p><span class="conn">At first</span>, I panicked, because it held my
+ID, my bank cards, and about a hundred dollars. <span class="conn">Then</span>, I called my bank to freeze my cards and
+retraced my steps back to the bus stop. I also contacted the transit
+company’s <span class="vocab">lost and found</span> office.</p>
+<p><span class="conn">In the end</span>, a kind passenger had handed it
+in, and everything was still inside.</p>
+<p><span class="tpl">Looking back</span>, I was extremely <span class="vocab">relieved</span>. It taught me to keep my belongings <span class="vocab">secure</span> and to trust that honest people exist.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lost and found</td>
+<td>an office that keeps lost items</td>
+<td>I checked the lost and found for my umbrella.</td>
+</tr>
+<tr>
+<td>relieved</td>
+<td>happy because a worry is gone</td>
+<td>She felt relieved after the call.</td>
+</tr>
+<tr>
+<td>secure</td>
+<td>safe and protected</td>
+<td>Keep your passport in a secure place.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="solving-a-problem">9.2 Solving a Problem</h2>
+<p>Talk about a time when you had to solve an unexpected problem.</p>
+<h3 id="sample-41">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time my laptop
+crashed an hour before an important online presentation. I was working
+from home, and my files were stored on the laptop.</p>
+<p><span class="conn">At first</span>, I felt my heart sink. <span class="conn">Then</span>, I stayed calm and thought about my options. I
+remembered that I had saved a copy of the slides in my email, so I
+borrowed my roommate’s computer and downloaded it. I also <span class="vocab">tested</span> my microphone, and I joined the meeting with
+five minutes to spare.</p>
+<p><span class="conn">In the end</span>, the presentation went
+smoothly.</p>
+<p><span class="tpl">Looking back</span>, it taught me to always keep a
+<span class="vocab">backup</span>. It also showed me that I can <span class="vocab">think on my feet</span> when things go wrong.</p>
+<h3 id="vocabulary-41">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tested</td>
+<td>checked that something works</td>
+<td>I tested the camera before the call.</td>
+</tr>
+<tr>
+<td>backup</td>
+<td>an extra copy kept for safety</td>
+<td>Always keep a backup of your files.</td>
+</tr>
+<tr>
+<td>think on my feet</td>
+<td>react quickly and sensibly</td>
+<td>Teachers must think on their feet.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-day-gone-wrong">9.3 A Day Gone Wrong</h2>
+<p>Describe a time when everything seemed to go wrong in a day.</p>
+<h3 id="sample-42">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a day when absolutely
+everything went wrong. It was a Monday, and my alarm didn’t ring, so I
+woke up an hour late.</p>
+<p><span class="conn">At first</span>, I rushed out without breakfast.
+<span class="conn">Then</span>, it started pouring rain, and I didn’t
+have an umbrella. I missed my bus, spilled coffee on my shirt, and
+arrived at the office soaked and <span class="vocab">flustered</span>.
+To make things worse, I realized I had left my presentation notes at
+home.</p>
+<p><span class="conn">In the end</span>, my coworkers laughed with me,
+and my boss lent me a spare jacket.</p>
+<p><span class="tpl">Looking back</span>, it was a day I’d rather
+forget, but it showed me how to <span class="vocab">laugh it off</span>.
+It was just a <span class="vocab">bad day</span>, and tomorrow was
+better.</p>
+<h3 id="vocabulary-42">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>flustered</td>
+<td>nervous and confused</td>
+<td>She felt flustered in front of the crowd.</td>
+</tr>
+<tr>
+<td>laugh it off</td>
+<td>treat a problem as unimportant</td>
+<td>He laughed it off after tripping.</td>
+</tr>
+<tr>
+<td>bad day</td>
+<td>a day when many things go wrong</td>
+<td>I had a bad day at work.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="help-from-a-stranger">9.4 Help From a Stranger</h2>
+<p>Talk about a time when you received help from a stranger.</p>
+<h3 id="sample-43">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time my car broke
+down on a quiet country road. It was late at night, my phone battery was
+almost dead, and I was alone.</p>
+<p><span class="conn">At first</span>, I felt scared and helpless. <span class="conn">Then</span>, a truck driver stopped and asked if I needed
+help. He checked my engine, realized the battery was <span class="vocab">drained</span>, and used jumper cables to start my car. He
+refused to accept any money.</p>
+<p><span class="conn">In the end</span>, I drove home safely, thanking
+him over and over.</p>
+<p><span class="tpl">Looking back</span>, I was touched by his <span class="vocab">kindness</span>. That night restored my <span class="vocab">faith in humanity</span>, and now I try to help others in
+need, too.</p>
+<h3 id="vocabulary-43">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drained</td>
+<td>with no power or energy left</td>
+<td>My phone battery was drained.</td>
+</tr>
+<tr>
+<td>kindness</td>
+<td>the quality of being caring</td>
+<td>Thank you for your kindness.</td>
+</tr>
+<tr>
+<td>faith in humanity</td>
+<td>belief that people are good</td>
+<td>His honesty restored my faith in humanity.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="being-late">9.5 Being Late</h2>
+<p>Describe a time you were late and missed something important.</p>
+<h3 id="sample-44">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the day I was late for
+my driving test. I had booked it three months earlier, and I was very
+excited.</p>
+<p><span class="conn">At first</span>, I left home with plenty of time.
+<span class="conn">Then</span>, there was a major accident on the
+highway, and traffic stopped completely. I watched the clock tick, and
+by the time I arrived, the examiner had already left. They <span class="vocab">refused</span> to give me another chance that day, and I
+lost my booking fee.</p>
+<p><span class="conn">In the end</span>, I had to wait another two
+months for a new test.</p>
+<p><span class="tpl">Looking back</span>, I learned to <span class="vocab">allow extra time</span> for unexpected delays. Now I
+always <span class="vocab">plan ahead</span> for important
+appointments.</p>
+<h3 id="vocabulary-44">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>refused</td>
+<td>said no to a request</td>
+<td>The clerk refused to change the ticket.</td>
+</tr>
+<tr>
+<td>allow extra time</td>
+<td>leave more time than you need</td>
+<td>Allow extra time for traffic.</td>
+</tr>
+<tr>
+<td>plan ahead</td>
+<td>prepare in advance</td>
+<td>It’s wise to plan ahead for trips.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="long-wait">9.6 Long Wait</h2>
+<p>Talk about a time you had to wait a very long time. What
+happened?</p>
+<h3 id="sample-45">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I waited six
+hours in an emergency room. I had cut my hand badly while cooking, and
+my friend drove me to the hospital.</p>
+<p><span class="conn">At first</span>, the waiting room was crowded, and
+the nurse said it would be a short wait. <span class="conn">Then</span>,
+hours passed as more serious cases arrived. I felt <span class="vocab">restless</span> and hungry, and the plastic chairs were
+<span class="vocab">uncomfortable</span>. To pass the time, I talked
+with other patients and listened to music.</p>
+<p><span class="conn">In the end</span>, a doctor stitched my hand in
+just ten minutes.</p>
+<p><span class="tpl">Looking back</span>, it was a <span class="vocab">frustrating</span> evening, but it taught me to be patient
+and to understand how <span class="vocab">overworked</span> medical
+staff are.</p>
+<h3 id="vocabulary-45">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>restless</td>
+<td>unable to stay still or relax</td>
+<td>The children grew restless on the plane.</td>
+</tr>
+<tr>
+<td>uncomfortable</td>
+<td>not pleasant to sit or be in</td>
+<td>The bench was uncomfortable.</td>
+</tr>
+<tr>
+<td>frustrating</td>
+<td>causing annoyance</td>
+<td>The slow service was frustrating.</td>
+</tr>
+<tr>
+<td>overworked</td>
+<td>made to work too hard</td>
+<td>Overworked nurses need more support.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

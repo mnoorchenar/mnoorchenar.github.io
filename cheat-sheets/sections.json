@@ -83,10 +83,28 @@
         {
           "id": "Speaking",
           "title": "Speaking",
-          "description": "CELPIP Speaking Tasks",
+          "description": "CELPIP Speaking Tasks 1–8",
           "icon": "fa-solid fa-microphone",
-          "images": [],
-          "captions": []
+          "images": [
+            "images/English/Speaking/01. CELPIP Speaking Task 1 Giving Advice.html",
+            "images/English/Speaking/02. CELPIP Speaking Task 2 Personal Experience.html",
+            "images/English/Speaking/03. CELPIP Speaking Task 3 Describing a Scene.html",
+            "images/English/Speaking/04. CELPIP Speaking Task 4 Making Predictions.html",
+            "images/English/Speaking/05. CELPIP Speaking Task 5 Comparing and Persuading.html",
+            "images/English/Speaking/06. CELPIP Speaking Task 6 Difficult Situation.html",
+            "images/English/Speaking/07. CELPIP Speaking Task 7 Expressing Opinions.html",
+            "images/English/Speaking/08. CELPIP Speaking Task 8 Unusual Situation.html"
+          ],
+          "captions": [
+            "CELPIP Speaking Task 1: Giving Advice",
+            "CELPIP Speaking Task 2: Personal Experience",
+            "CELPIP Speaking Task 3: Describing a Scene",
+            "CELPIP Speaking Task 4: Making Predictions",
+            "CELPIP Speaking Task 5: Comparing and Persuading",
+            "CELPIP Speaking Task 6: Difficult Situation",
+            "CELPIP Speaking Task 7: Expressing Opinions",
+            "CELPIP Speaking Task 8: Unusual Situation"
+          ]
         }
       ]
     }

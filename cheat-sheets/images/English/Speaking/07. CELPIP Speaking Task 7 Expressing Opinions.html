@@ -1,0 +1,3819 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 7 Expressing Opinions</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 7 Expressing Opinions</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-7-expressing-opinions" id="toc-celpip-speaking-task-7-expressing-opinions">CELPIP Speaking Task
+7: Expressing Opinions</a></li>
+<li><a href="#education-and-learning" id="toc-education-and-learning">1
+Education and Learning</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#school-uniforms" id="toc-school-uniforms">1.1 School
+Uniforms</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#online-learning" id="toc-online-learning">1.2 Online
+Learning</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#daily-homework" id="toc-daily-homework">1.3 Daily
+Homework</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#free-university" id="toc-free-university">1.4 Free
+University</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#financial-skills" id="toc-financial-skills">1.5 Financial
+Skills</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+<li><a href="#phones-in-class" id="toc-phones-in-class">1.6 Phones in
+Class</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#extracurricular-activities" id="toc-extracurricular-activities">1.7 Extracurricular Activities</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#technology-and-social-media" id="toc-technology-and-social-media">2 Technology and Social Media</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#kids-smartphones" id="toc-kids-smartphones">2.1 Kids’
+Smartphones</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#social-medias-effect" id="toc-social-medias-effect">2.2
+Social Media’s Effect</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#limiting-phone-time" id="toc-limiting-phone-time">2.3
+Limiting Phone Time</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#ai-at-work" id="toc-ai-at-work">2.4 AI at Work</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#sharing-online" id="toc-sharing-online">2.5 Sharing
+Online</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#work-and-career" id="toc-work-and-career">3 Work and
+Career</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#working-from-home" id="toc-working-from-home">3.1 Working
+From Home</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#four-day-work-week" id="toc-four-day-work-week">3.2
+Four-Day Work Week</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#satisfaction-vs-salary" id="toc-satisfaction-vs-salary">3.3 Satisfaction vs Salary</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#retirement-age" id="toc-retirement-age">3.4 Retirement
+Age</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#monitoring-employees" id="toc-monitoring-employees">3.5
+Monitoring Employees</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#community-city-and-government" id="toc-community-city-and-government">4 Community, City, and
+Government</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#free-public-transit" id="toc-free-public-transit">4.1 Free
+Public Transit</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#parks-vs-roads" id="toc-parks-vs-roads">4.2 Parks vs
+Roads</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#mandatory-recycling" id="toc-mandatory-recycling">4.3
+Mandatory Recycling</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+<li><a href="#car-free-downtown" id="toc-car-free-downtown">4.4 Car-Free
+Downtown</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#limiting-tourists" id="toc-limiting-tourists">4.5 Limiting
+Tourists</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#environment-animals-and-sustainability" id="toc-environment-animals-and-sustainability">5 Environment, Animals,
+and Sustainability</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#banning-plastics" id="toc-banning-plastics">5.1 Banning
+Plastics</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#electric-cars" id="toc-electric-cars">5.2 Electric
+Cars</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#zoos-and-animals" id="toc-zoos-and-animals">5.3 Zoos and
+Animals</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#climate-responsibility" id="toc-climate-responsibility">5.4 Climate Responsibility</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#adopting-pets" id="toc-adopting-pets">5.5 Adopting
+Pets</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#health-lifestyle-and-habits" id="toc-health-lifestyle-and-habits">6 Health, Lifestyle, and Habits</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#junk-food-ads" id="toc-junk-food-ads">6.1 Junk Food
+Ads</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#mandatory-pe" id="toc-mandatory-pe">6.2 Mandatory PE</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cooking-vs-eating-out" id="toc-cooking-vs-eating-out">6.3
+Cooking vs Eating Out</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+<li><a href="#sugar-tax" id="toc-sugar-tax">6.4 Sugar Tax</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+<li><a href="#work-life-balance" id="toc-work-life-balance">6.5
+Work-Life Balance</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#society-family-and-everyday-life" id="toc-society-family-and-everyday-life">7 Society, Family, and
+Everyday Life</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#teen-independence" id="toc-teen-independence">7.1 Teen
+Independence</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#keeping-traditions" id="toc-keeping-traditions">7.2
+Keeping Traditions</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#volunteering-monthly" id="toc-volunteering-monthly">7.3
+Volunteering Monthly</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+<li><a href="#many-vs-few-friends" id="toc-many-vs-few-friends">7.4 Many
+vs Few Friends</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#pets-in-public" id="toc-pets-in-public">7.5 Pets in
+Public</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#rent-at-home" id="toc-rent-at-home">7.6 Rent at Home</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#entertainment-media-and-leisure" id="toc-entertainment-media-and-leisure">8 Entertainment, Media, and
+Leisure</a>
+<ul>
+<li><a href="#general-template-7" id="toc-general-template-7">General
+Template</a></li>
+<li><a href="#video-games" id="toc-video-games">8.1 Video Games</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#books-vs-movies" id="toc-books-vs-movies">8.2 Books vs
+Movies</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+</ul></li>
+<li><a href="#athletes-salaries" id="toc-athletes-salaries">8.3
+Athletes’ Salaries</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+<li><a href="#funding-the-arts" id="toc-funding-the-arts">8.4 Funding
+the Arts</a>
+<ul>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+</ul></li>
+<li><a href="#time-alone-vs-together" id="toc-time-alone-vs-together">8.5 Time Alone vs Together</a>
+<ul>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#money-consumers-and-law-and-safety" id="toc-money-consumers-and-law-and-safety">9 Money, Consumers, and Law
+and Safety</a>
+<ul>
+<li><a href="#general-template-8" id="toc-general-template-8">General
+Template</a></li>
+<li><a href="#online-shopping" id="toc-online-shopping">9.1 Online
+Shopping</a>
+<ul>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cashless-society" id="toc-cashless-society">9.2 Cashless
+Society</a>
+<ul>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+</ul></li>
+<li><a href="#renting-vs-buying" id="toc-renting-vs-buying">9.3 Renting
+vs Buying</a>
+<ul>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
+</ul></li>
+<li><a href="#older-drivers" id="toc-older-drivers">9.4 Older
+Drivers</a>
+<ul>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
+</ul></li>
+<li><a href="#smoking-ban" id="toc-smoking-ban">9.5 Smoking Ban</a>
+<ul>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-7-expressing-opinions">CELPIP Speaking Task
+7: Expressing Opinions</h1>
+<h1 id="education-and-learning">1 Education and Learning</h1>
+<p>Topics: school rules, online learning, homework, university costs,
+languages, teaching methods.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="school-uniforms">1.1 School Uniforms</h2>
+<p>Should schools require students to wear uniforms? Why or why not?</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">In my opinion</span>, schools should require
+uniforms. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, uniforms create equality.
+When everybody wears the same clothes, nobody feels judged for their
+<span class="vocab">brand names</span> or their family’s income, so
+students can focus on learning. <span class="conn">For example</span>,
+in my school, there was much less <span class="vocab">peer
+pressure</span> about fashion.</p>
+<p><span class="conn">Moreover</span>, uniforms save time and money.
+Parents don’t have to buy lots of trendy outfits, and students don’t
+have to waste time choosing what to wear every morning. <span class="conn">On the other hand</span>, some people say that uniforms
+limit <span class="vocab">self-expression</span>, <span class="conn">but</span> students can still show their personality
+through hobbies, hairstyles, and accessories.</p>
+<p><span class="conn">All in all</span>, uniforms promote a sense of
+<span class="vocab">belonging</span> and a more serious <span class="vocab">learning environment</span>. <span class="tpl">That’s why
+I firmly believe that</span> schools should keep them.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brand names</td>
+<td>the names of well-known makers</td>
+<td>Teens often want brand names.</td>
+</tr>
+<tr>
+<td>peer pressure</td>
+<td>influence from people your age</td>
+<td>Peer pressure can be strong.</td>
+</tr>
+<tr>
+<td>self-expression</td>
+<td>showing who you are</td>
+<td>Art is a form of self-expression.</td>
+</tr>
+<tr>
+<td>belonging</td>
+<td>feeling accepted in a group</td>
+<td>A sense of belonging.</td>
+</tr>
+<tr>
+<td>learning environment</td>
+<td>the setting where students learn</td>
+<td>A calm learning environment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="online-learning">1.2 Online Learning</h2>
+<p>Is online learning as effective as learning in a classroom? Explain
+your opinion.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">In my opinion</span>, online learning is not as
+effective as classroom learning for most students. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, face-to-face lessons offer
+direct interaction. Students can ask questions immediately, and teachers
+can see when someone is confused. <span class="conn">For example</span>,
+in my own online course, I often felt lost, and nobody noticed.</p>
+<p><span class="conn">Moreover</span>, it requires strong <span class="vocab">self-discipline</span>. At home, there are many
+distractions, such as phones, family, and social media, so it’s easy to
+fall behind. <span class="conn">On the other hand</span>, online classes
+are flexible and cheaper, <span class="conn">but</span> that doesn’t
+mean that students learn more. They often miss the social side of
+school, like <span class="vocab">group work</span> and friendships.</p>
+<p><span class="conn">All in all</span>, online learning is a useful
+<span class="vocab">supplement</span>, but it can’t fully replace
+classrooms. <span class="tpl">That’s why I firmly believe that</span>
+in-person education remains more effective.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self-discipline</td>
+<td>the ability to control yourself</td>
+<td>Online study needs self-discipline.</td>
+</tr>
+<tr>
+<td>group work</td>
+<td>tasks done together</td>
+<td>Group work builds teamwork.</td>
+</tr>
+<tr>
+<td>supplement</td>
+<td>something that adds to something else</td>
+<td>A useful supplement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="daily-homework">1.3 Daily Homework</h2>
+<p>Should children have homework every day? Give your opinion.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">In my opinion</span>, children shouldn’t have
+homework every day. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, kids need time to rest and
+play. After spending six or seven hours at school, they’re tired, and
+too much homework causes stress and <span class="vocab">burnout</span>.
+<span class="conn">For example</span>, my nephew stays up until ten
+every night with assignments, and he’s often exhausted in class.</p>
+<p><span class="conn">Moreover</span>, children also learn important
+things outside books, such as sports, creativity, and family <span class="vocab">bonding</span>. <span class="conn">On the other
+hand</span>, homework helps students review the lesson, <span class="conn">but</span> a few times a week is enough, and the tasks
+should be short and meaningful, not just <span class="vocab">busywork</span>.</p>
+<p><span class="conn">All in all</span>, a balanced schedule gives
+children better health and better <span class="vocab">motivation</span>.
+<span class="tpl">That’s why I firmly believe that</span> schools should
+limit daily homework.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>burnout</td>
+<td>exhaustion from too much stress</td>
+<td>Burnout affects performance.</td>
+</tr>
+<tr>
+<td>bonding</td>
+<td>forming close relationships</td>
+<td>Family bonding matters.</td>
+</tr>
+<tr>
+<td>busywork</td>
+<td>pointless tasks that fill time</td>
+<td>The worksheet was busywork.</td>
+</tr>
+<tr>
+<td>motivation</td>
+<td>the desire to do something</td>
+<td>Rest improves motivation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="free-university">1.4 Free University</h2>
+<p>Should university education be free for everyone? Explain.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">In my opinion</span>, university education should
+be free, or at least much cheaper. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it would give everyone equal
+opportunities. Talented students from poor families often can’t attend
+because of <span class="vocab">tuition fees</span>, and society loses
+their potential. <span class="conn">For example</span>, in some European
+countries, higher education is free, and more people graduate.</p>
+<p><span class="conn">Moreover</span>, an educated population benefits
+the entire economy. Graduates earn more, pay more taxes, and fill <span class="vocab">skilled</span> jobs. <span class="conn">On the other
+hand</span>, critics say it would cost the government too much, <span class="conn">but</span> the long-term return is greater than the cost,
+and students wouldn’t carry heavy <span class="vocab">student
+loans</span> for decades.</p>
+<p><span class="conn">All in all</span>, free education is an <span class="vocab">investment</span> in the future. <span class="tpl">That’s
+why I firmly believe that</span> governments should make it available to
+all.</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuition fees</td>
+<td>the money paid for teaching</td>
+<td>Tuition fees are rising.</td>
+</tr>
+<tr>
+<td>skilled</td>
+<td>trained and able</td>
+<td>A skilled worker.</td>
+</tr>
+<tr>
+<td>student loans</td>
+<td>borrowed money for study</td>
+<td>Student loans are heavy.</td>
+</tr>
+<tr>
+<td>investment</td>
+<td>spending that brings later benefit</td>
+<td>Education is an investment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="financial-skills">1.5 Financial Skills</h2>
+<p>Should schools teach financial skills as a required subject? Why or
+why not?</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">In my opinion</span>, schools should definitely
+teach financial skills. <span class="tpl">There are two main reasons why
+I think so</span>.</p>
+<p><span class="conn">First of all</span>, these skills are essential
+for adult life. Many young people leave school without knowing how to
+make a <span class="vocab">budget</span>, understand interest, or avoid
+debt. <span class="conn">For example</span>, I know people who got into
+serious trouble with credit cards at the age of twenty.</p>
+<p><span class="conn">Moreover</span>, learning early builds good
+habits, such as saving and <span class="vocab">investing</span>. <span class="conn">On the other hand</span>, some say the curriculum is
+already full, <span class="conn">but</span> a short weekly class could
+replace outdated subjects. Parents may not always know how to teach
+money management, either.</p>
+<p><span class="conn">All in all</span>, <span class="vocab">financial
+literacy</span> protects people from mistakes and gives them <span class="vocab">independence</span>. <span class="tpl">That’s why I firmly
+believe that</span> it should be a required subject.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>budget</td>
+<td>a plan for spending money</td>
+<td>Make a monthly budget.</td>
+</tr>
+<tr>
+<td>investing</td>
+<td>putting money into something to earn more</td>
+<td>Investing takes patience.</td>
+</tr>
+<tr>
+<td>financial literacy</td>
+<td>understanding how money works</td>
+<td>Financial literacy is vital.</td>
+</tr>
+<tr>
+<td>independence</td>
+<td>freedom from control by others</td>
+<td>Money gives independence.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="phones-in-class">1.6 Phones in Class</h2>
+<p>Should mobile phones be banned in classrooms? Give your opinion.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">In my opinion</span>, phones should be banned in
+classrooms. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, they are a major <span class="vocab">distraction</span>. Students check messages and social
+media instead of listening, and studies show that even a phone on the
+desk reduces concentration. <span class="conn">For example</span>, in my
+cousin’s class, the grades improved after the school introduced a
+phone-free rule.</p>
+<p><span class="conn">Moreover</span>, phones can lead to <span class="vocab">cheating</span> and <span class="vocab">cyberbullying</span>. <span class="conn">On the other
+hand</span>, phones can be useful for research, <span class="conn">but</span> schools can provide tablets or computers for
+that, and students can use phones at lunch or in an emergency.</p>
+<p><span class="conn">All in all</span>, a ban helps students focus and
+interact more with each other. <span class="tpl">That’s why I firmly
+believe that</span> schools should keep phones out of classrooms.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>distraction</td>
+<td>something that takes attention away</td>
+<td>Phones are a distraction.</td>
+</tr>
+<tr>
+<td>cheating</td>
+<td>breaking the rules to get a better result</td>
+<td>Cheating is serious.</td>
+</tr>
+<tr>
+<td>cyberbullying</td>
+<td>harassing others online</td>
+<td>Cyberbullying hurts students.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extracurricular-activities">1.7 Extracurricular Activities</h2>
+<p>Do local schools offer enough extracurricular activities for
+teenagers? Explain your view.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">In my opinion</span>, local schools don’t offer
+enough extracurricular activities. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, there is limited variety.
+Most schools have a few sports teams, but few options for <span class="vocab">arts</span>, technology, or volunteering. <span class="conn">For example</span>, a teenager who loves robotics or
+theatre may have nowhere to go after school.</p>
+<p><span class="conn">Moreover</span>, budgets are limited, so
+activities are often cut first. That’s a pity, because teens develop
+<span class="vocab">teamwork</span>, leadership, and confidence through
+clubs. <span class="conn">On the other hand</span>, some schools do a
+great job, <span class="conn">but</span> they’re the exception, and many
+students can’t afford fees or <span class="vocab">transportation</span>
+to private programs.</p>
+<p><span class="conn">All in all</span>, more <span class="vocab">funding</span> would help young people stay <span class="vocab">engaged</span> and out of trouble. <span class="tpl">That’s why I firmly believe that</span> schools need to
+expand these programs.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>arts</td>
+<td>creative subjects like music and drama</td>
+<td>Arts classes were cut.</td>
+</tr>
+<tr>
+<td>teamwork</td>
+<td>working well together</td>
+<td>Teamwork wins games.</td>
+</tr>
+<tr>
+<td>transportation</td>
+<td>a way of travelling</td>
+<td>There’s no transportation after school.</td>
+</tr>
+<tr>
+<td>funding</td>
+<td>money provided for a purpose</td>
+<td>The club needs funding.</td>
+</tr>
+<tr>
+<td>engaged</td>
+<td>actively involved</td>
+<td>Engaged students do better.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="technology-and-social-media">2 Technology and Social Media</h1>
+<p>Topics: smartphones, social media, screen time, online privacy,
+artificial intelligence, remote communication.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="kids-smartphones">2.1 Kids’ Smartphones</h2>
+<p>Do you think children under 12 should have their own smartphones?
+Explain your opinion.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">In my opinion</span>, children under twelve
+shouldn’t have their own smartphones. <span class="tpl">There are two
+main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, young children aren’t mature
+enough to handle the internet. They can easily see <span class="vocab">inappropriate content</span> or talk to strangers online.
+<span class="conn">For example</span>, many parents report that their
+kids have been exposed to violent videos by accident.</p>
+<p><span class="conn">Moreover</span>, phones harm their development.
+Kids spend hours playing games instead of playing outside, which affects
+their health, sleep, and <span class="vocab">social skills</span>. <span class="conn">On the other hand</span>, a phone allows parents to contact
+their child, <span class="conn">but</span> a simple basic phone can do
+that without the risks.</p>
+<p><span class="conn">All in all</span>, children should enjoy a
+childhood with <span class="vocab">real-life</span> experiences. <span class="tpl">That’s why I firmly believe that</span> smartphones should
+wait until the teenage years, and parents should always use <span class="vocab">parental controls</span>.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>inappropriate content</td>
+<td>material not suitable for children</td>
+<td>Block inappropriate content.</td>
+</tr>
+<tr>
+<td>social skills</td>
+<td>the ability to interact with others</td>
+<td>Play builds social skills.</td>
+</tr>
+<tr>
+<td>real-life</td>
+<td>actual, not online</td>
+<td>Real-life friends matter.</td>
+</tr>
+<tr>
+<td>parental controls</td>
+<td>settings that limit what children can see</td>
+<td>Turn on parental controls.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="social-medias-effect">2.2 Social Media’s Effect</h2>
+<p>Does social media have a more positive or negative effect on society?
+Give your view.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">In my opinion</span>, social media has a more
+negative effect on society. <span class="tpl">There are two main reasons
+why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it spreads <span class="vocab">misinformation</span> very quickly. False news can reach
+millions of people before anyone checks it. <span class="conn">For
+example</span>, during the pandemic, many people believed dangerous
+rumours they found online.</p>
+<p><span class="conn">Moreover</span>, it harms <span class="vocab">mental health</span>. Constantly comparing yourself to
+perfect photos causes anxiety and low <span class="vocab">self-esteem</span>, especially among teenagers. <span class="conn">On the other hand</span>, social media connects families
+and gives a voice to ordinary people, <span class="conn">but</span>
+these benefits are outweighed by the damage of <span class="vocab">addiction</span> and cyberbullying.</p>
+<p><span class="conn">All in all</span>, while it has some advantages,
+the negative effects are stronger. <span class="tpl">That’s why I firmly
+believe that</span> society needs better rules and more <span class="vocab">digital literacy</span>.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>misinformation</td>
+<td>false information</td>
+<td>Misinformation spreads fast.</td>
+</tr>
+<tr>
+<td>mental health</td>
+<td>emotional and psychological wellbeing</td>
+<td>Protect your mental health.</td>
+</tr>
+<tr>
+<td>self-esteem</td>
+<td>confidence in your own worth</td>
+<td>Low self-esteem hurts.</td>
+</tr>
+<tr>
+<td>addiction</td>
+<td>inability to stop doing something</td>
+<td>Phone addiction is common.</td>
+</tr>
+<tr>
+<td>digital literacy</td>
+<td>skill in using technology wisely</td>
+<td>Teach digital literacy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="limiting-phone-time">2.3 Limiting Phone Time</h2>
+<p>Should people limit the time they spend on their phones? Why or why
+not?</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">In my opinion</span>, people should definitely
+limit their phone time. <span class="tpl">There are two main reasons why
+I think so</span>.</p>
+<p><span class="conn">First of all</span>, too much <span class="vocab">screen time</span> is bad for health. It causes eye
+strain, poor sleep, and back problems. <span class="conn">For
+example</span>, I used to scroll in bed for hours, and I woke up tired
+every morning.</p>
+<p><span class="conn">Moreover</span>, excessive phone use damages
+relationships. People sit together at a table and ignore each other,
+which is <span class="vocab">ironic</span>, because phones are supposed
+to connect us. <span class="conn">On the other hand</span>, phones are
+useful for work and communication, <span class="conn">but</span> we can
+still set limits, such as no phones at meals or after ten at night.</p>
+<p><span class="conn">All in all</span>, using our phones <span class="vocab">mindfully</span> gives us more time for hobbies, exercise,
+and real conversations. <span class="tpl">That’s why I firmly believe
+that</span> everyone should practise a healthy <span class="vocab">digital balance</span>.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>screen time</td>
+<td>time spent on devices</td>
+<td>Reduce your screen time.</td>
+</tr>
+<tr>
+<td>ironic</td>
+<td>the opposite of what you’d expect</td>
+<td>It’s ironic.</td>
+</tr>
+<tr>
+<td>mindfully</td>
+<td>with careful attention</td>
+<td>Eat mindfully.</td>
+</tr>
+<tr>
+<td>digital balance</td>
+<td>a healthy use of technology</td>
+<td>Aim for digital balance.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ai-at-work">2.4 AI at Work</h2>
+<p>Is artificial intelligence good for the workplace? Explain.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">In my opinion</span>, artificial intelligence is
+good for the workplace, if it’s used wisely. <span class="tpl">There are
+two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, AI <span class="vocab">boosts
+productivity</span>. It can handle repetitive tasks like data entry and
+scheduling, so employees can focus on creative work. <span class="conn">For example</span>, my company uses AI to summarize long
+reports, and it saves us hours every week.</p>
+<p><span class="conn">Moreover</span>, it helps reduce human error,
+especially in areas like medicine and finance. <span class="conn">On the
+other hand</span>, many people fear that AI will replace their jobs,
+<span class="conn">but</span> history shows that technology also creates
+new roles, and workers can <span class="vocab">upskill</span>. Of
+course, companies must protect <span class="vocab">privacy</span> and be
+transparent.</p>
+<p><span class="conn">All in all</span>, AI is a powerful tool that
+supports people rather than replaces them. <span class="tpl">That’s why
+I firmly believe that</span> businesses should embrace it
+responsibly.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boosts productivity</td>
+<td>increases how much work gets done</td>
+<td>Software boosts productivity.</td>
+</tr>
+<tr>
+<td>upskill</td>
+<td>learn new skills</td>
+<td>Workers must upskill.</td>
+</tr>
+<tr>
+<td>privacy</td>
+<td>freedom from being watched</td>
+<td>Protect customer privacy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sharing-online">2.5 Sharing Online</h2>
+<p>Should people share their personal lives on social media? Give your
+opinion.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">In my opinion</span>, people should be careful
+about sharing their personal lives online. <span class="tpl">There are
+two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it threatens <span class="vocab">privacy</span> and safety. Posting your address, your
+holiday plans, or photos of your children can attract thieves or <span class="vocab">scammers</span>. <span class="conn">For example</span>, a
+friend’s home was robbed while she was posting photos from a beach
+vacation.</p>
+<p><span class="conn">Moreover</span>, anything you post can stay on the
+internet forever, and employers often check candidates’ profiles. <span class="conn">On the other hand</span>, sharing happy moments helps us
+stay in touch with loved ones, <span class="conn">but</span> we can do
+that in private groups instead of making everything public.</p>
+<p><span class="conn">All in all</span>, a bit of <span class="vocab">discretion</span> protects our reputation and our
+families. <span class="tpl">That’s why I firmly believe that</span>
+people should think twice before they post.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>privacy</td>
+<td>freedom from public attention</td>
+<td>I value my privacy.</td>
+</tr>
+<tr>
+<td>scammers</td>
+<td>people who trick others to get money</td>
+<td>Scammers target seniors.</td>
+</tr>
+<tr>
+<td>discretion</td>
+<td>careful judgment about what to say</td>
+<td>Use discretion online.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="work-and-career">3 Work and Career</h1>
+<p>Topics: working from home, a four-day work week, salary, job
+satisfaction, employee benefits, retirement.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="working-from-home">3.1 Working From Home</h2>
+<p>Is working from home better than working in an office? Explain your
+opinion.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">In my opinion</span>, working from home is better
+for most people. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, it saves time and money.
+There’s no <span class="vocab">commute</span>, so you gain one or two
+hours a day, and you spend less on gas, lunch, and work clothes. <span class="conn">For example</span>, I now use that time for exercise, and
+I’m healthier.</p>
+<p><span class="conn">Moreover</span>, employees are often more
+productive at home, because there are fewer interruptions and they can
+organize their day. <span class="conn">On the other hand</span>, some
+people feel isolated at home, <span class="conn">but</span> they can
+still meet colleagues through video calls and occasional office days. A
+<span class="vocab">hybrid</span> model can solve that.</p>
+<p><span class="conn">All in all</span>, remote work gives a better
+<span class="vocab">work-life balance</span> and makes employees <span class="vocab">loyal</span>. <span class="tpl">That’s why I firmly
+believe that</span> companies should offer it whenever possible.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commute</td>
+<td>the daily trip to work</td>
+<td>A long commute is tiring.</td>
+</tr>
+<tr>
+<td>hybrid</td>
+<td>a mix of two things</td>
+<td>A hybrid schedule.</td>
+</tr>
+<tr>
+<td>work-life balance</td>
+<td>a healthy split of work and personal time</td>
+<td>Balance is important.</td>
+</tr>
+<tr>
+<td>loyal</td>
+<td>faithful</td>
+<td>A loyal employee.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="four-day-work-week">3.2 Four-Day Work Week</h2>
+<p>Should companies adopt a four-day work week? Why or why not?</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">In my opinion</span>, companies should adopt a
+four-day work week. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, it improves <span class="vocab">wellbeing</span>. With three days off, people have more
+time to rest, to be with family, and to take care of themselves, so they
+come back refreshed. <span class="conn">For example</span>, in several
+trials in Europe, employees reported less stress and fewer sick
+days.</p>
+<p><span class="conn">Moreover</span>, productivity often stays the same
+or even rises, because people concentrate better when time is limited.
+<span class="conn">On the other hand</span>, some businesses worry about
+customer service, <span class="conn">but</span> they can use <span class="vocab">rotating shifts</span> to stay open every day.</p>
+<p><span class="conn">All in all</span>, a shorter week is a win for
+both employers and employees, because it attracts talent and reduces
+<span class="vocab">turnover</span>. <span class="tpl">That’s why I
+firmly believe that</span> it’s the future of work.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>wellbeing</td>
+<td>health and happiness</td>
+<td>Employee wellbeing matters.</td>
+</tr>
+<tr>
+<td>rotating shifts</td>
+<td>work times that change in turn</td>
+<td>Nurses work rotating shifts.</td>
+</tr>
+<tr>
+<td>turnover</td>
+<td>the rate at which workers leave</td>
+<td>Turnover is low.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="satisfaction-vs-salary">3.3 Satisfaction vs Salary</h2>
+<p>Is job satisfaction more important than salary? Give your view.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">In my opinion</span>, job satisfaction is more
+important than salary. <span class="tpl">There are two main reasons why
+I think so</span>.</p>
+<p><span class="conn">First of all</span>, we spend a third of our lives
+at work, so if we hate our job, it affects our health and happiness.
+<span class="conn">For example</span>, my uncle earned a high salary in
+banking, but he was so unhappy and stressed that he finally quit.</p>
+<p><span class="conn">Moreover</span>, people who enjoy their work are
+more <span class="vocab">creative</span> and more successful in the long
+run, so they often earn more later. <span class="conn">On the other
+hand</span>, money is necessary to pay bills and support a family, <span class="conn">but</span> once your basic needs are met, extra income
+brings little additional <span class="vocab">fulfillment</span>.</p>
+<p><span class="conn">All in all</span>, a <span class="vocab">meaningful</span> job with a fair salary is better than a
+high-paying job that makes you miserable. <span class="tpl">That’s why I
+firmly believe that</span> satisfaction should come first.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>creative</td>
+<td>able to produce new ideas</td>
+<td>A creative team.</td>
+</tr>
+<tr>
+<td>fulfillment</td>
+<td>satisfaction from achieving something</td>
+<td>Teaching gives me fulfillment.</td>
+</tr>
+<tr>
+<td>meaningful</td>
+<td>important and worthwhile</td>
+<td>A meaningful career.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="retirement-age">3.4 Retirement Age</h2>
+<p>Should the retirement age be raised? Explain.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">In my opinion</span>, the retirement age shouldn’t
+be raised. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, many people have physically
+demanding jobs, such as construction or nursing, and working into their
+late sixties can damage their health. <span class="conn">For
+example</span>, my father is a mechanic, and his back already hurts at
+sixty.</p>
+<p><span class="conn">Moreover</span>, older workers who stay in their
+jobs block opportunities for young people, who struggle to find work.
+<span class="conn">On the other hand</span>, people live longer now, and
+pension systems face pressure, <span class="conn">but</span> the
+government can solve that by encouraging <span class="vocab">voluntary</span> later retirement, with <span class="vocab">incentives</span>, rather than forcing it.</p>
+<p><span class="conn">All in all</span>, retirement should be a <span class="vocab">reward</span> for decades of work. <span class="tpl">That’s why I firmly believe that</span> the retirement age
+should remain flexible, not higher.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>voluntary</td>
+<td>done by choice</td>
+<td>Voluntary retirement.</td>
+</tr>
+<tr>
+<td>incentives</td>
+<td>rewards that encourage action</td>
+<td>Tax incentives.</td>
+</tr>
+<tr>
+<td>reward</td>
+<td>something given for effort</td>
+<td>A well-earned reward.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-employees">3.5 Monitoring Employees</h2>
+<p>Should employers monitor employees’ internet use at work? Why or why
+not?</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">In my opinion</span>, employers should monitor
+internet use only in limited ways. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, companies need to protect
+their data and systems. Employees who visit <span class="vocab">suspicious</span> websites could download viruses and put
+confidential information at risk. <span class="conn">For example</span>,
+one careless click can cause a serious security breach.</p>
+<p><span class="conn">Moreover</span>, monitoring can help ensure that
+work time is used <span class="vocab">productively</span>. <span class="conn">On the other hand</span>, constant surveillance makes
+people feel distrusted and stressed, <span class="conn">but</span> this
+can be avoided if the company has a clear policy and tells employees
+what’s monitored and why.</p>
+<p><span class="conn">All in all</span>, <span class="vocab">transparency</span> and trust are the keys. <span class="tpl">That’s why I firmly believe that</span> monitoring should be
+reasonable, open, and focused on security.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>suspicious</td>
+<td>seeming dangerous or dishonest</td>
+<td>A suspicious email.</td>
+</tr>
+<tr>
+<td>productively</td>
+<td>in a way that achieves a lot</td>
+<td>Use time productively.</td>
+</tr>
+<tr>
+<td>transparency</td>
+<td>openness</td>
+<td>Transparency builds trust.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="community-city-and-government">4 Community, City, and
+Government</h1>
+<p>Topics: public transit, taxes, parks, recycling, rules and laws,
+spending public money.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="free-public-transit">4.1 Free Public Transit</h2>
+<p>Should public transit be free in big cities? Explain your
+opinion.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">In my opinion</span>, public transit should be free
+in big cities. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, it would reduce traffic and
+pollution. If buses and trains cost nothing, many drivers would leave
+their cars at home, and the roads would be less <span class="vocab">congested</span>. <span class="conn">For example</span>,
+some European cities that tried free transit saw a drop in car use.</p>
+<p><span class="conn">Moreover</span>, it would help low-income
+residents, who spend a big part of their salary on travel. <span class="conn">On the other hand</span>, critics say that free service is
+expensive for the city, <span class="conn">but</span> we’d save on road
+repairs and healthcare costs caused by pollution, and cities could use
+<span class="vocab">congestion</span> charges for downtown driving.</p>
+<p><span class="conn">All in all</span>, free transit makes cities
+cleaner and fairer, and it’s a smart <span class="vocab">public
+service</span>. <span class="tpl">That’s why I firmly believe
+that</span> it deserves <span class="vocab">funding</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>congested</td>
+<td>too full of traffic</td>
+<td>A congested road.</td>
+</tr>
+<tr>
+<td>public service</td>
+<td>a service provided for everyone</td>
+<td>Buses are a public service.</td>
+</tr>
+<tr>
+<td>funding</td>
+<td>money provided for a purpose</td>
+<td>The project needs funding.</td>
+</tr>
+<tr>
+<td>congestion</td>
+<td>heavy traffic that slows movement</td>
+<td>Congestion charges reduce traffic.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="parks-vs-roads">4.2 Parks vs Roads</h2>
+<p>Should governments spend more on parks and recreation or on roads?
+Give your view.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">In my opinion</span>, governments should spend more
+on parks and recreation. <span class="tpl">There are two main reasons
+why I think so</span>.</p>
+<p><span class="conn">First of all</span>, green spaces improve physical
+and mental health. People who have parks nearby exercise more and feel
+less stressed. <span class="conn">For example</span>, in my
+neighbourhood, a new park became a place where families, joggers, and
+seniors meet every day.</p>
+<p><span class="conn">Moreover</span>, parks bring the community
+together and make the city more attractive, and they help <span class="vocab">fight pollution</span> by absorbing carbon dioxide. <span class="conn">On the other hand</span>, roads are important for the
+economy, <span class="conn">but</span> most of our roads are already
+adequate, and building more only encourages more cars. A better approach
+is to maintain what exists.</p>
+<p><span class="conn">All in all</span>, parks are a long-term <span class="vocab">investment</span> in <span class="vocab">quality of
+life</span>. <span class="tpl">That’s why I firmly believe that</span>
+they deserve a greater share of the <span class="vocab">budget</span>.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fight pollution</td>
+<td>work to reduce dirty air and water</td>
+<td>Trees fight pollution.</td>
+</tr>
+<tr>
+<td>investment</td>
+<td>spending that brings later benefit</td>
+<td>Parks are an investment.</td>
+</tr>
+<tr>
+<td>quality of life</td>
+<td>how good everyday life is</td>
+<td>Parks improve quality of life.</td>
+</tr>
+<tr>
+<td>budget</td>
+<td>the money planned for use</td>
+<td>The city budget.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mandatory-recycling">4.3 Mandatory Recycling</h2>
+<p>Should recycling be mandatory for all households? Why or why not?</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">In my opinion</span>, recycling should be mandatory
+for all households. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, it protects the environment.
+Landfills are filling up, and recycling reduces waste and saves natural
+resources like trees and metals. <span class="conn">For example</span>,
+recycling one tonne of paper saves many trees and a lot of energy.</p>
+<p><span class="conn">Moreover</span>, when it’s required, people form
+the habit, and the system becomes more efficient. <span class="conn">On
+the other hand</span>, some people say that mandatory rules limit
+freedom, <span class="conn">but</span> we already have rules for <span class="vocab">garbage collection</span>, and a small <span class="vocab">fine</span> is a fair way to encourage <span class="vocab">responsibility</span>. The city can also provide clear
+bins and instructions.</p>
+<p><span class="conn">All in all</span>, recycling is a small effort
+with a big impact. <span class="tpl">That’s why I firmly believe
+that</span> it should be a <span class="vocab">civic duty</span>.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>garbage collection</td>
+<td>removal of household waste</td>
+<td>Garbage collection is on Monday.</td>
+</tr>
+<tr>
+<td>fine</td>
+<td>a payment as punishment</td>
+<td>A small fine.</td>
+</tr>
+<tr>
+<td>responsibility</td>
+<td>a duty</td>
+<td>Waste is everyone’s responsibility.</td>
+</tr>
+<tr>
+<td>civic duty</td>
+<td>a citizen’s obligation</td>
+<td>Voting is a civic duty.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="car-free-downtown">4.4 Car-Free Downtown</h2>
+<p>Should cities ban cars from downtown areas? Explain.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">In my opinion</span>, cities should ban cars from
+downtown areas, or at least strongly limit them. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it makes the air cleaner and
+the streets safer. Fewer cars mean less noise, less pollution, and fewer
+accidents. <span class="conn">For example</span>, when a European city
+closed its centre to traffic, the number of pedestrian injuries fell,
+and more people visited the shops.</p>
+<p><span class="conn">Moreover</span>, free space can become cafés, bike
+lanes, and squares, which makes the city more <span class="vocab">liveable</span>. <span class="conn">On the other
+hand</span>, drivers and shop owners may worry about <span class="vocab">access</span>, <span class="conn">but</span> good public
+transit, parking on the edge of the centre, and delivery times can solve
+that.</p>
+<p><span class="conn">All in all</span>, a car-free centre is <span class="vocab">healthier</span> and more <span class="vocab">sustainable</span>. <span class="tpl">That’s why I firmly
+believe that</span> it’s a change worth making.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveable</td>
+<td>pleasant to live in</td>
+<td>A liveable city.</td>
+</tr>
+<tr>
+<td>access</td>
+<td>the ability to reach a place</td>
+<td>Easy access to shops.</td>
+</tr>
+<tr>
+<td>healthier</td>
+<td>better for your health</td>
+<td>A healthier city.</td>
+</tr>
+<tr>
+<td>sustainable</td>
+<td>able to continue without harm</td>
+<td>Sustainable transport.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="limiting-tourists">4.5 Limiting Tourists</h2>
+<p>Should local governments limit tourist numbers in popular areas? Give
+your opinion.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">In my opinion</span>, local governments should
+limit tourist numbers in very popular places. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, too many visitors damage the
+environment and local life. <span class="vocab">Overtourism</span> leads
+to litter, crowded streets, and higher rents, and residents can’t afford
+to live in their own neighbourhoods. <span class="conn">For
+example</span>, some Mediterranean towns have had to restrict cruise
+ships.</p>
+<p><span class="conn">Moreover</span>, fewer people means a better
+experience for tourists as well, with less waiting and more <span class="vocab">authentic</span> interaction. <span class="conn">On the
+other hand</span>, tourism creates jobs and income, <span class="conn">but</span> limits don’t have to hurt the economy, because
+visitors could pay <span class="vocab">entry fees</span> that fund
+conservation, and travel could be spread through the year.</p>
+<p><span class="conn">All in all</span>, we need to protect heritage
+while sharing it. <span class="tpl">That’s why I firmly believe
+that</span> reasonable limits are a <span class="vocab">sustainable</span> solution.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overtourism</td>
+<td>too many tourists in one place</td>
+<td>Overtourism harms old towns.</td>
+</tr>
+<tr>
+<td>authentic</td>
+<td>real and genuine</td>
+<td>An authentic experience.</td>
+</tr>
+<tr>
+<td>entry fees</td>
+<td>money paid to enter</td>
+<td>Entry fees help maintenance.</td>
+</tr>
+<tr>
+<td>sustainable</td>
+<td>able to continue</td>
+<td>A sustainable plan.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="environment-animals-and-sustainability">5 Environment, Animals,
+and Sustainability</h1>
+<p>Topics: plastic bans, electric cars, zoos, pets, climate change,
+recycling, energy.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="banning-plastics">5.1 Banning Plastics</h2>
+<p>Should single-use plastics be banned? Why or why not?</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">In my opinion</span>, single-use plastics should be
+banned. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, they are a huge threat to the
+environment. Plastic bags and straws take hundreds of years to <span class="vocab">break down</span>, and they end up in oceans, where they
+harm <span class="vocab">marine life</span>. <span class="conn">For
+example</span>, scientists have found plastic inside the stomachs of
+many sea turtles and whales.</p>
+<p><span class="conn">Moreover</span>, good <span class="vocab">alternatives</span> already exist, such as paper bags,
+metal straws, and reusable bottles. <span class="conn">On the other
+hand</span>, businesses say that plastic is cheap and convenient, <span class="conn">but</span> the cost of cleaning up pollution is much
+higher, and people quickly get used to bringing their own bags.</p>
+<p><span class="conn">All in all</span>, a ban would reduce waste and
+encourage innovation. <span class="tpl">That’s why I firmly believe
+that</span> governments should act now for a <span class="vocab">cleaner</span> planet.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>break down</td>
+<td>decay into small parts</td>
+<td>Plastic doesn’t break down.</td>
+</tr>
+<tr>
+<td>marine life</td>
+<td>animals and plants of the sea</td>
+<td>Protect marine life.</td>
+</tr>
+<tr>
+<td>alternatives</td>
+<td>other choices</td>
+<td>Eco-friendly alternatives.</td>
+</tr>
+<tr>
+<td>cleaner</td>
+<td>less polluted</td>
+<td>A cleaner future.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="electric-cars">5.2 Electric Cars</h2>
+<p>Should governments encourage people to buy electric cars? Explain
+your opinion.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">In my opinion</span>, governments should encourage
+people to buy electric cars. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, electric vehicles produce no
+<span class="vocab">tailpipe emissions</span>, so they improve air
+quality in cities and reduce greenhouse gases. <span class="conn">For
+example</span>, a city with many electric buses has much cleaner
+air.</p>
+<p><span class="conn">Moreover</span>, they’re cheaper to run, because
+electricity costs less than gas, and they need little maintenance. <span class="conn">On the other hand</span>, electric cars are expensive to
+buy, <span class="conn">but</span> governments can offer <span class="vocab">subsidies</span> and build more <span class="vocab">charging stations</span>, which makes them affordable and
+practical.</p>
+<p><span class="conn">All in all</span>, supporting electric cars helps
+the climate and the economy by creating new jobs in <span class="vocab">clean energy</span>. <span class="tpl">That’s why I firmly
+believe that</span> it’s a wise policy.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tailpipe emissions</td>
+<td>gases from a vehicle’s exhaust</td>
+<td>Tailpipe emissions pollute.</td>
+</tr>
+<tr>
+<td>subsidies</td>
+<td>money from the state to lower costs</td>
+<td>Subsidies help buyers.</td>
+</tr>
+<tr>
+<td>charging stations</td>
+<td>places to charge electric cars</td>
+<td>More charging stations are needed.</td>
+</tr>
+<tr>
+<td>clean energy</td>
+<td>power that doesn’t harm the environment</td>
+<td>Invest in clean energy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zoos-and-animals">5.3 Zoos and Animals</h2>
+<p>Is it right to keep animals in zoos? Give your view.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">In my opinion</span>, modern zoos can be justified,
+but only if they meet high standards. <span class="tpl">There are two
+main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, good zoos play a key role in
+<span class="vocab">conservation</span>. They run breeding programs that
+save <span class="vocab">endangered species</span>. <span class="conn">For example</span>, some animals, like the Arabian oryx,
+survived because zoos bred them and released them into the wild.</p>
+<p><span class="conn">Moreover</span>, zoos educate the public,
+especially children, who learn to care about wildlife. <span class="conn">On the other hand</span>, many animals suffer in small
+cages, <span class="conn">but</span> strict rules can ensure large
+natural <span class="vocab">habitats</span> and proper care, and poor
+zoos should be closed.</p>
+<p><span class="conn">All in all</span>, I’m not against zoos, but
+animal welfare must come first. <span class="tpl">That’s why I firmly
+believe that</span> only ethical, <span class="vocab">accredited</span>
+zoos should operate.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>conservation</td>
+<td>protecting nature and animals</td>
+<td>A conservation project.</td>
+</tr>
+<tr>
+<td>endangered species</td>
+<td>animals at risk of disappearing</td>
+<td>Pandas are an endangered species.</td>
+</tr>
+<tr>
+<td>habitats</td>
+<td>natural homes of animals</td>
+<td>Protect their habitats.</td>
+</tr>
+<tr>
+<td>accredited</td>
+<td>officially approved</td>
+<td>An accredited zoo.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="climate-responsibility">5.4 Climate Responsibility</h2>
+<p>Is climate change the responsibility of individuals or of
+governments? Explain.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">In my opinion</span>, governments bear the main
+responsibility, although individuals matter too. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, governments make the rules
+that shape industries. They can set limits on <span class="vocab">emissions</span>, invest in <span class="vocab">renewable
+energy</span>, and improve public transit, which no individual can do.
+<span class="conn">For example</span>, a single factory can pollute more
+than thousands of households.</p>
+<p><span class="conn">Moreover</span>, big problems need coordinated
+action, and international agreements require governments. <span class="conn">On the other hand</span>, individuals can reduce waste,
+save energy, and vote for green policies, <span class="conn">but</span>
+personal choices alone can’t change the system.</p>
+<p><span class="conn">All in all</span>, it’s a shared challenge, but
+the largest part of the <span class="vocab">burden</span> lies with
+governments. <span class="tpl">That’s why I firmly believe that</span>
+they must lead, and citizens must support them.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>emissions</td>
+<td>gases released into the air</td>
+<td>Cut emissions.</td>
+</tr>
+<tr>
+<td>renewable energy</td>
+<td>power from sources that don’t run out</td>
+<td>Solar is renewable energy.</td>
+</tr>
+<tr>
+<td>burden</td>
+<td>a heavy responsibility</td>
+<td>A heavy burden.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="adopting-pets">5.5 Adopting Pets</h2>
+<p>Should people adopt pets from shelters instead of buying them? Give
+your opinion.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">In my opinion</span>, people should adopt pets from
+shelters rather than buy them. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, thousands of animals are
+waiting in shelters, and many are <span class="vocab">euthanized</span>
+each year because nobody wants them. By adopting, you give one a second
+chance. <span class="conn">For example</span>, my neighbour adopted a
+rescue dog, and he’s now the happiest, most loyal pet.</p>
+<p><span class="conn">Moreover</span>, adoption fights cruel <span class="vocab">puppy mills</span>, where animals are bred in terrible
+conditions. <span class="conn">On the other hand</span>, some people
+want a specific breed, <span class="conn">but</span> shelters often have
+purebred animals, and breed-specific rescue groups exist. Adopted pets
+are also usually vaccinated and <span class="vocab">neutered</span>,
+which saves money.</p>
+<p><span class="conn">All in all</span>, adopting saves lives and
+supports <span class="vocab">ethical</span> treatment of animals. <span class="tpl">That’s why I firmly believe that</span> it should be the
+first choice.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>euthanized</td>
+<td>painlessly put to death</td>
+<td>Many strays are euthanized.</td>
+</tr>
+<tr>
+<td>puppy mills</td>
+<td>places that breed dogs cruelly for profit</td>
+<td>Avoid puppy mills.</td>
+</tr>
+<tr>
+<td>neutered</td>
+<td>operated on to prevent breeding</td>
+<td>The cat was neutered.</td>
+</tr>
+<tr>
+<td>ethical</td>
+<td>morally right</td>
+<td>An ethical choice.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="health-lifestyle-and-habits">6 Health, Lifestyle, and
+Habits</h1>
+<p>Topics: exercise, food, sleep, smoking, sugar taxes, work-life
+balance.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="junk-food-ads">6.1 Junk Food Ads</h2>
+<p>Should junk food advertising be banned? Why or why not?</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">In my opinion</span>, junk food advertising should
+be banned, at least when it targets children. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, children are very <span class="vocab">impressionable</span>. Colourful ads with cartoon
+characters convince them to ask for unhealthy snacks, and that leads to
+bad habits and <span class="vocab">childhood obesity</span>. <span class="conn">For example</span>, studies show that kids who see more
+fast-food ads eat more of it.</p>
+<p><span class="conn">Moreover</span>, obesity brings serious problems
+like diabetes and heart disease, which cost the <span class="vocab">healthcare system</span> billions. <span class="conn">On
+the other hand</span>, companies argue that they have the right to
+advertise, <span class="conn">but</span> the same rule already applies
+to tobacco, and public health is more important than profit.</p>
+<p><span class="conn">All in all</span>, limiting these ads protects
+young people. <span class="tpl">That’s why I firmly believe that</span>
+the government should <span class="vocab">regulate</span> them.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>impressionable</td>
+<td>easily influenced</td>
+<td>Teens are impressionable.</td>
+</tr>
+<tr>
+<td>childhood obesity</td>
+<td>serious overweight in children</td>
+<td>Childhood obesity is rising.</td>
+</tr>
+<tr>
+<td>healthcare system</td>
+<td>the organized medical services of a country</td>
+<td>The healthcare system is strained.</td>
+</tr>
+<tr>
+<td>regulate</td>
+<td>control by rules</td>
+<td>Regulate advertising.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mandatory-pe">6.2 Mandatory PE</h2>
+<p>Should physical education be mandatory in all schools? Explain.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">In my opinion</span>, physical education should be
+mandatory in all schools. <span class="tpl">There are two main reasons
+why I think so</span>.</p>
+<p><span class="conn">First of all</span>, children today spend too much
+time sitting in front of screens, and regular exercise keeps them
+healthy and <span class="vocab">fit</span>. <span class="conn">For
+example</span>, a daily PE class can reduce the risk of obesity and
+improve heart health.</p>
+<p><span class="conn">Moreover</span>, sports teach teamwork,
+discipline, and <span class="vocab">resilience</span>, and exercise
+improves concentration, which helps students perform better in other
+subjects. <span class="conn">On the other hand</span>, some students
+dislike sports, <span class="conn">but</span> schools can offer a
+variety, such as dance, yoga, or swimming, so everyone finds something
+enjoyable, and grades in PE should focus on effort.</p>
+<p><span class="conn">All in all</span>, PE builds healthy lifelong
+habits. <span class="tpl">That’s why I firmly believe that</span> it
+should stay a <span class="vocab">core</span> subject.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fit</td>
+<td>healthy and strong</td>
+<td>I want to stay fit.</td>
+</tr>
+<tr>
+<td>resilience</td>
+<td>the ability to recover from difficulty</td>
+<td>Sport builds resilience.</td>
+</tr>
+<tr>
+<td>core</td>
+<td>most important</td>
+<td>A core subject.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cooking-vs-eating-out">6.3 Cooking vs Eating Out</h2>
+<p>Is it better to cook at home than eat at restaurants? Give your
+view.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">In my opinion</span>, cooking at home is better
+than eating out. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, it’s healthier. When you
+cook, you control the <span class="vocab">ingredients</span>, the amount
+of salt, sugar, and oil, and the <span class="vocab">portion
+sizes</span>. <span class="conn">For example</span>, restaurant meals
+often contain a lot more calories than a similar dish prepared at
+home.</p>
+<p><span class="conn">Moreover</span>, it saves a lot of money. A
+home-cooked dinner for four costs much less than a restaurant bill, and
+you can use the leftovers for lunch. <span class="conn">On the other
+hand</span>, eating out is convenient and social, <span class="conn">but</span> cooking can be fun, too, and it brings the
+family together around the table.</p>
+<p><span class="conn">All in all</span>, home cooking is <span class="vocab">nutritious</span>, <span class="vocab">economical</span>,
+and rewarding. <span class="tpl">That’s why I firmly believe that</span>
+it’s the better choice for daily meals, and restaurants are best for
+special occasions.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ingredients</td>
+<td>foods used in a recipe</td>
+<td>Fresh ingredients.</td>
+</tr>
+<tr>
+<td>portion sizes</td>
+<td>the amounts of food served</td>
+<td>Smaller portion sizes.</td>
+</tr>
+<tr>
+<td>nutritious</td>
+<td>full of good nutrients</td>
+<td>A nutritious meal.</td>
+</tr>
+<tr>
+<td>economical</td>
+<td>cheap to use</td>
+<td>An economical dinner.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sugar-tax">6.4 Sugar Tax</h2>
+<p>Should the government impose a tax on sugary drinks? Explain.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">In my opinion</span>, the government should tax
+sugary drinks. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, it helps reduce consumption.
+When the price goes up, people buy less soda, and that leads to lower
+rates of obesity and tooth decay. <span class="conn">For example</span>,
+after Mexico introduced a sugar tax, sales of sugary drinks fell
+significantly.</p>
+<p><span class="conn">Moreover</span>, the money raised can be used to
+fund public health programs and school meals, which benefits <span class="vocab">society</span> as a whole. <span class="conn">On the other
+hand</span>, some people say that such taxes hurt low-income families,
+<span class="conn">but</span> the health benefits are greater for them,
+and cheaper alternatives like water are always available. Companies
+might also <span class="vocab">reformulate</span> their products.</p>
+<p><span class="conn">All in all</span>, a sugar tax is a simple,
+effective tool. <span class="tpl">That’s why I firmly believe
+that</span> it supports a <span class="vocab">healthier</span>
+nation.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>society</td>
+<td>people living together</td>
+<td>Society benefits.</td>
+</tr>
+<tr>
+<td>reformulate</td>
+<td>change the recipe of</td>
+<td>Brands reformulate drinks.</td>
+</tr>
+<tr>
+<td>healthier</td>
+<td>in better health</td>
+<td>A healthier nation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="work-life-balance">6.5 Work-Life Balance</h2>
+<p>Is work-life balance more important than career success? Give your
+opinion.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">In my opinion</span>, work-life balance is more
+important than career success. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, health and relationships are
+what really matter in the end. A high-powered career is meaningless if
+you’re <span class="vocab">exhausted</span> and have no time for your
+family. <span class="conn">For example</span>, I know a manager who
+earned a great salary but lost his health to stress.</p>
+<p><span class="conn">Moreover</span>, people who have free time to rest
+and enjoy hobbies are more creative and more productive at work, so
+balance actually supports success. <span class="conn">On the other
+hand</span>, ambition can lead to great achievements, <span class="conn">but</span> it shouldn’t come at any price, and one can
+still work hard and set clear <span class="vocab">boundaries</span>.</p>
+<p><span class="conn">All in all</span>, a <span class="vocab">fulfilling</span> life includes both. <span class="tpl">That’s why I firmly believe that</span> balance should come
+first, and success will follow in a <span class="vocab">sustainable</span> way.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exhausted</td>
+<td>extremely tired</td>
+<td>I’m exhausted.</td>
+</tr>
+<tr>
+<td>boundaries</td>
+<td>limits you set</td>
+<td>Set boundaries.</td>
+</tr>
+<tr>
+<td>fulfilling</td>
+<td>satisfying</td>
+<td>A fulfilling life.</td>
+</tr>
+<tr>
+<td>sustainable</td>
+<td>able to continue</td>
+<td>A sustainable pace.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="society-family-and-everyday-life">7 Society, Family, and
+Everyday Life</h1>
+<p>Topics: raising children, volunteering, friendship, traditions,
+cultural differences, public behaviour.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="teen-independence">7.1 Teen Independence</h2>
+<p>Should parents allow their teenagers to make their own decisions?
+Explain your opinion.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">In my opinion</span>, parents should allow
+teenagers to make many of their own decisions. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it teaches <span class="vocab">responsibility</span>. Teenagers will soon be adults, and
+they need to practise choosing, making mistakes, and facing the
+consequences. <span class="conn">For example</span>, a teen who manages
+his own allowance learns the value of money.</p>
+<p><span class="conn">Moreover</span>, trust strengthens the
+relationship between parents and children. If parents control
+everything, teens may rebel or hide the truth. <span class="conn">On the
+other hand</span>, teenagers lack experience, <span class="conn">but</span> parents can still give guidance and set limits
+on serious matters like safety, and discuss the options rather than
+command.</p>
+<p><span class="conn">All in all</span>, giving teens <span class="vocab">autonomy</span> helps them become confident and
+independent. <span class="tpl">That’s why I firmly believe that</span>
+parents should <span class="vocab">support</span>, not control.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>responsibility</td>
+<td>a duty you must handle</td>
+<td>Teach responsibility.</td>
+</tr>
+<tr>
+<td>autonomy</td>
+<td>freedom to decide</td>
+<td>Teens want autonomy.</td>
+</tr>
+<tr>
+<td>support</td>
+<td>help and encourage</td>
+<td>Support your child.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keeping-traditions">7.2 Keeping Traditions</h2>
+<p>Is it important to keep traditions alive in modern society? Why or
+why not?</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">In my opinion</span>, it’s very important to keep
+traditions alive. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, traditions connect us to our
+<span class="vocab">heritage</span> and give us a sense of identity.
+They remind us where we come from. <span class="conn">For
+example</span>, my family still celebrates the harvest festival
+together, and it makes me proud of my roots.</p>
+<p><span class="conn">Moreover</span>, traditions bring people together.
+Festivals and family rituals create <span class="vocab">bonds</span>
+between generations. <span class="conn">On the other hand</span>, some
+old customs may not suit modern life, <span class="conn">but</span> we
+can adapt them instead of abandoning them, and keep their values.</p>
+<p><span class="conn">All in all</span>, in a fast-changing, <span class="vocab">globalized</span> world, traditions give us stability and
+meaning. <span class="tpl">That’s why I firmly believe that</span> we
+should <span class="vocab">preserve</span> them for the next
+generation.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>heritage</td>
+<td>traditions passed down</td>
+<td>Cultural heritage.</td>
+</tr>
+<tr>
+<td>bonds</td>
+<td>close connections</td>
+<td>Family bonds.</td>
+</tr>
+<tr>
+<td>globalized</td>
+<td>connected worldwide</td>
+<td>A globalized world.</td>
+</tr>
+<tr>
+<td>preserve</td>
+<td>keep safe</td>
+<td>Preserve our culture.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="volunteering-monthly">7.3 Volunteering Monthly</h2>
+<p>Should everyone volunteer at least a few hours a month? Give your
+view.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">In my opinion</span>, everyone should volunteer a
+few hours a month, although it shouldn’t be forced. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it strengthens the community.
+Volunteers help <span class="vocab">vulnerable</span> people, clean
+parks, and support schools, and that makes society kinder. <span class="conn">For example</span>, my local food bank depends entirely on
+volunteers.</p>
+<p><span class="conn">Moreover</span>, volunteering benefits the
+volunteers themselves. They gain new skills, make friends, and feel a
+sense of <span class="vocab">purpose</span>. <span class="conn">On the
+other hand</span>, many people are busy with work and family, <span class="conn">but</span> even two hours a month is manageable, and there
+are flexible, online options.</p>
+<p><span class="conn">All in all</span>, giving a little time creates a
+big <span class="vocab">impact</span>. <span class="tpl">That’s why I
+firmly believe that</span> we should <span class="vocab">encourage</span> everyone to take part.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vulnerable</td>
+<td>in need of protection</td>
+<td>Help vulnerable people.</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>the reason for doing something</td>
+<td>A sense of purpose.</td>
+</tr>
+<tr>
+<td>impact</td>
+<td>a strong effect</td>
+<td>A big impact.</td>
+</tr>
+<tr>
+<td>encourage</td>
+<td>give support or hope</td>
+<td>Encourage volunteering.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="many-vs-few-friends">7.4 Many vs Few Friends</h2>
+<p>Is it better to have many friends or a few close friends?
+Explain.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">In my opinion</span>, it’s better to have a few
+close friends. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, close friends offer real
+emotional support. You can <span class="vocab">confide</span> in them
+and count on them when life gets difficult, whereas a large circle of
+<span class="vocab">acquaintances</span> is often only superficial.
+<span class="conn">For example</span>, when I lost my job, it was two
+close friends who helped me, not the hundred people on my contact
+list.</p>
+<p><span class="conn">Moreover</span>, maintaining friendships takes
+time and energy, and we have only so much to give, so it’s better to
+invest in a few <span class="vocab">meaningful</span> relationships.
+<span class="conn">On the other hand</span>, having many friends can
+offer fun and <span class="vocab">networking</span>, <span class="conn">but</span> such connections rarely give the same depth.</p>
+<p><span class="conn">All in all</span>, quality matters more than
+quantity. <span class="tpl">That’s why I firmly believe that</span> a
+small group of loyal friends is worth more.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>confide</td>
+<td>tell secrets to</td>
+<td>I confide in her.</td>
+</tr>
+<tr>
+<td>acquaintances</td>
+<td>people you know slightly</td>
+<td>Many acquaintances.</td>
+</tr>
+<tr>
+<td>meaningful</td>
+<td>important and valuable</td>
+<td>A meaningful bond.</td>
+</tr>
+<tr>
+<td>networking</td>
+<td>meeting people for opportunities</td>
+<td>Networking helps careers.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pets-in-public">7.5 Pets in Public</h2>
+<p>Should people be allowed to bring pets to public places such as
+restaurants? Give your opinion.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">In my opinion</span>, pets shouldn’t be allowed in
+most public places such as restaurants. <span class="tpl">There are two
+main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, hygiene is a concern. Animals
+can bring dirt and germs into places where food is prepared and served,
+and some customers have <span class="vocab">allergies</span>. <span class="conn">For example</span>, a friend of mine had a serious reaction
+when a dog sat next to her.</p>
+<p><span class="conn">Moreover</span>, not every pet behaves well. A
+barking dog can disturb other diners, and some people are <span class="vocab">afraid of</span> animals. <span class="conn">On the other
+hand</span>, pets are part of the family for many owners, <span class="conn">but</span> there are suitable places, like outdoor terraces
+and pet-friendly cafés, where they’re welcome. <span class="vocab">Service animals</span> are a clear exception.</p>
+<p><span class="conn">All in all</span>, we need to balance the rights
+of pet owners with the comfort of everyone. <span class="tpl">That’s why
+I firmly believe that</span> clear rules are best.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allergies</td>
+<td>bad reactions to substances</td>
+<td>I have pet allergies.</td>
+</tr>
+<tr>
+<td>afraid of</td>
+<td>scared of</td>
+<td>He’s afraid of dogs.</td>
+</tr>
+<tr>
+<td>service animals</td>
+<td>animals trained to help people with disabilities</td>
+<td>Service animals are allowed.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rent-at-home">7.6 Rent at Home</h2>
+<p>Should young adults pay rent to their parents if they still live at
+home at age 21? Explain.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">In my opinion</span>, young adults who work should
+pay some rent to their parents. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it teaches <span class="vocab">financial responsibility</span>. Paying rent helps them
+understand budgets and the real cost of living, so they’re better
+prepared when they move out. <span class="conn">For example</span>, my
+cousin pays his parents a small amount, and he’s learned to manage money
+well.</p>
+<p><span class="conn">Moreover</span>, it’s a matter of fairness,
+because parents shouldn’t carry all the household costs forever. <span class="conn">On the other hand</span>, if the young person is a
+full-time student with no income, rent isn’t reasonable, <span class="conn">but</span> they can contribute by doing chores or helping
+with the family. The parents can even save the money and give it back as
+a <span class="vocab">deposit</span> for a first apartment.</p>
+<p><span class="conn">All in all</span>, a small <span class="vocab">contribution</span> builds maturity. <span class="tpl">That’s why I firmly believe that</span> it’s a healthy
+arrangement.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>financial responsibility</td>
+<td>the ability to handle money properly</td>
+<td>Learn financial responsibility.</td>
+</tr>
+<tr>
+<td>deposit</td>
+<td>money paid in advance</td>
+<td>A deposit for the apartment.</td>
+</tr>
+<tr>
+<td>contribution</td>
+<td>something given to help</td>
+<td>A small contribution.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="entertainment-media-and-leisure">8 Entertainment, Media, and
+Leisure</h1>
+<p>Topics: video games, books and movies, news, sports, the arts,
+hobbies.</p>
+<h2 id="general-template-7">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="video-games">8.1 Video Games</h2>
+<p>Are video games harmful for young people? Explain your opinion.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">In my opinion</span>, video games are not harmful
+if played in moderation. <span class="tpl">There are two main reasons
+why I think so</span>.</p>
+<p><span class="conn">First of all</span>, many games develop useful
+skills, such as problem-solving, <span class="vocab">hand-eye
+coordination</span>, and teamwork. <span class="conn">For
+example</span>, strategy games teach players to plan ahead, and online
+games help shy teens make friends.</p>
+<p><span class="conn">Moreover</span>, games are a harmless way to relax
+and <span class="vocab">unwind</span> after school. <span class="conn">On the other hand</span>, excessive gaming can lead to
+<span class="vocab">addiction</span>, poor sleep, and lower grades,
+<span class="conn">but</span> the problem is the lack of limits, not the
+games themselves. Parents can set time limits and choose age-appropriate
+titles.</p>
+<p><span class="conn">All in all</span>, games are neither good nor bad,
+and it depends on how they’re used. <span class="tpl">That’s why I
+firmly believe that</span> <span class="vocab">moderation</span> and
+<span class="vocab">supervision</span> are the answer.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hand-eye coordination</td>
+<td>the ability to match hand movements to what you see</td>
+<td>Games improve hand-eye coordination.</td>
+</tr>
+<tr>
+<td>unwind</td>
+<td>relax</td>
+<td>I unwind with a game.</td>
+</tr>
+<tr>
+<td>addiction</td>
+<td>being unable to stop</td>
+<td>Gaming addiction.</td>
+</tr>
+<tr>
+<td>moderation</td>
+<td>not too much</td>
+<td>Everything in moderation.</td>
+</tr>
+<tr>
+<td>supervision</td>
+<td>watching over someone</td>
+<td>Children need supervision.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="books-vs-movies">8.2 Books vs Movies</h2>
+<p>Is reading a book better than watching a movie? Give your view.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">In my opinion</span>, reading a book is better than
+watching a movie. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, books stimulate the <span class="vocab">imagination</span>. When you read, you create the
+characters and the settings in your mind, whereas a movie shows
+everything to you. <span class="conn">For example</span>, I usually
+enjoy the book version of a story more, because I picture it myself.</p>
+<p><span class="conn">Moreover</span>, reading improves vocabulary,
+concentration, and writing skills, and it offers more depth than a
+two-hour film. <span class="conn">On the other hand</span>, movies are
+entertaining and quicker, <span class="conn">but</span> they can’t show
+the characters’ thoughts the way a book can, and watching is more <span class="vocab">passive</span>.</p>
+<p><span class="conn">All in all</span>, both have value, but books are
+more <span class="vocab">enriching</span>. <span class="tpl">That’s why
+I firmly believe that</span> reading is the better way to spend free
+time.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imagination</td>
+<td>the ability to form ideas</td>
+<td>Books spark imagination.</td>
+</tr>
+<tr>
+<td>passive</td>
+<td>not active</td>
+<td>Passive entertainment.</td>
+</tr>
+<tr>
+<td>enriching</td>
+<td>making life fuller</td>
+<td>An enriching hobby.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="athletes-salaries">8.3 Athletes’ Salaries</h2>
+<p>Should professional athletes earn very high salaries? Why or why
+not?</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">In my opinion</span>, professional athletes’
+salaries are too high. <span class="tpl">There are two main reasons why
+I think so</span>.</p>
+<p><span class="conn">First of all</span>, there’s a huge gap between
+what athletes earn and what people in essential jobs earn. A nurse or a
+teacher makes a <span class="vocab">vital</span> contribution to
+society, but they earn far less than a football star. <span class="conn">For example</span>, some players make millions in a single
+month.</p>
+<p><span class="conn">Moreover</span>, the high salaries make tickets
+more expensive, so ordinary fans can’t afford to attend matches. <span class="conn">On the other hand</span>, athletes have short careers and
+bring <span class="vocab">huge profits</span> to teams and sponsors,
+<span class="conn">but</span> that doesn’t justify such an enormous
+difference. A fairer system with <span class="vocab">salary caps</span>
+would help.</p>
+<p><span class="conn">All in all</span>, society should reward real
+contributions more. <span class="tpl">That’s why I firmly believe
+that</span> sports salaries need to be more reasonable.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vital</td>
+<td>extremely important</td>
+<td>A vital role.</td>
+</tr>
+<tr>
+<td>huge profits</td>
+<td>very large gains</td>
+<td>The club made huge profits.</td>
+</tr>
+<tr>
+<td>salary caps</td>
+<td>limits on pay</td>
+<td>Salary caps keep it fair.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="funding-the-arts">8.4 Funding the Arts</h2>
+<p>Should governments fund the arts, such as museums and theatres?
+Explain.</p>
+<h3 id="sample-41">Sample</h3>
+<p><span class="tpl">In my opinion</span>, governments should fund the
+arts. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, the arts enrich society and
+preserve our <span class="vocab">cultural identity</span>. Museums and
+theatres keep history alive and give everyone access to creativity.
+<span class="conn">For example</span>, free admission days allow
+low-income families to visit galleries.</p>
+<p><span class="conn">Moreover</span>, the arts create jobs and attract
+tourists, so public money often returns as economic benefit. <span class="conn">On the other hand</span>, some people argue that the money
+should go to hospitals or schools, <span class="conn">but</span> the
+budget for the arts is small compared to those, and without support,
+many cultural institutions would <span class="vocab">shut down</span>,
+since they can’t survive on ticket sales alone.</p>
+<p><span class="conn">All in all</span>, funding the arts is an <span class="vocab">investment</span> in our <span class="vocab">wellbeing</span>. <span class="tpl">That’s why I firmly
+believe that</span> it’s a worthwhile use of taxes.</p>
+<h3 id="vocabulary-41">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cultural identity</td>
+<td>the sense of belonging to a culture</td>
+<td>Art shapes cultural identity.</td>
+</tr>
+<tr>
+<td>shut down</td>
+<td>close permanently</td>
+<td>The theatre shut down.</td>
+</tr>
+<tr>
+<td>investment</td>
+<td>spending for later benefit</td>
+<td>An investment in culture.</td>
+</tr>
+<tr>
+<td>wellbeing</td>
+<td>health and happiness</td>
+<td>Art improves wellbeing.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="time-alone-vs-together">8.5 Time Alone vs Together</h2>
+<p>Is it better to spend free time alone or with other people? Give your
+opinion.</p>
+<h3 id="sample-42">Sample</h3>
+<p><span class="tpl">In my opinion</span>, it’s better to spend most of
+your free time with other people, although some time alone is also
+valuable. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, social contact is essential
+for happiness. Sharing activities with friends and family builds <span class="vocab">relationships</span> and reduces loneliness. <span class="conn">For example</span>, playing sports or cooking together
+creates memories that last.</p>
+<p><span class="conn">Moreover</span>, being with others exposes us to
+new ideas and <span class="vocab">perspectives</span>. <span class="conn">On the other hand</span>, time alone lets us relax and
+<span class="vocab">reflect</span>, <span class="conn">but</span> too
+much isolation can lead to sadness. A <span class="vocab">healthy
+mix</span> of both is ideal.</p>
+<p><span class="conn">All in all</span>, people are social by nature.
+<span class="tpl">That’s why I firmly believe that</span> we should make
+company a priority and enjoy quiet moments as a bonus.</p>
+<h3 id="vocabulary-42">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>relationships</td>
+<td>connections between people</td>
+<td>Strong relationships.</td>
+</tr>
+<tr>
+<td>perspectives</td>
+<td>ways of seeing things</td>
+<td>New perspectives.</td>
+</tr>
+<tr>
+<td>reflect</td>
+<td>think deeply</td>
+<td>Time to reflect.</td>
+</tr>
+<tr>
+<td>healthy mix</td>
+<td>a good balance</td>
+<td>A healthy mix of activities.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="money-consumers-and-law-and-safety">9 Money, Consumers, and Law
+and Safety</h1>
+<p>Topics: online shopping, cash, renting versus buying, driving rules,
+smoking, safety.</p>
+<h2 id="general-template-8">General Template</h2>
+<p><span class="tpl">In my opinion</span>, [your position]. <span class="tpl">There are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, [reason 1 with an
+explanation]. <span class="conn">For example</span>, [a short
+example].</p>
+<p><span class="conn">Moreover</span>, [reason 2]. <span class="conn">On
+the other hand</span>, [one opposing point], <span class="conn">but</span> [why it is weaker].</p>
+<p><span class="conn">All in all</span>, [restate your position]. <span class="tpl">That’s why I firmly believe that</span> [conclusion].</p>
+<h2 id="online-shopping">9.1 Online Shopping</h2>
+<p>Is shopping online better than shopping in stores? Explain your
+opinion.</p>
+<h3 id="sample-43">Sample</h3>
+<p><span class="tpl">In my opinion</span>, shopping online is better for
+most purchases. <span class="tpl">There are two main reasons why I think
+so</span>.</p>
+<p><span class="conn">First of all</span>, it’s convenient. You can shop
+at any time from your sofa, without driving, parking, or waiting in
+line, and the goods are delivered to your door. <span class="conn">For
+example</span>, I bought a washing machine online, and it arrived the
+next day.</p>
+<p><span class="conn">Moreover</span>, you can easily compare prices and
+read <span class="vocab">customer reviews</span>, which helps you find a
+better deal. <span class="conn">On the other hand</span>, you can’t
+touch or try on products, <span class="conn">but</span> most websites
+offer free returns, so the <span class="vocab">risk</span> is small.
+Some people also worry about <span class="vocab">delivery fees</span>
+and scams.</p>
+<p><span class="conn">All in all</span>, online shopping saves time and
+money. <span class="tpl">That’s why I firmly believe that</span> it’s
+the more efficient option, although stores are still useful for clothes
+and fresh food.</p>
+<h3 id="vocabulary-43">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>customer reviews</td>
+<td>opinions written by buyers</td>
+<td>Read customer reviews.</td>
+</tr>
+<tr>
+<td>risk</td>
+<td>the chance of something bad</td>
+<td>Little risk.</td>
+</tr>
+<tr>
+<td>delivery fees</td>
+<td>charges for sending goods</td>
+<td>Free delivery fees.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cashless-society">9.2 Cashless Society</h2>
+<p>Should society move to a completely cashless system? Why or why
+not?</p>
+<h3 id="sample-44">Sample</h3>
+<p><span class="tpl">In my opinion</span>, society shouldn’t become
+completely cashless. <span class="tpl">There are two main reasons why I
+think so</span>.</p>
+<p><span class="conn">First of all</span>, a cashless system excludes
+people who don’t have bank accounts or smartphones, such as the elderly
+and homeless people. <span class="conn">For example</span>, an older
+neighbour of mine doesn’t trust cards and prefers to pay in cash.</p>
+<p><span class="conn">Moreover</span>, digital systems can fail. During
+a power cut or a <span class="vocab">cyberattack</span>, nobody could
+buy anything. Cash also protects <span class="vocab">privacy</span>,
+since digital payments leave a record. <span class="conn">On the other
+hand</span>, digital payments are fast and hygienic, <span class="conn">but</span> these advantages don’t require us to abolish
+cash. Both systems can <span class="vocab">coexist</span>.</p>
+<p><span class="conn">All in all</span>, we need a backup and an <span class="vocab">inclusive</span> system. <span class="tpl">That’s why I
+firmly believe that</span> cash should remain an option.</p>
+<h3 id="vocabulary-44">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cyberattack</td>
+<td>a hostile attack on computer systems</td>
+<td>A cyberattack shut down the bank.</td>
+</tr>
+<tr>
+<td>privacy</td>
+<td>freedom from being watched</td>
+<td>Cash protects privacy.</td>
+</tr>
+<tr>
+<td>coexist</td>
+<td>exist together</td>
+<td>Both can coexist.</td>
+</tr>
+<tr>
+<td>inclusive</td>
+<td>including everyone</td>
+<td>An inclusive system.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="renting-vs-buying">9.3 Renting vs Buying</h2>
+<p>Is it better to rent a home than to buy one? Give your view.</p>
+<h3 id="sample-45">Sample</h3>
+<p><span class="tpl">In my opinion</span>, renting is better for many
+people, especially young ones. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, it offers flexibility. If you
+change jobs or want to move to another city, you can simply leave when
+your lease ends. <span class="conn">For example</span>, my friend had to
+sell her house at a loss when she relocated for work.</p>
+<p><span class="conn">Moreover</span>, buying a home involves a large
+down payment, high <span class="vocab">interest</span>, property taxes,
+and repair costs, while renters have fewer expenses and can invest their
+savings. <span class="conn">On the other hand</span>, owning a home
+builds <span class="vocab">equity</span> and stability, <span class="conn">but</span> that only pays off if you stay for many years,
+and prices can also fall.</p>
+<p><span class="conn">All in all</span>, renting is the more <span class="vocab">practical</span> choice when you value freedom. <span class="tpl">That’s why I firmly believe that</span> it suits many people
+better.</p>
+<h3 id="vocabulary-45">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>interest</td>
+<td>money paid for borrowing</td>
+<td>High interest rates.</td>
+</tr>
+<tr>
+<td>equity</td>
+<td>the value you own in a property</td>
+<td>Build equity.</td>
+</tr>
+<tr>
+<td>practical</td>
+<td>sensible</td>
+<td>A practical choice.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="older-drivers">9.4 Older Drivers</h2>
+<p>Should older drivers be required to retake driving tests?
+Explain.</p>
+<h3 id="sample-46">Sample</h3>
+<p><span class="tpl">In my opinion</span>, older drivers should be
+required to retake tests after a certain age. <span class="tpl">There
+are two main reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, vision, hearing, and <span class="vocab">reaction time</span> often decline with age, and that can
+make driving dangerous for everyone on the road. <span class="conn">For
+example</span>, statistics show that accidents increase among drivers
+over eighty.</p>
+<p><span class="conn">Moreover</span>, regular tests would also protect
+the older drivers themselves. <span class="conn">On the other
+hand</span>, many seniors drive safely and depend on their cars for
+independence, <span class="conn">but</span> a fair test would simply
+confirm their ability. The rule should be based on skills, not age
+alone, and should include <span class="vocab">medical checks</span>. For
+those who fail, <span class="vocab">alternative transport</span> should
+be provided.</p>
+<p><span class="conn">All in all</span>, <span class="vocab">road
+safety</span> is everyone’s concern. <span class="tpl">That’s why I
+firmly believe that</span> periodic tests are a fair and sensible
+measure.</p>
+<h3 id="vocabulary-46">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reaction time</td>
+<td>how quickly you respond</td>
+<td>Fast reaction time.</td>
+</tr>
+<tr>
+<td>medical checks</td>
+<td>health examinations</td>
+<td>Regular medical checks.</td>
+</tr>
+<tr>
+<td>alternative transport</td>
+<td>other ways to travel</td>
+<td>Offer alternative transport.</td>
+</tr>
+<tr>
+<td>road safety</td>
+<td>protection from traffic accidents</td>
+<td>Road safety matters.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="smoking-ban">9.5 Smoking Ban</h2>
+<p>Should smoking be banned in all public outdoor places? Give your
+opinion.</p>
+<h3 id="sample-47">Sample</h3>
+<p><span class="tpl">In my opinion</span>, smoking should be banned in
+crowded public outdoor places. <span class="tpl">There are two main
+reasons why I think so</span>.</p>
+<p><span class="conn">First of all</span>, <span class="vocab">secondhand smoke</span> harms non-smokers, especially
+children, pregnant women, and people with asthma. Even outdoors, in a
+bus stop or a playground, the smoke is hard to avoid. <span class="conn">For example</span>, I’ve often had to cover my child’s face
+near the entrance of a mall.</p>
+<p><span class="conn">Moreover</span>, cigarette butts are a major
+source of litter and can cause <span class="vocab">fires</span>. <span class="conn">On the other hand</span>, smokers have rights as well,
+<span class="conn">but</span> their freedom shouldn’t harm others, and
+they can use <span class="vocab">designated areas</span>. A ban also
+encourages smokers to quit.</p>
+<p><span class="conn">All in all</span>, cleaner air benefits the whole
+community. <span class="tpl">That’s why I firmly believe that</span> a
+ban is a <span class="vocab">reasonable</span> step toward public
+health.</p>
+<h3 id="vocabulary-47">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>secondhand smoke</td>
+<td>smoke breathed in from others’ cigarettes</td>
+<td>Secondhand smoke is harmful.</td>
+</tr>
+<tr>
+<td>fires</td>
+<td>uncontrolled burning</td>
+<td>Cigarettes cause fires.</td>
+</tr>
+<tr>
+<td>designated areas</td>
+<td>places set aside for a purpose</td>
+<td>Smoke in designated areas.</td>
+</tr>
+<tr>
+<td>reasonable</td>
+<td>fair and sensible</td>
+<td>A reasonable rule.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

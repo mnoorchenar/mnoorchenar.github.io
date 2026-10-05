@@ -1,0 +1,3456 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 3 Describing a Scene</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 3 Describing a Scene</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-3-describing-a-scene" id="toc-celpip-speaking-task-3-describing-a-scene">CELPIP Speaking Task
+3: Describing a Scene</a></li>
+<li><a href="#public-places-and-outdoor-scenes" id="toc-public-places-and-outdoor-scenes">1 Public Places and Outdoor
+Scenes</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#park-on-a-sunny-day" id="toc-park-on-a-sunny-day">1.1 Park
+on a Sunny Day</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#busy-beach" id="toc-busy-beach">1.2 Busy Beach</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#farmers-market" id="toc-farmers-market">1.3 Farmers
+Market</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#city-street-at-rush-hour" id="toc-city-street-at-rush-hour">1.4 City Street at Rush Hour</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#train-platform" id="toc-train-platform">1.5 Train
+Platform</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#indoor-public-places" id="toc-indoor-public-places">2
+Indoor Public Places</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#quiet-library" id="toc-quiet-library">2.1 Quiet
+Library</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#busy-café" id="toc-busy-café">2.2 Busy Café</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#shopping-mall" id="toc-shopping-mall">2.3 Shopping
+Mall</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#airport-terminal" id="toc-airport-terminal">2.4 Airport
+Terminal</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#busy-gym" id="toc-busy-gym">2.5 Busy Gym</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#restaurant-dining-room" id="toc-restaurant-dining-room">2.6 Restaurant Dining Room</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#hotel-lobby" id="toc-hotel-lobby">2.7 Hotel Lobby</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#work-and-school-scenes" id="toc-work-and-school-scenes">3
+Work and School Scenes</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#office-meeting" id="toc-office-meeting">3.1 Office
+Meeting</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#active-classroom" id="toc-active-classroom">3.2 Active
+Classroom</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#restaurant-kitchen" id="toc-restaurant-kitchen">3.3
+Restaurant Kitchen</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#construction-site" id="toc-construction-site">3.4
+Construction Site</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#grocery-store" id="toc-grocery-store">3.5 Grocery
+Store</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#family-social-and-celebration-scenes" id="toc-family-social-and-celebration-scenes">4 Family, Social, and
+Celebration Scenes</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#birthday-party" id="toc-birthday-party">4.1 Birthday
+Party</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#family-picnic" id="toc-family-picnic">4.2 Family
+Picnic</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#block-party" id="toc-block-party">4.3 Block Party</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+<li><a href="#family-dinner" id="toc-family-dinner">4.4 Family
+Dinner</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#wedding-reception" id="toc-wedding-reception">4.5 Wedding
+Reception</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#moving-home-and-household-scenes" id="toc-moving-home-and-household-scenes">5 Moving, Home, and Household
+Scenes</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#moving-day" id="toc-moving-day">5.1 Moving Day</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#garage-sale" id="toc-garage-sale">5.2 Garage Sale</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#painting-a-room" id="toc-painting-a-room">5.3 Painting a
+Room</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#backyard-barbecue" id="toc-backyard-barbecue">5.4 Backyard
+Barbecue</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#community-garden" id="toc-community-garden">5.5 Community
+Garden</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#seasonal-and-weather-scenes" id="toc-seasonal-and-weather-scenes">6 Seasonal and Weather Scenes</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#snowy-street" id="toc-snowy-street">6.1 Snowy Street</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#rainy-city-day" id="toc-rainy-city-day">6.2 Rainy City
+Day</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#autumn-park" id="toc-autumn-park">6.3 Autumn Park</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+<li><a href="#summer-festival" id="toc-summer-festival">6.4 Summer
+Festival</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#leisure-arts-and-entertainment" id="toc-leisure-arts-and-entertainment">7 Leisure, Arts, and
+Entertainment</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#cooking-class" id="toc-cooking-class">7.1 Cooking
+Class</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+<li><a href="#amusement-park" id="toc-amusement-park">7.2 Amusement
+Park</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#museum-gallery" id="toc-museum-gallery">7.3 Museum
+Gallery</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#evening-campsite" id="toc-evening-campsite">7.4 Evening
+Campsite</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+<li><a href="#zoo-visit" id="toc-zoo-visit">7.5 Zoo Visit</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#services-and-health-scenes" id="toc-services-and-health-scenes">8 Services and Health Scenes</a>
+<ul>
+<li><a href="#general-template-7" id="toc-general-template-7">General
+Template</a></li>
+<li><a href="#doctors-waiting-room" id="toc-doctors-waiting-room">8.1
+Doctor’s Waiting Room</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#post-office" id="toc-post-office">8.2 Post Office</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+<li><a href="#hair-salon" id="toc-hair-salon">8.3 Hair Salon</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#car-repair-shop" id="toc-car-repair-shop">8.4 Car Repair
+Shop</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+</ul></li>
+<li><a href="#veterinary-clinic" id="toc-veterinary-clinic">8.5
+Veterinary Clinic</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#activity-and-sports-scenes" id="toc-activity-and-sports-scenes">9 Activity and Sports Scenes</a>
+<ul>
+<li><a href="#general-template-8" id="toc-general-template-8">General
+Template</a></li>
+<li><a href="#community-soccer-game" id="toc-community-soccer-game">9.1
+Community Soccer Game</a>
+<ul>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+</ul></li>
+<li><a href="#mountain-hikers" id="toc-mountain-hikers">9.2 Mountain
+Hikers</a>
+<ul>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+</ul></li>
+<li><a href="#skating-rink" id="toc-skating-rink">9.3 Skating Rink</a>
+<ul>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+</ul></li>
+<li><a href="#charity-run" id="toc-charity-run">9.4 Charity Run</a>
+<ul>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-3-describing-a-scene">CELPIP Speaking Task
+3: Describing a Scene</h1>
+<h1 id="public-places-and-outdoor-scenes">1 Public Places and Outdoor
+Scenes</h1>
+<p>Topics: a park, a street, a beach, a playground, a market, a train or
+bus station.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting,
+buildings, weather].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling
+or planning]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="park-on-a-sunny-day">1.1 Park on a Sunny Day</h2>
+<p>A park on a sunny day with people walking dogs, children playing, a
+couple on a bench, and a vendor selling ice cream. Describe the scene in
+detail.</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a lively park on
+a beautiful sunny day. <span class="conn">In the foreground</span>, a
+man and a woman are walking two <span class="vocab">playful</span> dogs
+along the path, and the dogs seem very excited.</p>
+<p><span class="conn">On the left</span>, a group of children are
+running around and playing tag on the grass. <span class="conn">Meanwhile</span>, a young couple is sitting on a wooden
+bench, enjoying the weather and chatting. <span class="conn">On the
+right</span>, there’s an ice cream <span class="vocab">vendor</span>
+with a colourful cart, and a small line of people is waiting.</p>
+<p><span class="conn">In the background</span>, there are tall green
+trees that provide <span class="vocab">shade</span>.</p>
+<p><span class="tpl">It looks like</span> everyone is relaxed and happy.
+<span class="conn">Overall</span>, it’s a cheerful weekend scene.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>playful</td>
+<td>full of fun and energy</td>
+<td>The playful puppy chased a ball.</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>a person who sells things</td>
+<td>The vendor sold hot dogs.</td>
+</tr>
+<tr>
+<td>shade</td>
+<td>a cool area out of the sun</td>
+<td>We sat in the shade.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="busy-beach">1.2 Busy Beach</h2>
+<p>A busy beach with swimmers, people sunbathing, a volleyball game, and
+a lifeguard tower. Describe what you see.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a crowded beach
+on a hot summer day. <span class="conn">In the foreground</span>,
+several people are <span class="vocab">sunbathing</span> on colourful
+towels, and one woman is putting on sunscreen.</p>
+<p><span class="conn">On the left</span>, a group of teenagers are
+playing volleyball, and one boy is jumping to hit the ball. <span class="conn">Meanwhile</span>, a few swimmers are splashing in the waves
+further out. <span class="conn">On the right</span>, there’s a tall
+<span class="vocab">lifeguard tower</span>, and the lifeguard is
+watching the water carefully.</p>
+<p><span class="conn">In the background</span>, I can see a clear blue
+sky and a few sailboats on the horizon.</p>
+<p><span class="tpl">It looks like</span> everyone is having a great
+time. <span class="conn">Overall</span>, the atmosphere is relaxed and
+<span class="vocab">energetic</span>.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sunbathing</td>
+<td>lying in the sun to get a tan</td>
+<td>She was sunbathing on the sand.</td>
+</tr>
+<tr>
+<td>lifeguard tower</td>
+<td>a high seat for watching swimmers</td>
+<td>The lifeguard tower stood near the water.</td>
+</tr>
+<tr>
+<td>energetic</td>
+<td>full of energy</td>
+<td>The kids were energetic.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="farmers-market">1.3 Farmers Market</h2>
+<p>An outdoor farmers market with stalls, shoppers, fruits and
+vegetables, and musicians. Describe the scene.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">bustling</span> farmers market on a bright morning. <span class="conn">In the foreground</span>, there’s a stall with piles of
+fresh tomatoes, apples, and carrots, and a smiling seller is handing a
+bag to a customer.</p>
+<p><span class="conn">On the left</span>, a few shoppers are carrying
+<span class="vocab">reusable bags</span> and comparing the prices of
+vegetables. <span class="conn">Meanwhile</span>, on the right, two
+musicians are playing a guitar and a violin, and a small group has
+stopped to listen. <span class="conn">In the background</span>, I can
+see white tents lined up along the street.</p>
+<p><span class="tpl">It looks like</span> the shoppers are enjoying the
+<span class="vocab">fresh produce</span> and the music. <span class="conn">Overall</span>, the market has a warm, community
+feeling.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bustling</td>
+<td>full of busy activity</td>
+<td>The street was bustling with shoppers.</td>
+</tr>
+<tr>
+<td>reusable bags</td>
+<td>shopping bags that can be used many times</td>
+<td>I bring reusable bags to the store.</td>
+</tr>
+<tr>
+<td>fresh produce</td>
+<td>newly picked fruits and vegetables</td>
+<td>The fresh produce looked delicious.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="city-street-at-rush-hour">1.4 City Street at Rush Hour</h2>
+<p>A city street at rush hour with pedestrians, cars, a cyclist, and a
+coffee shop. Describe what is happening.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a busy city
+street during rush hour. <span class="conn">In the foreground</span>,
+many pedestrians are <span class="vocab">crossing the street</span>, and
+most of them are wearing business clothes and carrying bags.</p>
+<p><span class="conn">On the left</span>, a cyclist is waiting at the
+red light, wearing a helmet. <span class="conn">Meanwhile</span>, the
+road is full of cars, and the traffic seems to be moving slowly. <span class="conn">On the right</span>, there’s a small coffee shop with a
+<span class="vocab">long queue</span> of people waiting for their
+morning drinks.</p>
+<p><span class="conn">In the background</span>, tall office buildings
+line both sides of the street.</p>
+<p><span class="tpl">It looks like</span> people are hurrying to work.
+<span class="conn">Overall</span>, the scene feels <span class="vocab">hectic</span>, but it’s <span class="vocab">typical</span>
+of a big city.</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>crossing the street</td>
+<td>going from one side of the road to the other</td>
+<td>Children were crossing the street safely.</td>
+</tr>
+<tr>
+<td>long queue</td>
+<td>a long line of people waiting</td>
+<td>There was a long queue at the bank.</td>
+</tr>
+<tr>
+<td>hectic</td>
+<td>very busy and rushed</td>
+<td>My morning was hectic.</td>
+</tr>
+<tr>
+<td>typical</td>
+<td>showing the usual features</td>
+<td>It’s a typical Monday morning.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="train-platform">1.5 Train Platform</h2>
+<p>A train platform with passengers waiting, a person checking a
+schedule, and a train arriving. Describe the scene.</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">train platform</span> in the early evening. <span class="conn">In the foreground</span>, a man in a grey coat is checking
+the timetable on the wall, and he looks a little worried.</p>
+<p><span class="conn">On the left</span>, a few passengers are standing
+behind the yellow line with suitcases and backpacks. <span class="conn">Meanwhile</span>, a woman is looking at her phone, and a
+young boy is holding his mother’s hand. <span class="conn">On the
+right</span>, a train is <span class="vocab">pulling into the
+station</span>, and the doors are about to open.</p>
+<p><span class="conn">In the background</span>, there’s a large clock
+and a sign showing the platform number.</p>
+<p><span class="tpl">It looks like</span> the passengers are getting
+ready to board. <span class="conn">Overall</span>, the scene is calm but
+a bit crowded, and everyone seems <span class="vocab">eager</span> to
+get home.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pulling into the station</td>
+<td>arriving at the station</td>
+<td>The train is pulling into the station now.</td>
+</tr>
+<tr>
+<td>train platform</td>
+<td>the raised area where passengers wait for trains</td>
+<td>We waited on the train platform for ten minutes.</td>
+</tr>
+<tr>
+<td>eager</td>
+<td>very keen and excited</td>
+<td>The kids were eager to leave.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="indoor-public-places">2 Indoor Public Places</h1>
+<p>Topics: a library, a cafe, a restaurant, a shopping mall, an airport,
+a gym, a waiting room.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling
+or planning]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="quiet-library">2.1 Quiet Library</h2>
+<p>A library with students studying, a librarian helping someone, and
+shelves of books. Describe the scene.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a quiet library
+full of students. <span class="conn">In the foreground</span>, two young
+women are sitting at a wooden table, and both are reading thick
+textbooks and taking notes.</p>
+<p><span class="conn">On the left</span>, a librarian is helping a man
+find a book, and she’s pointing to a shelf. <span class="conn">Meanwhile</span>, a boy with headphones is working on a
+laptop near the window. <span class="conn">In the background</span>,
+there are tall <span class="vocab">bookshelves</span> filled with
+hundreds of books, and a sign says “Silence Please.”</p>
+<p><span class="tpl">It looks like</span> the students are preparing for
+exams. <span class="conn">Overall</span>, the atmosphere is calm and
+<span class="vocab">studious</span>, and everyone is <span class="vocab">concentrating</span>.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bookshelves</td>
+<td>shelves for holding books</td>
+<td>The bookshelves reached the ceiling.</td>
+</tr>
+<tr>
+<td>studious</td>
+<td>spending a lot of time studying</td>
+<td>She is a studious student.</td>
+</tr>
+<tr>
+<td>concentrating</td>
+<td>focusing your mind</td>
+<td>He was concentrating on his essay.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="busy-café">2.2 Busy Café</h2>
+<p>A busy cafe with customers ordering, people working on laptops, and a
+barista making drinks. Describe what you see.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a cozy café that
+is quite busy. <span class="conn">In the foreground</span>, a customer
+in a green sweater is ordering at the counter, and the <span class="vocab">barista</span> is smiling while she’s taking the
+order.</p>
+<p><span class="conn">On the left</span>, two people are sitting at a
+small table with their laptops open, and they seem to be working. <span class="conn">Meanwhile</span>, behind the counter, another barista is
+pouring milk into a cup, making a latte. <span class="conn">On the
+right</span>, a couple is chatting over coffee and a slice of cake.</p>
+<p><span class="conn">In the background</span>, there’s a chalkboard
+menu on the wall and some green plants.</p>
+<p><span class="tpl">It looks like</span> it’s a popular spot. <span class="conn">Overall</span>, the atmosphere is warm and <span class="vocab">inviting</span>, and it smells of <span class="vocab">freshly brewed</span> coffee.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>barista</td>
+<td>a person who makes coffee drinks</td>
+<td>The barista drew a heart in the foam.</td>
+</tr>
+<tr>
+<td>inviting</td>
+<td>pleasant and attractive</td>
+<td>The café had an inviting look.</td>
+</tr>
+<tr>
+<td>freshly brewed</td>
+<td>just made, for coffee or tea</td>
+<td>I love freshly brewed tea.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shopping-mall">2.3 Shopping Mall</h2>
+<p>A shopping mall with shoppers carrying bags, a family eating at the
+food court, and a store sale sign. Describe the scene.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a large shopping
+mall full of people. <span class="conn">In the foreground</span>, a few
+shoppers are walking along the corridor, and they’re carrying several
+shopping bags. One woman is smiling, as if she found a good <span class="vocab">bargain</span>.</p>
+<p><span class="conn">On the left</span>, there’s a clothing store with
+a big red sign that says “50% Off,” and a small crowd is looking at the
+window. <span class="conn">Meanwhile</span>, on the right, a family of
+four is eating at the <span class="vocab">food court</span>, and the
+kids are sharing a plate of fries. <span class="conn">In the
+background</span>, I can see an escalator and more stores on the upper
+floor.</p>
+<p><span class="tpl">It looks like</span> it’s a weekend. <span class="conn">Overall</span>, the mall is <span class="vocab">lively</span> and full of shoppers.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bargain</td>
+<td>something bought for less than its usual price</td>
+<td>The jacket was a real bargain.</td>
+</tr>
+<tr>
+<td>food court</td>
+<td>an area in a mall with many places to eat</td>
+<td>We had lunch at the food court.</td>
+</tr>
+<tr>
+<td>lively</td>
+<td>full of energy</td>
+<td>The street was lively at night.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="airport-terminal">2.4 Airport Terminal</h2>
+<p>An airport terminal with travellers with luggage, an information
+desk, and a departures board. Describe what is going on.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a big airport
+terminal with many travellers. <span class="conn">In the
+foreground</span>, a man is pulling a suitcase and looking up at the
+<span class="vocab">departures board</span>, probably checking his gate
+number.</p>
+<p><span class="conn">On the left</span>, there’s an information desk,
+and a woman in a uniform is explaining something to a family with two
+small kids. <span class="conn">Meanwhile</span>, on the right, a few
+passengers are sitting on benches near their luggage, and one of them is
+sleeping. <span class="conn">In the background</span>, I can see <span class="vocab">check-in counters</span> and long lines of people.</p>
+<p><span class="tpl">It looks like</span> the travellers are either
+waiting for flights or searching for directions. <span class="conn">Overall</span>, the scene is busy but <span class="vocab">orderly</span>.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>departures board</td>
+<td>a screen showing flight times</td>
+<td>Check the departures board for your gate.</td>
+</tr>
+<tr>
+<td>check-in counters</td>
+<td>desks where travellers register for flights and drop their bags</td>
+<td>The check-in counters open three hours before departure.</td>
+</tr>
+<tr>
+<td>orderly</td>
+<td>neat and well organized</td>
+<td>The line was orderly.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="busy-gym">2.5 Busy Gym</h2>
+<p>A gym with people lifting weights, running on treadmills, and a
+trainer helping a member. Describe the scene.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a modern gym with
+a lot of equipment. <span class="conn">In the foreground</span>, a
+muscular man is <span class="vocab">lifting weights</span> on a bench,
+and his face shows effort.</p>
+<p><span class="conn">On the left</span>, a personal trainer is helping
+a woman with her posture while she’s using a machine. <span class="conn">Meanwhile</span>, on the right, several people are running
+on <span class="vocab">treadmills</span> in a row, and some are wearing
+headphones. <span class="conn">In the background</span>, I can see
+mirrors on the walls and a water fountain.</p>
+<p><span class="tpl">It looks like</span> everyone is <span class="vocab">determined</span> to stay fit. <span class="conn">Overall</span>, the gym feels energetic and <span class="vocab">motivating</span>.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lifting weights</td>
+<td>raising heavy objects for exercise</td>
+<td>He enjoys lifting weights every morning.</td>
+</tr>
+<tr>
+<td>treadmills</td>
+<td>machines for running indoors</td>
+<td>The gym has ten treadmills.</td>
+</tr>
+<tr>
+<td>determined</td>
+<td>firmly decided to achieve something</td>
+<td>She is determined to finish.</td>
+</tr>
+<tr>
+<td>motivating</td>
+<td>giving you the desire to act</td>
+<td>The coach was motivating.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="restaurant-dining-room">2.6 Restaurant Dining Room</h2>
+<p>A restaurant dining room with diners at tables, a waiter taking an
+order, and a birthday cake arriving. Describe the scene.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> an elegant
+restaurant dining room in the evening. <span class="conn">In the
+foreground</span>, a waiter in a black vest is taking an order from a
+couple, and he’s writing on a small notepad.</p>
+<p><span class="conn">On the left</span>, a large group of friends is
+sitting around a round table, and a waitress is carrying a <span class="vocab">birthday cake</span> with candles toward them. <span class="conn">Meanwhile</span>, everyone seems ready to sing. <span class="conn">On the right</span>, a few diners are enjoying their meals,
+and the table is set with glasses and napkins.</p>
+<p><span class="conn">In the background</span>, there’s soft lighting
+and a bar with bottles on the shelves.</p>
+<p><span class="tpl">It looks like</span> a <span class="vocab">celebration</span>. <span class="conn">Overall</span>, the
+atmosphere is warm and <span class="vocab">festive</span>.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>birthday cake</td>
+<td>a cake served to celebrate a birthday</td>
+<td>They brought out a birthday cake.</td>
+</tr>
+<tr>
+<td>celebration</td>
+<td>a happy event for a special occasion</td>
+<td>It was a family celebration.</td>
+</tr>
+<tr>
+<td>festive</td>
+<td>joyful and suited to a party</td>
+<td>The festive room was full of balloons.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hotel-lobby">2.7 Hotel Lobby</h2>
+<p>A hotel lobby with guests checking in, a bellhop with luggage, and a
+family sitting on sofas. Describe what you see.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a spacious hotel
+lobby with a high ceiling. <span class="conn">In the foreground</span>,
+a couple is <span class="vocab">checking in</span> at the reception
+desk, and the receptionist is handing them a key card.</p>
+<p><span class="conn">On the left</span>, a bellhop is pushing a cart
+loaded with suitcases toward the elevator. <span class="conn">Meanwhile</span>, on the right, a family is sitting on
+comfortable sofas, and the children are looking at a map. <span class="conn">In the background</span>, there’s a large chandelier and a
+lobby bar with a few guests.</p>
+<p><span class="tpl">It looks like</span> the guests have just arrived
+and are excited about their stay. <span class="conn">Overall</span>, the
+lobby feels <span class="vocab">elegant</span> and <span class="vocab">welcoming</span>.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>checking in</td>
+<td>registering on arrival at a hotel</td>
+<td>We’re checking in at three o’clock.</td>
+</tr>
+<tr>
+<td>elegant</td>
+<td>graceful and stylish</td>
+<td>The elegant lobby had marble floors.</td>
+</tr>
+<tr>
+<td>welcoming</td>
+<td>friendly and pleasant</td>
+<td>The staff was welcoming.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="work-and-school-scenes">3 Work and School Scenes</h1>
+<p>Topics: an office, a classroom, a meeting, a construction site, a
+kitchen, a store.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are doing or
+feeling]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="office-meeting">3.1 Office Meeting</h2>
+<p>An office with colleagues in a meeting, a person presenting charts,
+and others taking notes. Describe the scene.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a modern office
+where a meeting is taking place. <span class="conn">In the
+foreground</span>, a woman in a blue blazer is standing next to a screen
+and presenting colourful <span class="vocab">charts</span>, and she’s
+pointing at a graph.</p>
+<p><span class="conn">On the left</span>, three colleagues are sitting
+at a long table, and they’re taking notes on notebooks. <span class="conn">Meanwhile</span>, on the right, a man is leaning forward
+and asking a question. <span class="conn">In the background</span>,
+there’s a big window with a view of the city, and a whiteboard covered
+in <span class="vocab">diagrams</span>.</p>
+<p><span class="tpl">It looks like</span> they’re discussing company
+results. <span class="conn">Overall</span>, the mood is <span class="vocab">professional</span> and <span class="vocab">engaged</span>.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>charts</td>
+<td>pictures that show data</td>
+<td>The charts show sales growth.</td>
+</tr>
+<tr>
+<td>diagrams</td>
+<td>simple drawings that explain ideas</td>
+<td>He drew diagrams on the board.</td>
+</tr>
+<tr>
+<td>professional</td>
+<td>serious and skilled in a work setting</td>
+<td>The meeting was very professional.</td>
+</tr>
+<tr>
+<td>engaged</td>
+<td>interested and involved</td>
+<td>The audience was engaged.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="active-classroom">3.2 Active Classroom</h2>
+<p>A classroom with a teacher at the board, students raising their
+hands, and posters on the walls. Describe what you see.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a bright
+classroom full of students. <span class="conn">In the foreground</span>,
+a teacher is standing at the whiteboard and writing a math problem, and
+she’s looking at the class with a smile.</p>
+<p><span class="conn">On the left</span>, several students are <span class="vocab">raising their hands</span>, eager to answer. <span class="conn">Meanwhile</span>, on the right, a boy is looking out the
+window, and he seems a bit <span class="vocab">distracted</span>. <span class="conn">In the background</span>, there are colourful posters on
+the walls, a globe, and a bookshelf in the corner.</p>
+<p><span class="tpl">It looks like</span> the lesson is <span class="vocab">interactive</span>. <span class="conn">Overall</span>, the
+atmosphere is positive and focused.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raising their hands</td>
+<td>lifting their hands to ask or answer</td>
+<td>The students were raising their hands.</td>
+</tr>
+<tr>
+<td>distracted</td>
+<td>not paying attention</td>
+<td>He was distracted by the noise.</td>
+</tr>
+<tr>
+<td>interactive</td>
+<td>involving two-way communication</td>
+<td>It was an interactive lesson.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="restaurant-kitchen">3.3 Restaurant Kitchen</h2>
+<p>A restaurant kitchen with chefs cooking, a waiter picking up plates,
+and steam rising. Describe the scene.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">hectic</span> restaurant kitchen during dinner service.
+<span class="conn">In the foreground</span>, a chef in a white uniform
+is stirring a pot, and steam is rising from it.</p>
+<p><span class="conn">On the left</span>, another chef is chopping
+vegetables quickly, and a third one is flipping something in a pan.
+<span class="conn">Meanwhile</span>, on the right, a waiter is picking
+up two plates from the <span class="vocab">counter</span> and heading to
+the dining room. <span class="conn">In the background</span>, I can see
+shelves with pots, pans, and <span class="vocab">stainless steel</span>
+equipment.</p>
+<p><span class="tpl">It looks like</span> everyone is working under
+pressure. <span class="conn">Overall</span>, the kitchen is noisy, hot,
+and full of <span class="vocab">teamwork</span>.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hectic</td>
+<td>very busy</td>
+<td>The lunch rush was hectic.</td>
+</tr>
+<tr>
+<td>counter</td>
+<td>a long flat surface for working or serving</td>
+<td>He placed the plates on the counter.</td>
+</tr>
+<tr>
+<td>stainless steel</td>
+<td>a shiny metal that does not rust</td>
+<td>The sinks are made of stainless steel.</td>
+</tr>
+<tr>
+<td>teamwork</td>
+<td>people working together</td>
+<td>Good teamwork keeps the kitchen running.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="construction-site">3.4 Construction Site</h2>
+<p>A construction site with workers in helmets, a crane, and a
+supervisor with plans. Describe what is happening.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a large
+construction site on a sunny day. <span class="conn">In the
+foreground</span>, two workers are wearing <span class="vocab">hard
+hats</span> and orange vests, and they’re carrying a long metal
+pipe.</p>
+<p><span class="conn">On the left</span>, a supervisor is holding a set
+of <span class="vocab">blueprints</span> and pointing at the building,
+probably giving instructions. <span class="conn">Meanwhile</span>, on
+the right, a tall crane is lifting a heavy beam into the air. <span class="conn">In the background</span>, I can see the unfinished frame of
+a building and piles of materials.</p>
+<p><span class="tpl">It looks like</span> the project is in an early
+stage. <span class="conn">Overall</span>, the site is <span class="vocab">noisy</span> and busy, and the workers appear to be <span class="vocab">following safety rules</span>.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hard hats</td>
+<td>protective helmets</td>
+<td>Everyone must wear hard hats.</td>
+</tr>
+<tr>
+<td>blueprints</td>
+<td>detailed plans for a building</td>
+<td>The architect studied the blueprints.</td>
+</tr>
+<tr>
+<td>noisy</td>
+<td>making a lot of sound</td>
+<td>The noisy machines never stopped.</td>
+</tr>
+<tr>
+<td>following safety rules</td>
+<td>obeying rules that prevent accidents</td>
+<td>Workers are following safety rules.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="grocery-store">3.5 Grocery Store</h2>
+<p>A grocery store with shoppers, a cashier, stocked shelves, and a
+child in a cart. Describe the scene.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a bright grocery
+store with many customers. <span class="conn">In the foreground</span>,
+a mother is pushing a cart, and a little boy is sitting inside and
+holding a box of cereal.</p>
+<p><span class="conn">On the left</span>, a man is choosing vegetables
+in the <span class="vocab">produce section</span>, and he’s inspecting a
+tomato. <span class="conn">Meanwhile</span>, on the right, a cashier is
+scanning items at the checkout, and a customer is packing groceries into
+a bag. <span class="conn">In the background</span>, the shelves are
+fully <span class="vocab">stocked</span> with cans, boxes, and
+bottles.</p>
+<p><span class="tpl">It looks like</span> people are doing their weekly
+shopping. <span class="conn">Overall</span>, the store is <span class="vocab">well organized</span> and pleasant.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>produce section</td>
+<td>the area for fruits and vegetables</td>
+<td>The produce section smells fresh.</td>
+</tr>
+<tr>
+<td>stocked</td>
+<td>filled with goods</td>
+<td>The shelves are fully stocked.</td>
+</tr>
+<tr>
+<td>well organized</td>
+<td>arranged neatly and clearly</td>
+<td>The shop is well organized.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="family-social-and-celebration-scenes">4 Family, Social, and
+Celebration Scenes</h1>
+<p>Topics: a birthday party, a picnic, a family dinner, a wedding, a
+holiday gathering, a neighbourhood event.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the occasion and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+decorations].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling].
+<span class="conn">Overall</span>, [the general atmosphere].</p>
+<h2 id="birthday-party">4.1 Birthday Party</h2>
+<p>A birthday party with a cake, balloons, children playing, and parents
+chatting. Describe the scene.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a cheerful
+birthday party in a living room. <span class="conn">In the
+foreground</span>, a little girl in a pink dress is about to blow out
+the candles on a big birthday cake, and the other kids are gathered
+around her.</p>
+<p><span class="conn">On the left</span>, a few children are playing
+with <span class="vocab">balloons</span> and laughing. <span class="conn">Meanwhile</span>, on the right, some parents are standing
+near the table, chatting and holding cups of juice. <span class="conn">In the background</span>, there’s a banner that says “Happy
+Birthday” and colourful <span class="vocab">streamers</span> hanging
+from the ceiling.</p>
+<p><span class="tpl">It looks like</span> everyone is having a wonderful
+time. <span class="conn">Overall</span>, the atmosphere is <span class="vocab">joyful</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>balloons</td>
+<td>colourful rubber bags filled with air</td>
+<td>The kids loved the balloons.</td>
+</tr>
+<tr>
+<td>streamers</td>
+<td>long paper decorations</td>
+<td>Red streamers hung over the door.</td>
+</tr>
+<tr>
+<td>joyful</td>
+<td>full of happiness</td>
+<td>It was a joyful gathering.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="family-picnic">4.2 Family Picnic</h2>
+<p>A family picnic with a blanket, food, a kite, and relatives of
+different ages. Describe what you see.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a family enjoying
+a picnic in a green field. <span class="conn">In the foreground</span>,
+a large <span class="vocab">blanket</span> is spread on the grass, and
+it’s covered with sandwiches, fruit, and drinks in a wicker basket.</p>
+<p><span class="conn">On the left</span>, a grandfather and a
+grandmother are sitting in folding chairs and smiling. <span class="conn">Meanwhile</span>, on the right, two children are flying a
+red kite, and a father is helping them hold the string. <span class="conn">In the background</span>, there are tall trees and a clear
+blue sky with some white clouds.</p>
+<p><span class="tpl">It looks like</span> the family is spending a <span class="vocab">relaxing</span> weekend together. <span class="conn">Overall</span>, the scene is peaceful and shows strong
+<span class="vocab">family bonds</span>.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>blanket</td>
+<td>a soft cover</td>
+<td>We sat on a blanket.</td>
+</tr>
+<tr>
+<td>relaxing</td>
+<td>helping you feel calm</td>
+<td>It was a relaxing afternoon.</td>
+</tr>
+<tr>
+<td>family bonds</td>
+<td>close ties between relatives</td>
+<td>Picnics strengthen family bonds.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="block-party">4.3 Block Party</h2>
+<p>A neighbourhood block party with a barbecue, music, and neighbours
+talking. Describe the scene.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a lively block
+party on a residential street. <span class="conn">In the
+foreground</span>, a man in an apron is grilling burgers on a <span class="vocab">barbecue</span>, and smoke is rising from it.</p>
+<p><span class="conn">On the left</span>, several neighbours are
+standing in a circle, chatting and laughing with drinks in their hands.
+<span class="conn">Meanwhile</span>, on the right, a few kids are
+dancing to music from a small speaker, and a boy is playing the guitar.
+<span class="conn">In the background</span>, there are houses decorated
+with flags, and long tables with plates of food.</p>
+<p><span class="tpl">It looks like</span> the neighbours are enjoying
+getting to know each other. <span class="conn">Overall</span>, the mood
+is friendly, and it’s a great way to <span class="vocab">build
+community</span> and <span class="vocab">socialize</span>.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>barbecue</td>
+<td>a grill for cooking outdoors</td>
+<td>We bought a new barbecue.</td>
+</tr>
+<tr>
+<td>build community</td>
+<td>create closer bonds between people</td>
+<td>Events build community.</td>
+</tr>
+<tr>
+<td>socialize</td>
+<td>spend time with others</td>
+<td>We socialize with neighbours on weekends.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="family-dinner">4.4 Family Dinner</h2>
+<p>A family dinner with several generations around a table sharing food.
+Describe what is happening.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a large family
+gathered around a dining table for dinner. <span class="conn">In the
+foreground</span>, a grandmother is serving soup from a big pot, and a
+little girl is holding out her bowl.</p>
+<p><span class="conn">On the left</span>, a father is cutting a roast
+chicken, and a teenage boy is passing a plate of bread. <span class="conn">Meanwhile</span>, on the right, an elderly man and a young
+woman are talking and smiling, probably sharing a story. <span class="conn">In the background</span>, there’s a cozy living room with
+family photos on the wall and a warm lamp.</p>
+<p><span class="tpl">It looks like</span> it’s a special occasion, maybe
+a holiday. <span class="conn">Overall</span>, the scene shows <span class="vocab">three generations</span> enjoying a <span class="vocab">home-cooked</span> meal and strong <span class="vocab">togetherness</span>.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>three generations</td>
+<td>grandparents, parents and children</td>
+<td>Three generations live in the house.</td>
+</tr>
+<tr>
+<td>home-cooked</td>
+<td>made at home</td>
+<td>I miss home-cooked meals.</td>
+</tr>
+<tr>
+<td>togetherness</td>
+<td>the feeling of being close</td>
+<td>The dinner was full of togetherness.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="wedding-reception">4.5 Wedding Reception</h2>
+<p>A wedding reception with dancing, guests at tables, and a couple
+cutting a cake. Describe the scene.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a joyful wedding
+reception in a decorated hall. <span class="conn">In the
+foreground</span>, a bride in a white dress and a groom in a black suit
+are <span class="vocab">cutting the cake</span> together, and everyone
+is looking at them with big smiles.</p>
+<p><span class="conn">On the left</span>, several guests are dancing in
+the middle of the floor, and a little girl in a pretty dress is
+spinning. <span class="conn">Meanwhile</span>, on the right, other
+guests are sitting at round tables, clapping and taking photos with
+their phones. <span class="conn">In the background</span>, there are
+flowers on the tables, string lights, and a <span class="vocab">DJ</span> at his equipment.</p>
+<p><span class="tpl">It looks like</span> the couple is very happy.
+<span class="conn">Overall</span>, the atmosphere is <span class="vocab">festive</span> and full of love.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cutting the cake</td>
+<td>slicing the wedding cake together</td>
+<td>The couple is cutting the cake.</td>
+</tr>
+<tr>
+<td>DJ</td>
+<td>a person who plays recorded music at an event</td>
+<td>The DJ played our favourite songs.</td>
+</tr>
+<tr>
+<td>festive</td>
+<td>joyful and suited to a celebration</td>
+<td>The hall looked festive.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="moving-home-and-household-scenes">5 Moving, Home, and Household
+Scenes</h1>
+<p>Topics: moving day, a garage sale, painting a room, a backyard
+barbecue, gardening, cleaning.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the activity]. <span class="conn">In the foreground</span>, [main people
+and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are doing or
+feeling]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="moving-day">5.1 Moving Day</h2>
+<p>A moving day with a truck, people carrying boxes and furniture, and a
+dog watching from the lawn. Describe the scene.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a family on
+moving day in front of a house. <span class="conn">In the
+foreground</span>, two men are carrying a heavy brown sofa toward a
+<span class="vocab">moving truck</span>, and one of them looks like he’s
+struggling.</p>
+<p><span class="conn">On the left</span>, a woman is holding a cardboard
+box labelled “Kitchen,” and she’s checking a list. <span class="conn">Meanwhile</span>, on the right, a dog is lying on the lawn
+and watching everything with curious eyes. <span class="conn">In the
+background</span>, I can see the open back of the truck, which is half
+full of furniture and boxes.</p>
+<p><span class="tpl">It looks like</span> they’re moving to a new home.
+<span class="conn">Overall</span>, the scene is <span class="vocab">chaotic</span> but well organized, and everyone is <span class="vocab">working together</span>.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>moving truck</td>
+<td>a large vehicle used to carry belongings</td>
+<td>The moving truck arrived at eight.</td>
+</tr>
+<tr>
+<td>chaotic</td>
+<td>very messy and disorganized</td>
+<td>The first day was chaotic.</td>
+</tr>
+<tr>
+<td>working together</td>
+<td>cooperating</td>
+<td>They were working together to lift it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="garage-sale">5.2 Garage Sale</h2>
+<p>A garage sale with tables of items, shoppers browsing, and a
+handwritten price sign. Describe what you see.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">garage sale</span> on a sunny weekend morning. <span class="conn">In the foreground</span>, there are long tables covered
+with old toys, books, and kitchen items, and each one has a small price
+sticker.</p>
+<p><span class="conn">On the left</span>, an older woman is looking
+through a box of records, and she seems very interested. <span class="conn">Meanwhile</span>, on the right, a man is <span class="vocab">bargaining</span> with the seller over a lamp. <span class="conn">In the background</span>, there’s a handwritten sign that
+says “Everything Must Go,” and a few chairs and a bicycle are standing
+near the driveway.</p>
+<p><span class="tpl">It looks like</span> the owners are cleaning out
+their house. <span class="conn">Overall</span>, the atmosphere is
+relaxed, and shoppers are hunting for <span class="vocab">secondhand</span> treasures at <span class="vocab">low
+prices</span>.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>garage sale</td>
+<td>a sale of used household items at a home</td>
+<td>We found a lamp at a garage sale.</td>
+</tr>
+<tr>
+<td>bargaining</td>
+<td>discussing a price to get a lower one</td>
+<td>He was bargaining for a better price.</td>
+</tr>
+<tr>
+<td>secondhand</td>
+<td>previously owned by someone else</td>
+<td>I bought secondhand furniture.</td>
+</tr>
+<tr>
+<td>low prices</td>
+<td>small amounts of money charged</td>
+<td>The shop is known for low prices.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="painting-a-room">5.3 Painting a Room</h2>
+<p>A family painting a living room with ladders, paint cans, and covered
+furniture. Describe the scene.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a family painting
+their living room together. <span class="conn">In the foreground</span>,
+a father is standing on a <span class="vocab">ladder</span> and painting
+the top of the wall with a roller, and paint is dripping a little.</p>
+<p><span class="conn">On the left</span>, a mother is using a small
+brush to paint around the window frame, and she’s wearing an old
+T-shirt. <span class="conn">Meanwhile</span>, on the right, a teenage
+girl is stirring a can of light-blue paint. <span class="conn">In the
+background</span>, the furniture is covered with plastic sheets, and
+there are rolled-up carpets near the wall.</p>
+<p><span class="tpl">It looks like</span> they’re giving the room a
+fresh look. <span class="conn">Overall</span>, it’s a <span class="vocab">DIY</span> project, and the whole family seems cheerful
+and <span class="vocab">cooperative</span>.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ladder</td>
+<td>steps used for reaching high places</td>
+<td>He climbed the ladder to paint.</td>
+</tr>
+<tr>
+<td>DIY</td>
+<td>do-it-yourself, done without professionals</td>
+<td>They love DIY projects.</td>
+</tr>
+<tr>
+<td>cooperative</td>
+<td>willing to work with others</td>
+<td>A cooperative family finishes faster.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="backyard-barbecue">5.4 Backyard Barbecue</h2>
+<p>A backyard barbecue with a grill, guests chatting, and children
+running through a sprinkler. Describe what is happening.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a summer barbecue
+in a backyard. <span class="conn">In the foreground</span>, a man is
+standing by a grill with a spatula, and he’s turning burgers and
+sausages while smoke is rising.</p>
+<p><span class="conn">On the left</span>, a group of adults are sitting
+in garden chairs, chatting and holding cold drinks. <span class="conn">Meanwhile</span>, on the right, several children are
+running through a <span class="vocab">sprinkler</span> and screaming
+with laughter. <span class="conn">In the background</span>, I can see a
+wooden fence, green trees, and a table with salads and a pitcher of
+lemonade.</p>
+<p><span class="tpl">It looks like</span> it’s a hot day, and everyone
+is trying to cool off. <span class="conn">Overall</span>, the mood is
+<span class="vocab">carefree</span> and <span class="vocab">sociable</span>.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sprinkler</td>
+<td>a device that sprays water</td>
+<td>The kids ran through the sprinkler.</td>
+</tr>
+<tr>
+<td>carefree</td>
+<td>without worries</td>
+<td>It was a carefree afternoon.</td>
+</tr>
+<tr>
+<td>sociable</td>
+<td>friendly and enjoying company</td>
+<td>She’s a sociable neighbour.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="community-garden">5.5 Community Garden</h2>
+<p>A community garden with people planting, watering, and carrying
+baskets of vegetables. Describe the scene.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">community garden</span> on a sunny day. <span class="conn">In the foreground</span>, a woman in a straw hat is
+kneeling and planting small seedlings in a raised bed, and she’s using a
+little shovel.</p>
+<p><span class="conn">On the left</span>, an older man is watering rows
+of tomatoes with a green hose. <span class="conn">Meanwhile</span>, on
+the right, two young volunteers are carrying baskets full of fresh
+carrots and lettuce. <span class="conn">In the background</span>, there
+are wooden sheds, a compost bin, and a small sign with the garden’s
+name.</p>
+<p><span class="tpl">It looks like</span> the gardeners are preparing
+for the harvest. <span class="conn">Overall</span>, the scene is calm
+and <span class="vocab">productive</span>, and it shows how people can
+<span class="vocab">grow their own food</span> together.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>community garden</td>
+<td>a shared garden run by local people</td>
+<td>Our community garden has forty plots.</td>
+</tr>
+<tr>
+<td>productive</td>
+<td>achieving a lot</td>
+<td>We had a productive morning.</td>
+</tr>
+<tr>
+<td>grow their own food</td>
+<td>raise vegetables or fruit at home</td>
+<td>Many families grow their own food.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="seasonal-and-weather-scenes">6 Seasonal and Weather Scenes</h1>
+<p>Topics: a winter scene, snow, rain, autumn, a summer festival, a
+storm.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the season or
+weather and the general mood]. <span class="conn">In the
+foreground</span>, [main people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+weather details].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling
+or planning]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="snowy-street">6.1 Snowy Street</h2>
+<p>A snowy street with people shovelling, children building a snowman,
+and cars covered in snow. Describe the scene.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a quiet <span class="vocab">residential street</span> after a heavy snowfall. <span class="conn">In the foreground</span>, a man in a thick coat is <span class="vocab">shovelling snow</span> from his driveway, and his breath
+is visible in the cold air.</p>
+<p><span class="conn">On the left</span>, two children in colourful hats
+and scarves are building a snowman and putting a carrot on its face.
+<span class="conn">Meanwhile</span>, on the right, a woman is brushing
+snow off her car, which is almost buried. <span class="conn">In the
+background</span>, I can see houses with white roofs and bare trees
+covered in frost.</p>
+<p><span class="tpl">It looks like</span> it’s freezing, but the kids
+are having fun. <span class="conn">Overall</span>, the scene is peaceful
+and <span class="vocab">picturesque</span>.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shovelling snow</td>
+<td>clearing snow with a shovel</td>
+<td>I was shovelling snow all morning.</td>
+</tr>
+<tr>
+<td>residential street</td>
+<td>a street with mostly homes</td>
+<td>We live on a quiet residential street.</td>
+</tr>
+<tr>
+<td>picturesque</td>
+<td>pretty like a picture</td>
+<td>It was a picturesque village.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rainy-city-day">6.2 Rainy City Day</h2>
+<p>A rainy day in the city with people holding umbrellas, puddles, and a
+bus stop. Describe what you see.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a gloomy, rainy
+day in the city. <span class="conn">In the foreground</span>, a woman in
+a yellow raincoat is walking carefully around a big <span class="vocab">puddle</span>, and she’s holding a red umbrella.</p>
+<p><span class="conn">On the left</span>, a few people are standing
+under the bus shelter, and they’re checking their watches while waiting
+for the bus. <span class="conn">Meanwhile</span>, on the right, a man is
+<span class="vocab">jumping over</span> a puddle, and his shoes are
+getting wet. <span class="conn">In the background</span>, cars are
+driving slowly with their headlights on, and the buildings look
+grey.</p>
+<p><span class="tpl">It looks like</span> everyone wants to get out of
+the rain. <span class="conn">Overall</span>, the mood is <span class="vocab">dull</span>, but people look <span class="vocab">prepared</span>.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>puddle</td>
+<td>a small pool of water on the ground</td>
+<td>Don’t step in the puddle.</td>
+</tr>
+<tr>
+<td>jumping over</td>
+<td>going over something in the air</td>
+<td>He was jumping over the puddles.</td>
+</tr>
+<tr>
+<td>dull</td>
+<td>not bright or exciting</td>
+<td>The sky was dull and grey.</td>
+</tr>
+<tr>
+<td>prepared</td>
+<td>ready</td>
+<td>She was prepared with a raincoat.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="autumn-park">6.3 Autumn Park</h2>
+<p>An autumn park with falling leaves, joggers, and a family taking
+photos. Describe the scene.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a beautiful park
+in the middle of autumn. <span class="conn">In the foreground</span>,
+the ground is covered with <span class="vocab">fallen leaves</span> in
+red, orange, and yellow, and a young girl is picking one up.</p>
+<p><span class="conn">On the left</span>, a family is posing for a photo
+in front of a large maple tree, and the father is holding a camera.
+<span class="conn">Meanwhile</span>, on the right, two joggers are
+running along the path, wearing light jackets. <span class="conn">In the
+background</span>, I can see a pond reflecting the colourful trees.</p>
+<p><span class="tpl">It looks like</span> it’s a cool, crisp day. <span class="conn">Overall</span>, the scene is <span class="vocab">vibrant</span> and <span class="vocab">cozy</span>, and
+everyone is enjoying the <span class="vocab">seasonal</span> beauty.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fallen leaves</td>
+<td>leaves that have dropped from trees</td>
+<td>The path was covered with fallen leaves.</td>
+</tr>
+<tr>
+<td>vibrant</td>
+<td>bright and full of life</td>
+<td>The vibrant colours were stunning.</td>
+</tr>
+<tr>
+<td>cozy</td>
+<td>warm and comfortable</td>
+<td>It was a cozy afternoon.</td>
+</tr>
+<tr>
+<td>seasonal</td>
+<td>connected with a time of year</td>
+<td>We enjoy seasonal activities.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summer-festival">6.4 Summer Festival</h2>
+<p>A summer outdoor festival with food trucks, a stage, and a crowd.
+Describe what is going on.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a summer festival
+in a large open space. <span class="conn">In the foreground</span>,
+there are several <span class="vocab">food trucks</span> with long
+lines, and people are holding paper plates with tacos and burgers.</p>
+<p><span class="conn">On the left</span>, a big crowd is gathered in
+front of a stage, where a band is playing, and some people are dancing
+with their hands in the air. <span class="conn">Meanwhile</span>, on the
+right, a few families are sitting on the grass, and the children are
+eating ice cream. <span class="conn">In the background</span>, there are
+colourful flags, tents, and a <span class="vocab">Ferris
+wheel</span>.</p>
+<p><span class="tpl">It looks like</span> everyone is having a fantastic
+time. <span class="conn">Overall</span>, the atmosphere is <span class="vocab">lively</span> and <span class="vocab">upbeat</span>.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>food trucks</td>
+<td>vehicles that sell cooked food</td>
+<td>Food trucks line the street.</td>
+</tr>
+<tr>
+<td>Ferris wheel</td>
+<td>a large rotating wheel ride</td>
+<td>We rode the Ferris wheel.</td>
+</tr>
+<tr>
+<td>lively</td>
+<td>full of energy</td>
+<td>The lively music filled the park.</td>
+</tr>
+<tr>
+<td>upbeat</td>
+<td>positive and cheerful</td>
+<td>The crowd was upbeat.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="leisure-arts-and-entertainment">7 Leisure, Arts, and
+Entertainment</h1>
+<p>Topics: a concert, an art or cooking class, an amusement park, a
+museum, a zoo, a campsite.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling].
+<span class="conn">Overall</span>, [the general atmosphere].</p>
+<h2 id="cooking-class">7.1 Cooking Class</h2>
+<p>A cooking class with students at counters, an instructor
+demonstrating, and ingredients on the tables. Describe the scene.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a cooking class
+in a bright kitchen. <span class="conn">In the foreground</span>, an
+instructor in a white apron is <span class="vocab">demonstrating</span>
+how to cut an onion, and the students are watching closely.</p>
+<p><span class="conn">On the left</span>, a man is chopping tomatoes at
+his own counter, and he looks a bit nervous. <span class="conn">Meanwhile</span>, on the right, two women are measuring
+flour and laughing. <span class="conn">In the background</span>, there
+are shelves with pots and pans, and the tables are covered with fresh
+<span class="vocab">ingredients</span> like herbs, eggs, and
+vegetables.</p>
+<p><span class="tpl">It looks like</span> they’re learning to make a new
+dish. <span class="conn">Overall</span>, the atmosphere is friendly and
+<span class="vocab">hands-on</span>, and everyone seems <span class="vocab">eager to learn</span>.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>demonstrating</td>
+<td>showing how to do something</td>
+<td>The chef is demonstrating a recipe.</td>
+</tr>
+<tr>
+<td>ingredients</td>
+<td>foods used to make a dish</td>
+<td>Fresh ingredients matter.</td>
+</tr>
+<tr>
+<td>hands-on</td>
+<td>involving practical activity</td>
+<td>It was a hands-on class.</td>
+</tr>
+<tr>
+<td>eager to learn</td>
+<td>keen to gain new knowledge</td>
+<td>The students were eager to learn.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="amusement-park">7.2 Amusement Park</h2>
+<p>An amusement park with a Ferris wheel, long lines, and families
+holding balloons. Describe what you see.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> an <span class="vocab">amusement park</span> on a sunny afternoon. <span class="conn">In the foreground</span>, a long line of people is waiting
+for a roller coaster, and some of them look impatient.</p>
+<p><span class="conn">On the left</span>, a family is holding colourful
+balloons, and a little boy is eating cotton candy. <span class="conn">Meanwhile</span>, on the right, a <span class="vocab">Ferris wheel</span> is slowly turning, and people in the
+cabins are enjoying the view. <span class="conn">In the
+background</span>, I can see tall rides, bright flags, and a clear blue
+sky.</p>
+<p><span class="tpl">It looks like</span> it’s a busy weekend. <span class="conn">Overall</span>, the atmosphere is <span class="vocab">thrilling</span> and <span class="vocab">full of
+excitement</span>, and the visitors look happy.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>amusement park</td>
+<td>a place with rides and games</td>
+<td>We spent the day at an amusement park.</td>
+</tr>
+<tr>
+<td>Ferris wheel</td>
+<td>a big wheel ride with cabins</td>
+<td>The Ferris wheel offers great views.</td>
+</tr>
+<tr>
+<td>thrilling</td>
+<td>very exciting</td>
+<td>The roller coaster was thrilling.</td>
+</tr>
+<tr>
+<td>full of excitement</td>
+<td>very exciting</td>
+<td>The day was full of excitement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="museum-gallery">7.3 Museum Gallery</h2>
+<p>A museum gallery with visitors looking at paintings, a guide speaking
+to a group, and a child pointing at a sculpture. Describe the scene.</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a spacious museum
+gallery with high ceilings. <span class="conn">In the foreground</span>,
+a <span class="vocab">tour guide</span> is speaking to a group of
+visitors and gesturing toward a large painting.</p>
+<p><span class="conn">On the left</span>, a few people are standing in
+front of a landscape and quietly looking at it. <span class="conn">Meanwhile</span>, on the right, a small child is pointing
+at a marble <span class="vocab">sculpture</span>, and her father is
+bending down to explain it. <span class="conn">In the background</span>,
+there are more paintings on the walls and a security guard standing near
+the door.</p>
+<p><span class="tpl">It looks like</span> the visitors are interested
+and curious. <span class="conn">Overall</span>, the atmosphere is calm
+and <span class="vocab">cultural</span>.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tour guide</td>
+<td>a person who shows visitors around</td>
+<td>The tour guide explained the history.</td>
+</tr>
+<tr>
+<td>sculpture</td>
+<td>a three-dimensional work of art</td>
+<td>The sculpture stood in the hall.</td>
+</tr>
+<tr>
+<td>cultural</td>
+<td>related to arts and traditions</td>
+<td>It’s a cultural event.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evening-campsite">7.4 Evening Campsite</h2>
+<p>A campsite with tents, a campfire, people roasting marshmallows, and
+a canoe by the lake. Describe what is going on.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">campsite</span> beside a lake in the evening. <span class="conn">In the foreground</span>, a group of friends are sitting
+around a <span class="vocab">campfire</span>, and they’re roasting
+marshmallows on sticks.</p>
+<p><span class="conn">On the left</span>, two green tents are set up
+between the trees, and a lantern is hanging from a branch. <span class="conn">Meanwhile</span>, on the right, a canoe is resting on the
+shore next to a pair of paddles. <span class="conn">In the
+background</span>, the sun is setting over the lake, and the sky is
+orange and pink.</p>
+<p><span class="tpl">It looks like</span> they’ve had a long day of
+outdoor activities. <span class="conn">Overall</span>, the scene is
+<span class="vocab">tranquil</span> and gives a feeling of <span class="vocab">adventure</span>.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>campsite</td>
+<td>a place to set up tents</td>
+<td>We found a quiet campsite.</td>
+</tr>
+<tr>
+<td>campfire</td>
+<td>an outdoor fire for warmth and cooking</td>
+<td>We told stories by the campfire.</td>
+</tr>
+<tr>
+<td>tranquil</td>
+<td>calm and peaceful</td>
+<td>The lake was tranquil.</td>
+</tr>
+<tr>
+<td>adventure</td>
+<td>an exciting experience</td>
+<td>The trip was a real adventure.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zoo-visit">7.5 Zoo Visit</h2>
+<p>A zoo with families watching animals, a keeper feeding them, and
+children taking photos. Describe the scene.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a busy zoo on a
+sunny day. <span class="conn">In the foreground</span>, a zookeeper in a
+green uniform is throwing fish to a group of <span class="vocab">sea
+lions</span>, and the animals are jumping out of the water.</p>
+<p><span class="conn">On the left</span>, a family is standing behind a
+railing and watching with amazed faces. <span class="conn">Meanwhile</span>, on the right, two children are taking
+photos with their phones, and one of them is pointing at the animals.
+<span class="conn">In the background</span>, I can see a large pool,
+some rocks, and a sign with information about the animals.</p>
+<p><span class="tpl">It looks like</span> the kids are learning about
+wildlife. <span class="conn">Overall</span>, the scene is <span class="vocab">educational</span> and <span class="vocab">entertaining</span>.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sea lions</td>
+<td>large marine animals with flippers</td>
+<td>The sea lions clapped their flippers.</td>
+</tr>
+<tr>
+<td>educational</td>
+<td>teaching something useful</td>
+<td>The visit was educational.</td>
+</tr>
+<tr>
+<td>entertaining</td>
+<td>enjoyable and amusing</td>
+<td>The show was entertaining.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="services-and-health-scenes">8 Services and Health Scenes</h1>
+<p>Topics: a doctor’s waiting room, a bank, a post office, a vet, a hair
+salon, a car repair shop.</p>
+<h2 id="general-template-7">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the place and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are doing or
+feeling]. <span class="conn">Overall</span>, [the general
+atmosphere].</p>
+<h2 id="doctors-waiting-room">8.1 Doctor’s Waiting Room</h2>
+<p>A doctor’s waiting room with patients reading magazines, a
+receptionist at the desk, and a child with a parent. Describe the
+scene.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a quiet doctor’s
+<span class="vocab">waiting room</span>. <span class="conn">In the
+foreground</span>, an older man is reading a magazine in a comfortable
+chair, and he’s wearing glasses.</p>
+<p><span class="conn">On the left</span>, a mother is sitting with her
+young son, and she’s gently holding his hand because he looks nervous.
+<span class="conn">Meanwhile</span>, on the right, a <span class="vocab">receptionist</span> is typing on a computer and answering
+the phone. <span class="conn">In the background</span>, there’s a poster
+about healthy eating, a small table with brochures, and a closed door to
+the examination room.</p>
+<p><span class="tpl">It looks like</span> the patients are waiting for
+their appointments. <span class="conn">Overall</span>, the atmosphere is
+<span class="vocab">subdued</span>, and everyone is quietly <span class="vocab">patient</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>waiting room</td>
+<td>a room where people wait to be seen</td>
+<td>The waiting room was full.</td>
+</tr>
+<tr>
+<td>receptionist</td>
+<td>a person who greets visitors and handles calls</td>
+<td>The receptionist booked my appointment.</td>
+</tr>
+<tr>
+<td>subdued</td>
+<td>quiet and not lively</td>
+<td>The mood was subdued.</td>
+</tr>
+<tr>
+<td>patient</td>
+<td>able to wait calmly</td>
+<td>She stayed patient in line.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="post-office">8.2 Post Office</h2>
+<p>A post office with customers in line, a clerk weighing a parcel, and
+boxes stacked behind the counter. Describe what you see.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a busy post
+office with a long line. <span class="conn">In the foreground</span>, a
+woman is standing at the counter, and a clerk is <span class="vocab">weighing</span> a <span class="vocab">parcel</span> on a
+scale.</p>
+<p><span class="conn">On the left</span>, several customers are waiting
+in line, and one man is checking his watch. <span class="conn">Meanwhile</span>, on the right, a young man is <span class="vocab">filling out a form</span> on a small desk. <span class="conn">In the background</span>, I can see boxes stacked behind
+the counter and shelves with envelopes and packing tape.</p>
+<p><span class="tpl">It looks like</span> people are sending packages.
+<span class="conn">Overall</span>, the scene is routine, though a little
+crowded.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>weighing</td>
+<td>measuring how heavy something is</td>
+<td>He’s weighing the package.</td>
+</tr>
+<tr>
+<td>parcel</td>
+<td>a wrapped package for mailing</td>
+<td>I sent a parcel to my aunt.</td>
+</tr>
+<tr>
+<td>filling out a form</td>
+<td>writing information on a document</td>
+<td>She is filling out a form at the desk.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hair-salon">8.3 Hair Salon</h2>
+<p>A hair salon with stylists working, customers under dryers, and a
+person paying at the front. Describe the scene.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a stylish hair
+salon with several customers. <span class="conn">In the
+foreground</span>, a <span class="vocab">stylist</span> is cutting a
+woman’s hair, and the woman is looking at herself in the mirror.</p>
+<p><span class="conn">On the left</span>, two customers are sitting
+under hair dryers and reading magazines. <span class="conn">Meanwhile</span>, on the right, another stylist is <span class="vocab">blow-drying</span> a girl’s long hair. <span class="conn">In the background</span>, a man is paying at the front
+desk, and there are shelves with shampoos and hair products behind
+him.</p>
+<p><span class="tpl">It looks like</span> it’s a popular place. <span class="conn">Overall</span>, the atmosphere is relaxing and <span class="vocab">professional</span>.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stylist</td>
+<td>a person who cuts and styles hair</td>
+<td>The stylist trimmed my fringe.</td>
+</tr>
+<tr>
+<td>blow-drying</td>
+<td>drying hair with a hot-air machine</td>
+<td>She’s blow-drying her hair.</td>
+</tr>
+<tr>
+<td>professional</td>
+<td>skilled and serious about work</td>
+<td>The staff were professional.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="car-repair-shop">8.4 Car Repair Shop</h2>
+<p>A car repair shop with a mechanic under a lifted car, a customer
+talking to a manager, and tools on the wall. Describe what is
+happening.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a busy car repair
+shop. <span class="conn">In the foreground</span>, a <span class="vocab">mechanic</span> in blue overalls is standing under a car
+on a lift, and he’s checking the engine with a flashlight.</p>
+<p><span class="conn">On the left</span>, a customer is talking to the
+manager, who is holding a clipboard and explaining something about the
+repair costs. <span class="conn">Meanwhile</span>, on the right, another
+car is waiting with its hood open. <span class="conn">In the
+background</span>, there’s a wall covered with tools like wrenches and
+hammers, and a stack of tires.</p>
+<p><span class="tpl">It looks like</span> the customer is worried about
+the price. <span class="conn">Overall</span>, the shop looks <span class="vocab">well equipped</span> and <span class="vocab">efficient</span>.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mechanic</td>
+<td>a person who repairs vehicles</td>
+<td>The mechanic fixed my brakes.</td>
+</tr>
+<tr>
+<td>well equipped</td>
+<td>having all the needed equipment</td>
+<td>The garage is well equipped.</td>
+</tr>
+<tr>
+<td>efficient</td>
+<td>working quickly and well</td>
+<td>The staff was efficient.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="veterinary-clinic">8.5 Veterinary Clinic</h2>
+<p>A veterinary clinic with owners holding pets, a vet examining a dog,
+and a cat in a carrier. Describe the scene.</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a clean <span class="vocab">veterinary clinic</span> with several pet owners. <span class="conn">In the foreground</span>, a vet in a white coat is
+examining a golden retriever on a table, and she’s listening to its
+heart with a stethoscope.</p>
+<p><span class="conn">On the left</span>, a woman is holding a small dog
+on her lap, and the dog looks nervous. <span class="conn">Meanwhile</span>, on the right, a man is sitting beside a
+cat <span class="vocab">carrier</span>, and the cat is peeking out
+through the door. <span class="conn">In the background</span>, there’s a
+reception desk and a poster about pet vaccines.</p>
+<p><span class="tpl">It looks like</span> the owners are concerned about
+their pets. <span class="conn">Overall</span>, the atmosphere is <span class="vocab">caring</span> and a little <span class="vocab">anxious</span>.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>veterinary clinic</td>
+<td>a place where animals get medical care</td>
+<td>We took our cat to the veterinary clinic.</td>
+</tr>
+<tr>
+<td>carrier</td>
+<td>a box or bag for carrying a pet</td>
+<td>Put the cat in the carrier.</td>
+</tr>
+<tr>
+<td>caring</td>
+<td>showing kindness</td>
+<td>The caring vet comforted the dog.</td>
+</tr>
+<tr>
+<td>anxious</td>
+<td>worried</td>
+<td>He felt anxious about the results.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="activity-and-sports-scenes">9 Activity and Sports Scenes</h1>
+<p>Topics: a sports game, a community event, a hiking trip, a skating
+rink, a charity run.</p>
+<h2 id="general-template-8">General Template</h2>
+<p><span class="tpl">In this picture, I can see</span> [the activity and
+the general mood]. <span class="conn">In the foreground</span>, [main
+people and what they are doing].</p>
+<p><span class="conn">On the left / right</span>, [other people or
+objects]. <span class="conn">In the background</span>, [the setting and
+details].</p>
+<p><span class="tpl">It looks like</span> [what the people are feeling].
+<span class="conn">Overall</span>, [the general atmosphere].</p>
+<h2 id="community-soccer-game">9.1 Community Soccer Game</h2>
+<p>A community soccer game with players, cheering spectators, and a
+referee. Describe the scene.</p>
+<h3 id="sample-41">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a local soccer
+match on a sunny afternoon. <span class="conn">In the foreground</span>,
+a player in a red jersey is <span class="vocab">dribbling</span> the
+ball, and a defender in a blue jersey is chasing him.</p>
+<p><span class="conn">On the left</span>, a <span class="vocab">referee</span> is running along the field with a whistle
+in his mouth. <span class="conn">Meanwhile</span>, on the right, a group
+of <span class="vocab">spectators</span> is standing near the sideline,
+cheering and waving flags. <span class="conn">In the background</span>,
+I can see a goal post and some parked cars behind a fence.</p>
+<p><span class="tpl">It looks like</span> the game is very competitive.
+<span class="conn">Overall</span>, the atmosphere is energetic and full
+of team spirit.</p>
+<h3 id="vocabulary-41">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dribbling</td>
+<td>moving the ball forward with small kicks</td>
+<td>He is dribbling past the defender.</td>
+</tr>
+<tr>
+<td>referee</td>
+<td>an official who enforces the rules</td>
+<td>The referee blew the whistle.</td>
+</tr>
+<tr>
+<td>spectators</td>
+<td>people who watch an event</td>
+<td>Spectators filled the stands.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mountain-hikers">9.2 Mountain Hikers</h2>
+<p>A group of hikers on a mountain trail with backpacks, a map, and a
+lake. Describe what you see.</p>
+<h3 id="sample-42">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a group of hikers
+on a mountain <span class="vocab">trail</span>. <span class="conn">In
+the foreground</span>, three hikers with large backpacks are walking in
+a line, and one of them is holding a walking stick.</p>
+<p><span class="conn">On the left</span>, a woman has stopped and is
+looking at a paper map, and she seems to be checking the route. <span class="conn">Meanwhile</span>, on the right, a man is taking a photo of
+the view. <span class="conn">In the background</span>, there’s a
+sparkling blue lake surrounded by tall pine trees and snow-capped
+peaks.</p>
+<p><span class="tpl">It looks like</span> they’re enjoying the fresh air
+and the <span class="vocab">scenery</span>. <span class="conn">Overall</span>, the scene is <span class="vocab">adventurous</span> and refreshing.</p>
+<h3 id="vocabulary-42">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trail</td>
+<td>a path through nature</td>
+<td>The trail was narrow.</td>
+</tr>
+<tr>
+<td>scenery</td>
+<td>the natural beauty of a place</td>
+<td>The scenery was stunning.</td>
+</tr>
+<tr>
+<td>adventurous</td>
+<td>willing to try exciting things</td>
+<td>They are an adventurous group.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="skating-rink">9.3 Skating Rink</h2>
+<p>An outdoor skating rink with skaters of all ages, a coffee stand, and
+a skate rental booth. Describe the scene.</p>
+<h3 id="sample-43">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a crowded outdoor
+<span class="vocab">skating rink</span> in winter. <span class="conn">In
+the foreground</span>, a father is holding his daughter’s hands and
+helping her skate, and she’s wobbling a little.</p>
+<p><span class="conn">On the left</span>, a few teenagers are skating
+quickly in a group, and they’re laughing loudly. <span class="conn">Meanwhile</span>, on the right, there’s a small stand
+selling hot chocolate and coffee, and some people are warming their
+hands around paper cups. <span class="conn">In the background</span>, I
+can see a skate <span class="vocab">rental</span> booth with a long line
+and strings of lights.</p>
+<p><span class="tpl">It looks like</span> it’s a popular winter
+activity. <span class="conn">Overall</span>, the atmosphere is <span class="vocab">festive</span> and <span class="vocab">family-friendly</span>.</p>
+<h3 id="vocabulary-43">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skating rink</td>
+<td>an area of ice for skating</td>
+<td>We went to the skating rink.</td>
+</tr>
+<tr>
+<td>rental</td>
+<td>the act of borrowing for a fee</td>
+<td>Skate rental costs ten dollars.</td>
+</tr>
+<tr>
+<td>festive</td>
+<td>joyful</td>
+<td>The rink looked festive.</td>
+</tr>
+<tr>
+<td>family-friendly</td>
+<td>suitable for all ages</td>
+<td>It’s a family-friendly event.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="charity-run">9.4 Charity Run</h2>
+<p>A charity run with runners wearing numbers, volunteers handing out
+water, and a finish line. Describe what is happening.</p>
+<h3 id="sample-44">Sample</h3>
+<p><span class="tpl">In this picture, I can see</span> a <span class="vocab">charity run</span> on a clear morning. <span class="conn">In the foreground</span>, a group of runners wearing
+numbered bibs is crossing the finish line, and some of them are raising
+their arms in victory.</p>
+<p><span class="conn">On the left</span>, a few <span class="vocab">volunteers</span> in matching T-shirts are handing out
+cups of water, and they’re smiling and encouraging everyone. <span class="conn">Meanwhile</span>, on the right, a crowd is cheering behind
+a barrier and holding signs. <span class="conn">In the
+background</span>, I can see a big banner above the finish line and a
+row of tents.</p>
+<p><span class="tpl">It looks like</span> the runners are tired but
+proud. <span class="conn">Overall</span>, the scene is <span class="vocab">inspiring</span>, and it shows great <span class="vocab">community spirit</span>.</p>
+<h3 id="vocabulary-44">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>charity run</td>
+<td>a race held to raise money</td>
+<td>She joined a charity run.</td>
+</tr>
+<tr>
+<td>volunteers</td>
+<td>people who help without pay</td>
+<td>Volunteers handed out water.</td>
+</tr>
+<tr>
+<td>inspiring</td>
+<td>giving others the wish to do something</td>
+<td>It was an inspiring race.</td>
+</tr>
+<tr>
+<td>community spirit</td>
+<td>the feeling of helping and belonging</td>
+<td>The event showed community spirit.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

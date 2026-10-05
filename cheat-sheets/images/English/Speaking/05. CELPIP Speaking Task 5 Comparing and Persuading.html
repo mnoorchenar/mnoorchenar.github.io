@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+
+<style>
+/* ── Theme tokens — warm, Claude.ai-style palette ─────────── */
+/* Dark is the default theme; [data-theme="light"] below opts out. */
+:root, [data-theme="dark"] {
+  --bg-page:      #262624;
+  --bg-sidebar:   #201f1e;
+  --bg-elevated:  #30302e;
+  --text:         #f0efe9;
+  --text-muted:   #a8a6a0;
+  --border:       #3e3d3a;
+  --accent:       #e08a5f;
+  --accent-soft:  #3a2e26;
+  --h1-rule:      #e08a5f;
+  --h2-rule:      #3e3d3a;
+  --link:         #eb9d75;
+  --code-inline-fg: #ff7b72;
+  --table-head-bg: #2c2b28;
+  --table-row-alt: #292825;
+  --blockquote-bg: #2c2b28;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --code-bg:     #37342f;
+  --code-border: #4a453d;
+  --code-fg:     #e8e6de;
+  --code-head-bg: #403c36;
+  /* Token colors — same families as the PDF's tango palette, brightened
+     for legibility against the dark code background */
+  --tok-kw:      #6ea8e8;
+  --tok-dt:      #6ea8e8;
+  --tok-num:     #7c93ff;
+  --tok-str:     #39ff14;
+  --tok-comment: #caa15a;
+  --tok-fn:      #6ea8e8;
+  --tok-attr:    #6ea8e8;
+  --tok-op:      #ff9d42;
+  --tok-alert:   #ff5c5c;
+  --tok-other:   #caa15a;
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  --wt-tpl:      #4ade80;
+  --wt-conn:     #22d3ee;
+  --wt-vocab:    #ff7b72;
+}
+[data-theme="light"] {
+  --bg-page:      #ffffff;
+  --bg-sidebar:   #fafafa;
+  --bg-elevated:  #ffffff;
+  --text:         #2d2d2a;
+  --text-muted:   #75736c;
+  --border:       #e5e5e0;
+  --accent:       #c2632d;
+  --accent-soft:  #f4e6da;
+  --h1-rule:      #c2632d;
+  --h2-rule:      #e5e5e0;
+  --link:         #b8551f;
+  --code-inline-fg: #8b0000;
+  --table-head-bg: #fafafa;
+  --table-row-alt: #fbfbfa;
+  --blockquote-bg: #fafafa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --code-bg:     #f5f5f3;
+  --code-border: #dfdedb;
+  --code-fg:     #2d2d2a;
+  --code-head-bg: #ececea;
+  /* Token colors — Pandoc's "tango" palette, same as the PDF */
+  --tok-kw:      #204a87;
+  --tok-dt:      #204a87;
+  --tok-num:     #0000cf;
+  --tok-str:     #4e9a06;
+  --tok-comment: #8f5902;
+  --tok-fn:      #204a87;
+  --tok-attr:    #204a87;
+  --tok-op:      #ce5c00;
+  --tok-alert:   #a40000;
+  --tok-other:   #8f5902;
+  --wt-tpl:      #15803d;
+  --wt-conn:     #0e7490;
+  --wt-vocab:    #b91c1c;
+}
+/* No prefers-color-scheme media query — dark is the default regardless
+   of system preference; only an explicit [data-theme="light"] (set via
+   the toggle, remembered in localStorage) switches to light. */
+
+/* Force override Pandoc's body styles */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: var(--bg-page) !important;
+}
+
+/* ── Layout shell ───────────────────────────────────────── */
+#_layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Single scrollbar: the window's (flush with the right edge). The content
+   column does not scroll on its own; the TOC sidebar stays sticky. */
+#_toc-sidebar, #_main-content { box-sizing: border-box; }
+
+/* ── TOC Sidebar ────────────────────────────────────────── */
+#_toc-sidebar {
+  width: 260px;
+  min-width: 160px;
+  max-width: 520px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 56px 14px 24px;
+  transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+#_toc-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-right: none;
+  overflow: hidden;
+}
+
+#_toc-sidebar-label {
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Reset Pandoc's TOC styles */
+#TOC {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+#TOC::before { display: none !important; }
+
+#TOC ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#TOC li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#TOC > ul > li { margin-bottom: 2px !important; }
+#TOC li ul {
+  padding-left: 12px !important;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 4px !important;
+}
+#TOC a {
+  display: block;
+  padding: 4px 6px;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  font-size: 0.84em;
+  line-height: 1.35;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+#TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
+#TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
+#TOC li.toc-hide { display: none !important; }
+#_toc-levels {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+}
+#_toc-levels button {
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+}
+#_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
+#_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ── Resize handle ──────────────────────────────────────── */
+#_toc-resize {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 51;
+  transition: background 0.15s;
+}
+#_toc-resize:hover,
+#_toc-resize.dragging { background: var(--accent); }
+
+/* ── Main content ───────────────────────────────────────── */
+#_main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 56px 48px;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-page);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Top-right controls ─────────────────────────────────── */
+#_toc-toggle, #_theme-toggle {
+  position: fixed;
+  top: 12px;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 1.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, border-color 0.2s;
+}
+#_toc-toggle { left: 12px; }
+#_theme-toggle { left: 54px; }
+#_toc-toggle:hover, #_theme-toggle:hover { transform: translateY(-1px); border-color: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────── */
+#_main-content h1, #_main-content h2,
+#_main-content h3, #_main-content h4,
+#_main-content h5, #_main-content h6 {
+  margin-top: 1.3em; margin-bottom: 0.45em;
+  font-weight: 700; line-height: 1.3; color: var(--text);
+}
+#_main-content h1 { font-size: 1.75em; border-bottom: 2px solid var(--h1-rule); padding-bottom: 0.25em; margin-top: 0; }
+#_main-content h2 { font-size: 1.35em; border-bottom: 1px solid var(--h2-rule); padding-bottom: 0.25em; }
+#_main-content h3 { font-size: 1.15em; }
+#_main-content h4 { font-size: 1.02em; color: var(--text-muted); }
+#_main-content p  { margin: 0.8em 0; }
+#_main-content a  { color: var(--link); }
+
+/* ── Code blocks — card style with language/copy header bar ─── */
+#_main-content div.sourceCode {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--code-border) !important;
+  border-radius: 8px !important;
+  margin: 14px 0 !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#_code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--code-head-bg);
+  border-bottom: 1px solid var(--code-border);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.76em;
+  color: var(--text-muted);
+}
+#_main-content pre {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 13px 16px !important;
+  margin: 0 !important;
+  overflow-x: auto;
+}
+#_main-content code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.97em;
+  font-weight: 500;
+  font-variant-ligatures: none;
+}
+#_main-content pre > code,
+#_main-content pre code.sourceCode {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  line-height: 1.5;
+  white-space: pre;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* Inline code — no background box, just colored monospace text,
+   matching the PDF's 	extcolor{inlinecodecolor}{...} treatment. */
+#_main-content p code, #_main-content li code,
+#_main-content td code, #_main-content th code {
+  background: transparent !important;
+  padding: 0.1em 0.15em;
+  border-radius: 3px;
+  color: var(--code-inline-fg) !important;
+  font-weight: 600;
+}
+
+/* Syntax-highlight token colors — matches the PDF's tango palette
+   (brown italic comments, green strings, navy keywords, orange
+   operators, red errors); overrides whatever theme Pandoc's
+   --syntax-highlighting flag injected. */
+#_main-content pre code span.kw,
+#_main-content pre code span.cf { color: var(--tok-kw) !important; font-weight: 700; }
+#_main-content pre code span.dt { color: var(--tok-dt) !important; }
+#_main-content pre code span.dv,
+#_main-content pre code span.bn,
+#_main-content pre code span.fl { color: var(--tok-num) !important; }
+#_main-content pre code span.st,
+#_main-content pre code span.vs,
+#_main-content pre code span.ss,
+#_main-content pre code span.ch { color: var(--tok-str) !important; }
+#_main-content pre code span.co,
+#_main-content pre code span.an,
+#_main-content pre code span.cv,
+#_main-content pre code span.do,
+#_main-content pre code span.in,
+#_main-content pre code span.pp { color: var(--tok-comment) !important; font-style: italic; }
+#_main-content pre code span.fu { color: var(--tok-fn) !important; font-weight: 700; }
+#_main-content pre code span.at,
+#_main-content pre code span.va { color: var(--tok-attr) !important; }
+#_main-content pre code span.op,
+#_main-content pre code span.sc { color: var(--tok-op) !important; font-weight: 700; }
+#_main-content pre code span.al,
+#_main-content pre code span.er,
+#_main-content pre code span.wa { color: var(--tok-alert) !important; font-weight: 700; }
+#_main-content pre code span.ot { color: var(--tok-other) !important; }
+
+/* Writing-template highlights (pure Markdown bracketed spans) */
+#_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
+#_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
+#_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+
+#_main-content table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: var(--bg-elevated); border-radius: 8px; overflow: hidden; display: table;
+  table-layout: auto; box-shadow: var(--shadow);
+  font-size: 0.94em;
+}
+#_main-content th, #_main-content td {
+  padding: 8px 10px; border: 1px solid var(--border); text-align: left;
+  word-break: break-word; overflow-wrap: break-word; hyphens: auto;
+}
+#_main-content td code, #_main-content th code {
+  white-space: pre-wrap !important; word-break: break-word !important;
+}
+#_main-content thead { background: var(--table-head-bg); }
+#_main-content tbody tr:nth-child(even) { background: var(--table-row-alt); }
+
+#_main-content blockquote {
+  border-left: 4px solid var(--accent); margin: 14px 0;
+  padding: 8px 16px; background: var(--blockquote-bg); color: var(--text-muted);
+}
+#_main-content ul, #_main-content ol { margin: 0.7em 0; padding-left: 1.6em; }
+#_main-content li { margin: 0.3em 0; }
+#_main-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+#_main-content hr  { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+
+/* Hide the duplicate title Pandoc adds above the h1 */
+header#title-block-header { display: none; }
+
+@media (max-width: 760px) {
+  #_toc-sidebar, #_toc-resize, #_toc-toggle { display: none !important; }
+  #_theme-toggle { top: 10px; left: 10px; }
+  #_main-content { padding: 16px; height: auto; max-width: none; }
+}
+
+@media print {
+  /* Hide browser-only UI */
+  #_toc-sidebar, #_toc-resize, #_toc-toggle, #_theme-toggle { display: none !important; }
+
+  /* Full-width content with no flex overhead */
+  #_layout { display: block !important; }
+  #_main-content {
+    padding: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Tables: fixed layout so columns share the page width equally */
+  #_main-content table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    font-size: 0.82em !important;
+    page-break-inside: auto;
+  }
+  #_main-content th, #_main-content td {
+    padding: 6px 8px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  /* Inline code inside cells must wrap, not overflow */
+  #_main-content td code, #_main-content th code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.9em !important;
+  }
+  /* Code blocks inside cells */
+  #_main-content td pre, #_main-content th pre {
+    white-space: pre-wrap !important;
+    overflow: visible !important;
+    font-size: 0.8em !important;
+  }
+  #_main-content tr { page-break-inside: avoid; }
+
+  /* Paper is always white, so force the light-theme shades for highlights */
+  #_main-content span.tpl   { color: #15803d !important; }
+  #_main-content span.conn  { color: #0e7490 !important; }
+  #_main-content span.vocab { color: #b91c1c !important; }
+}
+</style>
+
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CELPIP Speaking Task 5 Comparing and Persuading</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CELPIP Speaking Task 5 Comparing and Persuading</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#celpip-speaking-task-5-comparing-and-persuading" id="toc-celpip-speaking-task-5-comparing-and-persuading">CELPIP Speaking
+Task 5: Comparing and Persuading</a></li>
+<li><a href="#housing-and-places-to-live" id="toc-housing-and-places-to-live">1 Housing and Places to Live</a>
+<ul>
+<li><a href="#general-template" id="toc-general-template">General
+Template</a></li>
+<li><a href="#condo-vs-house" id="toc-condo-vs-house">1.1 Condo vs
+House</a>
+<ul>
+<li><a href="#sample" id="toc-sample">Sample</a></li>
+<li><a href="#vocabulary" id="toc-vocabulary">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cheap-vs-close-apartment" id="toc-cheap-vs-close-apartment">1.2 Cheap vs Close Apartment</a>
+<ul>
+<li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
+<li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
+</ul></li>
+<li><a href="#living-alone-vs-sharing" id="toc-living-alone-vs-sharing">1.3 Living Alone vs Sharing</a>
+<ul>
+<li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
+<li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
+</ul></li>
+<li><a href="#renting-vs-buying" id="toc-renting-vs-buying">1.4 Renting
+vs Buying</a>
+<ul>
+<li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
+<li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
+</ul></li>
+<li><a href="#town-vs-city" id="toc-town-vs-city">1.5 Town vs City</a>
+<ul>
+<li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
+<li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#shopping-and-purchases" id="toc-shopping-and-purchases">2
+Shopping and Purchases</a>
+<ul>
+<li><a href="#general-template-1" id="toc-general-template-1">General
+Template</a></li>
+<li><a href="#small-car-vs-suv" id="toc-small-car-vs-suv">2.1 Small Car
+vs SUV</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#lightweight-vs-powerful-laptop" id="toc-lightweight-vs-powerful-laptop">2.2 Lightweight vs Powerful
+Laptop</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#stylish-vs-comfortable-sofa" id="toc-stylish-vs-comfortable-sofa">2.3 Stylish vs Comfortable Sofa</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#jewellery-vs-trip" id="toc-jewellery-vs-trip">2.4
+Jewellery vs Trip</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
+<li><a href="#two-smartphones" id="toc-two-smartphones">2.5 Two
+Smartphones</a>
+<ul>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#travel-and-vacations" id="toc-travel-and-vacations">3
+Travel and Vacations</a>
+<ul>
+<li><a href="#general-template-2" id="toc-general-template-2">General
+Template</a></li>
+<li><a href="#resort-vs-sightseeing" id="toc-resort-vs-sightseeing">3.1
+Resort vs Sightseeing</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#hotel-vs-rental" id="toc-hotel-vs-rental">3.2 Hotel vs
+Rental</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#bus-tour-vs-independent" id="toc-bus-tour-vs-independent">3.3 Bus Tour vs Independent</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cabin-vs-camping" id="toc-cabin-vs-camping">3.4 Cabin vs
+Camping</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#flying-vs-driving" id="toc-flying-vs-driving">3.5 Flying
+vs Driving</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#events-activities-and-entertainment" id="toc-events-activities-and-entertainment">4 Events, Activities, and
+Entertainment</a>
+<ul>
+<li><a href="#general-template-3" id="toc-general-template-3">General
+Template</a></li>
+<li><a href="#restaurant-vs-park-party" id="toc-restaurant-vs-park-party">4.1 Restaurant vs Park Party</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#bowling-vs-hike" id="toc-bowling-vs-hike">4.2 Bowling vs
+Hike</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#team-dinner-restaurant" id="toc-team-dinner-restaurant">4.3 Team Dinner Restaurant</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#gym-vs-yoga" id="toc-gym-vs-yoga">4.4 Gym vs Yoga</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#movie-night-in-vs-out" id="toc-movie-night-in-vs-out">4.5
+Movie Night In vs Out</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#transportation-and-commuting" id="toc-transportation-and-commuting">5 Transportation and Commuting</a>
+<ul>
+<li><a href="#general-template-4" id="toc-general-template-4">General
+Template</a></li>
+<li><a href="#driving-vs-bus" id="toc-driving-vs-bus">5.1 Driving vs
+Bus</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#electric-vs-gas-car" id="toc-electric-vs-gas-car">5.2
+Electric vs Gas Car</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cycling-vs-train" id="toc-cycling-vs-train">5.3 Cycling vs
+Train</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#train-vs-plane" id="toc-train-vs-plane">5.4 Train vs
+Plane</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#car-vs-taxis-and-transit" id="toc-car-vs-taxis-and-transit">5.5 Car vs Taxis and Transit</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#work-study-and-community" id="toc-work-study-and-community">6 Work, Study, and Community</a>
+<ul>
+<li><a href="#general-template-5" id="toc-general-template-5">General
+Template</a></li>
+<li><a href="#pay-vs-benefits" id="toc-pay-vs-benefits">6.1 Pay vs
+Benefits</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#nearby-vs-famous-school" id="toc-nearby-vs-famous-school">6.2 Nearby vs Famous School</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#spacious-vs-cozy-office" id="toc-spacious-vs-cozy-office">6.3 Spacious vs Cozy Office</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#hospital-vs-animal-shelter" id="toc-hospital-vs-animal-shelter">6.4 Hospital vs Animal Shelter</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#museum-vs-science-centre" id="toc-museum-vs-science-centre">6.5 Museum vs Science Centre</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#pets-classes-and-dining" id="toc-pets-classes-and-dining">7 Pets, Classes, and Dining</a>
+<ul>
+<li><a href="#general-template-6" id="toc-general-template-6">General
+Template</a></li>
+<li><a href="#dog-vs-cat" id="toc-dog-vs-cat">7.1 Dog vs Cat</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+</ul></li>
+<li><a href="#evening-vs-online-class" id="toc-evening-vs-online-class">7.2 Evening vs Online Class</a>
+<ul>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+</ul></li>
+<li><a href="#trade-school-vs-university" id="toc-trade-school-vs-university">7.3 Trade School vs University</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fancy-vs-home-cooked-dinner" id="toc-fancy-vs-home-cooked-dinner">7.4 Fancy vs Home-Cooked Dinner</a>
+<ul>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#catering-vs-cooking" id="toc-catering-vs-cooking">7.5
+Catering vs Cooking</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="celpip-speaking-task-5-comparing-and-persuading">CELPIP Speaking
+Task 5: Comparing and Persuading</h1>
+<h1 id="housing-and-places-to-live">1 Housing and Places to Live</h1>
+<p>Topics: apartments, houses, locations, shared housing, renting versus
+buying.</p>
+<h2 id="general-template">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="condo-vs-house">1.1 Condo vs House</h2>
+<p>Your family is choosing between a condo downtown and a house in the
+suburbs. Choose one and persuade your family.</p>
+<h3 id="sample">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the condo
+downtown. <span class="conn">First of all</span>, it’s close to our
+jobs, schools, and shops, so we’d save hours every week on the <span class="vocab">commute</span>. That means more family time.</p>
+<p><span class="conn">On top of that</span>, a condo needs very little
+<span class="vocab">maintenance</span>. There’s no lawn to mow and no
+snow to shovel, because the building takes care of it. We’d also enjoy
+<span class="vocab">amenities</span> like a gym and a pool.</p>
+<p><span class="conn">Admittedly</span>, the suburban house has a bigger
+yard, <span class="conn">but</span> we rarely use it, and we could visit
+a park nearby. Plus, downtown has restaurants, museums, and <span class="vocab">public transit</span> right outside our door.</p>
+<p><span class="tpl">That’s why I really think</span> the condo is the
+better option for our busy lifestyle.</p>
+<h3 id="vocabulary">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commute</td>
+<td>the daily trip to work</td>
+<td>His commute is short.</td>
+</tr>
+<tr>
+<td>maintenance</td>
+<td>the work of keeping something in good condition</td>
+<td>The house needs regular maintenance.</td>
+</tr>
+<tr>
+<td>amenities</td>
+<td>extra facilities in a building</td>
+<td>The amenities include a pool.</td>
+</tr>
+<tr>
+<td>public transit</td>
+<td>buses and trains</td>
+<td>I take public transit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cheap-vs-close-apartment">1.2 Cheap vs Close Apartment</h2>
+<p>A friend is picking between two apartments, one cheaper and farther
+from work, one expensive and close. Persuade them to choose the one you
+prefer.</p>
+<h3 id="sample-1">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the cheaper
+apartment. <span class="conn">First of all</span>, the lower rent will
+save you a lot of money every month, and you can put that money toward
+savings or travel.</p>
+<p><span class="conn">On top of that</span>, being farther from work
+isn’t a big problem if there’s a good train or bus line. You could read,
+listen to podcasts, or relax during the ride. <span class="conn">Furthermore</span>, a cheaper place reduces your <span class="vocab">financial stress</span>, which makes life much more
+enjoyable.</p>
+<p><span class="conn">Admittedly</span>, the expensive apartment is more
+convenient, <span class="conn">but</span> you’d be paying a <span class="vocab">premium</span> for a few saved minutes, and an unexpected
+expense could put you under pressure.</p>
+<p><span class="tpl">That’s why I really think</span> the cheaper
+apartment is the smarter <span class="vocab">investment</span> for
+you.</p>
+<h3 id="vocabulary-1">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>financial stress</td>
+<td>worry about money</td>
+<td>Rent can cause financial stress.</td>
+</tr>
+<tr>
+<td>premium</td>
+<td>an extra amount paid for something</td>
+<td>You pay a premium for the view.</td>
+</tr>
+<tr>
+<td>investment</td>
+<td>something that gives long-term value</td>
+<td>A good education is an investment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="living-alone-vs-sharing">1.3 Living Alone vs Sharing</h2>
+<p>Your sister is choosing between living alone and sharing an apartment
+with friends. Persuade her.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> sharing an
+apartment with friends. <span class="conn">First of all</span>, you’d
+split the rent and the bills, so you’d pay much less than you would on
+your own. That’s a huge help, especially at the start of your
+career.</p>
+<p><span class="conn">On top of that</span>, you’d have company, and
+you’d never feel lonely. Cooking dinners, watching movies, and chatting
+after work make life warmer. <span class="conn">Also</span>, friends can
+help each other in emergencies.</p>
+<p><span class="conn">Admittedly</span>, living alone gives you more
+privacy, <span class="conn">but</span> you can still enjoy <span class="vocab">personal space</span> in your own bedroom, and you can
+agree on <span class="vocab">house rules</span> to keep things
+peaceful.</p>
+<p><span class="tpl">That’s why I really think</span> sharing is the
+better option. It’s <span class="vocab">affordable</span> and fun.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>personal space</td>
+<td>privacy and room to be alone</td>
+<td>I need some personal space.</td>
+</tr>
+<tr>
+<td>house rules</td>
+<td>agreed guidelines at home</td>
+<td>Our house rules are simple.</td>
+</tr>
+<tr>
+<td>affordable</td>
+<td>not too expensive</td>
+<td>The apartment is affordable.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="renting-vs-buying">1.4 Renting vs Buying</h2>
+<p>Your parents are deciding between renting a large place and buying a
+smaller one. Persuade them.</p>
+<h3 id="sample-3">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> buying the
+smaller place. <span class="conn">First of all</span>, when you rent,
+you pay every month and own nothing. With a purchase, your payments
+build <span class="vocab">equity</span>, so you’d own something valuable
+in the future.</p>
+<p><span class="conn">On top of that</span>, you’d have <span class="vocab">stability</span>. A landlord can raise the rent or sell
+the building, but if you own your home, you decide how long you’ll stay.
+<span class="conn">Also</span>, property usually <span class="vocab">appreciates</span> in value over time.</p>
+<p><span class="conn">Admittedly</span>, the large rental has more
+space, <span class="conn">but</span> at your age, you don’t need much
+room, and a smaller home is cheaper to heat and clean.</p>
+<p><span class="tpl">That’s why I really think</span> buying is the
+wiser choice for your <span class="vocab">retirement</span>.</p>
+<h3 id="vocabulary-3">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>equity</td>
+<td>the value of the part of a property you own</td>
+<td>Equity grows as you pay your mortgage.</td>
+</tr>
+<tr>
+<td>stability</td>
+<td>the state of being steady and secure</td>
+<td>A home gives stability.</td>
+</tr>
+<tr>
+<td>appreciates</td>
+<td>increases in value</td>
+<td>The house appreciated by ten percent.</td>
+</tr>
+<tr>
+<td>retirement</td>
+<td>the time of life after working</td>
+<td>They plan for retirement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="town-vs-city">1.5 Town vs City</h2>
+<p>Your friend has to choose between a quiet town and a lively city.
+Persuade them to pick one.</p>
+<h3 id="sample-4">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the lively city.
+<span class="conn">First of all</span>, a city offers many more job
+<span class="vocab">opportunities</span>, and you can find work in
+almost any field. You’d also meet people from different backgrounds.</p>
+<p><span class="conn">On top of that</span>, there’s always something to
+do, such as concerts, restaurants, festivals, and museums. <span class="conn">Besides</span>, <span class="vocab">public
+transportation</span> makes it easy to get around without a car.</p>
+<p><span class="conn">Admittedly</span>, a quiet town is peaceful, <span class="conn">but</span> it can feel <span class="vocab">isolating</span>, and you’d probably get bored after a few
+months. In a city, you can always find a <span class="vocab">vibrant</span> community, and you can escape to nature on
+weekends.</p>
+<p><span class="tpl">That’s why I really think</span> the city is the
+better option for you.</p>
+<h3 id="vocabulary-4">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>opportunities</td>
+<td>chances for success</td>
+<td>The city has many opportunities.</td>
+</tr>
+<tr>
+<td>public transportation</td>
+<td>buses, trains and subways</td>
+<td>Public transportation is efficient.</td>
+</tr>
+<tr>
+<td>isolating</td>
+<td>making you feel alone</td>
+<td>A small village can be isolating.</td>
+</tr>
+<tr>
+<td>vibrant</td>
+<td>full of life</td>
+<td>The area is vibrant at night.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="shopping-and-purchases">2 Shopping and Purchases</h1>
+<p>Topics: choosing a car, a phone, a laptop, furniture, appliances,
+gifts.</p>
+<h2 id="general-template-1">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="small-car-vs-suv">2.1 Small Car vs SUV</h2>
+<p>Your family is choosing between a small, fuel-efficient car and a
+large SUV. Choose one and persuade them.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the small,
+fuel-efficient car. <span class="conn">First of all</span>, gas prices
+are very high, and a small car uses much less fuel, so we’d save
+hundreds of dollars a year.</p>
+<p><span class="conn">On top of that</span>, it’s easier to drive and
+park in the city, especially on narrow streets. <span class="conn">Also</span>, it’s more <span class="vocab">environmentally
+friendly</span>, because it produces fewer emissions, and the insurance
+is usually cheaper.</p>
+<p><span class="conn">Admittedly</span>, the SUV has more room, <span class="conn">but</span> we only travel with a few people most of the
+time, and for big trips, we can rent a larger vehicle. A small car is
+also less expensive to <span class="vocab">maintain</span>.</p>
+<p><span class="tpl">That’s why I really think</span> the small car is
+the more <span class="vocab">practical</span> choice for our family.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>environmentally friendly</td>
+<td>not harmful to nature</td>
+<td>Bikes are environmentally friendly.</td>
+</tr>
+<tr>
+<td>maintain</td>
+<td>keep in good condition</td>
+<td>It’s costly to maintain an SUV.</td>
+</tr>
+<tr>
+<td>practical</td>
+<td>sensible and useful</td>
+<td>A practical car saves money.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lightweight-vs-powerful-laptop">2.2 Lightweight vs Powerful
+Laptop</h2>
+<p>Your friend is picking between two laptops, one lightweight and one
+with more power. Persuade them.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the lightweight
+laptop. <span class="conn">First of all</span>, it’s much easier to
+carry around, so you can take it to class, to a café, or on a trip
+without back pain.</p>
+<p><span class="conn">On top of that</span>, the <span class="vocab">battery life</span> on lightweight models is usually
+longer, which means you won’t need to look for a power outlet all day.
+<span class="conn">Also</span>, you said you only use it for browsing,
+writing, and watching videos, so you don’t need extra <span class="vocab">processing power</span>.</p>
+<p><span class="conn">Admittedly</span>, the powerful laptop is faster,
+<span class="conn">but</span> it’s heavy, noisy, and often more
+expensive, and you’d pay for performance you’ll never use.</p>
+<p><span class="tpl">That’s why I really think</span> the lightweight
+laptop is the <span class="vocab">smarter</span> choice for your
+lifestyle.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>battery life</td>
+<td>how long a device works without charging</td>
+<td>The battery life is twelve hours.</td>
+</tr>
+<tr>
+<td>processing power</td>
+<td>the speed of a computer’s brain</td>
+<td>Games need more processing power.</td>
+</tr>
+<tr>
+<td>smarter</td>
+<td>wiser</td>
+<td>A smarter choice saves time.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="stylish-vs-comfortable-sofa">2.3 Stylish vs Comfortable
+Sofa</h2>
+<p>You are helping your parents choose a sofa, one stylish and one
+comfortable. Persuade them to pick one.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the comfortable
+sofa. <span class="conn">First of all</span>, you’ll sit on it every
+day, so comfort matters more than looks. A soft sofa helps you relax
+after a long day and is great for movie nights.</p>
+<p><span class="conn">On top of that</span>, it’s better for your
+health. A <span class="vocab">supportive</span> sofa is good for your
+back, and you can even take a nap on it. <span class="conn">Also</span>,
+comfortable sofas are usually made with quality cushions that last for
+years.</p>
+<p><span class="conn">Admittedly</span>, the stylish sofa looks great,
+<span class="conn">but</span> the seat is hard, and guests won’t want to
+stay long. You can always add <span class="vocab">colourful</span>
+pillows and a nice blanket to improve the look.</p>
+<p><span class="tpl">That’s why I really think</span> the comfortable
+sofa is the better <span class="vocab">investment</span>.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>supportive</td>
+<td>giving good physical support</td>
+<td>A supportive chair helps my back.</td>
+</tr>
+<tr>
+<td>colourful</td>
+<td>bright and varied in colour</td>
+<td>A colourful rug brightens the room.</td>
+</tr>
+<tr>
+<td>investment</td>
+<td>something that gives long-term value</td>
+<td>Good furniture is an investment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jewellery-vs-trip">2.4 Jewellery vs Trip</h2>
+<p>Your brother needs a gift for his wife and is choosing between
+jewellery and a trip. Persuade him.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the trip. <span class="conn">First of all</span>, jewellery is nice, but a trip creates
+<span class="vocab">lasting memories</span> that you’ll enjoy together
+for years. You’ll talk about it long after you come home.</p>
+<p><span class="conn">On top of that</span>, spending quality time
+together will strengthen your relationship. A weekend in a beautiful
+place, away from work, gives you a chance to relax, and she’ll feel
+truly valued.</p>
+<p><span class="conn">Admittedly</span>, jewellery is something she can
+wear every day, <span class="conn">but</span> she may not like the style
+you choose, and it can be <span class="vocab">costly</span>. A trip can
+be planned according to your <span class="vocab">budget</span>, and it’s
+more personal.</p>
+<p><span class="tpl">That’s why I really think</span> the trip is the
+better gift. It’s an <span class="vocab">experience</span> money can’t
+replace.</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lasting memories</td>
+<td>memories that stay for a long time</td>
+<td>The trip left lasting memories.</td>
+</tr>
+<tr>
+<td>costly</td>
+<td>expensive</td>
+<td>A diamond ring is costly.</td>
+</tr>
+<tr>
+<td>budget</td>
+<td>a plan for spending</td>
+<td>Stay within your budget.</td>
+</tr>
+<tr>
+<td>experience</td>
+<td>something you live through</td>
+<td>Travel is a great experience.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-smartphones">2.5 Two Smartphones</h2>
+<p>Your friend is choosing between two smartphones with different prices
+and features. Persuade them.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the cheaper
+smartphone. <span class="conn">First of all</span>, it still has all the
+main features you need, such as a good camera, a fast processor, and
+enough <span class="vocab">storage</span>. There’s no reason to pay
+more.</p>
+<p><span class="conn">On top of that</span>, you’d save about three
+hundred dollars, which you could use for a <span class="vocab">protective case</span>, headphones, or even a weekend
+trip. <span class="conn">Also</span>, new phones come out every year, so
+an expensive model loses its value quickly.</p>
+<p><span class="conn">Admittedly</span>, the pricier phone has a
+slightly better screen and some extra features, <span class="conn">but</span> you probably won’t notice the difference in
+daily life, and they’re not worth the <span class="vocab">extra
+cost</span>.</p>
+<p><span class="tpl">That’s why I really think</span> the cheaper phone
+offers better value for you.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>storage</td>
+<td>space for saving files</td>
+<td>I need more storage.</td>
+</tr>
+<tr>
+<td>protective case</td>
+<td>a cover that prevents damage</td>
+<td>I bought a protective case.</td>
+</tr>
+<tr>
+<td>extra cost</td>
+<td>additional money</td>
+<td>There’s no extra cost.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="travel-and-vacations">3 Travel and Vacations</h1>
+<p>Topics: choosing a destination, hotel versus rental, beach versus
+city, a tour, how to travel.</p>
+<h2 id="general-template-2">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="resort-vs-sightseeing">3.1 Resort vs Sightseeing</h2>
+<p>Your family is choosing between a beach resort and a city sightseeing
+tour for vacation. Persuade them.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the beach resort.
+<span class="conn">First of all</span>, we all work and study hard, so
+we need a real break. At a resort, we can <span class="vocab">unwind</span> by the pool, swim in the ocean, and let
+someone else cook for us.</p>
+<p><span class="conn">On top of that</span>, there’s something for
+everyone. The kids can join the activities, and the adults can enjoy the
+spa. <span class="conn">Also</span>, everything is <span class="vocab">all-inclusive</span>, so there’s no stress about planning
+or spending.</p>
+<p><span class="conn">Admittedly</span>, a city tour shows us history
+and culture, <span class="conn">but</span> it means walking all day and
+rushing between attractions, and we’d come home more tired than
+before.</p>
+<p><span class="tpl">That’s why I really think</span> the beach resort
+is the better way to <span class="vocab">recharge</span> as a
+family.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unwind</td>
+<td>relax</td>
+<td>I unwind with a book.</td>
+</tr>
+<tr>
+<td>all-inclusive</td>
+<td>with meals and drinks included in the price</td>
+<td>It’s an all-inclusive resort.</td>
+</tr>
+<tr>
+<td>recharge</td>
+<td>restore energy</td>
+<td>We need to recharge.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hotel-vs-rental">3.2 Hotel vs Rental</h2>
+<p>Your friends are deciding between a hotel and a vacation rental.
+Choose one and persuade them.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the vacation
+rental. <span class="conn">First of all</span>, with a group of friends,
+it works out cheaper. We can split the cost, and we’d get a whole house
+with several bedrooms instead of paying for separate hotel rooms.</p>
+<p><span class="conn">On top of that</span>, a rental has a <span class="vocab">fully equipped</span> kitchen, so we can cook some meals
+and save money on restaurants. <span class="conn">Also</span>, we’d have
+a living room where we can hang out together, which is much more fun
+than meeting in a hallway.</p>
+<p><span class="conn">Admittedly</span>, a hotel has daily cleaning and
+a front desk, <span class="conn">but</span> it’s less private, and the
+<span class="vocab">amenities</span> we’d actually use are all in the
+rental too.</p>
+<p><span class="tpl">That’s why I really think</span> the rental gives
+us more flexibility and better <span class="vocab">value for
+money</span>.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fully equipped</td>
+<td>having everything needed</td>
+<td>The kitchen is fully equipped.</td>
+</tr>
+<tr>
+<td>amenities</td>
+<td>useful facilities</td>
+<td>The rental has great amenities.</td>
+</tr>
+<tr>
+<td>value for money</td>
+<td>good quality for the price</td>
+<td>The apartment is great value for money.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bus-tour-vs-independent">3.3 Bus Tour vs Independent</h2>
+<p>Your parents are picking between a bus tour and exploring on their
+own. Persuade them.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the bus tour.
+<span class="conn">First of all</span>, everything is organized for you.
+The hotels, the transport, and the sightseeing are all arranged, so you
+don’t need to worry about <span class="vocab">directions</span> or
+timetables.</p>
+<p><span class="conn">On top of that</span>, a <span class="vocab">tour
+guide</span> will explain the history of every place, and you’ll learn
+far more than you would with a guidebook. <span class="conn">Also</span>, you’ll meet other travellers of your age, and
+it’s very safe, which is important when visiting a foreign country.</p>
+<p><span class="conn">Admittedly</span>, exploring alone gives you more
+freedom, <span class="conn">but</span> it can be stressful, especially
+with a language barrier, and you could waste time getting lost.</p>
+<p><span class="tpl">That’s why I really think</span> the bus tour is
+the more <span class="vocab">hassle-free</span> and <span class="vocab">enjoyable</span> option for you.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>directions</td>
+<td>information about how to get somewhere</td>
+<td>We asked for directions.</td>
+</tr>
+<tr>
+<td>tour guide</td>
+<td>a person who leads tourists</td>
+<td>The tour guide was funny.</td>
+</tr>
+<tr>
+<td>hassle-free</td>
+<td>without trouble</td>
+<td>It was a hassle-free trip.</td>
+</tr>
+<tr>
+<td>enjoyable</td>
+<td>giving pleasure</td>
+<td>It was an enjoyable week.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cabin-vs-camping">3.4 Cabin vs Camping</h2>
+<p>Your friend is choosing between a mountain cabin and a camping trip.
+Persuade them.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the mountain
+cabin. <span class="conn">First of all</span>, you’d have a comfortable
+bed, a roof over your head, and a warm fireplace. After a long hike,
+that’s exactly what you need.</p>
+<p><span class="conn">On top of that</span>, a cabin is more reliable in
+bad weather. If it rains or gets cold at night, you’ll stay dry and
+cozy, whereas in a tent, you might be miserable. <span class="conn">Also</span>, you can cook in a real kitchen and keep your
+food fresh.</p>
+<p><span class="conn">Admittedly</span>, camping is cheaper and feels
+more adventurous, <span class="conn">but</span> it needs a lot of <span class="vocab">gear</span> and effort to set up and clean.</p>
+<p><span class="tpl">That’s why I really think</span> the cabin is the
+better choice. You’ll enjoy the <span class="vocab">scenery</span> and
+<span class="vocab">peace</span> without the discomfort.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gear</td>
+<td>equipment for an activity</td>
+<td>Camping gear is heavy.</td>
+</tr>
+<tr>
+<td>scenery</td>
+<td>natural beauty</td>
+<td>The scenery was amazing.</td>
+</tr>
+<tr>
+<td>peace</td>
+<td>calm and quiet</td>
+<td>I love the peace of the mountains.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flying-vs-driving">3.5 Flying vs Driving</h2>
+<p>Your family is picking between flying and driving to a destination.
+Persuade them.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> flying. <span class="conn">First of all</span>, it’s much faster. A flight takes two
+hours, whereas driving would take almost ten, and we’d spend a whole day
+on the road instead of at our destination.</p>
+<p><span class="conn">On top of that</span>, it’s less tiring. We can
+relax, read, or watch a movie, and nobody has to drive for hours. <span class="conn">Also</span>, when you add up the cost of gas, tolls, food,
+and a hotel stop, the price of the tickets may be <span class="vocab">comparable</span>.</p>
+<p><span class="conn">Admittedly</span>, a car gives us flexibility,
+<span class="conn">but</span> the children will get restless and <span class="vocab">fussy</span> on a long drive, and there’s the risk of
+traffic and <span class="vocab">road construction</span>.</p>
+<p><span class="tpl">That’s why I really think</span> flying is the more
+efficient and comfortable choice.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>comparable</td>
+<td>similar in cost or quality</td>
+<td>The prices are comparable.</td>
+</tr>
+<tr>
+<td>fussy</td>
+<td>easily annoyed or upset</td>
+<td>The baby was fussy.</td>
+</tr>
+<tr>
+<td>road construction</td>
+<td>building or repair work on a road</td>
+<td>Road construction delayed us.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="events-activities-and-entertainment">4 Events, Activities, and
+Entertainment</h1>
+<p>Topics: a venue for a party, a restaurant, a weekend activity, a
+class, a hobby, a fundraising event.</p>
+<h2 id="general-template-3">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="restaurant-vs-park-party">4.1 Restaurant vs Park Party</h2>
+<p>Your friends are choosing a venue for a birthday party: a restaurant
+or a park. Persuade them.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the park. <span class="conn">First of all</span>, it’s free, so we can spend the money
+on food, a cake, and decorations. A restaurant bill for a big group can
+be very expensive.</p>
+<p><span class="conn">On top of that</span>, a park gives us lots of
+space for games like volleyball or frisbee, and nobody has to sit still
+at a table. <span class="conn">Also</span>, we can bring our own music
+and have a barbecue, and we won’t have to worry about being too
+loud.</p>
+<p><span class="conn">Admittedly</span>, a restaurant is protected from
+the weather, <span class="conn">but</span> we can check the forecast and
+book a shelter just in case.</p>
+<p><span class="tpl">That’s why I really think</span> the park is the
+better <span class="vocab">venue</span>. It will be more <span class="vocab">relaxed</span>, more fun, and more <span class="vocab">memorable</span>.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>venue</td>
+<td>the place where an event is held</td>
+<td>The venue was lovely.</td>
+</tr>
+<tr>
+<td>relaxed</td>
+<td>calm and informal</td>
+<td>It was a relaxed party.</td>
+</tr>
+<tr>
+<td>memorable</td>
+<td>worth remembering</td>
+<td>A memorable birthday.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bowling-vs-hike">4.2 Bowling vs Hike</h2>
+<p>Your group is choosing a weekend activity: bowling or a hike.
+Persuade them.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the hike. <span class="conn">First of all</span>, spending time in nature is great for
+our health, and we’d get exercise and fresh air. After a week of work,
+it’s the best way to clear our heads.</p>
+<p><span class="conn">On top of that</span>, hiking gives us time to
+talk, because we’re walking side by side, while at a bowling alley it’s
+loud, and we mostly watch the pins. <span class="conn">Also</span>, it’s
+almost free, and the views are <span class="vocab">spectacular</span>.</p>
+<p><span class="conn">Admittedly</span>, bowling is fun and indoors,
+<span class="conn">but</span> we can do it any day of the year, and a
+hike on a beautiful weekend is a rare chance.</p>
+<p><span class="tpl">That’s why I really think</span> the hike is the
+better choice. We’ll come home <span class="vocab">refreshed</span> and
+in a <span class="vocab">positive</span> mood.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spectacular</td>
+<td>very impressive</td>
+<td>The sunset was spectacular.</td>
+</tr>
+<tr>
+<td>refreshed</td>
+<td>full of energy again</td>
+<td>I felt refreshed after the walk.</td>
+</tr>
+<tr>
+<td>positive</td>
+<td>hopeful and good</td>
+<td>He’s in a positive mood.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="team-dinner-restaurant">4.3 Team Dinner Restaurant</h2>
+<p>Your coworkers are picking between two restaurants for the team
+dinner. Persuade them.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the Italian
+restaurant. <span class="conn">First of all</span>, the menu has
+something for everyone, including vegetarian and gluten-free dishes, and
+nobody will feel left out. The other place focuses on seafood, which not
+everyone enjoys.</p>
+<p><span class="conn">On top of that</span>, it has a large private room
+where we can talk and laugh without bothering other guests. <span class="conn">Also</span>, the prices are <span class="vocab">reasonable</span>, and they offer a group discount, which
+our manager will appreciate.</p>
+<p><span class="conn">Admittedly</span>, the seafood place has a nicer
+view, <span class="conn">but</span> it’s far from the office, and
+parking is <span class="vocab">limited</span>. The Italian restaurant is
+five minutes away.</p>
+<p><span class="tpl">That’s why I really think</span> the Italian
+restaurant is the better option. It’s <span class="vocab">convenient</span> and welcoming for the whole team.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reasonable</td>
+<td>fair in price</td>
+<td>The prices are reasonable.</td>
+</tr>
+<tr>
+<td>limited</td>
+<td>small in amount</td>
+<td>Seats are limited.</td>
+</tr>
+<tr>
+<td>convenient</td>
+<td>easy and handy</td>
+<td>It’s a convenient location.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gym-vs-yoga">4.4 Gym vs Yoga</h2>
+<p>Your friend is choosing between joining a gym or a yoga class.
+Persuade them.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the yoga class.
+<span class="conn">First of all</span>, you’ve told me that you feel
+stressed lately, and yoga is excellent for both the body and the mind.
+It improves flexibility and helps you stay calm.</p>
+<p><span class="conn">On top of that</span>, a class has a fixed
+schedule and an instructor, which will keep you <span class="vocab">motivated</span>. <span class="conn">Also</span>, in a
+gym, many people buy a membership and stop going after a month, but with
+a class, you meet the same friendly people every week.</p>
+<p><span class="conn">Admittedly</span>, a gym has more equipment, <span class="conn">but</span> it can be <span class="vocab">intimidating</span> for beginners, and the membership fee
+is usually higher.</p>
+<p><span class="tpl">That’s why I really think</span> yoga is the better
+option. It’s <span class="vocab">gentle</span>, and it will fit your
+lifestyle.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>motivated</td>
+<td>eager to act</td>
+<td>I’m motivated to exercise.</td>
+</tr>
+<tr>
+<td>intimidating</td>
+<td>making you feel nervous</td>
+<td>The gym felt intimidating.</td>
+</tr>
+<tr>
+<td>gentle</td>
+<td>soft and mild</td>
+<td>A gentle workout.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="movie-night-in-vs-out">4.5 Movie Night In vs Out</h2>
+<p>Your family is picking between a movie night at home and an evening
+at the theatre. Persuade them.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> a movie night at
+home. <span class="conn">First of all</span>, it’s much cheaper. Theatre
+tickets for the whole family, plus parking and snacks, would cost a lot,
+but at home we can make our own popcorn.</p>
+<p><span class="conn">On top of that</span>, we can choose any movie we
+like and pause it when we need to. <span class="conn">Also</span>, we
+can wear our <span class="vocab">pajamas</span>, sit on the sofa under
+blankets, and enjoy a <span class="vocab">cozy</span> atmosphere without
+worrying about the crowd.</p>
+<p><span class="conn">Admittedly</span>, the theatre has a big screen
+and great sound, <span class="conn">but</span> it’s less comfortable for
+little kids, and they might get <span class="vocab">restless</span> or
+sleepy.</p>
+<p><span class="tpl">That’s why I really think</span> staying home is
+the better option. It’s relaxing, affordable, and perfect for <span class="vocab">family bonding</span>.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pajamas</td>
+<td>clothes worn for sleeping</td>
+<td>We stayed in our pajamas.</td>
+</tr>
+<tr>
+<td>cozy</td>
+<td>warm and comfortable</td>
+<td>A cozy living room.</td>
+</tr>
+<tr>
+<td>restless</td>
+<td>unable to stay still</td>
+<td>The kids were restless.</td>
+</tr>
+<tr>
+<td>family bonding</td>
+<td>spending time to grow closer as a family</td>
+<td>Movie night is family bonding.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="transportation-and-commuting">5 Transportation and
+Commuting</h1>
+<p>Topics: car, bus, bike, electric or gas, train or plane, a
+commute.</p>
+<h2 id="general-template-4">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="driving-vs-bus">5.1 Driving vs Bus</h2>
+<p>Your friend is choosing how to get to work: driving or taking the
+bus. Persuade them.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> taking the bus.
+<span class="conn">First of all</span>, you’d avoid the stress of heavy
+traffic. Instead of gripping the steering wheel, you could read, answer
+emails, or listen to music on the way.</p>
+<p><span class="conn">On top of that</span>, it’s much cheaper. Gas,
+insurance, and especially downtown <span class="vocab">parking
+fees</span> add up to a lot every month, but a monthly bus pass costs a
+fraction of that. <span class="conn">Also</span>, it’s better for the
+environment, since you’d reduce your <span class="vocab">carbon
+footprint</span>.</p>
+<p><span class="conn">Admittedly</span>, a car gives you freedom, <span class="conn">but</span> the bus stops right near your office, and you’d
+never have to search for a spot.</p>
+<p><span class="tpl">That’s why I really think</span> the bus is the
+better option. It’s <span class="vocab">economical</span> and <span class="vocab">stress-free</span>.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parking fees</td>
+<td>money paid to park</td>
+<td>Parking fees are high downtown.</td>
+</tr>
+<tr>
+<td>carbon footprint</td>
+<td>the amount of carbon you cause to be released</td>
+<td>Walking reduces your carbon footprint.</td>
+</tr>
+<tr>
+<td>economical</td>
+<td>saving money</td>
+<td>An economical choice.</td>
+</tr>
+<tr>
+<td>stress-free</td>
+<td>without worry</td>
+<td>A stress-free commute.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="electric-vs-gas-car">5.2 Electric vs Gas Car</h2>
+<p>Your brother is deciding between an electric car and a gas car.
+Persuade him.</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the electric car.
+<span class="conn">First of all</span>, it costs far less to run.
+Electricity is cheaper than gas, and electric cars need almost no <span class="vocab">maintenance</span>, since there are no oil changes.</p>
+<p><span class="conn">On top of that</span>, you’d help the environment
+by producing no <span class="vocab">exhaust</span> fumes. <span class="conn">Also</span>, the government offers <span class="vocab">incentives</span>, like tax rebates, which lower the
+purchase price.</p>
+<p><span class="conn">Admittedly</span>, a gas car can be refuelled in
+minutes, <span class="conn">but</span> you could charge an electric car
+at home overnight, and the number of public chargers is growing
+quickly.</p>
+<p><span class="tpl">That’s why I really think</span> the electric car
+is the better option. It’s <span class="vocab">sustainable</span>,
+quiet, and a smart choice for the future.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maintenance</td>
+<td>work to keep something in good condition</td>
+<td>Maintenance is cheap.</td>
+</tr>
+<tr>
+<td>exhaust</td>
+<td>gas released by an engine</td>
+<td>Exhaust fumes pollute the air.</td>
+</tr>
+<tr>
+<td>incentives</td>
+<td>rewards that encourage you to act</td>
+<td>There are tax incentives.</td>
+</tr>
+<tr>
+<td>sustainable</td>
+<td>not harming the future</td>
+<td>Sustainable energy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cycling-vs-train">5.3 Cycling vs Train</h2>
+<p>Your friend is choosing between cycling to work and taking the train.
+Persuade them.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> cycling to work.
+<span class="conn">First of all</span>, you’d get regular exercise
+without needing a <span class="vocab">gym membership</span>, and you’ve
+said that you want to get in shape. Even thirty minutes a day makes a
+big difference.</p>
+<p><span class="conn">On top of that</span>, cycling is free, and you’ll
+never be stuck waiting for a delayed train. <span class="conn">Also</span>, studies show that people who cycle feel
+happier and more energetic at work.</p>
+<p><span class="conn">Admittedly</span>, the train is warmer on cold
+days, <span class="conn">but</span> you can dress properly, and in bad
+weather, you could take the train just that day. Many offices also have
+<span class="vocab">showers</span> and bike parking.</p>
+<p><span class="tpl">That’s why I really think</span> cycling is the
+better option. It’s <span class="vocab">healthy</span> and reliable.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gym membership</td>
+<td>a paid right to use a fitness centre</td>
+<td>A gym membership costs sixty dollars a month.</td>
+</tr>
+<tr>
+<td>showers</td>
+<td>places to wash after exercise</td>
+<td>The office has showers.</td>
+</tr>
+<tr>
+<td>healthy</td>
+<td>good for your body</td>
+<td>A healthy habit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="train-vs-plane">5.4 Train vs Plane</h2>
+<p>Your family is picking between a train and a plane for a trip.
+Persuade them.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the train. <span class="conn">First of all</span>, it’s far more relaxing. We don’t need
+to arrive three hours early, go through <span class="vocab">security
+checks</span>, or worry about luggage fees. We just walk in and sit
+down.</p>
+<p><span class="conn">On top of that</span>, the seats are larger, and
+we can walk around, so the kids won’t get restless. <span class="conn">Also</span>, we’ll enjoy <span class="vocab">scenic
+views</span> through the window instead of just clouds.</p>
+<p><span class="conn">Admittedly</span>, a plane is faster, <span class="conn">but</span> when we count the time spent getting to the
+airport and waiting, the difference is small, and the train takes us
+right to the city centre.</p>
+<p><span class="tpl">That’s why I really think</span> the train is the
+better option. It’s comfortable and fun for the <span class="vocab">entire</span> family.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>security checks</td>
+<td>inspections before boarding</td>
+<td>Security checks take time.</td>
+</tr>
+<tr>
+<td>scenic views</td>
+<td>beautiful landscapes</td>
+<td>The train offers scenic views.</td>
+</tr>
+<tr>
+<td>entire</td>
+<td>whole</td>
+<td>The entire family agreed.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="car-vs-taxis-and-transit">5.5 Car vs Taxis and Transit</h2>
+<p>Your parents are choosing between buying a car and using taxis and
+public transit. Persuade them.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> using taxis and
+public transit. <span class="conn">First of all</span>, owning a car is
+costly. Besides the purchase price, you’d pay for insurance, gas,
+repairs, and parking, and the total is surprising.</p>
+<p><span class="conn">On top of that</span>, you rarely drive long
+distances, so a car would sit in the driveway most of the day, losing
+value. <span class="conn">Also</span>, with a transit pass and a
+ride-sharing app, you can go anywhere without the responsibility of
+<span class="vocab">maintenance</span>.</p>
+<p><span class="conn">Admittedly</span>, a car is convenient, <span class="conn">but</span> you’d also have to deal with traffic and parking
+problems, and at your age, driving at night can be tiring.</p>
+<p><span class="tpl">That’s why I really think</span> public options are
+the better choice. They’re <span class="vocab">affordable</span> and
+<span class="vocab">hassle-free</span>.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maintenance</td>
+<td>the work of keeping something in good condition</td>
+<td>Car maintenance is expensive.</td>
+</tr>
+<tr>
+<td>affordable</td>
+<td>not too expensive</td>
+<td>Affordable transport.</td>
+</tr>
+<tr>
+<td>hassle-free</td>
+<td>without trouble</td>
+<td>A hassle-free ride.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="work-study-and-community">6 Work, Study, and Community</h1>
+<p>Topics: a job offer, a program, a school, an office setup, a charity,
+a volunteer role.</p>
+<h2 id="general-template-5">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="pay-vs-benefits">6.1 Pay vs Benefits</h2>
+<p>Your friend is picking between two job offers with different pay and
+benefits. Persuade them.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the job with
+better benefits. <span class="conn">First of all</span>, a good package,
+with health insurance, paid vacation, and a pension plan, is worth
+thousands of dollars a year, and the extra salary at the other job
+doesn’t cover that.</p>
+<p><span class="conn">On top of that</span>, you’ve told me you want to
+start a family, so <span class="vocab">job security</span> and <span class="vocab">parental leave</span> matter a lot. <span class="conn">Also</span>, the company offers training, which helps your
+<span class="vocab">career development</span>.</p>
+<p><span class="conn">Admittedly</span>, the other job pays more, <span class="conn">but</span> you’d have to buy your own insurance, and your
+workload would probably be heavier.</p>
+<p><span class="tpl">That’s why I really think</span> the first offer is
+the better option. It’s <span class="vocab">rewarding</span> in the long
+run.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>job security</td>
+<td>the confidence that your job is stable</td>
+<td>Job security matters to me.</td>
+</tr>
+<tr>
+<td>parental leave</td>
+<td>time off to care for a new child</td>
+<td>She took parental leave.</td>
+</tr>
+<tr>
+<td>career development</td>
+<td>growth in your working life</td>
+<td>The firm supports career development.</td>
+</tr>
+<tr>
+<td>rewarding</td>
+<td>giving satisfaction</td>
+<td>A rewarding career.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="nearby-vs-famous-school">6.2 Nearby vs Famous School</h2>
+<p>Your sibling is choosing between two schools for their child.
+Persuade them.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the school that
+is closer to home. <span class="conn">First of all</span>, your child
+wouldn’t have to spend an hour on the bus every day. A short trip means
+more sleep, more time for homework, and more time to play.</p>
+<p><span class="conn">On top of that</span>, a local school builds a
+strong sense of community. Your child would make friends who live
+nearby, and you could easily arrange <span class="vocab">playdates</span>. <span class="conn">Also</span>, you’d be
+able to attend school events without taking time off work.</p>
+<p><span class="conn">Admittedly</span>, the other school has a famous
+name, <span class="conn">but</span> a good teacher and a supportive
+environment matter more than a reputation.</p>
+<p><span class="tpl">That’s why I really think</span> the nearby school
+is the better option. It’s <span class="vocab">practical</span> and
+gives your child a <span class="vocab">balanced</span> life.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>playdates</td>
+<td>planned times for children to play together</td>
+<td>We arranged playdates.</td>
+</tr>
+<tr>
+<td>practical</td>
+<td>sensible</td>
+<td>A practical choice.</td>
+</tr>
+<tr>
+<td>balanced</td>
+<td>with a good mix</td>
+<td>A balanced schedule.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="spacious-vs-cozy-office">6.3 Spacious vs Cozy Office</h2>
+<p>Your office is choosing between a more spacious setup and a cozier
+one. Persuade your manager.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the more spacious
+setup. <span class="conn">First of all</span>, when people have room,
+they feel less stressed and more productive. A crowded office leads to
+noise and distractions.</p>
+<p><span class="conn">On top of that</span>, a spacious layout allows us
+to create different zones, such as a quiet area for focused work and a
+meeting space for <span class="vocab">collaboration</span>. <span class="conn">Also</span>, it makes a better impression on clients who
+visit, and it leaves room for our team to grow.</p>
+<p><span class="conn">Admittedly</span>, a cozier office feels warmer
+and costs less, <span class="conn">but</span> we can add plants and soft
+lighting to make the larger space just as <span class="vocab">inviting</span>.</p>
+<p><span class="tpl">That’s why I really think</span> the spacious
+option is the better choice. It supports our <span class="vocab">long-term</span> goals.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>collaboration</td>
+<td>working together</td>
+<td>Collaboration improves results.</td>
+</tr>
+<tr>
+<td>inviting</td>
+<td>pleasant and attractive</td>
+<td>An inviting space.</td>
+</tr>
+<tr>
+<td>long-term</td>
+<td>lasting for a long time</td>
+<td>A long-term plan.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hospital-vs-animal-shelter">6.4 Hospital vs Animal Shelter</h2>
+<p>Your friend wants to volunteer and is choosing between a hospital and
+an animal shelter. Persuade them.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the animal
+shelter. <span class="conn">First of all</span>, the animals really need
+help, and you love dogs and cats. You’d walk them, feed them, and give
+them the attention that they miss.</p>
+<p><span class="conn">On top of that</span>, it’s a <span class="vocab">stress-relieving</span> activity. Spending time with
+animals lowers anxiety and brings a lot of joy. <span class="conn">Also</span>, the schedule at a shelter is usually flexible,
+so you can fit it around your job.</p>
+<p><span class="conn">Admittedly</span>, a hospital lets you help people
+directly, <span class="conn">but</span> the training takes longer, and
+the environment can be emotionally heavy.</p>
+<p><span class="tpl">That’s why I really think</span> the shelter is the
+better option. It’s <span class="vocab">fulfilling</span>, and you’d
+help animals find a <span class="vocab">loving</span> home.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stress-relieving</td>
+<td>reducing worry</td>
+<td>A stress-relieving hobby.</td>
+</tr>
+<tr>
+<td>fulfilling</td>
+<td>giving a feeling of satisfaction</td>
+<td>A fulfilling job.</td>
+</tr>
+<tr>
+<td>loving</td>
+<td>full of care</td>
+<td>A loving family.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="museum-vs-science-centre">6.5 Museum vs Science Centre</h2>
+<p>Your class is choosing a field trip destination: a museum or a
+science centre. Persuade your teacher.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the science
+centre. <span class="conn">First of all</span>, it offers <span class="vocab">hands-on</span> activities, so students can touch, build,
+and experiment instead of just looking. That makes learning more
+exciting.</p>
+<p><span class="conn">On top of that</span>, it connects directly to
+what we’re studying in class, like electricity and space. <span class="conn">Also</span>, there are <span class="vocab">interactive</span> exhibits and a planetarium show, which
+everyone, even the students who normally lose interest, would enjoy.</p>
+<p><span class="conn">Admittedly</span>, a museum teaches us about
+history, <span class="conn">but</span> most of us have already visited
+one, and we’d spend the time walking past glass cases.</p>
+<p><span class="tpl">That’s why I really think</span> the science centre
+is the better choice. It’s <span class="vocab">educational</span> and
+fun at the same time.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hands-on</td>
+<td>involving physical participation</td>
+<td>A hands-on workshop.</td>
+</tr>
+<tr>
+<td>interactive</td>
+<td>involving user participation</td>
+<td>An interactive display.</td>
+</tr>
+<tr>
+<td>educational</td>
+<td>teaching something useful</td>
+<td>An educational visit.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="pets-classes-and-dining">7 Pets, Classes, and Dining</h1>
+<p>Topics: a dog or cat, a course, a language school, a restaurant,
+catering.</p>
+<h2 id="general-template-6">General Template</h2>
+<p><span class="tpl">I would strongly recommend</span> [your choice].
+<span class="conn">First of all</span>, [reason 1 with a benefit].</p>
+<p><span class="conn">On top of that</span>, [reason 2 or an example].
+<span class="conn">Admittedly</span>, [the other option has one
+advantage], <span class="conn">but</span> [why yours is still
+better].</p>
+<p><span class="tpl">That’s why I really think</span> [your choice] is
+[the better option for you].</p>
+<h2 id="dog-vs-cat">7.1 Dog vs Cat</h2>
+<p>Your family is choosing between adopting a dog and a cat. Persuade
+them.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> adopting a cat.
+<span class="conn">First of all</span>, cats are independent. Since
+we’re all out at work and school during the day, a cat will be fine on
+its own, whereas a dog needs several walks every day.</p>
+<p><span class="conn">On top of that</span>, a cat is cheaper and
+cleaner. It needs less food, and it grooms itself, so we won’t have to
+spend money on grooming or <span class="vocab">training classes</span>.
+<span class="conn">Also</span>, cats are quiet, which is important for
+our apartment and neighbours.</p>
+<p><span class="conn">Admittedly</span>, a dog is more energetic and
+loyal, <span class="conn">but</span> a cat can still be very
+affectionate, and it will curl up on our laps in the evening.</p>
+<p><span class="tpl">That’s why I really think</span> a cat is the
+better option for us. It’s <span class="vocab">low-maintenance</span>
+and a great <span class="vocab">companion</span>.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>training classes</td>
+<td>lessons that teach a pet to behave</td>
+<td>We took training classes.</td>
+</tr>
+<tr>
+<td>low-maintenance</td>
+<td>needing little care</td>
+<td>A low-maintenance plant.</td>
+</tr>
+<tr>
+<td>companion</td>
+<td>someone who keeps you company</td>
+<td>A faithful companion.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evening-vs-online-class">7.2 Evening vs Online Class</h2>
+<p>Your friend is choosing between an evening class and an online
+course. Persuade them.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the online
+course. <span class="conn">First of all</span>, you can study whenever
+it suits you, such as early in the morning or on weekends. With your
+changing work schedule, that flexibility is a big advantage.</p>
+<p><span class="conn">On top of that</span>, you’d save time and money
+on travel, and you could learn at your own <span class="vocab">pace</span>. <span class="conn">Also</span>, you can
+replay the lessons if you don’t understand something the first time.</p>
+<p><span class="conn">Admittedly</span>, an evening class gives you
+direct contact with a teacher, <span class="conn">but</span> many online
+courses have discussion forums and live sessions, and you can email the
+instructor with questions.</p>
+<p><span class="tpl">That’s why I really think</span> the online course
+is the better option. It’s <span class="vocab">convenient</span> and
+fits your <span class="vocab">busy lifestyle</span>.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pace</td>
+<td>speed of doing something</td>
+<td>Study at your own pace.</td>
+</tr>
+<tr>
+<td>convenient</td>
+<td>easy and handy</td>
+<td>An online class is convenient.</td>
+</tr>
+<tr>
+<td>busy lifestyle</td>
+<td>a life full of activities</td>
+<td>A busy lifestyle needs flexibility.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trade-school-vs-university">7.3 Trade School vs University</h2>
+<p>Your cousin is choosing between a trade school and a university.
+Persuade them.</p>
+<h3 id="sample-32">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the trade school.
+<span class="conn">First of all</span>, the programs are shorter, so
+you’d start working in two years instead of four, and you’d begin
+earning money much earlier.</p>
+<p><span class="conn">On top of that</span>, tuition is much lower, so
+you’d graduate with little or no <span class="vocab">student
+debt</span>. <span class="conn">Also</span>, skilled trades, like
+electricians and plumbers, are in high demand, which means excellent
+<span class="vocab">job prospects</span> and <span class="vocab">good
+pay</span>.</p>
+<p><span class="conn">Admittedly</span>, a university degree can open
+many doors, <span class="conn">but</span> it doesn’t guarantee a job,
+and you like working with your hands.</p>
+<p><span class="tpl">That’s why I really think</span> the trade school
+is the better option. It’s a practical path to a secure career.</p>
+<h3 id="vocabulary-32">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>student debt</td>
+<td>money owed after studying</td>
+<td>Student debt can last years.</td>
+</tr>
+<tr>
+<td>job prospects</td>
+<td>chances of finding work</td>
+<td>Good job prospects.</td>
+</tr>
+<tr>
+<td>good pay</td>
+<td>a high salary</td>
+<td>Plumbers earn good pay.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fancy-vs-home-cooked-dinner">7.4 Fancy vs Home-Cooked
+Dinner</h2>
+<p>Your family is picking a place for an anniversary dinner: a fancy
+restaurant or a home-cooked meal. Persuade them.</p>
+<h3 id="sample-33">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> a home-cooked
+meal. <span class="conn">First of all</span>, it’s more personal.
+Preparing the dishes ourselves shows love and effort, and we can cook
+the favourite recipes of my parents.</p>
+<p><span class="conn">On top of that</span>, it’s much cheaper, so we
+can spend the savings on a nice gift. <span class="conn">Also</span>, at
+home, we don’t have to follow a <span class="vocab">strict</span>
+schedule or sit quietly, and we can play music and share stories as long
+as we like in a <span class="vocab">cozy</span> setting.</p>
+<p><span class="conn">Admittedly</span>, a fancy restaurant is elegant,
+<span class="conn">but</span> it can feel <span class="vocab">stiff</span> and noisy, and the service is sometimes
+rushed.</p>
+<p><span class="tpl">That’s why I really think</span> a home-cooked
+dinner is the better option. It’s <span class="vocab">heartfelt</span>
+and unforgettable.</p>
+<h3 id="vocabulary-33">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>strict</td>
+<td>demanding and firm</td>
+<td>A strict rule.</td>
+</tr>
+<tr>
+<td>cozy</td>
+<td>warm and comfortable</td>
+<td>A cozy home.</td>
+</tr>
+<tr>
+<td>stiff</td>
+<td>formal and not relaxed</td>
+<td>The mood was stiff.</td>
+</tr>
+<tr>
+<td>heartfelt</td>
+<td>sincere</td>
+<td>A heartfelt gesture.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="catering-vs-cooking">7.5 Catering vs Cooking</h2>
+<p>You are organizing a party and must choose between catering and
+cooking yourself. Persuade your friend.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> hiring a caterer.
+<span class="conn">First of all</span>, it saves a huge amount of time.
+We won’t spend days shopping, chopping, and cooking, so we can focus on
+decorations and welcoming guests.</p>
+<p><span class="conn">On top of that</span>, a professional caterer
+provides a wide variety of dishes, and they take care of the serving and
+<span class="vocab">cleaning up</span>. <span class="conn">Also</span>,
+we won’t worry about running out of food, because they plan the right
+<span class="vocab">quantity</span>.</p>
+<p><span class="conn">Admittedly</span>, cooking ourselves is cheaper,
+<span class="conn">but</span> we’d be so tired and stressed that we
+wouldn’t enjoy our own party.</p>
+<p><span class="tpl">That’s why I really think</span> catering is the
+better option. It’s <span class="vocab">stress-free</span>, and the
+guests will be impressed.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cleaning up</td>
+<td>tidying after an event</td>
+<td>Cleaning up took an hour.</td>
+</tr>
+<tr>
+<td>quantity</td>
+<td>an amount</td>
+<td>The quantity was perfect.</td>
+</tr>
+<tr>
+<td>stress-free</td>
+<td>without worry</td>
+<td>A stress-free evening.</td>
+</tr>
+</tbody>
+</table>
+
+<script>
+(function () {
+  /* ── Theme toggle (dark by default, light on request) ──── */
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
+  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+
+  const themeBtn = document.createElement('button');
+  themeBtn.id = '_theme-toggle';
+  const isDark = () => root.getAttribute('data-theme') === 'dark';
+  const syncThemeBtn = () => {
+    themeBtn.innerHTML = isDark() ? '☀' : '☾';
+    themeBtn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('_doc_theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
+  document.body.appendChild(themeBtn);
+
+  /* ── Grab TOC (Pandoc renders it as <nav id="TOC">) ──── */
+  const toc = document.getElementById('TOC');
+
+  /* ── Build toggle button ─────────────────────────────── */
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = '_toc-toggle';
+  toggleBtn.innerHTML = '☰';
+  toggleBtn.title = 'Hide contents';
+  document.body.appendChild(toggleBtn);
+
+  /* ── Build sidebar ───────────────────────────────────── */
+  const sidebar = document.createElement('div');
+  sidebar.id = '_toc-sidebar';
+
+  let tocReady = false;  /* set once updateActive is wired up below */
+  if (toc) {
+    const label = document.createElement('div');
+    label.id = '_toc-sidebar-label';
+    label.textContent = '📚 Contents';
+    sidebar.appendChild(label);
+
+    /* Heading-level selector: hides TOC items deeper than the chosen level */
+    const levelBar = document.createElement('div');
+    levelBar.id = '_toc-levels';
+    levelBar.appendChild(document.createTextNode('Levels:'));
+    const levelBtns = [];
+    function applyTocLevel(n) {
+      toc.querySelectorAll('li').forEach(li => {
+        let d = 0;
+        for (let p = li.parentElement; p && p !== toc; p = p.parentElement) {
+          if (p.tagName === 'UL') d++;
+        }
+        li.classList.toggle('toc-hide', d > n);
+      });
+      levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
+      try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      if (tocReady) updateActive();
+    }
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = n === 6 ? 'All' : String(n);
+      b.dataset.level = String(n);
+      b.title = n === 6 ? 'Show all heading levels' : 'Show heading levels up to ' + n;
+      b.addEventListener('click', () => applyTocLevel(n));
+      levelBtns.push(b);
+      levelBar.appendChild(b);
+    });
+    sidebar.appendChild(levelBar);
+    sidebar.appendChild(toc);
+
+    let startLevel = 2;
+    try {
+      const saved = parseInt(localStorage.getItem('_toc-level'), 10);
+      if (saved >= 1 && saved <= 6) startLevel = saved;
+    } catch (e) {}
+    try { applyTocLevel(startLevel); } catch (e) { /* never break the sidebar */ }
+  }
+
+  /* ── Build resize handle ─────────────────────────────── */
+  const resizeHandle = document.createElement('div');
+  resizeHandle.id = '_toc-resize';
+
+  /* ── Build main content wrapper ──────────────────────── */
+  const mainContent = document.createElement('div');
+  mainContent.id = '_main-content';
+
+  /* Move all body children (except the toggle btn) into mainContent */
+  Array.from(document.body.childNodes)
+    .filter(n => n !== toggleBtn && n !== themeBtn)
+    .forEach(n => mainContent.appendChild(n));
+
+  /* ── Assemble layout ─────────────────────────────────── */
+  const layout = document.createElement('div');
+  layout.id = '_layout';
+  layout.appendChild(sidebar);
+  layout.appendChild(resizeHandle);
+  layout.appendChild(mainContent);
+  document.body.appendChild(layout);
+
+  /* ── Toggle show / hide ──────────────────────────────── */
+  let collapsed = false;
+  let savedWidth = 260;
+
+  toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (collapsed) {
+      sidebar.classList.add('collapsed');
+      resizeHandle.style.display = 'none';
+      toggleBtn.innerHTML = '▶';
+      toggleBtn.title = 'Show contents';
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebar.style.width = savedWidth + 'px';
+      resizeHandle.style.display = '';
+      toggleBtn.innerHTML = '☰';
+      toggleBtn.title = 'Hide contents';
+    }
+  });
+
+  /* ── Drag to resize ──────────────────────────────────── */
+  let dragging = false, startX = 0, startW = 0;
+
+  resizeHandle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = sidebar.offsetWidth;
+    resizeHandle.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(160, Math.min(520, startW + (e.clientX - startX)));
+    sidebar.style.width = w + 'px';
+    savedWidth = w;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizeHandle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  });
+
+  /* ── Active TOC link highlight on scroll ─────────────── */
+  const tocLinks = Array.from(document.querySelectorAll('#TOC a[href^="#"]'));
+  function updateActive() {
+    let active = null;
+    tocLinks.forEach(a => {
+      if (a.offsetParent === null) return;  /* hidden by level selector */
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target && target.getBoundingClientRect().top <= 80) active = a;
+    });
+    tocLinks.forEach(a => a.classList.toggle('toc-active', a === active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+  tocReady = true;
+
+  /* ── Header bar (language label + copy) on code blocks ── */
+  document.querySelectorAll('div.sourceCode').forEach(block => {
+    const codeEl = block.querySelector('code');
+    const preEl = block.querySelector('pre');
+    let lang = '';
+    (preEl ? preEl.className : '').split(/\s+/).concat(
+      (codeEl ? codeEl.className : '').split(/\s+/)
+    ).forEach(c => { if (c && c !== 'sourceCode') lang = c; });
+
+    const head = document.createElement('div');
+    head.id = '_code-head';
+
+    const label = document.createElement('span');
+    label.textContent = lang || 'code';
+    head.appendChild(label);
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'cursor:pointer;background:transparent;border:none;'
+      + 'color:inherit;font:inherit;font-weight:600;padding:0;transition:color 0.15s;';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(codeEl ? codeEl.innerText : '');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    };
+    head.appendChild(btn);
+
+    block.insertBefore(head, block.firstChild);
+  });
+})();
+</script>
+</body>
+</html>
