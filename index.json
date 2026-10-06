@@ -1,5 +1,20 @@
 [
   {
+    "name": "cheat-sheets",
+    "folder": "cheat-sheets",
+    "files": [
+      {
+        "name": "category",
+        "html": "cheat-sheets/category.html"
+      },
+      {
+        "name": "viewer",
+        "html": "cheat-sheets/viewer.html"
+      }
+    ],
+    "subfolders": []
+  },
+  {
     "name": "projects",
     "folder": "projects",
     "files": [

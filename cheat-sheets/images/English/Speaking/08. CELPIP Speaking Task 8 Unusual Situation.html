@@ -428,7 +428,31 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content .read-toggle::after { display: none !important; }
 }
+
+/* ── Read tracking ── */
+#_main-content .read-toggle { cursor: pointer; }
+#_main-content .read-toggle::after {
+  content: '✓';
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.1em; height: 1.1em; margin-left: 0.5em;
+  border: 2px solid #9ca3af; border-radius: 50%;
+  color: transparent; font-size: 0.6em; font-weight: 700;
+  vertical-align: middle; transition: all 0.15s;
+}
+#_main-content .read-toggle.read-off, #_main-content .read-toggle.read-auto { cursor: inherit; }
+#_main-content .read-toggle.read-off::after { display: none; }
+#_main-content .read-toggle:not(.read-off):not(.read-auto):hover::after { border-color: #16a34a; }
+#_main-content .read-toggle.read-done::after {
+  background: #16a34a; border-color: #16a34a; color: #fff;
+}
+#TOC a.read-done::before { content: '✓ '; color: #16a34a; font-weight: 700; }
+#_read-progress { padding: 8px 12px; }
+#_read-text { font-size: 0.78em; color: var(--text); margin-bottom: 4px; }
+#_read-track { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+#_read-fill { height: 100%; width: 0; background: #16a34a; transition: width 0.25s; }
+#_read-progress.complete #_read-text { color: #16a34a; font-weight: 600; }
 </style>
 
   <meta charset="utf-8" />
@@ -2813,6 +2837,7 @@ incredibly relaxing.</p>
       });
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
+      document.dispatchEvent(new Event('_toc-level'));
       if (tocReady) updateActive();
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
@@ -2916,6 +2941,84 @@ incredibly relaxing.</p>
   window.addEventListener('scroll', updateActive, { passive: true });
   updateActive();
   tocReady = true;
+
+  /* ── Read tracking: click a heading to mark it read (green ✓) ── */
+  (function () {
+    const store = '_read:' + location.pathname;
+    let done = {};
+    try { done = JSON.parse(localStorage.getItem(store) || '{}') || {}; } catch (e) {}
+
+    const items = [];  /* {id, heading, link} */
+    tocLinks.forEach(a => {
+      const id = decodeURIComponent(a.getAttribute('href').slice(1));
+      const t = document.getElementById(id);
+      if (!t || items.some(i => i.id === id)) return;
+      const heading = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (heading) items.push({ id: id, heading: heading, link: a });
+    });
+    if (!items.length) return;
+
+    const bar = document.createElement('div');
+    bar.id = '_read-progress';
+    bar.innerHTML = '<div id="_read-text"></div><div id="_read-track"><div id="_read-fill"></div></div>';
+    const levels = document.getElementById('_toc-levels');
+    if (levels && levels.parentNode) levels.parentNode.insertBefore(bar, levels.nextSibling);
+    else sidebar.insertBefore(bar, sidebar.firstChild);
+    const textEl = bar.querySelector('#_read-text');
+    const fillEl = bar.querySelector('#_read-fill');
+
+    /* Tree from the TOC nesting: only the deepest visible headings are
+       clickable; a parent is checked automatically once all its visible
+       children are read. */
+    items.forEach(i => { i.li = i.link.closest('li'); });
+    const byLi = new Map(items.map(i => [i.li, i]));
+    const isVis = i => !i.li || !i.li.classList.contains('toc-hide');
+    function kids(i) {
+      if (!i.li) return [];
+      return Array.from(i.li.querySelectorAll(':scope > ul > li'))
+        .map(li => byLi.get(li)).filter(c => c && isVis(c));
+    }
+    function isRead(i) {
+      const k = kids(i);
+      return k.length ? k.every(isRead) : !!done[i.id];
+    }
+    function render() {
+      let n = 0, total = 0;
+      items.forEach(i => {
+        const vis = isVis(i);
+        const leaf = vis && kids(i).length === 0;
+        const on = vis && isRead(i);
+        if (leaf) { total++; if (on) n++; }
+        i.leaf = leaf;
+        i.heading.classList.toggle('read-off', !vis);
+        i.heading.classList.toggle('read-auto', vis && !leaf);
+        i.heading.classList.toggle('read-done', on);
+        i.link.classList.toggle('read-done', on);
+        i.heading.title = !vis ? '' : leaf ? 'Click to mark as read / unread'
+          : 'Checked automatically when all its sub-sections are read';
+      });
+      const left = total - n;
+      textEl.textContent = n + ' / ' + total + ' read · ' + left + ' remaining';
+      fillEl.style.width = (total ? 100 * n / total : 0) + '%';
+      bar.classList.toggle('complete', total > 0 && left === 0);
+    }
+    document.addEventListener('_toc-level', render);
+    function save() {
+      try { localStorage.setItem(store, JSON.stringify(done)); } catch (e) {}
+    }
+
+    items.forEach(i => {
+      i.heading.classList.add('read-toggle');
+      i.heading.addEventListener('click', e => {
+        if (e.target.closest('a') || !i.leaf) return;
+        if (window.getSelection && String(window.getSelection())) return;
+        if (done[i.id]) delete done[i.id]; else done[i.id] = 1;
+        save();
+        render();
+      });
+    });
+    render();
+  })();
 
   /* ── Header bar (language label + copy) on code blocks ── */
   document.querySelectorAll('div.sourceCode').forEach(block => {
