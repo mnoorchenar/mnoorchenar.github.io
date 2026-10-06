@@ -428,23 +428,23 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
-  #_main-content .read-toggle::after { display: none !important; }
+  #_main-content .read-toggle::before { display: none !important; }
 }
 
 /* ── Read tracking ── */
 #_main-content .read-toggle { cursor: pointer; }
-#_main-content .read-toggle::after {
+#_main-content .read-toggle::before {
   content: '✓';
   display: inline-flex; align-items: center; justify-content: center;
-  width: 1.1em; height: 1.1em; margin-left: 0.5em;
+  width: 1.1em; height: 1.1em; margin-right: 0.5em;
   border: 2px solid #9ca3af; border-radius: 50%;
   color: transparent; font-size: 0.6em; font-weight: 700;
   vertical-align: middle; transition: all 0.15s;
 }
 #_main-content .read-toggle.read-off, #_main-content .read-toggle.read-auto { cursor: inherit; }
-#_main-content .read-toggle.read-off::after { display: none; }
-#_main-content .read-toggle:not(.read-off):not(.read-auto):hover::after { border-color: #16a34a; }
-#_main-content .read-toggle.read-done::after {
+#_main-content .read-toggle.read-off::before { display: none; }
+#_main-content .read-toggle:not(.read-off):not(.read-auto):hover::before { border-color: #16a34a; }
+#_main-content .read-toggle.read-done::before {
   background: #16a34a; border-color: #16a34a; color: #fff;
 }
 #TOC a.read-done::before { content: '✓ '; color: #16a34a; font-weight: 700; }
