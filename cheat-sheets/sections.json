@@ -67,6 +67,24 @@
       "icon": "fa-solid fa-language",
       "subsections": [
         {
+          "id": "Overview",
+          "title": "Exam Overview",
+          "description": "CELPIP Listening, Reading, Writing & Speaking guides",
+          "icon": "fa-solid fa-list-check",
+          "images": [
+            "images/English/CELPIP Listening_ Six-Part Guide.png",
+            "images/English/CELPIP Reading_ Four-Part Guide.png",
+            "images/English/CELPIP Writing_ Two-Task Study Guide.png",
+            "images/English/CELPIP Speaking_ 8-Task Guide.png"
+          ],
+          "captions": [
+            "CELPIP Listening: Six-Part Guide",
+            "CELPIP Reading: Four-Part Guide",
+            "CELPIP Writing: Two-Task Study Guide",
+            "CELPIP Speaking: 8-Task Guide"
+          ]
+        },
+        {
           "id": "Writing",
           "title": "Writing",
           "description": "CELPIP Writing Tasks 1 & 2",
