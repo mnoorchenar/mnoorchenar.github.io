@@ -4,7 +4,7 @@ Concept summaries / cheat sheets, browsed as a slideshow. Each item can be a pic
 
 ## Adding a new section
 
-1. Create a folder for the items: `cheat-sheets/images/<section-id>/` (e.g. `python-basics`), and drop the image or `.html` files in it (`01.png`, `02.html`, …).
+1. Create a folder for the items: `cheat-sheets/content/<NNN-section-id>/` (e.g. `006-python-basics`; the number sets the order), and drop the image or `.html` files in it (`01.png`, `02.html`, …).
 2. Add an entry to `sections.json`:
 
 ```json
@@ -16,8 +16,8 @@ Concept summaries / cheat sheets, browsed as a slideshow. Each item can be a pic
       "description": "Syntax, data structures, and idioms",
       "icon": "fa-brands fa-python",
       "images": [
-        "images/python-basics/01.png",
-        "images/python-basics/02.png"
+        "content/006-python-basics/01.png",
+        "content/006-python-basics/02.png"
       ],
       "captions": [
         "Variables and Type Conversion",
@@ -41,17 +41,17 @@ A section can group its items into subcategories instead of a flat `images` list
 
 ```json
 {
-  "id": "LLM",
+  "id": "004-llm",
   "title": "LLM",
   "description": "Large language model concepts, by subtopic",
   "icon": "fa-solid fa-brain",
   "subsections": [
     {
-      "id": "RAG",
+      "id": "01-rag",
       "title": "RAG",
       "description": "Retrieval-Augmented Generation",
       "icon": "fa-solid fa-magnifying-glass",
-      "images": ["images/LLM/RAG/01.png", "images/LLM/RAG/02.png"],
+      "images": ["content/004-llm/01-rag/01.png", "content/004-llm/01-rag/02.png"],
       "captions": ["RAG Overview", "RAG Pipeline"]
     }
   ]
@@ -59,3 +59,7 @@ A section can group its items into subcategories instead of a flat `images` list
 ```
 
 On the hub, a section with `subsections` opens `category.html?s=<section-id>` — a grid of its subcategories — instead of going straight to the slideshow. Picking a subcategory opens `viewer.html?s=<section-id>&sub=<subsection-id>`.
+
+## Naming convention
+
+All content lives in `content/`. Prefix every section folder/id with a 3-digit number (`001-python`, `002-pandas`, …) and every subsection folder/id with a 2-digit number (`01-rag`, `02-writing`, …). The number shows the intended order; list entries in `sections.json` in the same order, and keep the folder name equal to the `id`.

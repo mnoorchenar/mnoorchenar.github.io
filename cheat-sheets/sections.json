@@ -6,7 +6,7 @@
       "description": "Core Python programming concepts",
       "icon": "fa-brands fa-python",
       "images": [
-        "images/001-python/01. Python Fundamental Programming CheatSheet.html"
+        "content/001-python/01. Python Fundamental Programming CheatSheet.html"
       ],
       "captions": [
         "Python Fundamental Programming Cheat Sheet"
@@ -18,7 +18,7 @@
       "description": "Data manipulation with the Pandas library",
       "icon": "fa-solid fa-table",
       "images": [
-        "images/002-pandas/01. Pandas Library Comprehensive CheatSheet.html"
+        "content/002-pandas/01. Pandas Library Comprehensive CheatSheet.html"
       ],
       "captions": [
         "Pandas Library Comprehensive Cheat Sheet"
@@ -30,27 +30,27 @@
       "description": "Querying and managing relational databases",
       "icon": "fa-solid fa-database",
       "images": [
-        "images/003-sql/01. SQL Cheat Sheet.html"
+        "content/003-sql/01. SQL Cheat Sheet.html"
       ],
       "captions": [
         "SQL Cheat Sheet"
       ]
     },
     {
-      "id": "LLM",
+      "id": "004-llm",
       "title": "LLM",
       "description": "Large language model concepts, by subtopic",
       "icon": "fa-solid fa-brain",
       "subsections": [
         {
-          "id": "RAG",
+          "id": "01-rag",
           "title": "RAG",
           "description": "Retrieval-Augmented Generation",
           "icon": "fa-solid fa-magnifying-glass",
           "images": [
-            "images/LLM/RAG/01.png",
-            "images/LLM/RAG/02.png",
-            "images/LLM/RAG/03.png"
+            "content/004-llm/01-rag/01.png",
+            "content/004-llm/01-rag/02.png",
+            "content/004-llm/01-rag/03.png"
           ],
           "captions": [
             "RAG Overview",
@@ -61,21 +61,21 @@
       ]
     },
     {
-      "id": "English",
+      "id": "005-english",
       "title": "English Templates",
       "description": "CELPIP exam templates, by section",
       "icon": "fa-solid fa-language",
       "subsections": [
         {
-          "id": "Overview",
+          "id": "01-overview",
           "title": "Exam Overview",
           "description": "CELPIP Listening, Reading, Writing & Speaking guides",
           "icon": "fa-solid fa-list-check",
           "images": [
-            "images/English/Overview/CELPIP Listening_ Six-Part Guide.png",
-            "images/English/Overview/CELPIP Reading_ Four-Part Guide.png",
-            "images/English/Overview/CELPIP Writing_ Two-Task Study Guide.png",
-            "images/English/Overview/CELPIP Speaking_ 8-Task Guide.png"
+            "content/005-english/01-overview/CELPIP Listening_ Six-Part Guide.png",
+            "content/005-english/01-overview/CELPIP Reading_ Four-Part Guide.png",
+            "content/005-english/01-overview/CELPIP Writing_ Two-Task Study Guide.png",
+            "content/005-english/01-overview/CELPIP Speaking_ 8-Task Guide.png"
           ],
           "captions": [
             "CELPIP Listening: Six-Part Guide",
@@ -85,13 +85,13 @@
           ]
         },
         {
-          "id": "Writing",
+          "id": "02-writing",
           "title": "Writing",
           "description": "CELPIP Writing Tasks 1 & 2",
           "icon": "fa-solid fa-pen",
           "images": [
-            "images/English/Writing/01. CELPIP Writing Task 1 Email.html",
-            "images/English/Writing/02. CELPIP Writing Task 2 Survey Response.html"
+            "content/005-english/02-writing/01. CELPIP Writing Task 1 Email.html",
+            "content/005-english/02-writing/02. CELPIP Writing Task 2 Survey Response.html"
           ],
           "captions": [
             "CELPIP Writing Task 1: Email",
@@ -99,19 +99,19 @@
           ]
         },
         {
-          "id": "Speaking",
+          "id": "03-speaking",
           "title": "Speaking",
           "description": "CELPIP Speaking Tasks 1–8",
           "icon": "fa-solid fa-microphone",
           "images": [
-            "images/English/Speaking/01. CELPIP Speaking Task 1 Giving Advice.html",
-            "images/English/Speaking/02. CELPIP Speaking Task 2 Personal Experience.html",
-            "images/English/Speaking/03. CELPIP Speaking Task 3 Describing a Scene.html",
-            "images/English/Speaking/04. CELPIP Speaking Task 4 Making Predictions.html",
-            "images/English/Speaking/05. CELPIP Speaking Task 5 Comparing and Persuading.html",
-            "images/English/Speaking/06. CELPIP Speaking Task 6 Difficult Situation.html",
-            "images/English/Speaking/07. CELPIP Speaking Task 7 Expressing Opinions.html",
-            "images/English/Speaking/08. CELPIP Speaking Task 8 Unusual Situation.html"
+            "content/005-english/03-speaking/01. CELPIP Speaking Task 1 Giving Advice.html",
+            "content/005-english/03-speaking/02. CELPIP Speaking Task 2 Personal Experience.html",
+            "content/005-english/03-speaking/03. CELPIP Speaking Task 3 Describing a Scene.html",
+            "content/005-english/03-speaking/04. CELPIP Speaking Task 4 Making Predictions.html",
+            "content/005-english/03-speaking/05. CELPIP Speaking Task 5 Comparing and Persuading.html",
+            "content/005-english/03-speaking/06. CELPIP Speaking Task 6 Difficult Situation.html",
+            "content/005-english/03-speaking/07. CELPIP Speaking Task 7 Expressing Opinions.html",
+            "content/005-english/03-speaking/08. CELPIP Speaking Task 8 Unusual Situation.html"
           ],
           "captions": [
             "CELPIP Speaking Task 1: Giving Advice",
