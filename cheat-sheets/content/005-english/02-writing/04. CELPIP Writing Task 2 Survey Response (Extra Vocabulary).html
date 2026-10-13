@@ -185,6 +185,8 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
   display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
   margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
@@ -6940,7 +6942,25 @@ Clean-Ups</h2>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -6952,6 +6972,18 @@ Clean-Ups</h2>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
