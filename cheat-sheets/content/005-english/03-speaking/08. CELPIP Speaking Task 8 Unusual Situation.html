@@ -38,10 +38,11 @@
   --tok-op:      #ff9d42;
   --tok-alert:   #ff5c5c;
   --tok-other:   #caa15a;
-  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} / {.verb} */
   --wt-tpl:      #4ade80;
   --wt-conn:     #22d3ee;
   --wt-vocab:    #ff7b72;
+  --wt-verb:     #ff79c6;
 }
 [data-theme="light"] {
   --bg-page:      #ffffff;
@@ -78,6 +79,7 @@
   --wt-tpl:      #15803d;
   --wt-conn:     #0e7490;
   --wt-vocab:    #b91c1c;
+  --wt-verb:     #db2777;
 }
 /* No prefers-color-scheme media query — dark is the default regardless
    of system preference; only an explicit [data-theme="light"] (set via
@@ -183,13 +185,15 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -347,6 +351,7 @@ html, body {
 #_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
 #_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
 #_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+#_main-content span.verb  { color: var(--wt-verb)  !important; font-weight: 600; }
 
 #_main-content table {
   width: 100%; border-collapse: collapse; margin: 18px 0;
@@ -428,6 +433,7 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content span.verb  { color: #db2777 !important; }
   #_main-content .read-toggle::before { display: none !important; }
 }
 
@@ -661,6 +667,28 @@ Jacket</a>
 <li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
 <li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
 </ul></li>
+<li><a href="#turtle-sculpture-to-sell" id="toc-turtle-sculpture-to-sell">1.6 Turtle Sculpture to Sell ⭐</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#chocolate-statue-in-a-candy-shop" id="toc-chocolate-statue-in-a-candy-shop">1.7 Chocolate Statue in a
+Candy Shop ⭐</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fish-shaped-ice-cream-cones" id="toc-fish-shaped-ice-cream-cones">1.8 Fish-Shaped Ice Cream Cones
+⭐</a>
+<ul>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+</ul></li>
+<li><a href="#strange-eyeglasses-shop" id="toc-strange-eyeglasses-shop">1.9 Strange Eyeglasses Shop ⭐</a>
+<ul>
+<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
+<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#strange-objects-in-everyday-places" id="toc-strange-objects-in-everyday-places">2 Strange Objects in
 Everyday Places</a>
@@ -670,32 +698,43 @@ Template</a></li>
 <li><a href="#living-room-bathtub" id="toc-living-room-bathtub">2.1
 Living Room Bathtub</a>
 <ul>
-<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
-<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
+<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
 </ul></li>
 <li><a href="#tree-through-the-roof" id="toc-tree-through-the-roof">2.2
 Tree Through the Roof</a>
 <ul>
-<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
-<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
 </ul></li>
 <li><a href="#shoes-on-the-ceiling" id="toc-shoes-on-the-ceiling">2.3
 Shoes on the Ceiling</a>
 <ul>
-<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
-<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
 </ul></li>
 <li><a href="#bike-on-a-car-roof" id="toc-bike-on-a-car-roof">2.4 Bike
 on a Car Roof</a>
 <ul>
-<li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
-<li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
 </ul></li>
 <li><a href="#giant-banana-statue" id="toc-giant-banana-statue">2.5
 Giant Banana Statue</a>
 <ul>
-<li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
-<li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#statue-with-eyes-and-a-nose" id="toc-statue-with-eyes-and-a-nose">2.6 Statue With Eyes and a Nose
+⭐</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#lion-statue-with-glasses" id="toc-lion-statue-with-glasses">2.7 Lion Statue With Glasses ⭐</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#odd-or-unexpected-events-in-public" id="toc-odd-or-unexpected-events-in-public">3 Odd or Unexpected Events
@@ -706,31 +745,57 @@ Template</a></li>
 <li><a href="#dinosaur-costume-on-the-subway" id="toc-dinosaur-costume-on-the-subway">3.1 Dinosaur Costume on the
 Subway</a>
 <ul>
-<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
-<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
 </ul></li>
 <li><a href="#sheep-on-a-city-street" id="toc-sheep-on-a-city-street">3.2 Sheep on a City Street</a>
 <ul>
-<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
-<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
 </ul></li>
 <li><a href="#unicycle-juggler" id="toc-unicycle-juggler">3.3 Unicycle
 Juggler</a>
 <ul>
-<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
-<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cow-in-a-parking-lot" id="toc-cow-in-a-parking-lot">3.4
 Cow in a Parking Lot</a>
 <ul>
-<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
-<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
 </ul></li>
 <li><a href="#living-statue" id="toc-living-statue">3.5 Living
 Statue</a>
 <ul>
-<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
-<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+</ul></li>
+<li><a href="#strange-hot-air-balloons" id="toc-strange-hot-air-balloons">3.6 Strange Hot-Air Balloons ⭐</a>
+<ul>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+</ul></li>
+<li><a href="#monkeys-riding-ostriches" id="toc-monkeys-riding-ostriches">3.7 Monkeys Riding Ostriches ⭐</a>
+<ul>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+</ul></li>
+<li><a href="#skating-rink-in-animal-costumes" id="toc-skating-rink-in-animal-costumes">3.8 Skating Rink in Animal
+Costumes ⭐</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#geese-and-a-jetpack-boy" id="toc-geese-and-a-jetpack-boy">3.9 Geese and a Jetpack Boy ⭐</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fisherman-in-a-fountain" id="toc-fisherman-in-a-fountain">3.10 Fisherman in a Fountain ⭐</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#lost-damaged-or-misdelivered-items" id="toc-lost-damaged-or-misdelivered-items">4 Lost, Damaged, or
@@ -741,31 +806,31 @@ Template</a></li>
 <li><a href="#bag-left-on-a-train" id="toc-bag-left-on-a-train">4.1 Bag
 Left on a Train</a>
 <ul>
-<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
-<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
 </ul></li>
 <li><a href="#damaged-parcel" id="toc-damaged-parcel">4.2 Damaged
 Parcel</a>
 <ul>
-<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
-<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
 </ul></li>
 <li><a href="#wrong-sofa-delivered" id="toc-wrong-sofa-delivered">4.3
 Wrong Sofa Delivered</a>
 <ul>
-<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
-<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
 </ul></li>
 <li><a href="#missing-dog" id="toc-missing-dog">4.4 Missing Dog</a>
 <ul>
-<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
-<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
 </ul></li>
 <li><a href="#hit-parked-car" id="toc-hit-parked-car">4.5 Hit Parked
 Car</a>
 <ul>
-<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
-<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#unusual-buildings-vehicles-and-structures" id="toc-unusual-buildings-vehicles-and-structures">5 Unusual Buildings,
@@ -776,32 +841,38 @@ Template</a></li>
 <li><a href="#upside-down-house" id="toc-upside-down-house">5.1
 Upside-Down House</a>
 <ul>
-<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
-<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
 </ul></li>
 <li><a href="#beach-bus-café" id="toc-beach-bus-café">5.2 Beach Bus
 Café</a>
 <ul>
-<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
-<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
 </ul></li>
 <li><a href="#house-on-a-rock" id="toc-house-on-a-rock">5.3 House on a
 Rock</a>
 <ul>
-<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
-<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
 </ul></li>
 <li><a href="#boat-in-the-desert" id="toc-boat-in-the-desert">5.4 Boat
 in the Desert</a>
 <ul>
-<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
-<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
 </ul></li>
 <li><a href="#book-phone-booth" id="toc-book-phone-booth">5.5 Book Phone
 Booth</a>
 <ul>
-<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
-<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#giant-sand-sculpture" id="toc-giant-sand-sculpture">5.6
+Giant Sand Sculpture ⭐</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#mix-ups-and-mistakes" id="toc-mix-ups-and-mistakes">6
@@ -811,31 +882,43 @@ Mix-Ups and Mistakes</a>
 Template</a></li>
 <li><a href="#quiet-sign-at-a-concert" id="toc-quiet-sign-at-a-concert">6.1 Quiet Sign at a Concert</a>
 <ul>
-<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
-<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cart-of-toothbrushes" id="toc-cart-of-toothbrushes">6.2
 Cart of Toothbrushes</a>
 <ul>
-<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
-<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
 </ul></li>
 <li><a href="#open-sign-closed-shop" id="toc-open-sign-closed-shop">6.3
 Open Sign, Closed Shop</a>
 <ul>
-<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
-<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
 </ul></li>
 <li><a href="#winter-coat-on-a-beach" id="toc-winter-coat-on-a-beach">6.4 Winter Coat on a Beach</a>
 <ul>
-<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
-<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
 </ul></li>
-<li><a href="#one-cent-menu" id="toc-one-cent-menu">6.5 One-Cent
+<li><a href="#warm-clothes-and-flamingos" id="toc-warm-clothes-and-flamingos">6.5 Warm Clothes and Flamingos
+⭐</a>
+<ul>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+</ul></li>
+<li><a href="#one-cent-menu" id="toc-one-cent-menu">6.6 One-Cent
 Menu</a>
 <ul>
-<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
-<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+</ul></li>
+<li><a href="#baker-using-mud" id="toc-baker-using-mud">6.7 Baker Using
+Mud ⭐</a>
+<ul>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#nature-and-weather-oddities" id="toc-nature-and-weather-oddities">7 Nature and Weather Oddities</a>
@@ -845,26 +928,32 @@ Template</a></li>
 <li><a href="#snow-on-a-beach" id="toc-snow-on-a-beach">7.1 Snow on a
 Beach</a>
 <ul>
-<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
-<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
 </ul></li>
 <li><a href="#giant-pumpkin" id="toc-giant-pumpkin">7.2 Giant
 Pumpkin</a>
 <ul>
-<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
-<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
 </ul></li>
 <li><a href="#rainbow-river" id="toc-rainbow-river">7.3 Rainbow
 River</a>
 <ul>
-<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
-<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
 </ul></li>
 <li><a href="#house-in-a-tree" id="toc-house-in-a-tree">7.4 House in a
 Tree</a>
 <ul>
-<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
-<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
+</ul></li>
+<li><a href="#japanese-dragon-walking-out-of-the-water" id="toc-japanese-dragon-walking-out-of-the-water">7.5 Japanese Dragon
+Walking Out of the Water ⭐</a>
+<ul>
+<li><a href="#sample-48" id="toc-sample-48">Sample</a></li>
+<li><a href="#vocabulary-48" id="toc-vocabulary-48">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#home-school-and-work-oddities" id="toc-home-school-and-work-oddities">8 Home, School, and Work
@@ -875,25 +964,30 @@ Template</a></li>
 <li><a href="#rubber-ball-chairs" id="toc-rubber-ball-chairs">8.1 Rubber
 Ball Chairs</a>
 <ul>
-<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
-<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+<li><a href="#sample-49" id="toc-sample-49">Sample</a></li>
+<li><a href="#vocabulary-49" id="toc-vocabulary-49">Vocabulary</a></li>
 </ul></li>
 <li><a href="#upside-down-classroom" id="toc-upside-down-classroom">8.2
 Upside-Down Classroom</a>
 <ul>
-<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
-<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+<li><a href="#sample-50" id="toc-sample-50">Sample</a></li>
+<li><a href="#vocabulary-50" id="toc-vocabulary-50">Vocabulary</a></li>
 </ul></li>
 <li><a href="#balloons-in-the-sink" id="toc-balloons-in-the-sink">8.3
 Balloons in the Sink</a>
 <ul>
-<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
-<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+<li><a href="#sample-51" id="toc-sample-51">Sample</a></li>
+<li><a href="#vocabulary-51" id="toc-vocabulary-51">Vocabulary</a></li>
 </ul></li>
 <li><a href="#pond-in-the-living-room" id="toc-pond-in-the-living-room">8.4 Pond in the Living Room</a>
 <ul>
-<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
-<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+<li><a href="#sample-52" id="toc-sample-52">Sample</a></li>
+<li><a href="#vocabulary-52" id="toc-vocabulary-52">Vocabulary</a></li>
+</ul></li>
+<li><a href="#café-with-strange-hats" id="toc-café-with-strange-hats">8.5 Café With Strange Hats ⭐</a>
+<ul>
+<li><a href="#sample-53" id="toc-sample-53">Sample</a></li>
+<li><a href="#vocabulary-53" id="toc-vocabulary-53">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1168,6 +1262,298 @@ think</span>? Should I get it, or look for something more <span class="vocab">co
 </tr>
 </tbody>
 </table>
+<h2 id="turtle-sculpture-to-sell">1.6 Turtle Sculpture to Sell ⭐</h2>
+<p>A friend made an unusual turtle sculpture in an art class: on its
+back is a small tropical island with two palm trees and a flamingo, and
+it wears a bow tie. Call a friend who has an art shop, describe it in
+detail, and say you want to sell it in their shop.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports).</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. My friend made a sculpture in her
+art class, and I think it would sell really well in your shop.</p>
+<p><span class="tpl">It looks like</span> a big turtle, but its shell is
+a tiny tropical island. <span class="conn">First of all</span>, there
+are two palm trees, a bright pink flamingo and even a little blue lagoon
+painted on the back. <span class="conn">On top of that</span>, the
+turtle is wearing a red bow tie, which makes it look very <span class="vocab">elegant</span> and funny at the same time.</p>
+<p>The detail is <span class="vocab">astonishing</span>. Every leaf and
+feather is <span class="vocab">hand-painted</span>, and the colours
+really <span class="verb">pop</span>.</p>
+<p><span class="conn">That’s why</span> I’d love to <span class="verb">put it on display</span> in your window. Customers would
+<span class="verb">stop to stare at</span> it. <span class="tpl">What do
+you think</span>? Could we <span class="verb">work out</span> a price
+together?</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pop</span></td>
+<td>stand out clearly</td>
+<td>The red walls really pop.</td>
+</tr>
+<tr>
+<td><span class="verb">put on display</span></td>
+<td>show to the public</td>
+<td>They put the paintings on display.</td>
+</tr>
+<tr>
+<td><span class="verb">stop to stare at</span></td>
+<td>pause to look at</td>
+<td>People stopped to stare at the statue.</td>
+</tr>
+<tr>
+<td><span class="verb">work out</span></td>
+<td>find a solution</td>
+<td>Let’s work out the details.</td>
+</tr>
+<tr>
+<td><span class="vocab">elegant</span></td>
+<td>stylish and graceful</td>
+<td>An elegant dress.</td>
+</tr>
+<tr>
+<td><span class="vocab">astonishing</span></td>
+<td>very surprising</td>
+<td>An astonishing amount of detail.</td>
+</tr>
+<tr>
+<td><span class="vocab">hand-painted</span></td>
+<td>painted by hand</td>
+<td>A hand-painted vase.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chocolate-statue-in-a-candy-shop">1.7 Chocolate Statue in a
+Candy Shop ⭐</h2>
+<p>In a candy and chocolate shop that your brother had visited before,
+you see a strange chocolate statue with an unusual hat and a large candy
+cane in its hand. Call your brother, describe what you see, and ask
+whether he has seen the statue before.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3 (several reports).</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m in that candy shop you love, and
+there’s a strange statue in the middle of the room.</p>
+<p><span class="tpl">It looks like</span> a man made entirely of
+chocolate. <span class="conn">First of all</span>, he’s wearing a huge,
+<span class="vocab">colourful</span> hat covered in tiny sweets, and
+he’s holding a giant <span class="vocab">candy cane</span> in one hand.
+<span class="conn">On top of that</span>, his body is <span class="verb">decorated with</span> every kind of chocolate bar you can
+imagine.</p>
+<p>Kids are <span class="verb">crowding around</span> him, and everyone
+is <span class="verb">dying to</span> take a bite.</p>
+<p><span class="conn">That’s why</span> I thought of you. You used to
+come here all the time, so you must have <span class="verb">come
+across</span> him before. <span class="tpl">What do you think</span>?
+Have you seen this <span class="vocab">quirky</span> statue?</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">decorate with</span></td>
+<td>add decorations of</td>
+<td>The cake was decorated with berries.</td>
+</tr>
+<tr>
+<td><span class="verb">crowd around</span></td>
+<td>gather closely around</td>
+<td>Fans crowded around the singer.</td>
+</tr>
+<tr>
+<td><span class="verb">be dying to</span></td>
+<td>want very much to</td>
+<td>I’m dying to try it.</td>
+</tr>
+<tr>
+<td><span class="verb">come across</span></td>
+<td>see or find by chance</td>
+<td>I came across an old friend.</td>
+</tr>
+<tr>
+<td><span class="vocab">colourful</span></td>
+<td>having bright colours</td>
+<td>A colourful scarf.</td>
+</tr>
+<tr>
+<td><span class="vocab">quirky</span></td>
+<td>unusual in a charming way</td>
+<td>A quirky café.</td>
+</tr>
+<tr>
+<td><span class="vocab">candy cane</span></td>
+<td>a hard sweet shaped like a hook</td>
+<td>He hung a candy cane on the tree.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fish-shaped-ice-cream-cones">1.8 Fish-Shaped Ice Cream Cones
+⭐</h2>
+<p>You must choose between two ice creams for a relative’s child (for
+example Kevin). Both have fish-shaped cones; one has tiny colourful
+chocolate pieces and the other has glossy star patterns or popping
+candy. Explain their features and say which you want to buy and why.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3 (several reports).</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m at the ice cream shop, trying to
+choose a treat for Kevin, and both options are very unusual.</p>
+<p><span class="tpl">It looks like</span> a pair of fish. <span class="conn">First of all</span>, the cones are shaped like fish, with
+scales and little fins. The first one is covered in tiny colourful
+chocolate pieces, while the second has a <span class="vocab">glossy</span> star pattern and some kind of popping candy
+on top.</p>
+<p><span class="conn">On top of that</span>, the star cone <span class="verb">lights up</span> when you lick it, which is so <span class="vocab">eye-catching</span>.</p>
+<p><span class="conn">That’s why</span> I’d like to go for the second
+one. Kevin loves surprises, and I think he’ll <span class="verb">get a
+kick out of</span> the popping candy. <span class="tpl">What do you
+think</span>? Or should I <span class="verb">stick with</span> the
+chocolate one, which is a safer choice and less <span class="vocab">messy</span>?</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">light up</span></td>
+<td>become bright</td>
+<td>The toy lights up.</td>
+</tr>
+<tr>
+<td><span class="verb">get a kick out of</span></td>
+<td>enjoy very much</td>
+<td>He gets a kick out of magic tricks.</td>
+</tr>
+<tr>
+<td><span class="verb">stick with</span></td>
+<td>continue to choose</td>
+<td>I’ll stick with vanilla.</td>
+</tr>
+<tr>
+<td><span class="vocab">glossy</span></td>
+<td>smooth and shiny</td>
+<td>A glossy finish.</td>
+</tr>
+<tr>
+<td><span class="vocab">eye-catching</span></td>
+<td>attracting attention</td>
+<td>An eye-catching poster.</td>
+</tr>
+<tr>
+<td><span class="vocab">messy</span></td>
+<td>untidy or dirty</td>
+<td>Ice cream can be messy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="strange-eyeglasses-shop">1.9 Strange Eyeglasses Shop ⭐</h2>
+<p>You enter an eyeglasses shop with odd shapes resembling sea creatures
+or animals (jellyfish, turtle, penguin, shell). Call your brother,
+describe the place, and ask whether he wants to join you.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 10.</p>
+<h3 id="sample-8">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m in a new eyeglasses shop
+downtown, and it’s the strangest shop I’ve ever seen.</p>
+<p><span class="tpl">It looks like</span> an underwater world. <span class="conn">First of all</span>, the shelves are shaped like jellyfish
+and shells, and a huge turtle is <span class="verb">hanging from</span>
+the ceiling. <span class="conn">On top of that</span>, the mirrors have
+<span class="vocab">frames</span> like penguins, and the glasses are
+displayed inside <span class="vocab">glass bubbles</span>.</p>
+<p>The staff are very friendly and <span class="verb">bend over
+backwards</span> to help customers. One of them even let me <span class="verb">try on</span> a pair that looks like tiny fish. The
+decoration is so <span class="vocab">imaginative</span> that I can’t
+stop looking around.</p>
+<p><span class="conn">That’s why</span> I’d love you to join me. <span class="tpl">What do you think</span>? Could you <span class="verb">swing
+by</span> this afternoon?</p>
+<h3 id="vocabulary-8">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">hang from</span></td>
+<td>be attached at the top</td>
+<td>Lights hang from the ceiling.</td>
+</tr>
+<tr>
+<td><span class="verb">bend over backwards</span></td>
+<td>try very hard to help</td>
+<td>The staff bent over backwards for us.</td>
+</tr>
+<tr>
+<td><span class="verb">try on</span></td>
+<td>wear to check the fit</td>
+<td>Try on these glasses.</td>
+</tr>
+<tr>
+<td><span class="verb">swing by</span></td>
+<td>visit briefly</td>
+<td>Swing by my office.</td>
+</tr>
+<tr>
+<td><span class="vocab">glass bubbles</span></td>
+<td>round glass containers</td>
+<td>The glasses sat in glass bubbles.</td>
+</tr>
+<tr>
+<td><span class="vocab">imaginative</span></td>
+<td>full of creative ideas</td>
+<td>An imaginative design.</td>
+</tr>
+<tr>
+<td><span class="vocab">frames</span></td>
+<td>the parts that hold lenses in glasses</td>
+<td>These frames are very light.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="strange-objects-in-everyday-places">2 Strange Objects in
 Everyday Places</h1>
 <p>Topics: an odd item in a room, a strange piece of furniture, a mix-up
@@ -1182,7 +1568,7 @@ strange detail].</p>
 <h2 id="living-room-bathtub">2.1 Living Room Bathtub</h2>
 <p>A bathtub placed in the middle of a living room next to a television.
 Describe the unusual situation to a friend over the phone.</p>
-<h3 id="sample-5">Sample</h3>
+<h3 id="sample-9">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m at a friend’s apartment, and
 there’s a bathtub in the middle of the living room!</p>
@@ -1192,7 +1578,7 @@ to it, so it seems like people actually sit in it to watch movies. <span class="
 floor, so there’s no <span class="vocab">plumbing</span> at all.</p>
 <p><span class="conn">That’s why</span> it’s so <span class="vocab">bizarre</span>. <span class="tpl">I wonder</span> whether
 it’s a joke or a new kind of sofa. It looks very comfortable!</p>
-<h3 id="vocabulary-5">Vocabulary</h3>
+<h3 id="vocabulary-9">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1222,7 +1608,7 @@ it’s a joke or a new kind of sofa. It looks very comfortable!</p>
 <h2 id="tree-through-the-roof">2.2 Tree Through the Roof</h2>
 <p>A tree growing through the roof of a house. Describe what you see to
 someone who cannot see it.</p>
-<h3 id="sample-6">Sample</h3>
+<h3 id="sample-10">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m standing in front of a small house on a quiet street,
@@ -1237,7 +1623,7 @@ trunk.</p>
 built around the tree on purpose. <span class="tpl">I wonder</span> how
 the tree stays <span class="vocab">healthy</span> indoors. It’s truly a
 <span class="vocab">remarkable</span> sight.</p>
-<h3 id="vocabulary-6">Vocabulary</h3>
+<h3 id="vocabulary-10">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1272,7 +1658,7 @@ the tree stays <span class="vocab">healthy</span> indoors. It’s truly a
 <h2 id="shoes-on-the-ceiling">2.3 Shoes on the Ceiling</h2>
 <p>A shop window displaying shoes on the ceiling. Describe it so that
 your friend can picture it.</p>
-<h3 id="sample-7">Sample</h3>
+<h3 id="sample-11">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m walking past a shoe store downtown, and the display in
@@ -1285,7 +1671,7 @@ sitting on the ceiling too, and the price tags hang upward.</p>
 <p><span class="conn">That’s why</span> everyone on the sidewalk is
 stopping to stare. It’s a very <span class="vocab">creative</span> <span class="vocab">marketing</span> idea, and it certainly <span class="vocab">grabs attention</span>. <span class="tpl">I wonder</span>
 what they’ll do next week. Do you want to come and see it?</p>
-<h3 id="vocabulary-7">Vocabulary</h3>
+<h3 id="vocabulary-11">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1315,7 +1701,7 @@ what they’ll do next week. Do you want to come and see it?</p>
 <h2 id="bike-on-a-car-roof">2.4 Bike on a Car Roof</h2>
 <p>A bicycle parked on top of a car roof in a parking lot. Describe the
 situation.</p>
-<h3 id="sample-8">Sample</h3>
+<h3 id="sample-12">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m in the parking lot of the
 supermarket, and there’s a bicycle on the roof of a car.</p>
@@ -1329,7 +1715,7 @@ around.</p>
 the owner forgot it there and is about to drive away, which would be a
 disaster. I might leave a <span class="vocab">note</span> or tell the
 <span class="vocab">security guard</span>.</p>
-<h3 id="vocabulary-8">Vocabulary</h3>
+<h3 id="vocabulary-12">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1364,7 +1750,7 @@ disaster. I might leave a <span class="vocab">note</span> or tell the
 <h2 id="giant-banana-statue">2.5 Giant Banana Statue</h2>
 <p>A giant statue of a banana in the middle of a town square. Explain
 what you see.</p>
-<h3 id="sample-9">Sample</h3>
+<h3 id="sample-13">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in the town square, and there’s a gigantic statue of a
@@ -1377,7 +1763,7 @@ climbing the steps around it, and a few tourists are taking <span class="vocab">
 although it’s totally out of place next to the old stone church. <span class="tpl">I wonder</span> who decided to build it. There’s a small
 <span class="vocab">plaque</span> that says it celebrates the local
 fruit market.</p>
-<h3 id="vocabulary-9">Vocabulary</h3>
+<h3 id="vocabulary-13">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1404,6 +1790,148 @@ fruit market.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="statue-with-eyes-and-a-nose">2.6 Statue With Eyes and a Nose
+⭐</h2>
+<p>A strange statue with eyes and a nose; nothing else in the picture is
+notable. Call a friend and describe it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m in the town square, and there’s
+the weirdest statue right in front of me.</p>
+<p><span class="tpl">It looks like</span> a giant face without a mouth.
+<span class="conn">First of all</span>, it has two enormous round eyes
+made of glass and a long, <span class="vocab">pointed</span> nose made
+of metal. <span class="conn">On top of that</span>, it stands on a thin
+stone base, and the whole thing is much <span class="vocab">taller</span> than a person. There is nothing else around
+it, so it really <span class="verb">stands out</span>.</p>
+<p>People walk by, <span class="verb">do a double take</span>, and then
+<span class="verb">take out</span> their phones to snap a picture. I
+can’t <span class="verb">make sense of</span> what the artist wanted to
+say. It looks a bit <span class="vocab">eerie</span>, but also fun.</p>
+<p><span class="conn">That’s why</span> I wanted to call. <span class="tpl">What do you think</span>? Do you want to come and see
+it?</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">stand out</span></td>
+<td>be easy to notice</td>
+<td>Her red coat stands out.</td>
+</tr>
+<tr>
+<td><span class="verb">do a double take</span></td>
+<td>look again in surprise</td>
+<td>I did a double take when I saw him.</td>
+</tr>
+<tr>
+<td><span class="verb">take out</span></td>
+<td>remove from a pocket or bag</td>
+<td>She took out her camera.</td>
+</tr>
+<tr>
+<td><span class="verb">make sense of</span></td>
+<td>understand</td>
+<td>I can’t make sense of this sign.</td>
+</tr>
+<tr>
+<td><span class="vocab">taller</span></td>
+<td>greater in height</td>
+<td>The tower is taller than the church.</td>
+</tr>
+<tr>
+<td><span class="vocab">eerie</span></td>
+<td>strange and a little frightening</td>
+<td>An eerie silence.</td>
+</tr>
+<tr>
+<td><span class="vocab">pointed</span></td>
+<td>having a sharp end</td>
+<td>A pointed hat.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lion-statue-with-glasses">2.7 Lion Statue With Glasses ⭐</h2>
+<p>A strange statue of a lion wearing glasses stands in front of a
+school. Describe it to an old friend who was a schoolmate and ask
+whether they want to come and see it up close.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 10.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m standing in front of our old
+school, and there’s a new statue in the courtyard.</p>
+<p><span class="tpl">It looks like</span> a lion wearing glasses. <span class="conn">First of all</span>, it’s about two metres tall and made of
+dark bronze, and its mane is <span class="vocab">carved</span> in great
+detail. <span class="conn">On top of that</span>, it has a huge pair of
+round glasses sitting on its nose, as if it were <span class="vocab">reading a book</span>. A little <span class="vocab">plaque</span> says it’s a symbol of wisdom.</p>
+<p>The students <span class="verb">walk past</span> it and <span class="verb">burst out laughing</span>. Some of them even <span class="verb">pose with</span> it for photos. It really <span class="verb">brings back</span> memories of our school days.</p>
+<p><span class="conn">That’s why</span> I wanted to tell you right away.
+<span class="tpl">What do you think</span>? Would you like to come and
+see it up close?</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">walk past</span></td>
+<td>go by on foot</td>
+<td>I walk past the statue every day.</td>
+</tr>
+<tr>
+<td><span class="verb">burst out laughing</span></td>
+<td>suddenly begin to laugh</td>
+<td>We burst out laughing.</td>
+</tr>
+<tr>
+<td><span class="verb">pose with</span></td>
+<td>stand in position beside for a photo</td>
+<td>He posed with the mascot.</td>
+</tr>
+<tr>
+<td><span class="verb">bring back</span></td>
+<td>make you remember</td>
+<td>The song brings back memories.</td>
+</tr>
+<tr>
+<td><span class="vocab">carved</span></td>
+<td>cut into a shape</td>
+<td>A carved wooden bird.</td>
+</tr>
+<tr>
+<td><span class="vocab">read a book</span></td>
+<td>look at the pages and understand the words</td>
+<td>She likes to read a book at night.</td>
+</tr>
+<tr>
+<td><span class="vocab">plaque</span></td>
+<td>a flat sign with writing on it</td>
+<td>The plaque names the artist.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="odd-or-unexpected-events-in-public">3 Odd or Unexpected Events
 in Public</h1>
 <p>Topics: a strange parade, unusual clothing, an animal in a strange
@@ -1419,7 +1947,7 @@ detail].</p>
 Subway</h2>
 <p>A man in a full costume reading a newspaper on a crowded subway.
 Describe the situation.</p>
-<h3 id="sample-10">Sample</h3>
+<h3 id="sample-16">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m on the subway, and there’s a man
 dressed in a full dinosaur costume sitting across from me.</p>
@@ -1430,7 +1958,7 @@ laugh, and a child is staring at him.</p>
 <p><span class="conn">That’s why</span> the whole subway car is in a
 good mood. <span class="tpl">I wonder</span> whether he’s going to a
 party or a <span class="vocab">photo shoot</span>. It’s the most <span class="vocab">hilarious</span> thing I’ve seen on my <span class="vocab">commute</span>.</p>
-<h3 id="vocabulary-10">Vocabulary</h3>
+<h3 id="vocabulary-16">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1465,7 +1993,7 @@ party or a <span class="vocab">photo shoot</span>. It’s the most <span class="
 <h2 id="sheep-on-a-city-street">3.2 Sheep on a City Street</h2>
 <p>A flock of sheep walking down a busy city street. Describe what you
 see.</p>
-<h3 id="sample-11">Sample</h3>
+<h3 id="sample-17">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m downtown during rush hour, and a
 flock of sheep is walking down the middle of the street!</p>
@@ -1478,7 +2006,7 @@ filming with their phones.</p>
 <p><span class="conn">That’s why</span> the whole street feels like a
 country road. <span class="tpl">I wonder</span> where they’re going. It
 might be a traditional event, or maybe they’ve just <span class="vocab">wandered off</span> from a farm. Either way, it’s <span class="vocab">priceless</span>.</p>
-<h3 id="vocabulary-11">Vocabulary</h3>
+<h3 id="vocabulary-17">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1508,7 +2036,7 @@ might be a traditional event, or maybe they’ve just <span class="vocab">wander
 <h2 id="unicycle-juggler">3.3 Unicycle Juggler</h2>
 <p>A person riding a unicycle while juggling in a shopping mall.
 Describe what is happening.</p>
-<h3 id="sample-12">Sample</h3>
+<h3 id="sample-18">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m at the shopping mall, and
 there’s a person riding a unicycle in the middle of the hall.</p>
@@ -1519,7 +2047,7 @@ he smiles at the crowd, which has formed a circle around him. <span class="conn"
 are stopping to watch.</p>
 <p><span class="conn">That’s why</span> the whole mall is buzzing. <span class="tpl">I wonder</span> if he’s a professional <span class="vocab">performer</span>. His <span class="vocab">coordination</span> is amazing, and he’s definitely
 getting some tips in his hat.</p>
-<h3 id="vocabulary-12">Vocabulary</h3>
+<h3 id="vocabulary-18">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1554,7 +2082,7 @@ getting some tips in his hat.</p>
 <h2 id="cow-in-a-parking-lot">3.4 Cow in a Parking Lot</h2>
 <p>A cow standing in a parking lot in front of a supermarket. Describe
 it to a friend.</p>
-<h3 id="sample-13">Sample</h3>
+<h3 id="sample-19">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m outside the supermarket, and
 there’s a cow standing in the parking lot!</p>
@@ -1569,7 +2097,7 @@ pictures. <span class="tpl">I wonder</span> how it ended up here, and
 whether someone has called the <span class="vocab">owner</span>. The
 store manager is <span class="vocab">on the phone</span> now, so I think
 they’re dealing with it.</p>
-<h3 id="vocabulary-13">Vocabulary</h3>
+<h3 id="vocabulary-19">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1604,7 +2132,7 @@ they’re dealing with it.</p>
 <h2 id="living-statue">3.5 Living Statue</h2>
 <p>A street performer painted to look like a statue, surrounded by
 people taking selfies. Describe the scene.</p>
-<h3 id="sample-14">Sample</h3>
+<h3 id="sample-20">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m in the main square, and there’s
 a street performer who looks exactly like a statue.</p>
@@ -1616,7 +2144,7 @@ has gathered around him, and many people are taking selfies. <span class="conn">
 bucket, he moves slowly and bows.</p>
 <p><span class="conn">That’s why</span> the kids are completely <span class="vocab">amazed</span>. <span class="tpl">I wonder</span> how he
 can stay so still for hours. It takes great <span class="vocab">patience</span> and <span class="vocab">discipline</span>.</p>
-<h3 id="vocabulary-14">Vocabulary</h3>
+<h3 id="vocabulary-20">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1648,6 +2176,377 @@ can stay so still for hours. It takes great <span class="vocab">patience</span> 
 </tr>
 </tbody>
 </table>
+<h2 id="strange-hot-air-balloons">3.6 Strange Hot-Air Balloons ⭐</h2>
+<p>While hiking, you notice unusual hot-air balloons shaped like a
+rooster, a unicorn, a turnip with two horns, a puffy skirt, a pony and
+other odd shapes. Call your sister, describe what you see, say where you
+are and invite her to join.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3 (several reports).</p>
+<h3 id="sample-21">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m hiking in the hills near the
+lake, and the sky is full of the strangest balloons.</p>
+<p><span class="tpl">It looks like</span> a festival. <span class="conn">First of all</span>, there’s a giant pink unicorn <span class="verb">drifting across</span> the sky, and next to it, a rooster
+balloon with a boy on its back. <span class="conn">On top of
+that</span>, I can see a white and pink turnip with two horns, and
+another balloon shaped like a puffy skirt. The colours are so <span class="vocab">vibrant</span> that they look like a painting.</p>
+<p>People are <span class="verb">pointing at</span> them and <span class="vocab">snapping photos</span>, and the balloons <span class="verb">float by</span> very slowly.</p>
+<p><span class="conn">That’s why</span> I’m calling you. <span class="tpl">What do you think</span>? You should <span class="verb">hop
+in</span> the car and join me. It’s an <span class="vocab">unforgettable</span> sight.</p>
+<h3 id="vocabulary-21">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">drift across</span></td>
+<td>move slowly over</td>
+<td>Clouds drifted across the sky.</td>
+</tr>
+<tr>
+<td><span class="verb">point at</span></td>
+<td>show something with a finger</td>
+<td>Kids pointed at the balloon.</td>
+</tr>
+<tr>
+<td><span class="verb">float by</span></td>
+<td>move past gently</td>
+<td>Boats floated by.</td>
+</tr>
+<tr>
+<td><span class="verb">hop in</span></td>
+<td>get into a vehicle quickly</td>
+<td>Hop in, I’ll drive you.</td>
+</tr>
+<tr>
+<td><span class="vocab">vibrant</span></td>
+<td>bright and full of life</td>
+<td>Vibrant colours.</td>
+</tr>
+<tr>
+<td><span class="vocab">snap photos</span></td>
+<td>take pictures quickly</td>
+<td>Tourists snapped photos.</td>
+</tr>
+<tr>
+<td><span class="vocab">unforgettable</span></td>
+<td>impossible to forget</td>
+<td>An unforgettable view.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monkeys-riding-ostriches">3.7 Monkeys Riding Ostriches ⭐</h2>
+<p>You see three monkeys riding three ostriches that are racing each
+other. Call your father or a friend and tell them about it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>, Dad. <span class="tpl">You
+won’t believe what I’m looking at</span>. I’m at a park, and there’s a
+race going on, but it’s not an ordinary race.</p>
+<p><span class="tpl">It looks like</span> a scene from a cartoon. <span class="conn">First of all</span>, there are three huge ostriches running
+side by side, and each one has a small monkey on its back. <span class="conn">On top of that</span>, the monkeys are wearing tiny helmets
+and <span class="verb">holding on to</span> the ostriches’ necks with
+all their strength.</p>
+<p>The crowd is <span class="verb">cheering on</span> their favourite,
+and the ostriches are <span class="verb">kicking up</span> clouds of
+dust. One monkey is <span class="verb">pulling ahead of</span> the
+others, and he’s waving to the audience. The scene is so <span class="vocab">hilarious</span> and totally <span class="vocab">bizarre</span>.</p>
+<p><span class="conn">That’s why</span> I wanted to call you. <span class="tpl">What do you think</span>? Have you ever seen such a <span class="vocab">spectacle</span>?</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">hold on to</span></td>
+<td>grip firmly</td>
+<td>Hold on to the rail.</td>
+</tr>
+<tr>
+<td><span class="verb">cheer on</span></td>
+<td>encourage by shouting</td>
+<td>Fans cheered on their team.</td>
+</tr>
+<tr>
+<td><span class="verb">kick up</span></td>
+<td>cause to rise into the air</td>
+<td>The runners kicked up dust.</td>
+</tr>
+<tr>
+<td><span class="verb">pull ahead of</span></td>
+<td>move in front of</td>
+<td>She pulled ahead of the others.</td>
+</tr>
+<tr>
+<td><span class="vocab">hilarious</span></td>
+<td>extremely funny</td>
+<td>A hilarious video.</td>
+</tr>
+<tr>
+<td><span class="vocab">bizarre</span></td>
+<td>very strange</td>
+<td>A bizarre story.</td>
+</tr>
+<tr>
+<td><span class="vocab">spectacle</span></td>
+<td>an impressive public show</td>
+<td>The parade was a spectacle.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="skating-rink-in-animal-costumes">3.8 Skating Rink in Animal
+Costumes ⭐</h2>
+<p>At a skating rink, people are wearing animal costumes and skating on
+the ice. Call your cousin (for example Tammy), tell them about it and
+ask whether they want to join you.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9, Oct 8
+(several reports), Oct 7 and in one more report.</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m at the skating rink downtown,
+and everyone is dressed up as an animal!</p>
+<p><span class="tpl">It looks like</span> a costume party on ice. <span class="conn">First of all</span>, there’s a person in a bear suit <span class="verb">gliding across</span> the ice, and next to him, a rabbit
+and a penguin are holding hands. <span class="conn">On top of
+that</span>, a giant tiger is <span class="verb">wobbling around</span>
+and trying not to fall, which is really funny.</p>
+<p>Kids are <span class="vocab">laughing out loud</span>, and the music
+makes the whole rink feel <span class="vocab">festive</span>. A man
+dressed as a frog just <span class="verb">wiped out</span> in front of
+me!</p>
+<p><span class="conn">That’s why</span> I thought of you. <span class="tpl">What do you think</span>? Why don’t you <span class="verb">lace up</span> your skates and join me? It would be an
+<span class="vocab">amusing</span> afternoon.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">glide across</span></td>
+<td>move smoothly over</td>
+<td>Swans glide across the lake.</td>
+</tr>
+<tr>
+<td><span class="verb">wobble around</span></td>
+<td>move unsteadily</td>
+<td>The child wobbled around on the ice.</td>
+</tr>
+<tr>
+<td><span class="verb">wipe out</span></td>
+<td>fall over</td>
+<td>He wiped out on his bike.</td>
+</tr>
+<tr>
+<td><span class="verb">lace up</span></td>
+<td>tie the laces of</td>
+<td>Lace up your shoes.</td>
+</tr>
+<tr>
+<td><span class="vocab">laugh out loud</span></td>
+<td>laugh so that others can hear</td>
+<td>The film made me laugh out loud.</td>
+</tr>
+<tr>
+<td><span class="vocab">festive</span></td>
+<td>cheerful and joyful</td>
+<td>A festive mood.</td>
+</tr>
+<tr>
+<td><span class="vocab">amusing</span></td>
+<td>entertaining</td>
+<td>An amusing story.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="geese-and-a-jetpack-boy">3.9 Geese and a Jetpack Boy ⭐</h2>
+<p>From your office or a glass cabin, you see a very unusual scene: a
+girl attached by strings to several geese is flying with them, and a boy
+with a backpack and a rocket follows them. Call a friend, coworker or
+family member and describe it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9, Oct 8,
+Oct 7 and Oct 6.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m in my office, looking out of the
+window, and something incredible is happening outside. Can you see it
+from your unit too?</p>
+<p><span class="tpl">It looks like</span> a scene from a fairy tale.
+<span class="conn">First of all</span>, a young girl is flying through
+the air, and she’s attached to a flock of geese by long strings. The
+geese are <span class="vocab">flapping their wings</span> in perfect
+rhythm. <span class="conn">On top of that</span>, a little boy with a
+rocket on his backpack is <span class="verb">zooming after</span>
+them.</p>
+<p>Everyone in the street has <span class="verb">stopped in their
+tracks</span> and is <span class="verb">gazing up at</span> the sky. The
+girl looks calm and is even <span class="verb">waving down at</span> the
+crowd. It’s absolutely <span class="vocab">surreal</span>.</p>
+<p><span class="conn">That’s why</span> I called. <span class="tpl">What
+do you think</span>? Quick, <span class="vocab">take a look</span> out
+of your window!</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">zoom after</span></td>
+<td>move very fast behind</td>
+<td>The car zoomed after the truck.</td>
+</tr>
+<tr>
+<td><span class="verb">stop in one’s tracks</span></td>
+<td>suddenly stop</td>
+<td>She stopped in her tracks.</td>
+</tr>
+<tr>
+<td><span class="verb">gaze up at</span></td>
+<td>look upward for a long time</td>
+<td>They gazed up at the stars.</td>
+</tr>
+<tr>
+<td><span class="verb">wave down at</span></td>
+<td>move a hand toward people below</td>
+<td>He waved down at us.</td>
+</tr>
+<tr>
+<td><span class="vocab">flap their wings</span></td>
+<td>move wings up and down</td>
+<td>The bird flapped its wings.</td>
+</tr>
+<tr>
+<td><span class="vocab">surreal</span></td>
+<td>strange like a dream</td>
+<td>The scene was surreal.</td>
+</tr>
+<tr>
+<td><span class="vocab">take a look</span></td>
+<td>look at</td>
+<td>Take a look at this.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fisherman-in-a-fountain">3.10 Fisherman in a Fountain ⭐</h2>
+<p>A person is fishing in a park fountain wearing a life jacket, a
+flotation ring and a boat-shaped hat. Call a friend and describe it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m at the park, and there’s a man
+fishing in the middle of the fountain!</p>
+<p><span class="tpl">It looks like</span> he’s preparing for a deep-sea
+trip. <span class="conn">First of all</span>, he’s wearing a bright
+orange life jacket and a <span class="vocab">flotation ring</span>
+around his waist. <span class="conn">On top of that</span>, he has a
+funny hat shaped like a little boat, and he’s holding a long fishing rod
+over the water. Of course, the fountain is only knee-deep.</p>
+<p>People are <span class="verb">stopping by</span> to watch, and
+children are <span class="verb">giggling at</span> him. He seems totally
+serious and keeps <span class="verb">reeling in</span> the line with
+great patience. A police officer is <span class="verb">looking
+on</span>, <span class="vocab">scratching his head</span>. It’s the
+funniest, most <span class="vocab">ridiculous</span> thing I’ve
+seen.</p>
+<p><span class="conn">That’s why</span> I’m telling you. <span class="tpl">What do you think</span>? Do you want to <span class="verb">head over</span> and see it?</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">stop by</span></td>
+<td>visit briefly</td>
+<td>Stop by the park.</td>
+</tr>
+<tr>
+<td><span class="verb">giggle at</span></td>
+<td>laugh quietly at</td>
+<td>The girls giggled at the joke.</td>
+</tr>
+<tr>
+<td><span class="verb">reel in</span></td>
+<td>pull in a fishing line</td>
+<td>He reeled in a big fish.</td>
+</tr>
+<tr>
+<td><span class="verb">look on</span></td>
+<td>watch without taking part</td>
+<td>The crowd looked on.</td>
+</tr>
+<tr>
+<td><span class="verb">head over</span></td>
+<td>go to a place</td>
+<td>Let’s head over to the pond.</td>
+</tr>
+<tr>
+<td><span class="vocab">scratch his head</span></td>
+<td>show confusion</td>
+<td>He scratched his head in confusion.</td>
+</tr>
+<tr>
+<td><span class="vocab">ridiculous</span></td>
+<td>very silly</td>
+<td>A ridiculous costume.</td>
+</tr>
+<tr>
+<td><span class="vocab">flotation ring</span></td>
+<td>a ring that helps you float</td>
+<td>Kids wear a flotation ring at the pool.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="lost-damaged-or-misdelivered-items">4 Lost, Damaged, or
 Misdelivered Items</h1>
 <p>Topics: a lost bag, a damaged parcel, a wrong delivery, a missing
@@ -1662,7 +2561,7 @@ distinctive features]. <span class="conn">On top of that</span>,
 <h2 id="bag-left-on-a-train">4.1 Bag Left on a Train</h2>
 <p>You left your bag on a train. Call the lost-and-found and describe
 the bag and its contents.</p>
-<h3 id="sample-15">Sample</h3>
+<h3 id="sample-26">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> a bag that I left
 on the 5:40 train from Ottawa this evening, in the third car.</p>
 <p><span class="tpl">It looks like</span> a medium-sized black leather
@@ -1675,7 +2574,7 @@ bottle</span>, and a notebook with a green cover.</p>
 back as soon as possible. <span class="tpl">Could you please</span>
 check whether someone has <span class="vocab">handed it in</span>? <span class="conn">If so</span>, I can come to the station right away to claim
 it, and I’ll bring my ID.</p>
-<h3 id="vocabulary-15">Vocabulary</h3>
+<h3 id="vocabulary-26">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1710,7 +2609,7 @@ it, and I’ll bring my ID.</p>
 <h2 id="damaged-parcel">4.2 Damaged Parcel</h2>
 <p>A parcel arrived with the item badly damaged. Call the store and
 describe what you received.</p>
-<h3 id="sample-16">Sample</h3>
+<h3 id="sample-27">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> an order that I
 received this morning, number 78452.</p>
 <p><span class="tpl">It looks like</span> the box was crushed on one
@@ -1721,7 +2620,7 @@ paper, so I think it was <span class="vocab">poorly packed</span>.</p>
 <p><span class="conn">That’s why</span> I’d like a solution. <span class="tpl">Could you please</span> send a replacement, or <span class="vocab">issue a refund</span>? <span class="conn">In
 addition</span>, I have taken photos of the box and the broken vase, and
 I can email them to you right away as proof.</p>
-<h3 id="vocabulary-16">Vocabulary</h3>
+<h3 id="vocabulary-27">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1756,7 +2655,7 @@ I can email them to you right away as proof.</p>
 <h2 id="wrong-sofa-delivered">4.3 Wrong Sofa Delivered</h2>
 <p>You ordered a plain brown sofa but received a bright orange one with
 stripes. Call customer service and describe it.</p>
-<h3 id="sample-17">Sample</h3>
+<h3 id="sample-28">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> a sofa that was
 delivered to my home yesterday.</p>
 <p><span class="tpl">It looks like</span> a very bright orange sofa with
@@ -1768,7 +2667,7 @@ in the hallway.</p>
 deliver the correct sofa? <span class="conn">In addition</span>, I’d
 like confirmation of the <span class="vocab">delivery date</span>, and
 my order number is 5521.</p>
-<h3 id="vocabulary-17">Vocabulary</h3>
+<h3 id="vocabulary-28">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1798,7 +2697,7 @@ my order number is 5521.</p>
 <h2 id="missing-dog">4.4 Missing Dog</h2>
 <p>Your dog is missing. Call a neighbour and describe what the dog looks
 like and where you last saw it.</p>
-<h3 id="sample-18">Sample</h3>
+<h3 id="sample-29">Sample</h3>
 <p><span class="tpl">Hi, it’s your neighbour from number twelve</span>.
 <span class="tpl">I’m calling about</span> my dog, Buddy, who is
 missing.</p>
@@ -1813,7 +2712,7 @@ house, after the gate was left open.</p>
 <span class="tpl">Could you please</span> check your garden and garage?
 If you see him, please call me at once. He’s very <span class="vocab">friendly</span>, so he’ll come if you call his name. I’d
 be <span class="vocab">truly grateful</span>.</p>
-<h3 id="vocabulary-18">Vocabulary</h3>
+<h3 id="vocabulary-29">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1843,7 +2742,7 @@ be <span class="vocab">truly grateful</span>.</p>
 <h2 id="hit-parked-car">4.5 Hit Parked Car</h2>
 <p>Someone hit your parked car and left a large dent. Call your
 insurance company and describe the damage.</p>
-<h3 id="sample-19">Sample</h3>
+<h3 id="sample-30">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> damage to my car
 that happened last night while it was parked outside my home.</p>
 <p><span class="tpl">It looks like</span> a large <span class="vocab">dent</span>, about thirty centimetres wide, on the rear
@@ -1856,7 +2755,7 @@ leave a note or any contact details.</p>
 explain the steps and what documents I need? I have photos of the damage
 and a <span class="vocab">police report</span> number, and my policy
 number is 90817.</p>
-<h3 id="vocabulary-19">Vocabulary</h3>
+<h3 id="vocabulary-30">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1902,7 +2801,7 @@ more strange detail].</p>
 <h2 id="upside-down-house">5.1 Upside-Down House</h2>
 <p>A house built upside down with the roof on the ground. Describe it to
 someone on the phone.</p>
-<h3 id="sample-20">Sample</h3>
+<h3 id="sample-31">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m at a tourist attraction, and
 there’s a whole house built upside down.</p>
@@ -1916,7 +2815,7 @@ chairs, and even the lamps.</p>
 through. <span class="tpl">I wonder</span> how the architects came up
 with the idea. It’s an <span class="vocab">optical illusion</span>, and
 the kids love it.</p>
-<h3 id="vocabulary-20">Vocabulary</h3>
+<h3 id="vocabulary-31">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1951,7 +2850,7 @@ the kids love it.</p>
 <h2 id="beach-bus-café">5.2 Beach Bus Café</h2>
 <p>A bus that has been turned into a cafe on a beach. Describe what you
 see.</p>
-<h3 id="sample-21">Sample</h3>
+<h3 id="sample-32">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m on the beach, and there’s an old
 double-decker bus that has been turned into a café.</p>
@@ -1965,7 +2864,7 @@ hand-painted sign that says “Sunset Bus.”</p>
 <p><span class="conn">That’s why</span> it’s such a <span class="vocab">popular</span> spot. <span class="tpl">I wonder</span> how
 they got the bus onto the beach. It’s a very <span class="vocab">creative</span> use of an old vehicle, and the view is
 <span class="vocab">stunning</span>.</p>
-<h3 id="vocabulary-21">Vocabulary</h3>
+<h3 id="vocabulary-32">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1995,7 +2894,7 @@ they got the bus onto the beach. It’s a very <span class="vocab">creative</spa
 <h2 id="house-on-a-rock">5.3 House on a Rock</h2>
 <p>A house built on a very tall, narrow rock. Describe the
 situation.</p>
-<h3 id="sample-22">Sample</h3>
+<h3 id="sample-33">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m on a hiking trip, and there’s a small house standing on
@@ -2009,7 +2908,7 @@ flag on the roof, and a woman is hanging laundry outside.</p>
 <span class="tpl">I wonder</span> how they carried the building
 materials up there. It must be a <span class="vocab">breathtaking</span>
 place to live, but definitely not for people who are <span class="vocab">afraid of heights</span>.</p>
-<h3 id="vocabulary-22">Vocabulary</h3>
+<h3 id="vocabulary-33">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2039,7 +2938,7 @@ place to live, but definitely not for people who are <span class="vocab">afraid 
 <h2 id="boat-in-the-desert">5.4 Boat in the Desert</h2>
 <p>A boat in the middle of a desert with people having a picnic on it.
 Describe what you see.</p>
-<h3 id="sample-23">Sample</h3>
+<h3 id="sample-34">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in the middle of a desert, and there’s a boat here, and
@@ -2055,7 +2954,7 @@ father is pretending to <span class="vocab">steer</span> the boat.</p>
 dream. <span class="tpl">I wonder</span> whether it’s an art project or
 a <span class="vocab">movie set</span>. Either way, it’s completely
 <span class="vocab">surreal</span>.</p>
-<h3 id="vocabulary-23">Vocabulary</h3>
+<h3 id="vocabulary-34">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2095,7 +2994,7 @@ a <span class="vocab">movie set</span>. Either way, it’s completely
 <h2 id="book-phone-booth">5.5 Book Phone Booth</h2>
 <p>A phone booth filled with books in a village. Explain what it looks
 like.</p>
-<h3 id="sample-24">Sample</h3>
+<h3 id="sample-35">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in a small village square, and there’s an old red phone
@@ -2108,7 +3007,7 @@ sign says “Take a book, leave a book.” A woman is standing inside,
 reading a novel.</p>
 <p><span class="conn">That’s why</span> it works as a mini <span class="vocab">community library</span>. <span class="tpl">I
 wonder</span> who started this lovely idea. It’s a clever way to <span class="vocab">recycle</span> an old booth and <span class="vocab">encourage</span> reading.</p>
-<h3 id="vocabulary-24">Vocabulary</h3>
+<h3 id="vocabulary-35">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2140,6 +3039,87 @@ wonder</span> who started this lovely idea. It’s a clever way to <span class="
 </tr>
 </tbody>
 </table>
+<h2 id="giant-sand-sculpture">5.6 Giant Sand Sculpture ⭐</h2>
+<p>At the beach you see a very unusual sand sculpture that looks like a
+sandcastle and possibly a frog. It is large, with a rope barrier and a
+path around it, and a few birds nearby. Call a friend who is interested
+in sculptures, describe it, and invite them to come and see it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports) and Oct 9.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m at the beach, and there’s a
+massive sand sculpture that I think you’ll love.</p>
+<p><span class="tpl">It looks like</span> a sandcastle and a giant frog
+at the same time. <span class="conn">First of all</span>, it’s about
+three metres tall, with a round body, two big eyes and uneven edges, and
+there are strange points and formations on top. <span class="conn">On
+top of that</span>, a <span class="vocab">rope barrier</span> surrounds
+it, and there’s a little path that lets you <span class="verb">walk
+around</span> it.</p>
+<p>A few seagulls are <span class="verb">perched on</span> the head, and
+tourists are <span class="verb">leaning in</span> to see the <span class="vocab">intricate</span> details. It’s hard to believe that
+someone <span class="verb">put together</span> this by hand.</p>
+<p><span class="conn">That’s why</span> I’m calling you. <span class="tpl">What do you think</span>? Since you’re so into sculptures,
+you should <span class="vocab">come check it out</span> before the tide
+<span class="verb">washes it away</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">walk around</span></td>
+<td>move around the outside of</td>
+<td>We walked around the statue.</td>
+</tr>
+<tr>
+<td><span class="verb">perch on</span></td>
+<td>sit on the edge of something high</td>
+<td>A bird perched on the roof.</td>
+</tr>
+<tr>
+<td><span class="verb">lean in</span></td>
+<td>bend closer</td>
+<td>He leaned in to see.</td>
+</tr>
+<tr>
+<td><span class="verb">put together</span></td>
+<td>build or assemble</td>
+<td>They put together a model.</td>
+</tr>
+<tr>
+<td><span class="verb">wash away</span></td>
+<td>remove by moving water</td>
+<td>The waves washed away the castle.</td>
+</tr>
+<tr>
+<td><span class="vocab">intricate</span></td>
+<td>very detailed</td>
+<td>An intricate pattern.</td>
+</tr>
+<tr>
+<td><span class="vocab">come check it out</span></td>
+<td>come and look at it</td>
+<td>Come check it out!</td>
+</tr>
+<tr>
+<td><span class="vocab">rope barrier</span></td>
+<td>a rope used to keep people back</td>
+<td>A rope barrier surrounded the statue.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="mix-ups-and-mistakes">6 Mix-Ups and Mistakes</h1>
 <p>Topics: wrong signs, misplaced items, confusing labels, a mismatch of
 clothes or items, a funny error.</p>
@@ -2153,7 +3133,7 @@ clothes or items, a funny error.</p>
 <h2 id="quiet-sign-at-a-concert">6.1 Quiet Sign at a Concert</h2>
 <p>A “Quiet Please” sign hung on a stage next to loud speakers at a
 concert. Describe the situation.</p>
-<h3 id="sample-25">Sample</h3>
+<h3 id="sample-37">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m at an outdoor rock concert, and there’s a funny mistake
@@ -2167,7 +3147,7 @@ hands over his ears, and some fans are pointing at it and laughing.</p>
 if it was <span class="vocab">left over</span> from an earlier event.
 It’s the funniest <span class="vocab">contradiction</span> I’ve ever
 seen!</p>
-<h3 id="vocabulary-25">Vocabulary</h3>
+<h3 id="vocabulary-37">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2197,7 +3177,7 @@ seen!</p>
 <h2 id="cart-of-toothbrushes">6.2 Cart of Toothbrushes</h2>
 <p>A shopper in a store with a cart full of only one kind of item, such
 as dozens of toothbrushes. Describe what you see.</p>
-<h3 id="sample-26">Sample</h3>
+<h3 id="sample-38">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m at the supermarket, and a man in front of me has a
@@ -2209,7 +3189,7 @@ as if it’s perfectly normal, and the cashier looks <span class="vocab">bewilde
 <p><span class="conn">That’s why</span> the whole line is staring. <span class="tpl">I wonder</span> if he’s buying them for a school, or a
 charity, or maybe there’s a big sale that I don’t know about. It’s
 definitely a very <span class="vocab">odd</span> shopping trip.</p>
-<h3 id="vocabulary-26">Vocabulary</h3>
+<h3 id="vocabulary-38">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2239,7 +3219,7 @@ definitely a very <span class="vocab">odd</span> shopping trip.</p>
 <h2 id="open-sign-closed-shop">6.3 Open Sign, Closed Shop</h2>
 <p>A sign reading “Open” on a closed shop with a line of customers
 outside. Describe the situation.</p>
-<h3 id="sample-27">Sample</h3>
+<h3 id="sample-39">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m outside a bakery, and there’s a
 confusing situation here.</p>
@@ -2252,7 +3232,7 @@ says “Back in an hour.” <span class="conn">That’s why</span> the people
 look <span class="vocab">frustrated</span>. <span class="tpl">I
 wonder</span> whether the owner forgot to flip the sign. I think I’ll
 just join the line and <span class="vocab">hope for the best</span>.</p>
-<h3 id="vocabulary-27">Vocabulary</h3>
+<h3 id="vocabulary-39">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2287,7 +3267,7 @@ just join the line and <span class="vocab">hope for the best</span>.</p>
 <h2 id="winter-coat-on-a-beach">6.4 Winter Coat on a Beach</h2>
 <p>A person wearing a winter coat and boots on a hot beach. Describe the
 scene.</p>
-<h3 id="sample-28">Sample</h3>
+<h3 id="sample-40">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m at the beach, and there’s a man dressed for winter.</p>
@@ -2302,7 +3282,7 @@ as if nothing were unusual, and sweat is running down his face.</p>
 if he’s a tourist who <span class="vocab">misjudged</span> the weather,
 or if he’s just a <span class="vocab">stubborn</span> person who loves
 winter clothes.</p>
-<h3 id="vocabulary-28">Vocabulary</h3>
+<h3 id="vocabulary-40">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2329,10 +3309,94 @@ winter clothes.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="one-cent-menu">6.5 One-Cent Menu</h2>
+<h2 id="warm-clothes-and-flamingos">6.5 Warm Clothes and Flamingos
+⭐</h2>
+<p>A picture of a man in warm clothes (a hat and scarf) sleeping or
+sunbathing on a beach chair in a snowy area, surrounded by flamingos or
+storks, artificial palm trees, a ball and an umbrella, with a wooden
+cabin behind. Call a friend and describe it.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11
+(several reports), Oct 10, Oct 4 and in undated reports.</p>
+<h3 id="sample-41">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m looking at the strangest
+picture, and I have to describe it to you.</p>
+<p><span class="tpl">It looks like</span> a summer vacation scene, but
+it’s actually in the snow. <span class="conn">First of all</span>,
+there’s a man lying on a beach chair, wearing a thick coat, a hat and a
+scarf, and he seems to be fast asleep. <span class="conn">On top of
+that</span>, he’s <span class="verb">surrounded by</span> pink
+flamingos, a palm tree, a <span class="vocab">beach umbrella</span> and
+a ball.</p>
+<p>Behind him there’s a wooden cabin with a snowy roof, and the palm
+trees look <span class="vocab">fake</span>. The man <span class="verb">seems oblivious to</span> the cold and the birds, which is
+so funny. He must be <span class="verb">dreaming of</span> a tropical
+holiday!</p>
+<p><span class="conn">That’s why</span>, I think the picture is totally
+<span class="vocab">absurd</span>. <span class="tpl">What do you
+think</span>? Why would anyone <span class="verb">dress up for</span>
+winter and then <span class="verb">lie back</span> in a beach chair?</p>
+<h3 id="vocabulary-41">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">surround by</span></td>
+<td>have all around</td>
+<td>The house is surrounded by trees.</td>
+</tr>
+<tr>
+<td><span class="verb">be oblivious to</span></td>
+<td>not notice</td>
+<td>He was oblivious to the noise.</td>
+</tr>
+<tr>
+<td><span class="verb">dream of</span></td>
+<td>imagine wanting</td>
+<td>She dreams of a beach holiday.</td>
+</tr>
+<tr>
+<td><span class="verb">dress up for</span></td>
+<td>wear special clothes for</td>
+<td>They dressed up for winter.</td>
+</tr>
+<tr>
+<td><span class="verb">lie back</span></td>
+<td>lean back and relax</td>
+<td>Lie back and rest.</td>
+</tr>
+<tr>
+<td><span class="vocab">fake</span></td>
+<td>not real</td>
+<td>A fake plant.</td>
+</tr>
+<tr>
+<td><span class="vocab">absurd</span></td>
+<td>very silly</td>
+<td>An absurd idea.</td>
+</tr>
+<tr>
+<td><span class="vocab">beach umbrella</span></td>
+<td>a large umbrella for shade at the beach</td>
+<td>We sat under a beach umbrella.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="one-cent-menu">6.6 One-Cent Menu</h2>
 <p>A restaurant menu with every item priced at one cent. Describe what
 is unusual.</p>
-<h3 id="sample-29">Sample</h3>
+<h3 id="sample-42">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in a restaurant, and the menu has a very strange
@@ -2345,7 +3409,7 @@ that</span>, the waiter is looking nervous, and the manager is <span class="voca
 as much as they can. <span class="tpl">I wonder</span> whether it’s a
 <span class="vocab">printing error</span> or a special promotion. I’m
 tempted to order everything on the menu!</p>
-<h3 id="vocabulary-29">Vocabulary</h3>
+<h3 id="vocabulary-42">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2382,6 +3446,79 @@ tempted to order everything on the menu!</p>
 </tr>
 </tbody>
 </table>
+<h2 id="baker-using-mud">6.7 Baker Using Mud ⭐</h2>
+<p>You go to order a cake for a friend from a bakery, but in its kitchen
+you see the baker using mud (a mix of soil and water, or flowerpot soil)
+instead of cake mix and serving it to people. The shop is very dirty.
+Call and describe this.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 and
+Oct 10.</p>
+<h3 id="sample-43">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I came to the bakery to order a cake
+for Julie, but something is terribly wrong here.</p>
+<p><span class="tpl">It looks like</span> the baker is making a cake out
+of mud! <span class="conn">First of all</span>, I can see him mixing
+dark soil from a flowerpot with water in a big bowl. <span class="conn">On top of that</span>, the kitchen is <span class="vocab">filthy</span>. There are dirty dishes in the sink, flies
+buzzing around, and flour <span class="verb">spilled all over</span> the
+floor.</p>
+<p>Worst of all, he’s <span class="vocab">serving</span> slices of this
+“cake” to customers, and some of them are <span class="verb">digging
+into</span> it without realizing what it is! I can’t <span class="verb">turn a blind eye to</span> this. It’s <span class="vocab">unhygienic</span> and could make people sick.</p>
+<p><span class="conn">That’s why</span> I’m going to <span class="verb">report him to</span> the health inspector. <span class="tpl">What do you think</span>? Should I order the cake somewhere
+else?</p>
+<h3 id="vocabulary-43">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">spill all over</span></td>
+<td>fall or flow everywhere</td>
+<td>Milk spilled all over the table.</td>
+</tr>
+<tr>
+<td><span class="verb">dig into</span></td>
+<td>start eating eagerly</td>
+<td>They dug into the meal.</td>
+</tr>
+<tr>
+<td><span class="verb">turn a blind eye to</span></td>
+<td>ignore on purpose</td>
+<td>He turned a blind eye to the problem.</td>
+</tr>
+<tr>
+<td><span class="verb">report to</span></td>
+<td>tell an official about</td>
+<td>I reported the issue to the manager.</td>
+</tr>
+<tr>
+<td><span class="vocab">serving</span></td>
+<td>giving food to people</td>
+<td>The waiter is serving drinks.</td>
+</tr>
+<tr>
+<td><span class="vocab">unhygienic</span></td>
+<td>dirty and unsafe for health</td>
+<td>An unhygienic kitchen.</td>
+</tr>
+<tr>
+<td><span class="vocab">filthy</span></td>
+<td>extremely dirty</td>
+<td>The floor was filthy.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="nature-and-weather-oddities">7 Nature and Weather Oddities</h1>
 <p>Topics: an unusual weather event, an unusual animal, a strange plant,
 a weird natural formation.</p>
@@ -2395,7 +3532,7 @@ strange detail].</p>
 <h2 id="snow-on-a-beach">7.1 Snow on a Beach</h2>
 <p>Snow falling on a palm-tree beach with sunbathers. Describe the
 situation to someone on the phone.</p>
-<h3 id="sample-30">Sample</h3>
+<h3 id="sample-44">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m on a tropical beach, and it’s
 snowing!</p>
@@ -2408,7 +3545,7 @@ are trying to catch the snowflakes on their tongues, and a <span class="vocab">l
 <p><span class="conn">That’s why</span> it feels like two seasons are
 mixed together. <span class="tpl">I wonder</span> whether it’s a rare
 <span class="vocab">weather phenomenon</span> or a <span class="vocab">special effect</span> for a film. It’s an <span class="vocab">unforgettable</span> sight.</p>
-<h3 id="vocabulary-30">Vocabulary</h3>
+<h3 id="vocabulary-44">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2448,7 +3585,7 @@ mixed together. <span class="tpl">I wonder</span> whether it’s a rare
 <h2 id="giant-pumpkin">7.2 Giant Pumpkin</h2>
 <p>A huge pumpkin the size of a car on a farm. Describe what you
 see.</p>
-<h3 id="sample-31">Sample</h3>
+<h3 id="sample-45">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m visiting a farm, and there’s a
 pumpkin the size of a car!</p>
@@ -2461,7 +3598,7 @@ small boy is trying to hug it.</p>
 <span class="tpl">I wonder</span> how he made it grow so big. He says it
 won the prize in the local <span class="vocab">competition</span>, and
 he used special <span class="vocab">fertilizer</span>. It’s truly <span class="vocab">enormous</span>.</p>
-<h3 id="vocabulary-31">Vocabulary</h3>
+<h3 id="vocabulary-45">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2496,7 +3633,7 @@ he used special <span class="vocab">fertilizer</span>. It’s truly <span class=
 <h2 id="rainbow-river">7.3 Rainbow River</h2>
 <p>A rainbow-coloured river flowing through a green forest. Describe
 what you see.</p>
-<h3 id="sample-32">Sample</h3>
+<h3 id="sample-46">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m hiking in the forest, and
 there’s a river with all the colours of a rainbow.</p>
@@ -2509,7 +3646,7 @@ close-up photos.</p>
 causes the colours. Maybe there are <span class="vocab">minerals</span>
 or special plants under the water. I’ll read the sign nearby to find
 out.</p>
-<h3 id="vocabulary-32">Vocabulary</h3>
+<h3 id="vocabulary-46">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2538,7 +3675,7 @@ out.</p>
 </table>
 <h2 id="house-in-a-tree">7.4 House in a Tree</h2>
 <p>A tree with a house built inside its trunk. Describe it.</p>
-<h3 id="sample-33">Sample</h3>
+<h3 id="sample-47">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in an old park, and there’s a huge tree with a house
@@ -2552,7 +3689,7 @@ platform among the branches, with a rope ladder.</p>
 fairy tale. <span class="tpl">I wonder</span> whether somebody actually
 lives there. A small plaque says it’s a <span class="vocab">guesthouse</span>, and you can book it for a night. It
 would be a <span class="vocab">one-of-a-kind</span> experience.</p>
-<h3 id="vocabulary-33">Vocabulary</h3>
+<h3 id="vocabulary-47">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2579,6 +3716,79 @@ would be a <span class="vocab">one-of-a-kind</span> experience.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="japanese-dragon-walking-out-of-the-water">7.5 Japanese Dragon
+Walking Out of the Water ⭐</h2>
+<p>A Japanese-style dragon with an eagle’s front legs, a lion’s back
+legs, an eagle’s beak, gills and fish fins is walking from the water
+onto land. Describe this unusual picture.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+reports.</p>
+<h3 id="sample-48">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m standing by the lake, and a
+creature is coming out of the water right now.</p>
+<p><span class="tpl">It looks like</span> a Japanese dragon, but it’s a
+mix of different animals. <span class="conn">First of all</span>, its
+front legs are like an eagle’s, with sharp claws, while its back legs
+are those of a lion. <span class="conn">On top of that</span>, it has an
+eagle’s beak, gills on its neck, and big fish fins along its back.</p>
+<p>It’s slowly <span class="verb">crawling out of</span> the water and
+<span class="verb">shaking off</span> drops from its scales. People on
+the shore are <span class="verb">backing away</span>, but I’m <span class="vocab">rooted to the spot</span>. The scales <span class="verb">glitter in</span> the sun, and its eyes are <span class="vocab">piercing</span>.</p>
+<p><span class="conn">That’s why</span>, I couldn’t wait to tell you.
+<span class="tpl">What do you think</span>? Isn’t it <span class="vocab">mythical</span>?</p>
+<h3 id="vocabulary-48">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">crawl out of</span></td>
+<td>move slowly out of</td>
+<td>A turtle crawled out of the sea.</td>
+</tr>
+<tr>
+<td><span class="verb">shake off</span></td>
+<td>remove by shaking</td>
+<td>The dog shook off the water.</td>
+</tr>
+<tr>
+<td><span class="verb">back away</span></td>
+<td>move backward to avoid something</td>
+<td>People backed away from the fire.</td>
+</tr>
+<tr>
+<td><span class="verb">glitter in</span></td>
+<td>shine with small flashes in</td>
+<td>The lake glittered in the sun.</td>
+</tr>
+<tr>
+<td><span class="vocab">rooted to the spot</span></td>
+<td>unable to move, often from surprise</td>
+<td>I stood rooted to the spot.</td>
+</tr>
+<tr>
+<td><span class="vocab">piercing</span></td>
+<td>very sharp or intense</td>
+<td>A piercing gaze.</td>
+</tr>
+<tr>
+<td><span class="vocab">mythical</span></td>
+<td>existing only in legends</td>
+<td>A mythical beast.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="home-school-and-work-oddities">8 Home, School, and Work
 Oddities</h1>
 <p>Topics: an unusual classroom, a strange office, an odd kitchen, a
@@ -2593,7 +3803,7 @@ strange detail].</p>
 <h2 id="rubber-ball-chairs">8.1 Rubber Ball Chairs</h2>
 <p>An office where every worker is sitting on a large rubber ball
 instead of a chair. Describe the situation.</p>
-<h3 id="sample-34">Sample</h3>
+<h3 id="sample-49">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m visiting a new office, and
 nobody is sitting on a chair.</p>
@@ -2606,7 +3816,7 @@ odd.</p>
 <p><span class="conn">That’s why</span> the office feels fun and
 energetic. <span class="tpl">I wonder</span> whether it’s a <span class="vocab">health initiative</span> to improve <span class="vocab">posture</span>. I tried one, and it’s surprisingly
 comfortable, but it’s quite hard to <span class="vocab">balance</span>!</p>
-<h3 id="vocabulary-34">Vocabulary</h3>
+<h3 id="vocabulary-49">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2641,7 +3851,7 @@ comfortable, but it’s quite hard to <span class="vocab">balance</span>!</p>
 <h2 id="upside-down-classroom">8.2 Upside-Down Classroom</h2>
 <p>A classroom with students at desks on the ceiling. Describe what you
 see.</p>
-<h3 id="sample-35">Sample</h3>
+<h3 id="sample-50">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m in a classroom that seems to
 defy gravity.</p>
@@ -2655,7 +3865,7 @@ textbooks tightly so they don’t fall.</p>
 <p><span class="conn">That’s why</span> it looks like a <span class="vocab">scene</span> from a cartoon. <span class="tpl">I
 wonder</span> whether it’s a science experiment about <span class="vocab">gravity</span>. I’d love to try it, though I’d probably
 feel <span class="vocab">dizzy</span>.</p>
-<h3 id="vocabulary-35">Vocabulary</h3>
+<h3 id="vocabulary-50">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2690,7 +3900,7 @@ feel <span class="vocab">dizzy</span>.</p>
 <h2 id="balloons-in-the-sink">8.3 Balloons in the Sink</h2>
 <p>A kitchen where the sink is full of colourful balloons. Describe the
 scene.</p>
-<h3 id="sample-36">Sample</h3>
+<h3 id="sample-51">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. <span class="conn">First of
 all</span>, I’m in my aunt’s kitchen, and the sink is full of
@@ -2704,7 +3914,7 @@ on the wall says “Happy Birthday.”</p>
 <p><span class="conn">That’s why</span> I think she’s preparing a
 surprise party. <span class="tpl">I wonder</span> why she chose the
 sink. Maybe she wanted to hide them from her <span class="vocab">curious</span> kids. It’s a bit <span class="vocab">messy</span>, but it looks <span class="vocab">festive</span>.</p>
-<h3 id="vocabulary-36">Vocabulary</h3>
+<h3 id="vocabulary-51">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2734,7 +3944,7 @@ sink. Maybe she wanted to hide them from her <span class="vocab">curious</span> 
 <h2 id="pond-in-the-living-room">8.4 Pond in the Living Room</h2>
 <p>A living room with a small pond and fish in the middle of the floor.
 Describe the situation to someone over the phone.</p>
-<h3 id="sample-37">Sample</h3>
+<h3 id="sample-52">Sample</h3>
 <p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
 believe what I’m looking at</span>. I’m in the living room of a friend’s
 new house, and there’s a pond in the middle of the floor.</p>
@@ -2749,7 +3959,7 @@ placed around it, and the carpet is rolled back.</p>
 <span class="vocab">Zen</span> garden. <span class="tpl">I wonder</span>
 how he keeps the floor from getting wet. It’s a very <span class="vocab">unique</span> way to bring nature inside, and it’s
 incredibly relaxing.</p>
-<h3 id="vocabulary-37">Vocabulary</h3>
+<h3 id="vocabulary-52">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2773,6 +3983,74 @@ incredibly relaxing.</p>
 <td>unique</td>
 <td>one of a kind</td>
 <td>A unique design.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="café-with-strange-hats">8.5 Café With Strange Hats ⭐</h2>
+<p>In a café, people are wearing strange hats: one like a crab, one like
+an aquarium. Describe the unusual scene.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8.</p>
+<h3 id="sample-53">Sample</h3>
+<p><span class="tpl">Hi, it’s me</span>. <span class="tpl">You won’t
+believe what I’m looking at</span>. I’m at that new café near the
+library, and everyone here is wearing a weird hat.</p>
+<p><span class="tpl">It looks like</span> a crazy costume party. <span class="conn">First of all</span>, a man at the corner table has a big
+red crab on his head, with claws sticking out on both sides. <span class="conn">On top of that</span>, the woman next to him is wearing a
+glass hat that looks like a tiny aquarium, with real fish <span class="verb">swimming around</span> inside!</p>
+<p>The waiter is <span class="vocab">balancing</span> a tray, and a hat
+shaped like a teapot is on his head. The customers are <span class="verb">bursting with laughter</span>, and nobody seems <span class="vocab">embarrassed</span>. I’m just <span class="verb">sitting
+back</span> and enjoying the <span class="vocab">spectacle</span>.</p>
+<p><span class="conn">That’s why</span>, I wanted you to know about this
+place. <span class="tpl">What do you think</span>? Do you want to <span class="verb">meet up</span> here tomorrow?</p>
+<h3 id="vocabulary-53">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">swim around</span></td>
+<td>move through water in different directions</td>
+<td>Fish swim around the tank.</td>
+</tr>
+<tr>
+<td><span class="verb">burst with laughter</span></td>
+<td>laugh suddenly and loudly</td>
+<td>The class burst with laughter.</td>
+</tr>
+<tr>
+<td><span class="verb">sit back</span></td>
+<td>relax and watch</td>
+<td>Sit back and enjoy the show.</td>
+</tr>
+<tr>
+<td><span class="verb">meet up</span></td>
+<td>get together</td>
+<td>Let’s meet up at six.</td>
+</tr>
+<tr>
+<td><span class="vocab">balance</span></td>
+<td>keep steady</td>
+<td>She balanced a book on her head.</td>
+</tr>
+<tr>
+<td><span class="vocab">embarrassed</span></td>
+<td>feeling shy or ashamed</td>
+<td>He looked embarrassed.</td>
+</tr>
+<tr>
+<td><span class="vocab">spectacle</span></td>
+<td>an impressive sight</td>
+<td>The parade was a spectacle.</td>
 </tr>
 </tbody>
 </table>
@@ -2838,7 +4116,25 @@ incredibly relaxing.</p>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -2850,6 +4146,18 @@ incredibly relaxing.</p>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
@@ -3051,5 +4359,557 @@ incredibly relaxing.</p>
   });
 })();
 </script>
+<!-- _doc-audio-panel -->
+<!-- Voice panel for generated HTML documents. Baked into the files (like the read check-marks) and
+     re-injected by the app when it serves them, so it works opened from the app, from a local file or
+     from Hugging Face. With the app running, recordings are saved in the app folder; without it they
+     are saved in this browser (IndexedDB) and can be exported / imported. Edit THIS file, then run
+     bake_audio_panel.py to refresh the copies inside the HTML files. -->
+<style>
+#_aud-rec-toggle, #_aud-io { position: fixed; top: 12px; z-index: 200; width: 34px; height: 34px;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font-size: 1.05em; cursor: pointer; box-shadow: var(--shadow, none);
+  display: flex; align-items: center; justify-content: center; }
+#_aud-rec-toggle { left: 96px; } #_aud-io { left: 138px; }
+#_aud-rec-toggle:hover, #_aud-io:hover { border-color: var(--accent, #e08a5f); }
+#_aud-rec-toggle.live { background: #b91c1c; border-color: #ef4444; color: #fff; }
+#_aud-src { position: fixed; top: 12px; left: 180px; z-index: 200; height: 34px; padding: 0 10px; display: none;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font: 0.8em sans-serif; cursor: pointer; box-shadow: var(--shadow, none); }
+#_aud-src:hover { border-color: var(--accent, #e08a5f); }
+#_aud-hud, #_aud-menu { position: fixed; top: 54px; left: 12px; z-index: 200; display: none; width: 300px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border, #3e3d3a);
+  background: var(--bg-elevated, #30302e); color: var(--text, #f0efe9);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.4 sans-serif; }
+#_aud-hud { border-color: #ef4444; }
+#_aud-hud .lbl { font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#_aud-hud .tm.live { color: #ef4444; font-weight: 600; }
+#_aud-hud .row, #_aud-menu .row, #_aud-bar { display: flex; gap: 6px; align-items: center; }
+#_aud-hud .row, #_aud-menu .row { margin-top: 6px; flex-wrap: wrap; }
+#_aud-menu .hint { color: var(--text-muted, #a8a6a0); font-size: .92em; }
+#_aud-bar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 200;
+  width: min(820px, 96vw); display: none; padding: 6px 10px; border-radius: 12px;
+  border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.3 sans-serif; }
+#_aud-bar input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent, #e08a5f); }
+#_aud-bar .tt { font-variant-numeric: tabular-nums; color: var(--text-muted, #a8a6a0); white-space: nowrap; }
+#_aud-toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 210; display: none;
+  padding: 4px 12px; border-radius: 8px; background: var(--bg-elevated, #30302e); color: var(--accent, #e08a5f);
+  border: 1px solid var(--border, #3e3d3a); font: 0.85em sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+#_aud-hud button, #_aud-menu button, #_aud-bar button, #_aud-bar select { padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 1em; border: 1px solid var(--border, #3e3d3a); background: transparent;
+  color: var(--text, #f0efe9); }
+#_aud-bar select option { background: var(--bg-elevated, #30302e); }
+#_aud-hud button:hover, #_aud-menu button:hover, #_aud-bar button:hover, #_aud-bar button.on {
+  border-color: var(--accent, #e08a5f); color: var(--accent, #e08a5f); }
+#_aud-bar button { white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+._aud-hrec { margin-right: 8px; padding: 0 6px; font-size: 0.55em; line-height: 1.7; vertical-align: middle;
+  border-radius: 6px; cursor: pointer; opacity: .5; border: 1px solid var(--border, #3e3d3a);
+  background: transparent; color: var(--text, #f0efe9); }
+._aud-hrec:hover { opacity: 1; border-color: var(--accent, #e08a5f); }
+._aud-hrec.has { opacity: 1; border-color: #ef4444; background: #ef4444; color: #fff; }
+._aud-hrec.live { opacity: 1; border-color: #ef4444; background: #b91c1c; color: #fff; }
+a._aud-has::after { content: ' \1F50A'; font-size: .8em; }
+a._aud-now { color: var(--accent, #e08a5f) !important; font-weight: 700; }
+@media print { #_aud-src, #_aud-rec-toggle, #_aud-io, #_aud-hud, #_aud-menu, #_aud-bar, #_aud-toast, ._aud-hrec { display: none !important; } }
+</style>
+<script>
+(function () {
+  if (window.__audPanel) return;
+  if (!window.MediaRecorder || !window.indexedDB || !window.fetch || !window.Promise) return;  /* e.g. wkhtmltopdf */
+  window.__audPanel = true;
+  const docKey = decodeURIComponent(location.pathname);
+  const docName = docKey.split('/').pop().replace(/\.html?$/i, '');
+  let speed = 2;  /* same default as the library player */
+  try { speed = parseFloat(localStorage.getItem('_aud_speed')) || 2; } catch (e) {}
+
+  /* ── Sections of the document: TOC order, heading element per id ── */
+  const clean = el => { const c = el.cloneNode(true); c.querySelectorAll('._aud-hrec').forEach(n => n.remove());
+    return c.textContent.replace(/\s+/g, ' ').trim(); };
+  const tocAnchors = () => Array.from(document.querySelectorAll('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]'));
+  const idOf = a => decodeURIComponent((a.getAttribute('href') || '').slice(1));
+  const heads = [];
+  (function () {
+    const seen = new Set();
+    const add = id => {
+      const t = id && document.getElementById(id);
+      if (!t || seen.has(id)) return;
+      const h = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (!h || h.closest('#TOC') || h.closest('#_toc-sidebar')) return;
+      seen.add(id); heads.push({ id: id, el: h, title: clean(h) });
+    };
+    tocAnchors().forEach(a => add(idOf(a)));
+    if (!heads.length) document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => add(h.id));
+  })();
+  if (!heads.length) return;
+  const titleOf = id => (heads.find(h => h.id === id) || {}).title || id;
+  const headPos = id => heads.findIndex(h => h.id === id);
+
+  /* The active section = last heading scrolled to the top area of the screen. */
+  function activeId() {
+    let cur = heads[0];
+    for (const h of heads) { if (h.el.getBoundingClientRect().top <= 90) cur = h; else break; }
+    return cur.id;
+  }
+
+  /* ── Storage: the app (when it is running) or this browser (IndexedDB) ── */
+  let mode = 'local';   /* 'api' = the app saves recordings in the library folder; 'local' = this browser */
+  const apiInfo = async () => {
+    const r = await fetch('/api/library/get-audio?html_url=' + encodeURIComponent(docKey));
+    if (!r.ok) throw new Error('no app');
+    const d = await r.json();
+    if (!d || typeof d.has_audio === 'undefined') throw new Error('no app');
+    return d;
+  };
+  const idb = (function () {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('_doc_voice', 1);
+      r.onupgradeneeded = () => { r.result.createObjectStore('clips', { keyPath: 'k' }).createIndex('doc', 'doc'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+    const run = (access, fn) => open().then(db => new Promise((res, rej) => {
+      const t = db.transaction('clips', access), req = fn(t.objectStore('clips'));
+      t.oncomplete = () => res(req.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    return {
+      all: doc => run('readonly', s => s.index('doc').getAll(doc)),
+      put: c => run('readwrite', s => s.put(c)),
+      del: k => run('readwrite', s => s.delete(k)),
+    };
+  })();
+  const clipKey = id => docKey + '||' + id;
+
+  /* ── UI ── */
+  const recToggle = document.createElement('button');
+  recToggle.id = '_aud-rec-toggle'; recToggle.textContent = '🎙';
+  recToggle.title = 'Record my voice for the section I am reading';
+  const ioBtn = document.createElement('button');
+  ioBtn.id = '_aud-io'; ioBtn.textContent = '💾'; ioBtn.title = 'Where my recordings are saved / export / import';
+  const srcBtn = document.createElement('button');
+  srcBtn.id = '_aud-src';
+  const hud = document.createElement('div');
+  hud.id = '_aud-hud';
+  hud.innerHTML = '<div class="lbl"></div><div class="tm"></div><div class="row">' +
+    '<button data-a="pause">⏸ Pause</button><button data-a="save">⏹ Stop &amp; save</button>' +
+    '<button data-a="cancel">Cancel</button></div>';
+  const menu = document.createElement('div');
+  menu.id = '_aud-menu';
+  menu.innerHTML = '<div class="hint" id="_aud-where"></div><div class="row">' +
+    '<button data-a="export">⬇ Export recordings</button><button data-a="import">⬆ Import recordings…</button></div>' +
+    '<input type="file" accept=".voicebundle" style="display:none">';
+  const bar = document.createElement('div');
+  bar.id = '_aud-bar';
+  bar.innerHTML = '<button id="_aud-all">▶ Full audio</button>' +
+    '<button id="_aud-sec" title="Play only the section I am reading">▶ This section</button>' +
+    '<button id="_aud-follow" title="Jump the audio to the section I scroll to">⇣ Follow</button>' +
+    '<input type="range" min="0" max="1000" value="0" step="1"><span class="tt">0:00 / 0:00</span>' +
+    '<select title="Speed"></select><audio preload="none" style="display:none"></audio>';
+  const toast = document.createElement('div');
+  toast.id = '_aud-toast';
+  document.body.append(recToggle, ioBtn, srcBtn, hud, menu, bar, toast);
+  const player = bar.querySelector('audio'), allBtn = bar.querySelector('#_aud-all'),
+        secBtn = bar.querySelector('#_aud-sec'), followBtn = bar.querySelector('#_aud-follow'),
+        slider = bar.querySelector('input[type=range]'), timeLbl = bar.querySelector('.tt'),
+        speedSel = bar.querySelector('select'), fileIn = menu.querySelector('input[type=file]');
+  [1, 1.25, 1.5, 2].forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s + '×'; speedSel.appendChild(o);
+  });
+  speedSel.value = speed;
+  function flash(t) { toast.textContent = t; toast.style.display = 'block'; clearTimeout(flash.t);
+    flash.t = setTimeout(() => { toast.style.display = 'none'; }, 2800); }
+  const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  /* ── State ── */
+  let clips = [];   /* my recordings, in play order: {id, src, off, dur, vStart} (seconds) */
+  let blobUrls = [];
+  let hasApp = false, appUrl = null, hasMine = false, mineUrl = null;
+  let source = 'mine', pick = null;   /* 'mine' = my own recordings (default when they exist), 'app' = the document's app audio */
+  let follow = true, lastActive = null, curIdx = -1, cont = false, dragging = false;
+  const isMine = () => source === 'mine';
+  const idxOf = id => clips.findIndex(c => c.id === id);
+  const hasClip = id => idxOf(id) >= 0;
+
+  function applySpeed() {
+    player.playbackRate = speed;
+    player.preservesPitch = true; player.mozPreservesPitch = true; player.webkitPreservesPitch = true;
+  }
+  speedSel.addEventListener('change', () => {
+    speed = parseFloat(speedSel.value);
+    try { localStorage.setItem('_aud_speed', String(speed)); } catch (e) {}
+    applySpeed();
+  });
+  player.addEventListener('loadedmetadata', applySpeed);
+  player.addEventListener('play', applySpeed);
+
+  /* ── Playback engine ── */
+  /* Recorded blobs have no length in their header; this makes the browser work it out. */
+  function whenReady(then) {
+    if (player.duration === Infinity) {
+      const back = () => { player.removeEventListener('timeupdate', back); player.currentTime = 0; then(); };
+      player.addEventListener('timeupdate', back);
+      player.currentTime = 1e101;
+    } else then();
+  }
+  function setSrc(src, then) {
+    if (player.dataset.s === src) {
+      if (player.readyState >= 1) then(); else player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+      return;
+    }
+    player.dataset.s = src; player.src = src;
+    player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+    player.load();
+  }
+  /* Start (or just cue) my clip i at `offset` seconds into it. cnt = keep going into the next clips afterwards. */
+  function cue(i, offset, play, cnt) {
+    const c = clips[i]; if (!c) return;
+    curIdx = i; cont = cnt;
+    setSrc(c.src, () => {
+      player.currentTime = c.off + offset; applySpeed();
+      if (play) player.play().catch(() => {});
+      updateSlider();
+    });
+  }
+  function vTime() {
+    if (!isMine()) return player.currentTime || 0;
+    const c = clips[curIdx];
+    return c ? c.vStart + Math.max(0, Math.min(c.dur, player.currentTime - c.off)) : 0;
+  }
+  function vTotal() {
+    if (!isMine()) return isFinite(player.duration) ? player.duration : 0;
+    const l = clips[clips.length - 1]; return l ? l.vStart + l.dur : 0;
+  }
+  function updateSlider() {
+    const tot = vTotal(), v = vTime();
+    if (!dragging) slider.value = tot ? Math.round(1000 * v / tot) : 0;
+    timeLbl.textContent = fmt(v * 1000) + ' / ' + fmt(tot * 1000);
+  }
+  function clipAt(v) {   /* my clip containing virtual time v */
+    let i = clips.length - 1;
+    for (let k = 0; k < clips.length; k++) if (v < clips[k].vStart + clips[k].dur) { i = k; break; }
+    return i;
+  }
+  /* A clip finished: carry on with the next one, or stop. */
+  function clipEnded() {
+    if (!isMine()) return;
+    if (cont && curIdx + 1 < clips.length) cue(curIdx + 1, 0, true, true);
+    else { player.pause(); cont = false; }
+  }
+  player.addEventListener('ended', clipEnded);
+  player.addEventListener('timeupdate', () => {
+    const t = player.currentTime;
+    if (isMine() && mode === 'api' && clips.length) {
+      /* One shared file: follow the clock to know which clip is playing, stop at a section's end. */
+      const j = clips.findIndex(x => t >= x.off - 0.02 && t < x.off + x.dur);
+      if (j >= 0) curIdx = j;
+      const c = clips[curIdx];
+      if (c && !cont && !player.paused && t >= c.off + c.dur - 0.04) player.pause();
+    }
+    updateSlider();
+    const cur = isMine() && clips[curIdx] && !player.paused ? clips[curIdx].id : null;
+    tocAnchors().forEach(a => a.classList.toggle('_aud-now', !!cur && idOf(a) === cur));
+  });
+  slider.addEventListener('input', () => {
+    dragging = true;
+    const tot = vTotal(); timeLbl.textContent = fmt(slider.value / 1000 * tot * 1000) + ' / ' + fmt(tot * 1000);
+  });
+  slider.addEventListener('change', () => {
+    dragging = false;
+    const tot = vTotal(), v = slider.value / 1000 * tot, playing = !player.paused;
+    if (!isMine()) { player.currentTime = v; return; }
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), playing, true);   /* moving the bar by hand lifts any section-only limit */
+  });
+  allBtn.addEventListener('click', () => {
+    if (!player.paused && cont) { player.pause(); return; }
+    if (!isMine()) { player.play().catch(() => {}); return; }
+    let v = vTime(); const tot = vTotal();
+    if (v >= tot - 0.2) v = 0;
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), true, true);
+  });
+  secBtn.addEventListener('click', () => {
+    const id = activeId(), i = idxOf(id);
+    if (!isMine()) { flash('Sections only work with my recordings'); return; }
+    if (i < 0) { flash('No recording for "' + titleOf(id).slice(0, 40) + '" yet'); return; }
+    if (!player.paused && !cont && curIdx === i) { player.pause(); return; }
+    cue(i, 0, true, false);
+  });
+  function labelSecBtn() {
+    const id = activeId();
+    secBtn.textContent = '▶ ' + titleOf(id);
+    secBtn.classList.toggle('on', isMine() && hasClip(id));
+    secBtn.style.opacity = isMine() && hasClip(id) ? '1' : '.55';
+  }
+  /* Follow: when the section I am reading changes, the audio moves to it. */
+  function followScroll() {
+    const id = activeId();
+    if (id === lastActive) return;
+    lastActive = id;
+    const i = idxOf(id);
+    if (!follow || !isMine() || i < 0 || !bar.style.display || bar.style.display === 'none') return;
+    cue(i, 0, !player.paused, true);   /* playing: jump and keep going; paused: just cue it */
+  }
+  followBtn.classList.add('on');
+  followBtn.addEventListener('click', () => {
+    follow = !follow; followBtn.classList.toggle('on', follow);
+    flash(follow ? 'Audio will follow the section you scroll to' : 'Follow is off');
+  });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { ticking = false; labelSecBtn(); followScroll(); });
+  }, { passive: true });
+  /* Clicking a Contents item: the page scrolls as usual AND the audio jumps to that section. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]');
+    const i = a && isMine() ? idxOf(idOf(a)) : -1;
+    if (i >= 0) cue(i, 0, true, true);
+  });
+
+  /* ── Heading buttons (beside the read check-mark) ── */
+  heads.forEach(h => {
+    const b = document.createElement('button');
+    b.className = '_aud-hrec'; b.dataset.id = h.id; b.textContent = '🎙';
+    b.addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); onHeadingButton(h.id); });
+    h.el.insertBefore(b, h.el.firstChild);
+  });
+  function markButtons() {
+    document.querySelectorAll('._aud-hrec').forEach(b => {
+      const id = b.dataset.id, live = rec && target === id;
+      b.classList.toggle('live', !!live);
+      b.classList.toggle('has', !live && hasClip(id));
+      b.textContent = live ? '⏹' : '🎙';
+      b.title = live ? 'Stop & save this recording'
+        : hasClip(id) ? 'Recorded — click to remove this recording' : 'Record my voice for this section';
+    });
+    tocAnchors().forEach(a => a.classList.toggle('_aud-has', hasClip(idOf(a))));
+    labelSecBtn();
+  }
+
+  /* ── Loading what exists ── */
+  async function probeAppAudio() {   /* the document's own audio, if it sits next to the HTML on a web server */
+    if (!/^https?:$/.test(location.protocol)) return null;
+    const raw = location.pathname.split('/'), file = raw.pop(), base = decodeURIComponent(file).replace(/\.html?$/i, '');
+    const dirs = [raw.join('/')];
+    if (decodeURIComponent(raw[raw.length - 1] || '') === 'HTML') dirs.push(raw.slice(0, -1).join('/'));
+    const cands = [];
+    dirs.forEach(d => ['m4a', 'mp3', 'wav', 'ogg', 'aac', 'flac', 'mp4', 'webm'].forEach(x =>
+      cands.push(d + '/' + encodeURIComponent(base) + '.' + x)));
+    const hits = await Promise.all(cands.map(u => fetch(u, { method: 'HEAD' }).then(r => {
+      const ct = r.headers.get('content-type') || '';
+      return r.ok && !/text\/html/i.test(ct) ? u : null;
+    }).catch(() => null)));
+    return hits.find(Boolean) || null;
+  }
+  let probed = false, ready = Promise.resolve();
+  /* Every action waits for the latest refresh, so nothing runs before we know whether the app is there. */
+  function refresh() { ready = doRefresh(); return ready; }
+  async function doRefresh() {
+    blobUrls.forEach(u => URL.revokeObjectURL(u)); blobUrls = [];
+    try {
+      const d = await apiInfo();
+      mode = 'api';
+      hasApp = !!d.has_audio; appUrl = d.url || null;
+      hasMine = !!d.my_voice; mineUrl = d.my_url || null;
+      const S = d.sections || {}, stamp = (mineUrl && mineUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      clips = Object.keys(S).map(id => ({ id: id, src: mineUrl + stamp, off: S[id].start,
+        dur: S[id].end - S[id].start, vStart: S[id].start })).sort((a, b) => a.off - b.off);
+      if (!hasMine) clips = [];
+    } catch (e) {
+      mode = 'local';
+      if (!probed) { probed = true; try { appUrl = await probeAppAudio(); } catch (er) { appUrl = null; } }
+      hasApp = !!appUrl;
+      let rows = [];
+      try { rows = await idb.all(docKey); } catch (er) { flash('Browser storage is not available here'); }
+      const byId = new Map(rows.map(r => [r.id, r]));
+      let v = 0; clips = [];
+      heads.forEach(h => {
+        const r = byId.get(h.id); if (!r) return;
+        const u = URL.createObjectURL(r.blob); blobUrls.push(u);
+        clips.push({ id: h.id, src: u, off: 0, dur: r.dur, vStart: v }); v += r.dur;
+      });
+      hasMine = clips.length > 0;
+    }
+    if ((pick === 'mine' && !hasMine) || (pick === 'app' && !hasApp)) pick = null;
+    source = pick || (hasMine ? 'mine' : 'app');   /* my own voice wins by default */
+    loadSource();
+  }
+  function loadSource() {
+    player.pause(); player.removeAttribute('src'); player.dataset.s = ''; curIdx = -1; cont = false;
+    const available = isMine() ? hasMine : hasApp;
+    if (!available) { bar.style.display = 'none'; document.body.style.paddingBottom = ''; }
+    else {
+      bar.style.display = 'flex'; document.body.style.paddingBottom = '64px';
+      if (!isMine()) { player.dataset.s = appUrl; player.src = appUrl + (appUrl.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+    }
+    srcBtn.style.display = hasApp && hasMine ? 'block' : 'none';
+    srcBtn.textContent = isMine() ? '🎙 My voice' : '🔈 App voice';
+    srcBtn.title = isMine() ? "Playing my own recordings. Click to play the app's audio instead"
+                            : "Playing the app's audio. Click to play my own recordings instead";
+    allBtn.title = isMine() ? 'Play all my recordings from the start' : 'Play the app audio from the start';
+    followBtn.style.display = isMine() ? '' : 'none';
+    updateSlider(); markButtons();
+  }
+  srcBtn.addEventListener('click', () => { pick = isMine() ? 'app' : 'mine'; source = pick; loadSource(); });
+  player.addEventListener('loadedmetadata', updateSlider);
+
+  /* ── Removing ── */
+  async function removeSection(id) {
+    await ready;
+    if (!confirm('Remove your recording for "' + titleOf(id) + '"?')) return;
+    let ok = true, err = '';
+    if (mode === 'api') {
+      try {
+        const d = await (await fetch('/api/library/delete-section', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html_url: docKey, section_id: id }) })).json();
+        ok = !!d.success; err = d.error || '';
+      } catch (e) { ok = false; err = 'Network error'; }
+    } else {
+      try { await idb.del(clipKey(id)); } catch (e) { ok = false; err = 'Browser storage error'; }
+    }
+    flash(ok ? 'Recording removed' : (err || 'Could not remove'));
+    refresh();
+  }
+
+  /* ── Recording ── */
+  let stream = null, rec = null, chunks = [], t0 = 0, acc = 0, timer = null, target = null;
+  const lbl = hud.querySelector('.lbl'), tm = hud.querySelector('.tm'), pauseBtn = hud.querySelector('[data-a=pause]');
+  function tick() {
+    const paused = rec && rec.state === 'paused';
+    tm.textContent = (paused ? 'Paused ' : '● Recording ') + fmt(acc + (rec && !paused ? Date.now() - t0 : 0));
+    tm.classList.toggle('live', !paused);
+  }
+  function release() {
+    clearInterval(timer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = rec = target = null; chunks = []; acc = 0;
+    hud.style.display = 'none'; recToggle.classList.remove('live'); recToggle.textContent = '🎙';
+    markButtons();
+  }
+  async function startRecording(id) {
+    if (rec) return;
+    await ready;
+    if (rec) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { flash('Recording is not supported here'); return; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false, noiseSuppression: false, autoGainControl: false, sampleRate: 48000 } });
+    } catch (e) { flash('Microphone blocked: ' + e.message); return; }
+    player.pause();
+    target = id;
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : undefined);
+    rec.addEventListener('dataavailable', e => { if (e.data && e.data.size) chunks.push(e.data); });
+    rec.start(); t0 = Date.now(); acc = 0;
+    lbl.textContent = (hasClip(id) ? 'Re-recording: ' : 'Recording: ') + titleOf(id);
+    pauseBtn.textContent = '⏸ Pause';
+    hud.style.display = 'block'; recToggle.classList.add('live'); recToggle.textContent = '⏹';
+    timer = setInterval(tick, 200); tick(); markButtons();
+  }
+  async function stopAndSave() {
+    if (!rec) return;
+    const id = target, ms = acc + (rec.state === 'recording' ? Date.now() - t0 : 0);
+    const stopped = new Promise(res => rec.addEventListener('stop', res, { once: true }));
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: (rec && rec.mimeType) || 'audio/webm' });
+    clearInterval(timer); tm.classList.remove('live'); tm.textContent = 'Saving…';
+    let ok = false, err = '';
+    if (mode === 'api') {
+      const fd = new FormData();
+      fd.append('html_url', docKey); fd.append('section_id', id); fd.append('file', blob, 'recording.webm');
+      try { const d = await (await fetch('/api/library/record-section', { method: 'POST', body: fd })).json();
+        ok = !!d.success; err = d.error || ''; }
+      catch (e) { err = 'Network error while saving'; }
+    } else {
+      try { await idb.put({ k: clipKey(id), doc: docKey, id: id, blob: blob, dur: ms / 1000, ts: Date.now() }); ok = true; }
+      catch (e) { err = 'Browser storage error: ' + (e && e.message || e); }
+    }
+    release();
+    flash(ok ? (mode === 'api' ? 'Saved ✔' : 'Saved in this browser ✔ — use 💾 to export a backup') : (err || 'Save failed'));
+    if (ok) pick = 'mine';
+    refresh();
+  }
+  function onHeadingButton(id) {
+    if (rec) { if (target === id) stopAndSave(); else flash('Finish the current recording first'); return; }
+    if (hasClip(id)) removeSection(id); else startRecording(id);
+  }
+  recToggle.addEventListener('click', () => { if (rec) stopAndSave(); else startRecording(activeId()); });
+  hud.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'save') stopAndSave();
+    else if (a === 'cancel') { if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (er) {} } release(); }
+    else if (a === 'pause' && rec) {
+      if (rec.state === 'recording') { rec.pause(); acc += Date.now() - t0; pauseBtn.textContent = '▶ Resume'; }
+      else if (rec.state === 'paused') { rec.resume(); t0 = Date.now(); pauseBtn.textContent = '⏸ Pause'; }
+      tick();
+    }
+  });
+
+  /* ── Export / import (a .voicebundle: "MYVOICE1", 4-byte header length, JSON header, then the clips) ── */
+  function menuText() {
+    menu.querySelector('#_aud-where').textContent = mode === 'api'
+      ? 'Recordings are saved in the app folder next to this document. Import brings in a backup exported from a browser.'
+      : 'No app here: recordings are kept in this browser only (like the ✓ marks) and are lost if its data is cleared. Export a backup file; open the document in the app and use Import to move it into your library.';
+    menu.querySelector('[data-a=export]').style.display = mode === 'local' && hasMine ? '' : 'none';
+  }
+  ioBtn.addEventListener('click', () => {
+    menuText(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+  async function exportBundle() {
+    let rows = [];
+    try { rows = await idb.all(docKey); } catch (e) {}
+    rows.sort((a, b) => headPos(a.id) - headPos(b.id));
+    if (!rows.length) { flash('Nothing to export'); return; }
+    const enc = new TextEncoder();
+    const head = enc.encode(JSON.stringify({ v: 1, doc: docKey, name: docName,
+      clips: rows.map(r => ({ id: r.id, dur: r.dur, size: r.blob.size, type: r.blob.type || 'audio/webm' })) }));
+    const len = new Uint8Array(4); new DataView(len.buffer).setUint32(0, head.length);
+    const out = new Blob([enc.encode('MYVOICE1'), len, head].concat(rows.map(r => r.blob)), { type: 'application/octet-stream' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out); a.download = docName + '.voicebundle';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    flash('Exported ' + rows.length + ' recording' + (rows.length > 1 ? 's' : ''));
+  }
+  async function parseBundle(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (new TextDecoder().decode(u8.slice(0, 8)) !== 'MYVOICE1') throw new Error('Not a voice bundle');
+    const hl = new DataView(buf).getUint32(8), head = JSON.parse(new TextDecoder().decode(u8.slice(12, 12 + hl)));
+    let pos = 12 + hl;
+    head.clips.forEach(c => { c.blob = new Blob([u8.slice(pos, pos + c.size)], { type: c.type }); pos += c.size; });
+    return head;
+  }
+  fileIn.addEventListener('change', async () => {
+    const f = fileIn.files[0]; fileIn.value = '';
+    if (!f) return;
+    await ready;
+    try {
+      const b = await parseBundle(f);
+      if (b.name && b.name !== docName && !confirm('This backup is from "' + b.name + '", not this document. Import anyway?')) return;
+      if (mode === 'api') {
+        flash('Importing…');
+        const fd = new FormData(); fd.append('html_url', docKey); fd.append('file', f, f.name);
+        const d = await (await fetch('/api/library/import-voice', { method: 'POST', body: fd })).json();
+        if (!d.success) throw new Error(d.error || 'Import failed');
+        flash('Imported ' + d.imported + ' recording' + (d.imported === 1 ? '' : 's') + ' into the app');
+      } else {
+        for (const c of b.clips) await idb.put({ k: clipKey(c.id), doc: docKey, id: c.id, blob: c.blob, dur: c.dur, ts: Date.now() });
+        flash('Imported ' + b.clips.length + ' recording' + (b.clips.length === 1 ? '' : 's'));
+      }
+      pick = 'mine'; menu.style.display = 'none'; refresh();
+    } catch (e) { flash('Import failed: ' + (e && e.message || e)); }
+  });
+  menu.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'export') exportBundle(); else if (a === 'import') fileIn.click();
+  });
+
+  refresh();
+})();
+</script>
+<!-- /_doc-audio-panel -->
 </body>
 </html>

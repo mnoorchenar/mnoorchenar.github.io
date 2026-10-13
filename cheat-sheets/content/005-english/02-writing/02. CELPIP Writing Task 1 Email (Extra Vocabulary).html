@@ -188,12 +188,12 @@ html, body {
 #TOC li.toc-nostar { display: none !important; }
 #TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }

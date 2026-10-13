@@ -38,10 +38,11 @@
   --tok-op:      #ff9d42;
   --tok-alert:   #ff5c5c;
   --tok-other:   #caa15a;
-  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} / {.verb} */
   --wt-tpl:      #4ade80;
   --wt-conn:     #22d3ee;
   --wt-vocab:    #ff7b72;
+  --wt-verb:     #ff79c6;
 }
 [data-theme="light"] {
   --bg-page:      #ffffff;
@@ -78,6 +79,7 @@
   --wt-tpl:      #15803d;
   --wt-conn:     #0e7490;
   --wt-vocab:    #b91c1c;
+  --wt-verb:     #db2777;
 }
 /* No prefers-color-scheme media query — dark is the default regardless
    of system preference; only an explicit [data-theme="light"] (set via
@@ -183,13 +185,15 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -347,6 +351,7 @@ html, body {
 #_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
 #_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
 #_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+#_main-content span.verb  { color: var(--wt-verb)  !important; font-weight: 600; }
 
 #_main-content table {
   width: 100%; border-collapse: collapse; margin: 18px 0;
@@ -428,6 +433,7 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content span.verb  { color: #db2777 !important; }
   #_main-content .read-toggle::before { display: none !important; }
 }
 
@@ -662,6 +668,11 @@ Kitchen</a>
 <li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
 <li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
 </ul></li>
+<li><a href="#storing-a-friends-things" id="toc-storing-a-friends-things">1.6 Storing a Friend’s Things ⭐</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#workplace-situations" id="toc-workplace-situations">2
 Workplace Situations</a>
@@ -671,32 +682,43 @@ Template</a></li>
 <li><a href="#late-coworker" id="toc-late-coworker">2.1 Late
 Coworker</a>
 <ul>
-<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
-<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
-</ul></li>
-<li><a href="#day-off-request" id="toc-day-off-request">2.2 Day Off
-Request</a>
-<ul>
 <li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
 <li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
 </ul></li>
-<li><a href="#teammate-not-helping" id="toc-teammate-not-helping">2.3
-Teammate Not Helping</a>
+<li><a href="#absent-colleague" id="toc-absent-colleague">2.2 Absent
+Colleague ⭐</a>
 <ul>
 <li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
 <li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
 </ul></li>
-<li><a href="#mistake-in-report" id="toc-mistake-in-report">2.4 Mistake
-in Report</a>
+<li><a href="#day-off-request" id="toc-day-off-request">2.3 Day Off
+Request</a>
 <ul>
 <li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
 <li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
 </ul></li>
-<li><a href="#borrowed-equipment" id="toc-borrowed-equipment">2.5
-Borrowed Equipment</a>
+<li><a href="#teammate-not-helping" id="toc-teammate-not-helping">2.4
+Teammate Not Helping</a>
 <ul>
 <li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
 <li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#whose-name-comes-first" id="toc-whose-name-comes-first">2.5 Whose Name Comes First ⭐</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#mistake-in-report" id="toc-mistake-in-report">2.6 Mistake
+in Report</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#borrowed-equipment" id="toc-borrowed-equipment">2.7
+Borrowed Equipment</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#customer-service-and-purchases" id="toc-customer-service-and-purchases">3 Customer Service and
@@ -706,30 +728,36 @@ Purchases</a>
 Template</a></li>
 <li><a href="#faulty-phone" id="toc-faulty-phone">3.1 Faulty Phone</a>
 <ul>
-<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
-<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
-</ul></li>
-<li><a href="#wrong-restaurant-order" id="toc-wrong-restaurant-order">3.2 Wrong Restaurant Order</a>
-<ul>
-<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
-<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
-</ul></li>
-<li><a href="#noisy-hotel-room" id="toc-noisy-hotel-room">3.3 Noisy
-Hotel Room</a>
-<ul>
-<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
-<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
-</ul></li>
-<li><a href="#late-package" id="toc-late-package">3.4 Late Package</a>
-<ul>
 <li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
 <li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
 </ul></li>
-<li><a href="#extra-bill-charge" id="toc-extra-bill-charge">3.5 Extra
-Bill Charge</a>
+<li><a href="#wrong-restaurant-order" id="toc-wrong-restaurant-order">3.2 Wrong Restaurant Order</a>
 <ul>
 <li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
 <li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#automatic-20-tip" id="toc-automatic-20-tip">3.3 Automatic
+20% Tip ⭐</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#noisy-hotel-room" id="toc-noisy-hotel-room">3.4 Noisy
+Hotel Room</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#late-package" id="toc-late-package">3.5 Late Package</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#extra-bill-charge" id="toc-extra-bill-charge">3.6 Extra
+Bill Charge</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#friends-family-and-social-conflicts" id="toc-friends-family-and-social-conflicts">4 Friends, Family, and
@@ -739,32 +767,61 @@ Social Conflicts</a>
 Template</a></li>
 <li><a href="#damaged-car" id="toc-damaged-car">4.1 Damaged Car</a>
 <ul>
-<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
-<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cancelled-plans" id="toc-cancelled-plans">4.2 Cancelled
 Plans</a>
 <ul>
-<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
-<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
 </ul></li>
 <li><a href="#uninvited-guests" id="toc-uninvited-guests">4.3 Uninvited
 Guests</a>
 <ul>
-<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
-<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
 </ul></li>
 <li><a href="#refusing-a-loan" id="toc-refusing-a-loan">4.4 Refusing a
 Loan</a>
 <ul>
-<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
-<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
 </ul></li>
 <li><a href="#unwanted-advice" id="toc-unwanted-advice">4.5 Unwanted
 Advice</a>
 <ul>
-<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
-<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#elderly-woman-in-the-queue" id="toc-elderly-woman-in-the-queue">4.6 Elderly Woman in the Queue
+⭐</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#camping-departure-time" id="toc-camping-departure-time">4.7 Camping Departure Time ⭐</a>
+<ul>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+</ul></li>
+<li><a href="#borrowing-a-family-necklace" id="toc-borrowing-a-family-necklace">4.8 Borrowing a Family Necklace
+⭐</a>
+<ul>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#borrowing-camping-equipment" id="toc-borrowing-camping-equipment">4.9 Borrowing Camping Equipment
+⭐</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#job-in-another-city" id="toc-job-in-another-city">4.10 Job
+in Another City ⭐</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#apologies-and-explaining-your-mistake" id="toc-apologies-and-explaining-your-mistake">5 Apologies and
@@ -774,32 +831,43 @@ Explaining Your Mistake</a>
 Template</a></li>
 <li><a href="#broken-vase" id="toc-broken-vase">5.1 Broken Vase</a>
 <ul>
-<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
-<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
 </ul></li>
 <li><a href="#forgotten-meeting" id="toc-forgotten-meeting">5.2
 Forgotten Meeting</a>
 <ul>
-<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
-<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
 </ul></li>
 <li><a href="#missed-deadline" id="toc-missed-deadline">5.3 Missed
 Deadline</a>
 <ul>
-<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
-<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
 </ul></li>
 <li><a href="#rude-in-a-meeting" id="toc-rude-in-a-meeting">5.4 Rude in
 a Meeting</a>
 <ul>
-<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
-<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cancelling-a-dinner" id="toc-cancelling-a-dinner">5.5
 Cancelling a Dinner</a>
 <ul>
-<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
-<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#goodbye-party-vs-final-project" id="toc-goodbye-party-vs-final-project">5.6 Goodbye Party vs Final
+Project ⭐</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+<li><a href="#explaining-a-car-accident" id="toc-explaining-a-car-accident">5.7 Explaining a Car Accident ⭐</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#travel-and-transportation-problems" id="toc-travel-and-transportation-problems">6 Travel and Transportation
@@ -810,30 +878,30 @@ Template</a></li>
 <li><a href="#cancelled-flight" id="toc-cancelled-flight">6.1 Cancelled
 Flight</a>
 <ul>
-<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
-<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
 </ul></li>
 <li><a href="#lost-luggage" id="toc-lost-luggage">6.2 Lost Luggage</a>
 <ul>
-<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
-<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
 </ul></li>
 <li><a href="#taxi-overcharge" id="toc-taxi-overcharge">6.3 Taxi
 Overcharge</a>
 <ul>
-<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
-<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
 </ul></li>
 <li><a href="#delayed-train" id="toc-delayed-train">6.4 Delayed
 Train</a>
 <ul>
-<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
-<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
 </ul></li>
 <li><a href="#seat-mix-up" id="toc-seat-mix-up">6.5 Seat Mix-Up</a>
 <ul>
-<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
-<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#school-and-community-situations" id="toc-school-and-community-situations">7 School and Community
@@ -843,32 +911,43 @@ Situations</a>
 Template</a></li>
 <li><a href="#unfair-grade" id="toc-unfair-grade">7.1 Unfair Grade</a>
 <ul>
-<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
-<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
 </ul></li>
 <li><a href="#extension-request" id="toc-extension-request">7.2
 Extension Request</a>
 <ul>
-<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
-<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
 </ul></li>
 <li><a href="#noisy-library" id="toc-noisy-library">7.3 Noisy
 Library</a>
 <ul>
-<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
-<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
 </ul></li>
 <li><a href="#loud-street-festival" id="toc-loud-street-festival">7.4
 Loud Street Festival</a>
 <ul>
-<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
-<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
 </ul></li>
 <li><a href="#class-schedule-change" id="toc-class-schedule-change">7.5
 Class Schedule Change</a>
 <ul>
-<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
-<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
+</ul></li>
+<li><a href="#gap-year-or-university" id="toc-gap-year-or-university">7.6 Gap Year or University ⭐</a>
+<ul>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
+</ul></li>
+<li><a href="#more-or-less-homework" id="toc-more-or-less-homework">7.7
+More or Less Homework ⭐</a>
+<ul>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#services-utilities-and-polite-refusals" id="toc-services-utilities-and-polite-refusals">8 Services, Utilities,
@@ -879,37 +958,37 @@ Template</a></li>
 <li><a href="#internet-outage" id="toc-internet-outage">8.1 Internet
 Outage</a>
 <ul>
-<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
-<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+<li><a href="#sample-48" id="toc-sample-48">Sample</a></li>
+<li><a href="#vocabulary-48" id="toc-vocabulary-48">Vocabulary</a></li>
 </ul></li>
 <li><a href="#unfinished-renovation" id="toc-unfinished-renovation">8.2
 Unfinished Renovation</a>
 <ul>
-<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
-<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+<li><a href="#sample-49" id="toc-sample-49">Sample</a></li>
+<li><a href="#vocabulary-49" id="toc-vocabulary-49">Vocabulary</a></li>
 </ul></li>
 <li><a href="#unknown-bank-charge" id="toc-unknown-bank-charge">8.3
 Unknown Bank Charge</a>
 <ul>
-<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
-<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+<li><a href="#sample-50" id="toc-sample-50">Sample</a></li>
+<li><a href="#vocabulary-50" id="toc-vocabulary-50">Vocabulary</a></li>
 </ul></li>
 <li><a href="#gym-cancellation" id="toc-gym-cancellation">8.4 Gym
 Cancellation</a>
 <ul>
-<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
-<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+<li><a href="#sample-51" id="toc-sample-51">Sample</a></li>
+<li><a href="#vocabulary-51" id="toc-vocabulary-51">Vocabulary</a></li>
 </ul></li>
 <li><a href="#declining-weekend-work" id="toc-declining-weekend-work">8.5 Declining Weekend Work</a>
 <ul>
-<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
-<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+<li><a href="#sample-52" id="toc-sample-52">Sample</a></li>
+<li><a href="#vocabulary-52" id="toc-vocabulary-52">Vocabulary</a></li>
 </ul></li>
 <li><a href="#working-from-home" id="toc-working-from-home">8.6 Working
 From Home</a>
 <ul>
-<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
-<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+<li><a href="#sample-53" id="toc-sample-53">Sample</a></li>
+<li><a href="#vocabulary-53" id="toc-vocabulary-53">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1169,6 +1248,80 @@ it’s easier, we can make a chart together this evening.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="storing-a-friends-things">1.6 Storing a Friend’s Things ⭐</h2>
+<p>Your friend Sara wants to bring some of her things from storage to
+your home. Your housemate Samantha objects because the unit is small and
+the landlord wants the home kept tidy. Speak to one of them, explain the
+situation and suggest a solution.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Hi, I hope I’m not disturbing you</span>, Sara.
+<span class="tpl">I wanted to talk to you about</span> your boxes from
+storage.</p>
+<p><span class="conn">The thing is</span>, our apartment is quite small,
+and Samantha is worried that the <span class="vocab">clutter</span> will
+<span class="verb">get out of hand</span>. On top of that, our landlord
+wants us to keep the place tidy, and he <span class="verb">drops
+by</span> for inspections. <span class="tpl">I understand that</span>
+paying for storage is expensive and that you’re <span class="vocab">on a
+tight budget</span>.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest a
+compromise. You could bring only the essential items, and we can <span class="verb">clear out</span> a corner of the closet for them. <span class="conn">In that case</span>, you’ll save money, and we’ll <span class="vocab">stay on good terms</span> with the landlord and
+Samantha.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m sure we can <span class="verb">work something out</span>.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get out of hand</span></td>
+<td>become impossible to control</td>
+<td>The mess got out of hand.</td>
+</tr>
+<tr>
+<td><span class="verb">drop by</span></td>
+<td>visit briefly</td>
+<td>The landlord dropped by yesterday.</td>
+</tr>
+<tr>
+<td><span class="verb">clear out</span></td>
+<td>empty and clean</td>
+<td>We cleared out the garage.</td>
+</tr>
+<tr>
+<td><span class="verb">work out</span></td>
+<td>find a solution</td>
+<td>Let’s work out a plan.</td>
+</tr>
+<tr>
+<td><span class="vocab">on a tight budget</span></td>
+<td>with very little money to spend</td>
+<td>She’s on a tight budget this month.</td>
+</tr>
+<tr>
+<td><span class="vocab">stay on good terms</span></td>
+<td>keep a friendly relationship</td>
+<td>We stay on good terms with our neighbours.</td>
+</tr>
+<tr>
+<td><span class="vocab">clutter</span></td>
+<td>untidy things lying around</td>
+<td>The clutter filled the hallway.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="workplace-situations">2 Workplace Situations</h1>
 <p>Topics: a coworker issue, a deadline, asking for time off, a change
 in schedule, shared tasks, a boss.</p>
@@ -1185,7 +1338,7 @@ understanding</span>.</p>
 <h2 id="late-coworker">2.1 Late Coworker</h2>
 <p>A coworker often arrives late to team meetings. Talk to them and ask
 them to be on time.</p>
-<h3 id="sample-5">Sample</h3>
+<h3 id="sample-6">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> our team meetings.</p>
 <p><span class="conn">The thing is</span>, you’ve arrived about ten
 minutes late for the last few meetings, and we’ve had to repeat
@@ -1200,7 +1353,7 @@ meeting to the afternoon.</p>
 <p><span class="tpl">Thank you so much for your understanding</span>. I
 <span class="vocab">value</span> your work, and I just want us to run
 smoothly.</p>
-<h3 id="vocabulary-5">Vocabulary</h3>
+<h3 id="vocabulary-6">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1232,10 +1385,78 @@ smoothly.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="day-off-request">2.2 Day Off Request</h2>
+<h2 id="absent-colleague">2.2 Absent Colleague ⭐</h2>
+<p>You are the owner of a company, or a colleague, and one employee is
+constantly absent or late, often to look after family, so another
+employee has to cover their duties. Persuade one of them or work out a
+solution.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 and
+Oct 10.</p>
+<h3 id="sample-7">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> your recent
+schedule.</p>
+<p><span class="conn">The thing is</span>, you’ve been absent or late
+several times this month, and your teammate has had to <span class="verb">cover for</span> you. It’s putting extra pressure on her,
+and our deadlines are starting to <span class="vocab">slip</span>. <span class="tpl">I understand that</span> you’re <span class="verb">taking
+care of</span> your family, and I truly respect that.</p>
+<p><span class="conn">That’s why</span> I’d like us to find a better
+arrangement together. For example, you could work flexible hours or
+<span class="verb">make up for</span> the lost time on weekends. <span class="conn">In that case</span>, your colleague won’t be <span class="vocab">overloaded</span>, and you’ll keep your job and your peace
+of mind.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+Let’s <span class="vocab">touch base</span> next week to see how it’s
+going.</p>
+<h3 id="vocabulary-7">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">cover for</span></td>
+<td>do someone’s work while they are absent</td>
+<td>I covered for him on Monday.</td>
+</tr>
+<tr>
+<td><span class="verb">take care of</span></td>
+<td>look after</td>
+<td>She takes care of her parents.</td>
+</tr>
+<tr>
+<td><span class="verb">make up for</span></td>
+<td>compensate for</td>
+<td>I’ll make up for the lost hours.</td>
+</tr>
+<tr>
+<td><span class="vocab">slip</span></td>
+<td>fall behind</td>
+<td>The schedule is slipping.</td>
+</tr>
+<tr>
+<td><span class="vocab">overloaded</span></td>
+<td>given too much work</td>
+<td>The team is overloaded.</td>
+</tr>
+<tr>
+<td><span class="vocab">touch base</span></td>
+<td>briefly make contact to share news</td>
+<td>Let’s touch base on Friday.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="day-off-request">2.3 Day Off Request</h2>
 <p>You need to ask your manager for a day off at a busy time. Explain
 your reason and offer a solution.</p>
-<h3 id="sample-6">Sample</h3>
+<h3 id="sample-8">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> taking a day off next
 Friday.</p>
 <p><span class="conn">The thing is</span>, I know it’s a busy period,
@@ -1247,7 +1468,7 @@ over</span> the rest to a colleague with clear notes. <span class="conn">In that
 urgent question.</p>
 <p><span class="tpl">Thank you so much for your understanding</span>.
 I’ll make sure everything is <span class="vocab">covered</span>.</p>
-<h3 id="vocabulary-6">Vocabulary</h3>
+<h3 id="vocabulary-8">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1279,10 +1500,10 @@ I’ll make sure everything is <span class="vocab">covered</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="teammate-not-helping">2.3 Teammate Not Helping</h2>
+<h2 id="teammate-not-helping">2.4 Teammate Not Helping</h2>
 <p>A teammate is not doing their share of a group project. Talk to them
 about it.</p>
-<h3 id="sample-7">Sample</h3>
+<h3 id="sample-9">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> our group project.</p>
 <p><span class="conn">The thing is</span>, I’ve noticed that several of
 your tasks are still unfinished, and the deadline is next week. I’m
@@ -1295,7 +1516,7 @@ much, we can <span class="vocab">redistribute</span> some parts. <span class="co
 and we’ll finish with a better result.</p>
 <p><span class="tpl">Thank you so much for your understanding</span>. I
 really want us to succeed <span class="vocab">as a team</span>.</p>
-<h3 id="vocabulary-7">Vocabulary</h3>
+<h3 id="vocabulary-9">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1322,10 +1543,80 @@ really want us to succeed <span class="vocab">as a team</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="mistake-in-report">2.4 Mistake in Report</h2>
+<h2 id="whose-name-comes-first">2.5 Whose Name Comes First ⭐</h2>
+<p>You finished a team project with classmates or colleagues. One friend
+wrote most of it and says their name should be first on the cover;
+another says most of the ideas were theirs and their name should be
+first. Persuade one of them.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports).</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the cover page of our
+project.</p>
+<p><span class="conn">The thing is</span>, I know you wrote most of the
+report, and that took a lot of time. <span class="tpl">I understand
+that</span> you want your efforts to be recognized. However, Alex came
+up with the main ideas, and without them, the project would <span class="verb">fall flat</span>.</p>
+<p><span class="conn">That’s why</span> I think we should list the names
+in alphabetical order, or write “<span class="vocab">equal
+contribution</span>” under all of them. <span class="conn">In that
+case</span>, nobody will feel <span class="vocab">overlooked</span>, and
+the teacher will see that we <span class="verb">pulled together</span>
+as a team. You could also <span class="verb">take the lead</span> in the
+presentation, since you know the text best.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+believe this is a <span class="vocab">fair</span> solution.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">fall flat</span></td>
+<td>fail to have the intended effect</td>
+<td>The joke fell flat.</td>
+</tr>
+<tr>
+<td><span class="verb">pull together</span></td>
+<td>work as a team</td>
+<td>The staff pulled together.</td>
+</tr>
+<tr>
+<td><span class="verb">take the lead</span></td>
+<td>be in charge</td>
+<td>She took the lead in the meeting.</td>
+</tr>
+<tr>
+<td><span class="vocab">overlooked</span></td>
+<td>not given attention</td>
+<td>His work was overlooked.</td>
+</tr>
+<tr>
+<td><span class="vocab">fair</span></td>
+<td>just and equal</td>
+<td>That’s a fair deal.</td>
+</tr>
+<tr>
+<td><span class="vocab">equal contribution</span></td>
+<td>the same amount of work from each person</td>
+<td>The paper notes equal contribution.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mistake-in-report">2.6 Mistake in Report</h2>
 <p>You made a mistake in a report your boss will present tomorrow. Tell
 your boss and explain your plan.</p>
-<h3 id="sample-8">Sample</h3>
+<h3 id="sample-11">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the sales report for
 tomorrow’s presentation.</p>
 <p><span class="conn">The thing is</span>, I found an error in the
@@ -1338,7 +1629,7 @@ corrected version, and I’ll double-check every figure tonight. <span class="co
 thing in the morning, and I’ll explain the <span class="vocab">correction</span> if anyone asks.</p>
 <p><span class="tpl">Thank you so much for your understanding</span>.
 I’ll make sure it doesn’t happen again.</p>
-<h3 id="vocabulary-8">Vocabulary</h3>
+<h3 id="vocabulary-11">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1370,10 +1661,10 @@ I’ll make sure it doesn’t happen again.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="borrowed-equipment">2.5 Borrowed Equipment</h2>
+<h2 id="borrowed-equipment">2.7 Borrowed Equipment</h2>
 <p>Your coworker keeps borrowing your equipment without asking. Speak to
 them politely.</p>
-<h3 id="sample-9">Sample</h3>
+<h3 id="sample-12">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> my stapler and
 headphones.</p>
 <p><span class="conn">The thing is</span>, I’ve noticed that they’ve
@@ -1388,7 +1679,7 @@ Also, if you need your own set, I can <span class="vocab">recommend</span> where
 <p><span class="tpl">Thank you so much for your understanding</span>. I
 just want to keep <span class="vocab">a good working
 relationship</span>.</p>
-<h3 id="vocabulary-9">Vocabulary</h3>
+<h3 id="vocabulary-12">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1435,7 +1726,7 @@ benefit for both sides].</p>
 <h2 id="faulty-phone">3.1 Faulty Phone</h2>
 <p>You bought a phone that stopped working after two days. Call the
 store and ask for a replacement or refund.</p>
-<h3 id="sample-10">Sample</h3>
+<h3 id="sample-13">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> a phone that I
 bought from your store on Monday.</p>
 <p><span class="conn">The issue is</span>, it stopped working after two
@@ -1448,7 +1739,7 @@ to the store tomorrow, and I’ll bring everything with me, including the
 <span class="vocab">warranty</span> card.</p>
 <p><span class="tpl">Thank you so much for your help</span>. I’d
 appreciate a quick solution.</p>
-<h3 id="vocabulary-10">Vocabulary</h3>
+<h3 id="vocabulary-13">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1483,7 +1774,7 @@ appreciate a quick solution.</p>
 <h2 id="wrong-restaurant-order">3.2 Wrong Restaurant Order</h2>
 <p>Your restaurant order arrived wrong and cold. Talk to the server and
 ask for a solution.</p>
-<h3 id="sample-11">Sample</h3>
+<h3 id="sample-14">Sample</h3>
 <p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my order.</p>
 <p><span class="conn">The issue is</span>, I ordered the grilled
 chicken, but I received the fish, and it’s also <span class="vocab">lukewarm</span>. I’m sure it was a simple mix-up. <span class="tpl">I understand that</span> the restaurant is very busy
@@ -1494,7 +1785,7 @@ case</span>, I’ll happily wait a few extra minutes. If that’s not
 possible, I’d be glad to have the dish <span class="vocab">removed</span> from the bill.</p>
 <p><span class="tpl">Thank you so much for your help</span>. I really
 <span class="vocab">appreciate</span> your quick attention.</p>
-<h3 id="vocabulary-11">Vocabulary</h3>
+<h3 id="vocabulary-14">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1521,10 +1812,80 @@ possible, I’d be glad to have the dish <span class="vocab">removed</span> from
 </tr>
 </tbody>
 </table>
-<h2 id="noisy-hotel-room">3.3 Noisy Hotel Room</h2>
+<h2 id="automatic-20-tip">3.3 Automatic 20% Tip ⭐</h2>
+<p>You are at a restaurant with a friend or colleagues. The server
+automatically added a 20% tip to the bill. Ask for a new bill without
+the tip so you can decide, or accept it, and persuade your friend.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports).</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Excuse me, I’m sorry to bother you</span>, but
+<span class="tpl">I wanted to talk to you about</span> the bill.</p>
+<p><span class="conn">The thing is</span>, a 20% tip has been added
+<span class="vocab">automatically</span>, and nobody told us about it.
+<span class="tpl">I understand that</span> the service was good and that
+servers <span class="verb">rely on</span> tips for their income. We
+would be happy to <span class="vocab">leave a generous tip</span>.</p>
+<p><span class="conn">That’s why</span> I’d like to ask for a new bill
+without the tip, so that we can <span class="vocab">make our own
+decision</span>. <span class="conn">In that case</span>, we’ll pay the
+tip separately, and everything will be clear and fair. If you could
+<span class="verb">sort this out</span>, we would really appreciate
+it.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. We
+enjoyed the meal, and we’ll <span class="verb">stand by</span> our
+promise to tip well.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">rely on</span></td>
+<td>depend on</td>
+<td>Many servers rely on tips.</td>
+</tr>
+<tr>
+<td><span class="verb">sort out</span></td>
+<td>solve a problem</td>
+<td>Please sort this out.</td>
+</tr>
+<tr>
+<td><span class="verb">stand by</span></td>
+<td>keep a promise or support</td>
+<td>I stand by my words.</td>
+</tr>
+<tr>
+<td><span class="vocab">leave a generous tip</span></td>
+<td>give an extra amount of money for good service</td>
+<td>We left a generous tip.</td>
+</tr>
+<tr>
+<td><span class="vocab">make our own decision</span></td>
+<td>choose by ourselves</td>
+<td>We want to make our own decision.</td>
+</tr>
+<tr>
+<td><span class="vocab">automatically</span></td>
+<td>without being asked</td>
+<td>The fee was added automatically.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="noisy-hotel-room">3.4 Noisy Hotel Room</h2>
 <p>Your hotel room is noisy and dirty. Talk to the front desk and ask
 for a different room.</p>
-<h3 id="sample-12">Sample</h3>
+<h3 id="sample-16">Sample</h3>
 <p><span class="tpl">Hello, I’m calling from room 412</span>, <span class="tpl">and I’d like to talk about</span> the condition of my
 room.</p>
 <p><span class="conn">The issue is</span>, the room is quite dirty. The
@@ -1536,7 +1897,7 @@ quieter and cleaner room, preferably on a higher floor. <span class="conn">In th
 I’m happy to wait in the lobby. I’d also like a <span class="vocab">discount</span> for the inconvenience.</p>
 <p><span class="tpl">Thank you so much for your help</span>. I’m sure
 you can <span class="vocab">sort this out</span>.</p>
-<h3 id="vocabulary-12">Vocabulary</h3>
+<h3 id="vocabulary-16">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1568,10 +1929,10 @@ you can <span class="vocab">sort this out</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="late-package">3.4 Late Package</h2>
+<h2 id="late-package">3.5 Late Package</h2>
 <p>Your package is two weeks late. Call customer service to find out
 what happened.</p>
-<h3 id="sample-13">Sample</h3>
+<h3 id="sample-17">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> an order that I
 placed on the fifth of March.</p>
 <p><span class="conn">The issue is</span>, it was supposed to arrive
@@ -1585,7 +1946,7 @@ case</span>, I can plan my week. If it’s lost, I’d prefer you <span class="v
 delivery</span> at no extra charge, or refund my money.</p>
 <p><span class="tpl">Thank you so much for your help</span>. Could you
 please send me an email to confirm this?</p>
-<h3 id="vocabulary-13">Vocabulary</h3>
+<h3 id="vocabulary-17">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1617,10 +1978,10 @@ please send me an email to confirm this?</p>
 </tr>
 </tbody>
 </table>
-<h2 id="extra-bill-charge">3.5 Extra Bill Charge</h2>
+<h2 id="extra-bill-charge">3.6 Extra Bill Charge</h2>
 <p>You were charged extra on a bill. Call the company and ask for a
 correction.</p>
-<h3 id="sample-14">Sample</h3>
+<h3 id="sample-18">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> my latest phone
 bill.</p>
 <p><span class="conn">The issue is</span>, I was charged an extra thirty
@@ -1635,7 +1996,7 @@ explanation of how it happened.</p>
 <p><span class="tpl">Thank you so much for your help</span>. I’ve been a
 <span class="vocab">loyal customer</span> for years, and I’d like to
 <span class="vocab">keep it that way</span>.</p>
-<h3 id="vocabulary-14">Vocabulary</h3>
+<h3 id="vocabulary-18">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1682,7 +2043,7 @@ sides].</p>
 <h2 id="damaged-car">4.1 Damaged Car</h2>
 <p>Your friend borrowed your car and returned it with damage. Talk to
 your friend about it.</p>
-<h3 id="sample-15">Sample</h3>
+<h3 id="sample-19">Sample</h3>
 <p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> my car.</p>
 <p><span class="conn">The thing is</span>, when you returned it
 yesterday, I noticed a <span class="vocab">dent</span> on the back door
@@ -1695,7 +2056,7 @@ from a repair shop and decide how to cover the cost. <span class="conn">In that 
 friendship will stay <span class="vocab">intact</span>. Next time, I’d
 also appreciate it if you told me right away about any <span class="vocab">damage</span>.</p>
 <p><span class="tpl">Thanks for hearing me out</span>.</p>
-<h3 id="vocabulary-15">Vocabulary</h3>
+<h3 id="vocabulary-19">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1725,7 +2086,7 @@ also appreciate it if you told me right away about any <span class="vocab">damag
 <h2 id="cancelled-plans">4.2 Cancelled Plans</h2>
 <p>A friend cancelled plans at the last minute three times. Tell them
 how you feel.</p>
-<h3 id="sample-16">Sample</h3>
+<h3 id="sample-20">Sample</h3>
 <p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> our plans.</p>
 <p><span class="conn">The thing is</span>, this is the third time you’ve
 cancelled at the last minute, and I’ve started to feel <span class="vocab">let down</span>. I look forward to our meetings, and I
@@ -1736,7 +2097,7 @@ tell me a day earlier. <span class="conn">In that case</span>, I won’t
 be disappointed, and we can <span class="vocab">reschedule</span> to a
 time that suits you. Our friendship is important to me.</p>
 <p><span class="tpl">Thanks for hearing me out</span>.</p>
-<h3 id="vocabulary-16">Vocabulary</h3>
+<h3 id="vocabulary-20">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1766,7 +2127,7 @@ time that suits you. Our friendship is important to me.</p>
 <h2 id="uninvited-guests">4.3 Uninvited Guests</h2>
 <p>Your sibling wants to bring friends to a family event you planned for
 just the family. Talk to them about it.</p>
-<h3 id="sample-17">Sample</h3>
+<h3 id="sample-21">Sample</h3>
 <p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> Saturday’s dinner.</p>
 <p><span class="conn">The thing is</span>, I planned it as a small
 evening for the family only, because we rarely get to be together, and I
@@ -1779,7 +2140,7 @@ next weekend, and I’d gladly help. <span class="conn">In that
 case</span>, we’d have a <span class="vocab">cozy</span> family dinner
 now, and your friends would get a proper welcome later.</p>
 <p><span class="tpl">Thanks for hearing me out</span>. I hope you <span class="vocab">don’t take it the wrong way</span>.</p>
-<h3 id="vocabulary-17">Vocabulary</h3>
+<h3 id="vocabulary-21">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1814,7 +2175,7 @@ now, and your friends would get a proper welcome later.</p>
 <h2 id="refusing-a-loan">4.4 Refusing a Loan</h2>
 <p>You must tell your friend that you cannot lend them money. Explain
 politely.</p>
-<h3 id="sample-18">Sample</h3>
+<h3 id="sample-22">Sample</h3>
 <p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> the money you asked
 about.</p>
 <p><span class="conn">The thing is</span>, I really wish I could help,
@@ -1828,7 +2189,7 @@ look for <span class="vocab">community</span> support programs. <span class="con
 friendship wouldn’t be affected by money.</p>
 <p><span class="tpl">Thanks for hearing me out</span>. I hope you
 understand.</p>
-<h3 id="vocabulary-18">Vocabulary</h3>
+<h3 id="vocabulary-22">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1863,7 +2224,7 @@ understand.</p>
 <h2 id="unwanted-advice">4.5 Unwanted Advice</h2>
 <p>A relative keeps giving you advice you do not want. Politely talk to
 them about it.</p>
-<h3 id="sample-19">Sample</h3>
+<h3 id="sample-23">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the advice you’ve been
 giving me.</p>
 <p><span class="conn">The thing is</span>, I know you care about me, and
@@ -1878,7 +2239,7 @@ need guidance.</p>
 <p><span class="tpl">Thank you so much for your understanding</span>. It
 means a lot to me and <span class="vocab">strengthens</span> our
 relationship.</p>
-<h3 id="vocabulary-19">Vocabulary</h3>
+<h3 id="vocabulary-23">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1905,6 +2266,368 @@ relationship.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="elderly-woman-in-the-queue">4.6 Elderly Woman in the Queue
+⭐</h2>
+<p>You and your sister are waiting in line for a concert when an elderly
+woman comes from the back and asks to get in front of you because she
+badly wants to see her favourite singer. Your sister worries you will
+lose good seats. Persuade your sister to let her go first, or speak to
+the elderly woman.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports) and Oct 10.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> the lady behind us.</p>
+<p><span class="conn">The thing is</span>, I know you’re worried that
+we’ll lose our good seats. <span class="tpl">I understand that</span> we
+waited in this <span class="vocab">queue</span> for hours and <span class="verb">paid a lot for</span> these tickets. However, she is
+elderly, and she’s very excited to see her favourite singer. It would
+mean so much to her.</p>
+<p><span class="conn">That’s why</span> I think we should let her go
+first. <span class="conn">In that case</span>, we’d lose only a minute,
+and there will still be plenty of seats in the front rows. Besides, a
+small <span class="vocab">act of kindness</span> <span class="verb">goes
+a long way</span>. I’d also feel <span class="vocab">guilty</span> if we
+<span class="verb">turned her down</span>.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m sure we’ll <span class="verb">make up for</span> it by enjoying the
+show even more.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pay a lot for</span></td>
+<td>spend much money on</td>
+<td>We paid a lot for the seats.</td>
+</tr>
+<tr>
+<td><span class="verb">go a long way</span></td>
+<td>be very helpful</td>
+<td>A smile goes a long way.</td>
+</tr>
+<tr>
+<td><span class="verb">turn down</span></td>
+<td>refuse</td>
+<td>He turned down my request.</td>
+</tr>
+<tr>
+<td><span class="verb">make up for</span></td>
+<td>compensate for</td>
+<td>We made up for lost time.</td>
+</tr>
+<tr>
+<td><span class="vocab">queue</span></td>
+<td>a line of people waiting</td>
+<td>The queue was long.</td>
+</tr>
+<tr>
+<td><span class="vocab">act of kindness</span></td>
+<td>a kind thing done for someone</td>
+<td>A small act of kindness.</td>
+</tr>
+<tr>
+<td><span class="vocab">guilty</span></td>
+<td>feeling bad about doing something wrong</td>
+<td>I felt guilty about forgetting.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="camping-departure-time">4.7 Camping Departure Time ⭐</h2>
+<p>You and friends want to go camping outside the city. One friend
+insists on leaving on Friday evening after work; another wants to leave
+early on Saturday morning. Choose one and persuade the other.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9 and Oct
+8 (several reports).</p>
+<h3 id="sample-25">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> when we leave for the
+camping trip.</p>
+<p><span class="conn">The thing is</span>, I think leaving on Saturday
+morning is a better idea. <span class="tpl">I understand that</span> you
+want to go on Friday so we can <span class="verb">make the most
+of</span> the weekend. However, we’ll all be tired after work, and
+driving at night on unfamiliar roads can be <span class="vocab">risky</span>.</p>
+<p><span class="conn">That’s why</span> I suggest we <span class="verb">set off</span> early on Saturday morning, say at seven.
+<span class="conn">In that case</span>, we’ll arrive in daylight, <span class="vocab">pitch the tent</span> safely and still have a full day to
+hike and <span class="verb">take in</span> the scenery. We can <span class="verb">stock up on</span> food on the way.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m sure we’ll have a <span class="vocab">fantastic</span> time.</p>
+<h3 id="vocabulary-25">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">make the most of</span></td>
+<td>use as well as possible</td>
+<td>Let’s make the most of the trip.</td>
+</tr>
+<tr>
+<td><span class="verb">set off</span></td>
+<td>begin a journey</td>
+<td>We set off at dawn.</td>
+</tr>
+<tr>
+<td><span class="verb">take in</span></td>
+<td>look at and enjoy</td>
+<td>She took in the view.</td>
+</tr>
+<tr>
+<td><span class="verb">stock up on</span></td>
+<td>buy a large supply of</td>
+<td>We stocked up on snacks.</td>
+</tr>
+<tr>
+<td><span class="vocab">risky</span></td>
+<td>possibly dangerous</td>
+<td>Night driving is risky.</td>
+</tr>
+<tr>
+<td><span class="vocab">pitch the tent</span></td>
+<td>set up a tent</td>
+<td>We pitched the tent by the lake.</td>
+</tr>
+<tr>
+<td><span class="vocab">fantastic</span></td>
+<td>excellent</td>
+<td>A fantastic weekend.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="borrowing-a-family-necklace">4.8 Borrowing a Family Necklace
+⭐</h2>
+<p>A friend wants to borrow your old family necklace for a wedding, but
+your sister disagrees. You must talk to one of them.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> the family
+necklace.</p>
+<p><span class="conn">The thing is</span>, I know you’d like to wear it
+at the wedding, and I’m happy that you asked. <span class="tpl">I
+understand that</span> you’ll take good care of it. However, it’s an
+<span class="vocab">heirloom</span> from my grandmother, and my sister
+is <span class="verb">attached to</span> it for <span class="vocab">sentimental</span> reasons. It would be a disaster if it
+got lost.</p>
+<p><span class="conn">That’s why</span> I’d rather not lend it. <span class="conn">In that case</span>, I could <span class="verb">help you
+out</span> in another way, such as <span class="verb">lending you</span>
+a different piece of <span class="vocab">jewellery</span>, or going
+shopping with you to <span class="verb">pick out</span> something
+beautiful.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+hope you’ll have a wonderful time at the wedding.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">be attached to</span></td>
+<td>feel strong emotion for</td>
+<td>She is attached to her old teddy bear.</td>
+</tr>
+<tr>
+<td><span class="verb">help out</span></td>
+<td>assist</td>
+<td>I’ll help you out with the cost.</td>
+</tr>
+<tr>
+<td><span class="verb">lend</span></td>
+<td>give temporarily</td>
+<td>Can you lend me your pen?</td>
+</tr>
+<tr>
+<td><span class="verb">pick out</span></td>
+<td>choose</td>
+<td>Let’s pick out a gift.</td>
+</tr>
+<tr>
+<td><span class="vocab">heirloom</span></td>
+<td>a valuable object passed down in a family</td>
+<td>The ring is an heirloom.</td>
+</tr>
+<tr>
+<td><span class="vocab">sentimental</span></td>
+<td>related to feelings and memories</td>
+<td>It has sentimental value.</td>
+</tr>
+<tr>
+<td><span class="vocab">jewellery</span></td>
+<td>decorative items like rings and necklaces</td>
+<td>She wears simple jewellery.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="borrowing-camping-equipment">4.9 Borrowing Camping Equipment
+⭐</h2>
+<p>Your friend David (or Tom) bought new camping equipment (tent,
+camping bed, supplies) and is camping next week. Another friend, who has
+a dog, wants to borrow it, but David is unwilling because it might get
+damaged. Choose to talk to one of the two friends.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 7 (two
+reports).</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>, David? <span class="tpl">I wanted to talk to you about</span> your new camping
+equipment.</p>
+<p><span class="conn">The thing is</span>, Mia would like to <span class="vocab">borrow</span> your tent for the weekend, and I know you’re
+worried about it getting damaged. <span class="tpl">I understand
+that</span> you <span class="verb">saved up for</span> it, and you want
+it to be perfect for your own trip next week.</p>
+<p><span class="conn">That’s why</span> I’d like to suggest a solution.
+She could borrow it after your trip, so there’s no risk of delays. <span class="conn">In that case</span>, she’d also promise to <span class="verb">pay for</span> any damage and clean it carefully before
+returning it. Her dog could even stay with me, so the tent stays <span class="vocab">spotless</span>.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+This way, you can <span class="verb">look forward to</span> your trip
+without any <span class="vocab">worries</span>.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">save up for</span></td>
+<td>save money to buy</td>
+<td>I saved up for a new bike.</td>
+</tr>
+<tr>
+<td><span class="verb">pay for</span></td>
+<td>give money to cover</td>
+<td>He will pay for the repairs.</td>
+</tr>
+<tr>
+<td><span class="verb">look forward to</span></td>
+<td>be excited about a future event</td>
+<td>I look forward to the weekend.</td>
+</tr>
+<tr>
+<td><span class="vocab">spotless</span></td>
+<td>completely clean</td>
+<td>The kitchen was spotless.</td>
+</tr>
+<tr>
+<td><span class="vocab">worries</span></td>
+<td>things that make you anxious</td>
+<td>She has no worries.</td>
+</tr>
+<tr>
+<td><span class="vocab">borrow</span></td>
+<td>take and promise to return</td>
+<td>May I borrow your charger?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="job-in-another-city">4.10 Job in Another City ⭐</h2>
+<p>You got your first job (or found a position) in another city, and
+your family is not happy about you moving. Either drop the job or
+persuade your family why you want to move.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4
+(several reports).</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> my new job in
+Calgary.</p>
+<p><span class="conn">The thing is</span>, I know you’re worried about
+me living far from home. <span class="tpl">I understand that</span> you
+<span class="verb">care about</span> me and want me to be safe. However,
+this is my first real job, and it’s a rare <span class="vocab">opportunity</span> to start my <span class="vocab">career</span> at a good company.</p>
+<p><span class="conn">That’s why</span> I’d like to explain my plan.
+I’ll visit every month, and we can video call every weekend. <span class="conn">In that case</span>, we’ll <span class="vocab">stay
+close</span> even if we are far apart. Besides, the salary is high
+enough to help me <span class="verb">stand on my own two feet</span> and
+even <span class="verb">chip in</span> for family expenses. I won’t
+<span class="verb">turn my back on</span> you.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+Your support means everything to me.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">care about</span></td>
+<td>feel concern for</td>
+<td>I care about you.</td>
+</tr>
+<tr>
+<td><span class="verb">stand on my own two feet</span></td>
+<td>be independent</td>
+<td>I want to stand on my own two feet.</td>
+</tr>
+<tr>
+<td><span class="verb">chip in</span></td>
+<td>contribute money</td>
+<td>We all chipped in.</td>
+</tr>
+<tr>
+<td><span class="verb">turn my back on</span></td>
+<td>abandon</td>
+<td>I’d never turn my back on my family.</td>
+</tr>
+<tr>
+<td><span class="vocab">opportunity</span></td>
+<td>a good chance</td>
+<td>It’s a great opportunity.</td>
+</tr>
+<tr>
+<td><span class="vocab">stay close</span></td>
+<td>keep a strong relationship</td>
+<td>Friends stay close despite the distance.</td>
+</tr>
+<tr>
+<td><span class="vocab">career</span></td>
+<td>a person’s working life</td>
+<td>She started her career in sales.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="apologies-and-explaining-your-mistake">5 Apologies and
 Explaining Your Mistake</h1>
 <p>Topics: breaking something, forgetting a plan, missing a deadline,
@@ -1920,7 +2643,7 @@ their feelings].</p>
 <h2 id="broken-vase">5.1 Broken Vase</h2>
 <p>You accidentally broke your friend’s favourite item. Call them,
 apologize, and offer a solution.</p>
-<h3 id="sample-20">Sample</h3>
+<h3 id="sample-29">Sample</h3>
 <p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
 <span class="tpl">I wanted to apologize for</span> something that
 happened at your place.</p>
@@ -1934,7 +2657,7 @@ together. <span class="conn">In that case</span>, we might save most of
 it, and I’ll cover the cost.</p>
 <p><span class="tpl">Once again, I’m truly sorry</span>. I hope you can
 <span class="vocab">forgive</span> me.</p>
-<h3 id="vocabulary-20">Vocabulary</h3>
+<h3 id="vocabulary-29">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1969,7 +2692,7 @@ it, and I’ll cover the cost.</p>
 <h2 id="forgotten-meeting">5.2 Forgotten Meeting</h2>
 <p>You forgot to meet a friend who waited for you for an hour. Call them
 and apologize.</p>
-<h3 id="sample-21">Sample</h3>
+<h3 id="sample-30">Sample</h3>
 <p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
 <span class="tpl">I wanted to apologize for</span> not showing up
 today.</p>
@@ -1982,7 +2705,7 @@ dinner this weekend, and it’s my treat. <span class="conn">In that
 case</span>, we can finally have the chat we planned, and I’ll put it in
 my calendar with an <span class="vocab">alert</span>.</p>
 <p><span class="tpl">Once again, I’m truly sorry</span>. It was <span class="vocab">careless</span> of me.</p>
-<h3 id="vocabulary-21">Vocabulary</h3>
+<h3 id="vocabulary-30">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2012,7 +2735,7 @@ my calendar with an <span class="vocab">alert</span>.</p>
 <h2 id="missed-deadline">5.3 Missed Deadline</h2>
 <p>You will miss an important deadline at work. Tell your manager and
 explain your plan.</p>
-<h3 id="sample-22">Sample</h3>
+<h3 id="sample-31">Sample</h3>
 <p><span class="tpl">Hi, I’m really sorry to bother you</span>. <span class="tpl">I wanted to inform you about</span> the marketing
 report.</p>
 <p><span class="conn">The truth is</span>, I won’t be able to submit it
@@ -2023,7 +2746,7 @@ that</span> this affects your schedule, and I’m sorry for the <span class="voc
 a draft tomorrow with the main findings, and I’ll <span class="vocab">finalize</span> the full report by Thursday. <span class="conn">In that case</span>, you’ll have the key points for the
 meeting, and the quality won’t suffer. I’ll also <span class="vocab">prioritize</span> this above my other tasks.</p>
 <p><span class="tpl">Once again, I’m truly sorry</span>.</p>
-<h3 id="vocabulary-22">Vocabulary</h3>
+<h3 id="vocabulary-31">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2058,7 +2781,7 @@ meeting, and the quality won’t suffer. I’ll also <span class="vocab">priorit
 <h2 id="rude-in-a-meeting">5.4 Rude in a Meeting</h2>
 <p>You were rude to a coworker during a stressful meeting. Talk to them
 and apologize.</p>
-<h3 id="sample-23">Sample</h3>
+<h3 id="sample-32">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to apologize for</span> what happened in the
 meeting.</p>
 <p><span class="conn">The truth is</span>, I was stressed about the
@@ -2072,7 +2795,7 @@ I’d like to hear your ideas on the project. If you want, we could also
 have coffee and <span class="vocab">clear the air</span>. I promise to
 stay calm and respectful in the future.</p>
 <p><span class="tpl">Once again, I’m truly sorry</span>. I really <span class="vocab">respect</span> your work.</p>
-<h3 id="vocabulary-23">Vocabulary</h3>
+<h3 id="vocabulary-32">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2102,7 +2825,7 @@ stay calm and respectful in the future.</p>
 <h2 id="cancelling-a-dinner">5.5 Cancelling a Dinner</h2>
 <p>You must cancel a family dinner you agreed to host. Call your
 relative and explain.</p>
-<h3 id="sample-24">Sample</h3>
+<h3 id="sample-33">Sample</h3>
 <p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
 <span class="tpl">I wanted to let you know about</span> Sunday’s
 dinner.</p>
@@ -2115,7 +2838,7 @@ cook something special to make up for it. I’ll also send everyone the
 updated date today.</p>
 <p><span class="tpl">Once again, I’m truly sorry</span>. Thank you for
 being so <span class="vocab">understanding</span>.</p>
-<h3 id="vocabulary-24">Vocabulary</h3>
+<h3 id="vocabulary-33">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2142,6 +2865,147 @@ being so <span class="vocab">understanding</span>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="goodbye-party-vs-final-project">5.6 Goodbye Party vs Final
+Project ⭐</h2>
+<p>Your cousin is leaving the country forever and has a goodbye party,
+but you have an important university final project due. Either tell your
+cousin why you cannot attend, or ask your professor for a deadline
+extension (the professor will extend it only if the situation is very
+serious).</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9 (two
+reports) and Oct 8.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>,
+Professor. <span class="tpl">I wanted to apologize for</span> asking
+this at the last minute.</p>
+<p><span class="conn">The thing is</span>, my cousin is leaving the
+country permanently, and her goodbye party is the day before my final
+project is due. <span class="tpl">I understand that</span> deadlines are
+important, and I’ve been <span class="verb">working on</span> the
+project for weeks. However, I may never see her again, and this is a
+very <span class="vocab">emotional</span> moment for my family.</p>
+<p><span class="conn">That’s why</span> I was wondering if I could have
+a two-day <span class="vocab">extension</span>. <span class="conn">In
+that case</span>, I’ll attend the party and <span class="verb">hand
+in</span> a complete, <span class="vocab">polished</span> project right
+after. I can also send you a draft today so you can see my progress.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’ll make sure to <span class="verb">live up to</span> your
+expectations.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">work on</span></td>
+<td>spend time on</td>
+<td>I’m working on my thesis.</td>
+</tr>
+<tr>
+<td><span class="verb">hand in</span></td>
+<td>submit</td>
+<td>Hand in your essay on Monday.</td>
+</tr>
+<tr>
+<td><span class="verb">live up to</span></td>
+<td>meet a standard</td>
+<td>She lived up to her promise.</td>
+</tr>
+<tr>
+<td><span class="vocab">emotional</span></td>
+<td>full of strong feelings</td>
+<td>It was an emotional goodbye.</td>
+</tr>
+<tr>
+<td><span class="vocab">extension</span></td>
+<td>extra time to finish something</td>
+<td>She asked for an extension.</td>
+</tr>
+<tr>
+<td><span class="vocab">polished</span></td>
+<td>carefully finished</td>
+<td>A polished presentation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="explaining-a-car-accident">5.7 Explaining a Car Accident ⭐</h2>
+<p>Your car got scratched in an accident, and you have to explain to
+your family what happened and the situation.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">Hi, I’m really sorry to call you like this</span>.
+<span class="tpl">I wanted to apologize for</span> the scratch on our
+car.</p>
+<p><span class="conn">The thing is</span>, I was parking at the mall
+this afternoon, and another driver <span class="verb">backed into</span>
+me. Nobody was hurt, but the side door has a long scratch. <span class="tpl">I understand that</span> you <span class="verb">count
+on</span> me to look after the car, and I feel terrible.</p>
+<p><span class="conn">That’s why</span> I’d like to tell you everything.
+I took photos, <span class="vocab">exchanged</span> insurance details
+with the other driver, and I’ve already <span class="vocab">filed a
+claim</span>. <span class="conn">In that case</span>, the insurance
+should <span class="verb">take care of</span> most of the cost, and I’ll
+pay the <span class="vocab">deductible</span> myself.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+promise I’ll be more careful in the future.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">back into</span></td>
+<td>hit something while reversing</td>
+<td>He backed into a pole.</td>
+</tr>
+<tr>
+<td><span class="verb">count on</span></td>
+<td>rely on</td>
+<td>We count on you.</td>
+</tr>
+<tr>
+<td><span class="verb">take care of</span></td>
+<td>deal with</td>
+<td>Insurance takes care of repairs.</td>
+</tr>
+<tr>
+<td><span class="vocab">exchange</span></td>
+<td>give and receive</td>
+<td>We exchanged phone numbers.</td>
+</tr>
+<tr>
+<td><span class="vocab">file a claim</span></td>
+<td>make an official request for insurance money</td>
+<td>She filed a claim after the storm.</td>
+</tr>
+<tr>
+<td><span class="vocab">deductible</span></td>
+<td>the amount you pay before insurance pays</td>
+<td>The deductible is five hundred dollars.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="travel-and-transportation-problems">6 Travel and Transportation
 Problems</h1>
 <p>Topics: a cancelled flight, lost luggage, an overcharge, a delayed
@@ -2156,7 +3020,7 @@ empathy].</p>
 <h2 id="cancelled-flight">6.1 Cancelled Flight</h2>
 <p>Your flight was cancelled. Talk to the airline agent and ask for
 another flight.</p>
-<h3 id="sample-25">Sample</h3>
+<h3 id="sample-36">Sample</h3>
 <p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my flight to
 Vancouver.</p>
 <p><span class="conn">The issue is</span>, it has just been cancelled,
@@ -2169,7 +3033,7 @@ that’s not possible, I’d appreciate a <span class="vocab">voucher</span>
 for a hotel and a meal, since the delay will be long. Could you also
 confirm that my luggage will be <span class="vocab">transferred</span>?</p>
 <p><span class="tpl">Thank you so much for your help</span>.</p>
-<h3 id="vocabulary-25">Vocabulary</h3>
+<h3 id="vocabulary-36">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2204,7 +3068,7 @@ confirm that my luggage will be <span class="vocab">transferred</span>?</p>
 <h2 id="lost-luggage">6.2 Lost Luggage</h2>
 <p>Your luggage did not arrive at your destination. Talk to the airline
 and ask what they will do.</p>
-<h3 id="sample-26">Sample</h3>
+<h3 id="sample-37">Sample</h3>
 <p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I’d like to talk about</span> my luggage.</p>
 <p><span class="conn">The issue is</span>, my suitcase didn’t come out
 on the <span class="vocab">baggage claim</span>, and everything I need
@@ -2215,7 +3079,7 @@ you can deliver the suitcase as soon as it’s found. I’d also like to
 know whether the airline will <span class="vocab">reimburse</span> me
 for basic items I have to buy.</p>
 <p><span class="tpl">Thank you so much for your help</span>.</p>
-<h3 id="vocabulary-26">Vocabulary</h3>
+<h3 id="vocabulary-37">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2250,7 +3114,7 @@ for basic items I have to buy.</p>
 <h2 id="taxi-overcharge">6.3 Taxi Overcharge</h2>
 <p>A taxi driver charged much more than the fare shown. Talk to the
 driver or the company.</p>
-<h3 id="sample-27">Sample</h3>
+<h3 id="sample-38">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> a taxi ride I took
 yesterday evening.</p>
 <p><span class="conn">The issue is</span>, the meter showed twenty-two
@@ -2264,7 +3128,7 @@ that case</span>, if the charge was a mistake, I’d expect you to <span class="
 <span class="vocab">licence plate number</span> of the car, and I’m
 happy to send them by email.</p>
 <p><span class="tpl">Thank you so much for your help</span>.</p>
-<h3 id="vocabulary-27">Vocabulary</h3>
+<h3 id="vocabulary-38">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2299,7 +3163,7 @@ happy to send them by email.</p>
 <h2 id="delayed-train">6.4 Delayed Train</h2>
 <p>Your train was delayed two hours and you missed an appointment. Ask
 the rail company for a refund.</p>
-<h3 id="sample-28">Sample</h3>
+<h3 id="sample-39">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> the 9:15 train from
 Montreal yesterday.</p>
 <p><span class="conn">The issue is</span>, it was delayed by two hours,
@@ -2313,7 +3177,7 @@ know whether there’s a <span class="vocab">compensation</span> policy
 for long delays, because I had to pay a <span class="vocab">cancellation
 fee</span> for the appointment. I can send you my ticket details.</p>
 <p><span class="tpl">Thank you so much for your help</span>.</p>
-<h3 id="vocabulary-28">Vocabulary</h3>
+<h3 id="vocabulary-39">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2348,7 +3212,7 @@ fee</span> for the appointment. I can send you my ticket details.</p>
 <h2 id="seat-mix-up">6.5 Seat Mix-Up</h2>
 <p>A passenger is sitting in the seat you reserved on a bus. Politely
 ask them to move.</p>
-<h3 id="sample-29">Sample</h3>
+<h3 id="sample-40">Sample</h3>
 <p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I think there might be a small mix-up</span> with the
 seat.</p>
 <p><span class="conn">The issue is</span>, I reserved this seat, 14A,
@@ -2363,7 +3227,7 @@ if your seat is nearby, we can easily <span class="vocab">swap</span>,
 and I won’t mind at all.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-29">Vocabulary</h3>
+<h3 id="vocabulary-40">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2412,7 +3276,7 @@ understanding</span>.</p>
 <h2 id="unfair-grade">7.1 Unfair Grade</h2>
 <p>You think your teacher graded your assignment unfairly. Talk to the
 teacher politely.</p>
-<h3 id="sample-30">Sample</h3>
+<h3 id="sample-41">Sample</h3>
 <p><span class="tpl">Excuse me, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the grade I received on
 my essay.</p>
 <p><span class="conn">The thing is</span>, I got sixty-five percent, and
@@ -2424,7 +3288,7 @@ you have many papers to grade, and I respect your work.</p>
 through the <span class="vocab">marking criteria</span> together. <span class="conn">In that case</span>, I’d know what to <span class="vocab">improve</span>, and if there was an error in the <span class="vocab">calculation</span>, you could correct it.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-30">Vocabulary</h3>
+<h3 id="vocabulary-41">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2459,7 +3323,7 @@ understanding</span>.</p>
 <h2 id="extension-request">7.2 Extension Request</h2>
 <p>You want to ask your professor for an extension. Explain your
 situation.</p>
-<h3 id="sample-31">Sample</h3>
+<h3 id="sample-42">Sample</h3>
 <p><span class="tpl">Excuse me, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the deadline for my
 research paper.</p>
 <p><span class="conn">The thing is</span>, I’ve been dealing with a
@@ -2474,7 +3338,7 @@ outline and the research, and I can show you my progress, if you’d
 like.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-31">Vocabulary</h3>
+<h3 id="vocabulary-42">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2504,7 +3368,7 @@ understanding</span>.</p>
 <h2 id="noisy-library">7.3 Noisy Library</h2>
 <p>A person is talking loudly in a library. Politely ask them to be
 quiet.</p>
-<h3 id="sample-32">Sample</h3>
+<h3 id="sample-43">Sample</h3>
 <p><span class="tpl">Excuse me, I’m sorry to bother you</span>, <span class="tpl">but I wanted to mention</span> the noise.</p>
 <p><span class="conn">The thing is</span>, I’m trying to study for an
 exam, and it’s hard to concentrate when there’s talking around. <span class="tpl">I understand that</span> you’re probably discussing
@@ -2516,7 +3380,7 @@ room</span> on the second floor, where talking is allowed. <span class="conn">In
 that room is usually <span class="vocab">vacant</span> at this time.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-32">Vocabulary</h3>
+<h3 id="vocabulary-43">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2546,7 +3410,7 @@ understanding</span>.</p>
 <h2 id="loud-street-festival">7.4 Loud Street Festival</h2>
 <p>A neighbourhood event is too loud for the residents. Talk to the
 organizer and suggest a solution.</p>
-<h3 id="sample-33">Sample</h3>
+<h3 id="sample-44">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the music at the street
 festival.</p>
 <p><span class="conn">The thing is</span>, it’s quite loud, and several
@@ -2561,7 +3425,7 @@ residents will <span class="vocab">cooperate</span> more next year. I’m
 also happy to <span class="vocab">volunteer</span> to help.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-33">Vocabulary</h3>
+<h3 id="vocabulary-44">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2591,7 +3455,7 @@ understanding</span>.</p>
 <h2 id="class-schedule-change">7.5 Class Schedule Change</h2>
 <p>You want to ask the gym manager to change the class schedule. Explain
 your reasons.</p>
-<h3 id="sample-34">Sample</h3>
+<h3 id="sample-45">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> the yoga class
 schedule.</p>
 <p><span class="conn">The thing is</span>, the class is at four in the
@@ -2606,7 +3470,7 @@ also ask my coworkers to <span class="vocab">sign up</span>, and I’d be
 glad to <span class="vocab">fill out</span> a survey.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-34">Vocabulary</h3>
+<h3 id="vocabulary-45">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2633,6 +3497,155 @@ understanding</span>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="gap-year-or-university">7.6 Gap Year or University ⭐</h2>
+<p>One friend decides to take a year off after school; another says they
+must go to university because the three of you promised to go together.
+Convince one of them.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9.</p>
+<h3 id="sample-46">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> your plan to take a
+year off.</p>
+<p><span class="conn">The thing is</span>, we promised to start
+university together, and I’d really miss having you there. <span class="tpl">I understand that</span> you want to <span class="verb">take
+a breather</span> after school, and you want to travel. But a gap year
+can easily <span class="verb">drag on</span>, and it’s sometimes hard to
+<span class="verb">get back into</span> studying.</p>
+<p><span class="conn">That’s why</span> I’d suggest a <span class="vocab">compromise</span>. You could start university this year
+and travel during the summer breaks. <span class="conn">In that
+case</span>, you won’t <span class="verb">fall behind</span>, and we’ll
+<span class="verb">look out for</span> each other. You could even choose
+an <span class="vocab">exchange program</span> abroad.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>. I
+know it’s a <span class="vocab">major</span> decision, and I support you
+either way.</p>
+<h3 id="vocabulary-46">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">take a breather</span></td>
+<td>rest for a short time</td>
+<td>Let’s take a breather.</td>
+</tr>
+<tr>
+<td><span class="verb">drag on</span></td>
+<td>continue too long</td>
+<td>The meeting dragged on.</td>
+</tr>
+<tr>
+<td><span class="verb">get back into</span></td>
+<td>start doing again</td>
+<td>It’s hard to get back into a routine.</td>
+</tr>
+<tr>
+<td><span class="verb">fall behind</span></td>
+<td>not keep up</td>
+<td>Don’t fall behind in class.</td>
+</tr>
+<tr>
+<td><span class="verb">look out for</span></td>
+<td>take care of</td>
+<td>Friends look out for each other.</td>
+</tr>
+<tr>
+<td><span class="vocab">exchange program</span></td>
+<td>a study program in another country</td>
+<td>She joined an exchange program in France.</td>
+</tr>
+<tr>
+<td><span class="vocab">major</span></td>
+<td>very important</td>
+<td>A major decision.</td>
+</tr>
+<tr>
+<td><span class="vocab">compromise</span></td>
+<td>an agreement where both sides give something up</td>
+<td>They reached a compromise.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="more-or-less-homework">7.7 More or Less Homework ⭐</h2>
+<p>You and your friend are taking a language class. Option A is less
+homework; option B is more homework. Convince your friend that your
+choice is better.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-47">Sample</h3>
+<p><span class="tpl">Hey, can we talk for a minute</span>? <span class="tpl">I wanted to talk to you about</span> the homework in our
+language class.</p>
+<p><span class="conn">The thing is</span>, I think we should choose more
+homework. <span class="tpl">I understand that</span> you’re busy and
+that less homework sounds <span class="vocab">appealing</span>. However,
+languages are learned through daily practice, and extra exercises will
+help us <span class="verb">pick up</span> the grammar much faster.</p>
+<p><span class="conn">That’s why</span> I’d like us to go for the
+heavier option. <span class="conn">In that case</span>, we can <span class="vocab">study together</span> twice a week and <span class="verb">quiz</span> each other, which makes it more fun. If it gets
+too heavy, we can always <span class="verb">cut back on</span> other
+activities and <span class="verb">stay on track</span>.</p>
+<p><span class="tpl">Thank you so much for your understanding</span>.
+I’m sure that in a few months we’ll be proud of our <span class="vocab">progress</span>.</p>
+<h3 id="vocabulary-47">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pick up</span></td>
+<td>learn casually</td>
+<td>I picked up some Spanish.</td>
+</tr>
+<tr>
+<td><span class="verb">quiz</span></td>
+<td>test with questions</td>
+<td>Quiz me on the new words.</td>
+</tr>
+<tr>
+<td><span class="verb">cut back on</span></td>
+<td>reduce</td>
+<td>I cut back on TV.</td>
+</tr>
+<tr>
+<td><span class="verb">stay on track</span></td>
+<td>continue making progress as planned</td>
+<td>Set goals to stay on track.</td>
+</tr>
+<tr>
+<td><span class="vocab">appealing</span></td>
+<td>attractive</td>
+<td>The offer is appealing.</td>
+</tr>
+<tr>
+<td><span class="vocab">study together</span></td>
+<td>learn with a partner</td>
+<td>We study together at the library.</td>
+</tr>
+<tr>
+<td><span class="vocab">progress</span></td>
+<td>improvement</td>
+<td>She made great progress.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="services-utilities-and-polite-refusals">8 Services, Utilities,
 and Polite Refusals</h1>
 <p>Topics: internet, a contractor, a bank, a membership, declining a
@@ -2651,7 +3664,7 @@ understanding</span>.</p>
 <h2 id="internet-outage">8.1 Internet Outage</h2>
 <p>Your internet has been down for three days. Call the provider and ask
 for a solution.</p>
-<h3 id="sample-35">Sample</h3>
+<h3 id="sample-48">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> my internet
 connection.</p>
 <p><span class="conn">The issue is</span>, it has been down for three
@@ -2666,7 +3679,7 @@ back to work quickly. I’d also like a <span class="vocab">credit</span>
 on my bill for the days without service. Could you tell me the <span class="vocab">estimated</span> time for the repair?</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-35">Vocabulary</h3>
+<h3 id="vocabulary-48">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2701,7 +3714,7 @@ understanding</span>.</p>
 <h2 id="unfinished-renovation">8.2 Unfinished Renovation</h2>
 <p>A contractor left your kitchen unfinished and has not returned. Call
 them and ask them to finish the work.</p>
-<h3 id="sample-36">Sample</h3>
+<h3 id="sample-49">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> the kitchen
 renovation at my house.</p>
 <p><span class="conn">The issue is</span>, you stopped working two weeks
@@ -2717,7 +3730,7 @@ problems, and I’ll pay the <span class="vocab">remaining</span> balance
 on completion. Otherwise, I’ll have to look at options in our <span class="vocab">contract</span>.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-36">Vocabulary</h3>
+<h3 id="vocabulary-49">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2757,7 +3770,7 @@ understanding</span>.</p>
 <h2 id="unknown-bank-charge">8.3 Unknown Bank Charge</h2>
 <p>You see an unknown charge on your bank statement. Call the bank and
 explain the problem.</p>
-<h3 id="sample-37">Sample</h3>
+<h3 id="sample-50">Sample</h3>
 <p><span class="tpl">Hello, I’m calling about</span> my credit card
 statement.</p>
 <p><span class="conn">The issue is</span>, there’s a charge of two
@@ -2771,7 +3784,7 @@ I’d feel safer if you could <span class="vocab">block</span> my card and
 send me a new one. Could you also let me know how long the <span class="vocab">investigation</span> will take?</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-37">Vocabulary</h3>
+<h3 id="vocabulary-50">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2811,7 +3824,7 @@ understanding</span>.</p>
 <h2 id="gym-cancellation">8.4 Gym Cancellation</h2>
 <p>You want to cancel your gym membership but the staff say it is not
 possible. Talk to the manager.</p>
-<h3 id="sample-38">Sample</h3>
+<h3 id="sample-51">Sample</h3>
 <p><span class="tpl">Hello, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> cancelling my
 membership.</p>
 <p><span class="conn">The issue is</span>, I’m moving to another city
@@ -2824,7 +3837,7 @@ case</span>, my last payment would be next month, and we’d <span class="vocab"
 it in right now and provide proof of my new address.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-38">Vocabulary</h3>
+<h3 id="vocabulary-51">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2859,7 +3872,7 @@ understanding</span>.</p>
 <h2 id="declining-weekend-work">8.5 Declining Weekend Work</h2>
 <p>Your manager asks you to work an extra weekend, but you have plans.
 Politely decline and suggest an alternative.</p>
-<h3 id="sample-39">Sample</h3>
+<h3 id="sample-52">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> working this
 weekend.</p>
 <p><span class="conn">The thing is</span>, I’d love to help, but I have
@@ -2874,7 +3887,7 @@ would be <span class="vocab">overworked</span>. I could also be <span class="voc
 <p><span class="tpl">Thank you so much for your understanding</span>.
 I’m <span class="vocab">committed</span> to the success of the
 project.</p>
-<h3 id="vocabulary-39">Vocabulary</h3>
+<h3 id="vocabulary-52">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2909,7 +3922,7 @@ project.</p>
 <h2 id="working-from-home">8.6 Working From Home</h2>
 <p>You want to convince your manager to let you work from home two days
 a week. Explain your reasons.</p>
-<h3 id="sample-40">Sample</h3>
+<h3 id="sample-53">Sample</h3>
 <p><span class="tpl">Hi, do you have a minute</span>? <span class="tpl">I wanted to talk to you about</span> a flexible work
 arrangement.</p>
 <p><span class="conn">The thing is</span>, I’d like to work from home
@@ -2922,7 +3935,7 @@ could review my results, and I’d stay <span class="vocab">available</span> by 
 performance drops, we can go back to the old <span class="vocab">arrangement</span>.</p>
 <p><span class="tpl">Thank you so much for your
 understanding</span>.</p>
-<h3 id="vocabulary-40">Vocabulary</h3>
+<h3 id="vocabulary-53">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -3011,7 +4024,25 @@ understanding</span>.</p>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -3023,6 +4054,18 @@ understanding</span>.</p>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
@@ -3224,5 +4267,557 @@ understanding</span>.</p>
   });
 })();
 </script>
+<!-- _doc-audio-panel -->
+<!-- Voice panel for generated HTML documents. Baked into the files (like the read check-marks) and
+     re-injected by the app when it serves them, so it works opened from the app, from a local file or
+     from Hugging Face. With the app running, recordings are saved in the app folder; without it they
+     are saved in this browser (IndexedDB) and can be exported / imported. Edit THIS file, then run
+     bake_audio_panel.py to refresh the copies inside the HTML files. -->
+<style>
+#_aud-rec-toggle, #_aud-io { position: fixed; top: 12px; z-index: 200; width: 34px; height: 34px;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font-size: 1.05em; cursor: pointer; box-shadow: var(--shadow, none);
+  display: flex; align-items: center; justify-content: center; }
+#_aud-rec-toggle { left: 96px; } #_aud-io { left: 138px; }
+#_aud-rec-toggle:hover, #_aud-io:hover { border-color: var(--accent, #e08a5f); }
+#_aud-rec-toggle.live { background: #b91c1c; border-color: #ef4444; color: #fff; }
+#_aud-src { position: fixed; top: 12px; left: 180px; z-index: 200; height: 34px; padding: 0 10px; display: none;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font: 0.8em sans-serif; cursor: pointer; box-shadow: var(--shadow, none); }
+#_aud-src:hover { border-color: var(--accent, #e08a5f); }
+#_aud-hud, #_aud-menu { position: fixed; top: 54px; left: 12px; z-index: 200; display: none; width: 300px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border, #3e3d3a);
+  background: var(--bg-elevated, #30302e); color: var(--text, #f0efe9);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.4 sans-serif; }
+#_aud-hud { border-color: #ef4444; }
+#_aud-hud .lbl { font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#_aud-hud .tm.live { color: #ef4444; font-weight: 600; }
+#_aud-hud .row, #_aud-menu .row, #_aud-bar { display: flex; gap: 6px; align-items: center; }
+#_aud-hud .row, #_aud-menu .row { margin-top: 6px; flex-wrap: wrap; }
+#_aud-menu .hint { color: var(--text-muted, #a8a6a0); font-size: .92em; }
+#_aud-bar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 200;
+  width: min(820px, 96vw); display: none; padding: 6px 10px; border-radius: 12px;
+  border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.3 sans-serif; }
+#_aud-bar input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent, #e08a5f); }
+#_aud-bar .tt { font-variant-numeric: tabular-nums; color: var(--text-muted, #a8a6a0); white-space: nowrap; }
+#_aud-toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 210; display: none;
+  padding: 4px 12px; border-radius: 8px; background: var(--bg-elevated, #30302e); color: var(--accent, #e08a5f);
+  border: 1px solid var(--border, #3e3d3a); font: 0.85em sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+#_aud-hud button, #_aud-menu button, #_aud-bar button, #_aud-bar select { padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 1em; border: 1px solid var(--border, #3e3d3a); background: transparent;
+  color: var(--text, #f0efe9); }
+#_aud-bar select option { background: var(--bg-elevated, #30302e); }
+#_aud-hud button:hover, #_aud-menu button:hover, #_aud-bar button:hover, #_aud-bar button.on {
+  border-color: var(--accent, #e08a5f); color: var(--accent, #e08a5f); }
+#_aud-bar button { white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+._aud-hrec { margin-right: 8px; padding: 0 6px; font-size: 0.55em; line-height: 1.7; vertical-align: middle;
+  border-radius: 6px; cursor: pointer; opacity: .5; border: 1px solid var(--border, #3e3d3a);
+  background: transparent; color: var(--text, #f0efe9); }
+._aud-hrec:hover { opacity: 1; border-color: var(--accent, #e08a5f); }
+._aud-hrec.has { opacity: 1; border-color: #ef4444; background: #ef4444; color: #fff; }
+._aud-hrec.live { opacity: 1; border-color: #ef4444; background: #b91c1c; color: #fff; }
+a._aud-has::after { content: ' \1F50A'; font-size: .8em; }
+a._aud-now { color: var(--accent, #e08a5f) !important; font-weight: 700; }
+@media print { #_aud-src, #_aud-rec-toggle, #_aud-io, #_aud-hud, #_aud-menu, #_aud-bar, #_aud-toast, ._aud-hrec { display: none !important; } }
+</style>
+<script>
+(function () {
+  if (window.__audPanel) return;
+  if (!window.MediaRecorder || !window.indexedDB || !window.fetch || !window.Promise) return;  /* e.g. wkhtmltopdf */
+  window.__audPanel = true;
+  const docKey = decodeURIComponent(location.pathname);
+  const docName = docKey.split('/').pop().replace(/\.html?$/i, '');
+  let speed = 2;  /* same default as the library player */
+  try { speed = parseFloat(localStorage.getItem('_aud_speed')) || 2; } catch (e) {}
+
+  /* ── Sections of the document: TOC order, heading element per id ── */
+  const clean = el => { const c = el.cloneNode(true); c.querySelectorAll('._aud-hrec').forEach(n => n.remove());
+    return c.textContent.replace(/\s+/g, ' ').trim(); };
+  const tocAnchors = () => Array.from(document.querySelectorAll('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]'));
+  const idOf = a => decodeURIComponent((a.getAttribute('href') || '').slice(1));
+  const heads = [];
+  (function () {
+    const seen = new Set();
+    const add = id => {
+      const t = id && document.getElementById(id);
+      if (!t || seen.has(id)) return;
+      const h = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (!h || h.closest('#TOC') || h.closest('#_toc-sidebar')) return;
+      seen.add(id); heads.push({ id: id, el: h, title: clean(h) });
+    };
+    tocAnchors().forEach(a => add(idOf(a)));
+    if (!heads.length) document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => add(h.id));
+  })();
+  if (!heads.length) return;
+  const titleOf = id => (heads.find(h => h.id === id) || {}).title || id;
+  const headPos = id => heads.findIndex(h => h.id === id);
+
+  /* The active section = last heading scrolled to the top area of the screen. */
+  function activeId() {
+    let cur = heads[0];
+    for (const h of heads) { if (h.el.getBoundingClientRect().top <= 90) cur = h; else break; }
+    return cur.id;
+  }
+
+  /* ── Storage: the app (when it is running) or this browser (IndexedDB) ── */
+  let mode = 'local';   /* 'api' = the app saves recordings in the library folder; 'local' = this browser */
+  const apiInfo = async () => {
+    const r = await fetch('/api/library/get-audio?html_url=' + encodeURIComponent(docKey));
+    if (!r.ok) throw new Error('no app');
+    const d = await r.json();
+    if (!d || typeof d.has_audio === 'undefined') throw new Error('no app');
+    return d;
+  };
+  const idb = (function () {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('_doc_voice', 1);
+      r.onupgradeneeded = () => { r.result.createObjectStore('clips', { keyPath: 'k' }).createIndex('doc', 'doc'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+    const run = (access, fn) => open().then(db => new Promise((res, rej) => {
+      const t = db.transaction('clips', access), req = fn(t.objectStore('clips'));
+      t.oncomplete = () => res(req.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    return {
+      all: doc => run('readonly', s => s.index('doc').getAll(doc)),
+      put: c => run('readwrite', s => s.put(c)),
+      del: k => run('readwrite', s => s.delete(k)),
+    };
+  })();
+  const clipKey = id => docKey + '||' + id;
+
+  /* ── UI ── */
+  const recToggle = document.createElement('button');
+  recToggle.id = '_aud-rec-toggle'; recToggle.textContent = '🎙';
+  recToggle.title = 'Record my voice for the section I am reading';
+  const ioBtn = document.createElement('button');
+  ioBtn.id = '_aud-io'; ioBtn.textContent = '💾'; ioBtn.title = 'Where my recordings are saved / export / import';
+  const srcBtn = document.createElement('button');
+  srcBtn.id = '_aud-src';
+  const hud = document.createElement('div');
+  hud.id = '_aud-hud';
+  hud.innerHTML = '<div class="lbl"></div><div class="tm"></div><div class="row">' +
+    '<button data-a="pause">⏸ Pause</button><button data-a="save">⏹ Stop &amp; save</button>' +
+    '<button data-a="cancel">Cancel</button></div>';
+  const menu = document.createElement('div');
+  menu.id = '_aud-menu';
+  menu.innerHTML = '<div class="hint" id="_aud-where"></div><div class="row">' +
+    '<button data-a="export">⬇ Export recordings</button><button data-a="import">⬆ Import recordings…</button></div>' +
+    '<input type="file" accept=".voicebundle" style="display:none">';
+  const bar = document.createElement('div');
+  bar.id = '_aud-bar';
+  bar.innerHTML = '<button id="_aud-all">▶ Full audio</button>' +
+    '<button id="_aud-sec" title="Play only the section I am reading">▶ This section</button>' +
+    '<button id="_aud-follow" title="Jump the audio to the section I scroll to">⇣ Follow</button>' +
+    '<input type="range" min="0" max="1000" value="0" step="1"><span class="tt">0:00 / 0:00</span>' +
+    '<select title="Speed"></select><audio preload="none" style="display:none"></audio>';
+  const toast = document.createElement('div');
+  toast.id = '_aud-toast';
+  document.body.append(recToggle, ioBtn, srcBtn, hud, menu, bar, toast);
+  const player = bar.querySelector('audio'), allBtn = bar.querySelector('#_aud-all'),
+        secBtn = bar.querySelector('#_aud-sec'), followBtn = bar.querySelector('#_aud-follow'),
+        slider = bar.querySelector('input[type=range]'), timeLbl = bar.querySelector('.tt'),
+        speedSel = bar.querySelector('select'), fileIn = menu.querySelector('input[type=file]');
+  [1, 1.25, 1.5, 2].forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s + '×'; speedSel.appendChild(o);
+  });
+  speedSel.value = speed;
+  function flash(t) { toast.textContent = t; toast.style.display = 'block'; clearTimeout(flash.t);
+    flash.t = setTimeout(() => { toast.style.display = 'none'; }, 2800); }
+  const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  /* ── State ── */
+  let clips = [];   /* my recordings, in play order: {id, src, off, dur, vStart} (seconds) */
+  let blobUrls = [];
+  let hasApp = false, appUrl = null, hasMine = false, mineUrl = null;
+  let source = 'mine', pick = null;   /* 'mine' = my own recordings (default when they exist), 'app' = the document's app audio */
+  let follow = true, lastActive = null, curIdx = -1, cont = false, dragging = false;
+  const isMine = () => source === 'mine';
+  const idxOf = id => clips.findIndex(c => c.id === id);
+  const hasClip = id => idxOf(id) >= 0;
+
+  function applySpeed() {
+    player.playbackRate = speed;
+    player.preservesPitch = true; player.mozPreservesPitch = true; player.webkitPreservesPitch = true;
+  }
+  speedSel.addEventListener('change', () => {
+    speed = parseFloat(speedSel.value);
+    try { localStorage.setItem('_aud_speed', String(speed)); } catch (e) {}
+    applySpeed();
+  });
+  player.addEventListener('loadedmetadata', applySpeed);
+  player.addEventListener('play', applySpeed);
+
+  /* ── Playback engine ── */
+  /* Recorded blobs have no length in their header; this makes the browser work it out. */
+  function whenReady(then) {
+    if (player.duration === Infinity) {
+      const back = () => { player.removeEventListener('timeupdate', back); player.currentTime = 0; then(); };
+      player.addEventListener('timeupdate', back);
+      player.currentTime = 1e101;
+    } else then();
+  }
+  function setSrc(src, then) {
+    if (player.dataset.s === src) {
+      if (player.readyState >= 1) then(); else player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+      return;
+    }
+    player.dataset.s = src; player.src = src;
+    player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+    player.load();
+  }
+  /* Start (or just cue) my clip i at `offset` seconds into it. cnt = keep going into the next clips afterwards. */
+  function cue(i, offset, play, cnt) {
+    const c = clips[i]; if (!c) return;
+    curIdx = i; cont = cnt;
+    setSrc(c.src, () => {
+      player.currentTime = c.off + offset; applySpeed();
+      if (play) player.play().catch(() => {});
+      updateSlider();
+    });
+  }
+  function vTime() {
+    if (!isMine()) return player.currentTime || 0;
+    const c = clips[curIdx];
+    return c ? c.vStart + Math.max(0, Math.min(c.dur, player.currentTime - c.off)) : 0;
+  }
+  function vTotal() {
+    if (!isMine()) return isFinite(player.duration) ? player.duration : 0;
+    const l = clips[clips.length - 1]; return l ? l.vStart + l.dur : 0;
+  }
+  function updateSlider() {
+    const tot = vTotal(), v = vTime();
+    if (!dragging) slider.value = tot ? Math.round(1000 * v / tot) : 0;
+    timeLbl.textContent = fmt(v * 1000) + ' / ' + fmt(tot * 1000);
+  }
+  function clipAt(v) {   /* my clip containing virtual time v */
+    let i = clips.length - 1;
+    for (let k = 0; k < clips.length; k++) if (v < clips[k].vStart + clips[k].dur) { i = k; break; }
+    return i;
+  }
+  /* A clip finished: carry on with the next one, or stop. */
+  function clipEnded() {
+    if (!isMine()) return;
+    if (cont && curIdx + 1 < clips.length) cue(curIdx + 1, 0, true, true);
+    else { player.pause(); cont = false; }
+  }
+  player.addEventListener('ended', clipEnded);
+  player.addEventListener('timeupdate', () => {
+    const t = player.currentTime;
+    if (isMine() && mode === 'api' && clips.length) {
+      /* One shared file: follow the clock to know which clip is playing, stop at a section's end. */
+      const j = clips.findIndex(x => t >= x.off - 0.02 && t < x.off + x.dur);
+      if (j >= 0) curIdx = j;
+      const c = clips[curIdx];
+      if (c && !cont && !player.paused && t >= c.off + c.dur - 0.04) player.pause();
+    }
+    updateSlider();
+    const cur = isMine() && clips[curIdx] && !player.paused ? clips[curIdx].id : null;
+    tocAnchors().forEach(a => a.classList.toggle('_aud-now', !!cur && idOf(a) === cur));
+  });
+  slider.addEventListener('input', () => {
+    dragging = true;
+    const tot = vTotal(); timeLbl.textContent = fmt(slider.value / 1000 * tot * 1000) + ' / ' + fmt(tot * 1000);
+  });
+  slider.addEventListener('change', () => {
+    dragging = false;
+    const tot = vTotal(), v = slider.value / 1000 * tot, playing = !player.paused;
+    if (!isMine()) { player.currentTime = v; return; }
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), playing, true);   /* moving the bar by hand lifts any section-only limit */
+  });
+  allBtn.addEventListener('click', () => {
+    if (!player.paused && cont) { player.pause(); return; }
+    if (!isMine()) { player.play().catch(() => {}); return; }
+    let v = vTime(); const tot = vTotal();
+    if (v >= tot - 0.2) v = 0;
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), true, true);
+  });
+  secBtn.addEventListener('click', () => {
+    const id = activeId(), i = idxOf(id);
+    if (!isMine()) { flash('Sections only work with my recordings'); return; }
+    if (i < 0) { flash('No recording for "' + titleOf(id).slice(0, 40) + '" yet'); return; }
+    if (!player.paused && !cont && curIdx === i) { player.pause(); return; }
+    cue(i, 0, true, false);
+  });
+  function labelSecBtn() {
+    const id = activeId();
+    secBtn.textContent = '▶ ' + titleOf(id);
+    secBtn.classList.toggle('on', isMine() && hasClip(id));
+    secBtn.style.opacity = isMine() && hasClip(id) ? '1' : '.55';
+  }
+  /* Follow: when the section I am reading changes, the audio moves to it. */
+  function followScroll() {
+    const id = activeId();
+    if (id === lastActive) return;
+    lastActive = id;
+    const i = idxOf(id);
+    if (!follow || !isMine() || i < 0 || !bar.style.display || bar.style.display === 'none') return;
+    cue(i, 0, !player.paused, true);   /* playing: jump and keep going; paused: just cue it */
+  }
+  followBtn.classList.add('on');
+  followBtn.addEventListener('click', () => {
+    follow = !follow; followBtn.classList.toggle('on', follow);
+    flash(follow ? 'Audio will follow the section you scroll to' : 'Follow is off');
+  });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { ticking = false; labelSecBtn(); followScroll(); });
+  }, { passive: true });
+  /* Clicking a Contents item: the page scrolls as usual AND the audio jumps to that section. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]');
+    const i = a && isMine() ? idxOf(idOf(a)) : -1;
+    if (i >= 0) cue(i, 0, true, true);
+  });
+
+  /* ── Heading buttons (beside the read check-mark) ── */
+  heads.forEach(h => {
+    const b = document.createElement('button');
+    b.className = '_aud-hrec'; b.dataset.id = h.id; b.textContent = '🎙';
+    b.addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); onHeadingButton(h.id); });
+    h.el.insertBefore(b, h.el.firstChild);
+  });
+  function markButtons() {
+    document.querySelectorAll('._aud-hrec').forEach(b => {
+      const id = b.dataset.id, live = rec && target === id;
+      b.classList.toggle('live', !!live);
+      b.classList.toggle('has', !live && hasClip(id));
+      b.textContent = live ? '⏹' : '🎙';
+      b.title = live ? 'Stop & save this recording'
+        : hasClip(id) ? 'Recorded — click to remove this recording' : 'Record my voice for this section';
+    });
+    tocAnchors().forEach(a => a.classList.toggle('_aud-has', hasClip(idOf(a))));
+    labelSecBtn();
+  }
+
+  /* ── Loading what exists ── */
+  async function probeAppAudio() {   /* the document's own audio, if it sits next to the HTML on a web server */
+    if (!/^https?:$/.test(location.protocol)) return null;
+    const raw = location.pathname.split('/'), file = raw.pop(), base = decodeURIComponent(file).replace(/\.html?$/i, '');
+    const dirs = [raw.join('/')];
+    if (decodeURIComponent(raw[raw.length - 1] || '') === 'HTML') dirs.push(raw.slice(0, -1).join('/'));
+    const cands = [];
+    dirs.forEach(d => ['m4a', 'mp3', 'wav', 'ogg', 'aac', 'flac', 'mp4', 'webm'].forEach(x =>
+      cands.push(d + '/' + encodeURIComponent(base) + '.' + x)));
+    const hits = await Promise.all(cands.map(u => fetch(u, { method: 'HEAD' }).then(r => {
+      const ct = r.headers.get('content-type') || '';
+      return r.ok && !/text\/html/i.test(ct) ? u : null;
+    }).catch(() => null)));
+    return hits.find(Boolean) || null;
+  }
+  let probed = false, ready = Promise.resolve();
+  /* Every action waits for the latest refresh, so nothing runs before we know whether the app is there. */
+  function refresh() { ready = doRefresh(); return ready; }
+  async function doRefresh() {
+    blobUrls.forEach(u => URL.revokeObjectURL(u)); blobUrls = [];
+    try {
+      const d = await apiInfo();
+      mode = 'api';
+      hasApp = !!d.has_audio; appUrl = d.url || null;
+      hasMine = !!d.my_voice; mineUrl = d.my_url || null;
+      const S = d.sections || {}, stamp = (mineUrl && mineUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      clips = Object.keys(S).map(id => ({ id: id, src: mineUrl + stamp, off: S[id].start,
+        dur: S[id].end - S[id].start, vStart: S[id].start })).sort((a, b) => a.off - b.off);
+      if (!hasMine) clips = [];
+    } catch (e) {
+      mode = 'local';
+      if (!probed) { probed = true; try { appUrl = await probeAppAudio(); } catch (er) { appUrl = null; } }
+      hasApp = !!appUrl;
+      let rows = [];
+      try { rows = await idb.all(docKey); } catch (er) { flash('Browser storage is not available here'); }
+      const byId = new Map(rows.map(r => [r.id, r]));
+      let v = 0; clips = [];
+      heads.forEach(h => {
+        const r = byId.get(h.id); if (!r) return;
+        const u = URL.createObjectURL(r.blob); blobUrls.push(u);
+        clips.push({ id: h.id, src: u, off: 0, dur: r.dur, vStart: v }); v += r.dur;
+      });
+      hasMine = clips.length > 0;
+    }
+    if ((pick === 'mine' && !hasMine) || (pick === 'app' && !hasApp)) pick = null;
+    source = pick || (hasMine ? 'mine' : 'app');   /* my own voice wins by default */
+    loadSource();
+  }
+  function loadSource() {
+    player.pause(); player.removeAttribute('src'); player.dataset.s = ''; curIdx = -1; cont = false;
+    const available = isMine() ? hasMine : hasApp;
+    if (!available) { bar.style.display = 'none'; document.body.style.paddingBottom = ''; }
+    else {
+      bar.style.display = 'flex'; document.body.style.paddingBottom = '64px';
+      if (!isMine()) { player.dataset.s = appUrl; player.src = appUrl + (appUrl.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+    }
+    srcBtn.style.display = hasApp && hasMine ? 'block' : 'none';
+    srcBtn.textContent = isMine() ? '🎙 My voice' : '🔈 App voice';
+    srcBtn.title = isMine() ? "Playing my own recordings. Click to play the app's audio instead"
+                            : "Playing the app's audio. Click to play my own recordings instead";
+    allBtn.title = isMine() ? 'Play all my recordings from the start' : 'Play the app audio from the start';
+    followBtn.style.display = isMine() ? '' : 'none';
+    updateSlider(); markButtons();
+  }
+  srcBtn.addEventListener('click', () => { pick = isMine() ? 'app' : 'mine'; source = pick; loadSource(); });
+  player.addEventListener('loadedmetadata', updateSlider);
+
+  /* ── Removing ── */
+  async function removeSection(id) {
+    await ready;
+    if (!confirm('Remove your recording for "' + titleOf(id) + '"?')) return;
+    let ok = true, err = '';
+    if (mode === 'api') {
+      try {
+        const d = await (await fetch('/api/library/delete-section', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html_url: docKey, section_id: id }) })).json();
+        ok = !!d.success; err = d.error || '';
+      } catch (e) { ok = false; err = 'Network error'; }
+    } else {
+      try { await idb.del(clipKey(id)); } catch (e) { ok = false; err = 'Browser storage error'; }
+    }
+    flash(ok ? 'Recording removed' : (err || 'Could not remove'));
+    refresh();
+  }
+
+  /* ── Recording ── */
+  let stream = null, rec = null, chunks = [], t0 = 0, acc = 0, timer = null, target = null;
+  const lbl = hud.querySelector('.lbl'), tm = hud.querySelector('.tm'), pauseBtn = hud.querySelector('[data-a=pause]');
+  function tick() {
+    const paused = rec && rec.state === 'paused';
+    tm.textContent = (paused ? 'Paused ' : '● Recording ') + fmt(acc + (rec && !paused ? Date.now() - t0 : 0));
+    tm.classList.toggle('live', !paused);
+  }
+  function release() {
+    clearInterval(timer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = rec = target = null; chunks = []; acc = 0;
+    hud.style.display = 'none'; recToggle.classList.remove('live'); recToggle.textContent = '🎙';
+    markButtons();
+  }
+  async function startRecording(id) {
+    if (rec) return;
+    await ready;
+    if (rec) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { flash('Recording is not supported here'); return; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false, noiseSuppression: false, autoGainControl: false, sampleRate: 48000 } });
+    } catch (e) { flash('Microphone blocked: ' + e.message); return; }
+    player.pause();
+    target = id;
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : undefined);
+    rec.addEventListener('dataavailable', e => { if (e.data && e.data.size) chunks.push(e.data); });
+    rec.start(); t0 = Date.now(); acc = 0;
+    lbl.textContent = (hasClip(id) ? 'Re-recording: ' : 'Recording: ') + titleOf(id);
+    pauseBtn.textContent = '⏸ Pause';
+    hud.style.display = 'block'; recToggle.classList.add('live'); recToggle.textContent = '⏹';
+    timer = setInterval(tick, 200); tick(); markButtons();
+  }
+  async function stopAndSave() {
+    if (!rec) return;
+    const id = target, ms = acc + (rec.state === 'recording' ? Date.now() - t0 : 0);
+    const stopped = new Promise(res => rec.addEventListener('stop', res, { once: true }));
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: (rec && rec.mimeType) || 'audio/webm' });
+    clearInterval(timer); tm.classList.remove('live'); tm.textContent = 'Saving…';
+    let ok = false, err = '';
+    if (mode === 'api') {
+      const fd = new FormData();
+      fd.append('html_url', docKey); fd.append('section_id', id); fd.append('file', blob, 'recording.webm');
+      try { const d = await (await fetch('/api/library/record-section', { method: 'POST', body: fd })).json();
+        ok = !!d.success; err = d.error || ''; }
+      catch (e) { err = 'Network error while saving'; }
+    } else {
+      try { await idb.put({ k: clipKey(id), doc: docKey, id: id, blob: blob, dur: ms / 1000, ts: Date.now() }); ok = true; }
+      catch (e) { err = 'Browser storage error: ' + (e && e.message || e); }
+    }
+    release();
+    flash(ok ? (mode === 'api' ? 'Saved ✔' : 'Saved in this browser ✔ — use 💾 to export a backup') : (err || 'Save failed'));
+    if (ok) pick = 'mine';
+    refresh();
+  }
+  function onHeadingButton(id) {
+    if (rec) { if (target === id) stopAndSave(); else flash('Finish the current recording first'); return; }
+    if (hasClip(id)) removeSection(id); else startRecording(id);
+  }
+  recToggle.addEventListener('click', () => { if (rec) stopAndSave(); else startRecording(activeId()); });
+  hud.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'save') stopAndSave();
+    else if (a === 'cancel') { if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (er) {} } release(); }
+    else if (a === 'pause' && rec) {
+      if (rec.state === 'recording') { rec.pause(); acc += Date.now() - t0; pauseBtn.textContent = '▶ Resume'; }
+      else if (rec.state === 'paused') { rec.resume(); t0 = Date.now(); pauseBtn.textContent = '⏸ Pause'; }
+      tick();
+    }
+  });
+
+  /* ── Export / import (a .voicebundle: "MYVOICE1", 4-byte header length, JSON header, then the clips) ── */
+  function menuText() {
+    menu.querySelector('#_aud-where').textContent = mode === 'api'
+      ? 'Recordings are saved in the app folder next to this document. Import brings in a backup exported from a browser.'
+      : 'No app here: recordings are kept in this browser only (like the ✓ marks) and are lost if its data is cleared. Export a backup file; open the document in the app and use Import to move it into your library.';
+    menu.querySelector('[data-a=export]').style.display = mode === 'local' && hasMine ? '' : 'none';
+  }
+  ioBtn.addEventListener('click', () => {
+    menuText(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+  async function exportBundle() {
+    let rows = [];
+    try { rows = await idb.all(docKey); } catch (e) {}
+    rows.sort((a, b) => headPos(a.id) - headPos(b.id));
+    if (!rows.length) { flash('Nothing to export'); return; }
+    const enc = new TextEncoder();
+    const head = enc.encode(JSON.stringify({ v: 1, doc: docKey, name: docName,
+      clips: rows.map(r => ({ id: r.id, dur: r.dur, size: r.blob.size, type: r.blob.type || 'audio/webm' })) }));
+    const len = new Uint8Array(4); new DataView(len.buffer).setUint32(0, head.length);
+    const out = new Blob([enc.encode('MYVOICE1'), len, head].concat(rows.map(r => r.blob)), { type: 'application/octet-stream' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out); a.download = docName + '.voicebundle';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    flash('Exported ' + rows.length + ' recording' + (rows.length > 1 ? 's' : ''));
+  }
+  async function parseBundle(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (new TextDecoder().decode(u8.slice(0, 8)) !== 'MYVOICE1') throw new Error('Not a voice bundle');
+    const hl = new DataView(buf).getUint32(8), head = JSON.parse(new TextDecoder().decode(u8.slice(12, 12 + hl)));
+    let pos = 12 + hl;
+    head.clips.forEach(c => { c.blob = new Blob([u8.slice(pos, pos + c.size)], { type: c.type }); pos += c.size; });
+    return head;
+  }
+  fileIn.addEventListener('change', async () => {
+    const f = fileIn.files[0]; fileIn.value = '';
+    if (!f) return;
+    await ready;
+    try {
+      const b = await parseBundle(f);
+      if (b.name && b.name !== docName && !confirm('This backup is from "' + b.name + '", not this document. Import anyway?')) return;
+      if (mode === 'api') {
+        flash('Importing…');
+        const fd = new FormData(); fd.append('html_url', docKey); fd.append('file', f, f.name);
+        const d = await (await fetch('/api/library/import-voice', { method: 'POST', body: fd })).json();
+        if (!d.success) throw new Error(d.error || 'Import failed');
+        flash('Imported ' + d.imported + ' recording' + (d.imported === 1 ? '' : 's') + ' into the app');
+      } else {
+        for (const c of b.clips) await idb.put({ k: clipKey(c.id), doc: docKey, id: c.id, blob: c.blob, dur: c.dur, ts: Date.now() });
+        flash('Imported ' + b.clips.length + ' recording' + (b.clips.length === 1 ? '' : 's'));
+      }
+      pick = 'mine'; menu.style.display = 'none'; refresh();
+    } catch (e) { flash('Import failed: ' + (e && e.message || e)); }
+  });
+  menu.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'export') exportBundle(); else if (a === 'import') fileIn.click();
+  });
+
+  refresh();
+})();
+</script>
+<!-- /_doc-audio-panel -->
 </body>
 </html>

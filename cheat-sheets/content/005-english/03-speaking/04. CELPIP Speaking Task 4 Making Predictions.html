@@ -38,10 +38,11 @@
   --tok-op:      #ff9d42;
   --tok-alert:   #ff5c5c;
   --tok-other:   #caa15a;
-  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} / {.verb} */
   --wt-tpl:      #4ade80;
   --wt-conn:     #22d3ee;
   --wt-vocab:    #ff7b72;
+  --wt-verb:     #ff79c6;
 }
 [data-theme="light"] {
   --bg-page:      #ffffff;
@@ -78,6 +79,7 @@
   --wt-tpl:      #15803d;
   --wt-conn:     #0e7490;
   --wt-vocab:    #b91c1c;
+  --wt-verb:     #db2777;
 }
 /* No prefers-color-scheme media query — dark is the default regardless
    of system preference; only an explicit [data-theme="light"] (set via
@@ -183,13 +185,15 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -347,6 +351,7 @@ html, body {
 #_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
 #_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
 #_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+#_main-content span.verb  { color: var(--wt-verb)  !important; font-weight: 600; }
 
 #_main-content table {
   width: 100%; border-collapse: collapse; margin: 18px 0;
@@ -428,6 +433,7 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content span.verb  { color: #db2777 !important; }
   #_main-content .read-toggle::before { display: none !important; }
 }
 
@@ -708,27 +714,50 @@ Laptop Not Connecting</a>
 <li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
 <li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
 </ul></li>
-<li><a href="#exam-day" id="toc-exam-day">3.2 Exam Day</a>
+<li><a href="#distracted-employees-in-a-meeting" id="toc-distracted-employees-in-a-meeting">3.2 Distracted Employees in a
+Meeting ⭐</a>
 <ul>
 <li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
 <li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
 </ul></li>
-<li><a href="#long-checkout-line" id="toc-long-checkout-line">3.3 Long
-Checkout Line</a>
+<li><a href="#exam-day" id="toc-exam-day">3.3 Exam Day</a>
 <ul>
 <li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
 <li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
 </ul></li>
-<li><a href="#concert-starting" id="toc-concert-starting">3.4 Concert
-Starting</a>
+<li><a href="#long-checkout-line" id="toc-long-checkout-line">3.4 Long
+Checkout Line</a>
 <ul>
 <li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
 <li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
 </ul></li>
-<li><a href="#new-employees-first-day" id="toc-new-employees-first-day">3.5 New Employee’s First Day</a>
+<li><a href="#concert-starting" id="toc-concert-starting">3.5 Concert
+Starting</a>
 <ul>
 <li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
 <li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#new-employees-first-day" id="toc-new-employees-first-day">3.6 New Employee’s First Day</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#roadside-cleanup" id="toc-roadside-cleanup">3.7 Roadside
+Cleanup ⭐</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cooking-competition" id="toc-cooking-competition">3.8
+Cooking Competition ⭐</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#library" id="toc-library">3.9 Library ⭐</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#home-kitchen-and-diy-situations" id="toc-home-kitchen-and-diy-situations">4 Home, Kitchen, and DIY
@@ -739,30 +768,36 @@ Template</a></li>
 <li><a href="#pot-boiling-over" id="toc-pot-boiling-over">4.1 Pot
 Boiling Over</a>
 <ul>
-<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
-<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
 </ul></li>
 <li><a href="#ladder-and-paint-can" id="toc-ladder-and-paint-can">4.2
 Ladder and Paint Can</a>
 <ul>
-<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
-<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
 </ul></li>
 <li><a href="#moving-boxes-and-a-dog" id="toc-moving-boxes-and-a-dog">4.3 Moving Boxes and a Dog</a>
 <ul>
-<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
-<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
 </ul></li>
 <li><a href="#locked-out-in-the-rain" id="toc-locked-out-in-the-rain">4.4 Locked Out in the Rain</a>
 <ul>
-<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
-<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
 </ul></li>
 <li><a href="#leaking-ceiling" id="toc-leaking-ceiling">4.5 Leaking
 Ceiling</a>
 <ul>
-<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
-<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#apartment-building-windows" id="toc-apartment-building-windows">4.6 Apartment Building Windows
+⭐</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#family-and-social-situations" id="toc-family-and-social-situations">5 Family and Social Situations</a>
@@ -772,31 +807,36 @@ Template</a></li>
 <li><a href="#surprise-party" id="toc-surprise-party">5.1 Surprise
 Party</a>
 <ul>
-<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
-<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
 </ul></li>
 <li><a href="#airport-welcome" id="toc-airport-welcome">5.2 Airport
 Welcome</a>
 <ul>
-<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
-<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
 </ul></li>
 <li><a href="#child-and-gift" id="toc-child-and-gift">5.3 Child and
 Gift</a>
 <ul>
-<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
-<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
 </ul></li>
 <li><a href="#old-friends-meeting" id="toc-old-friends-meeting">5.4 Old
 Friends Meeting</a>
 <ul>
-<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
-<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
 </ul></li>
 <li><a href="#surprise-congratulations" id="toc-surprise-congratulations">5.5 Surprise Congratulations</a>
 <ul>
-<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
-<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+<li><a href="#patio-party" id="toc-patio-party">5.6 Patio Party ⭐</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#shopping-money-and-lost-items" id="toc-shopping-money-and-lost-items">6 Shopping, Money, and Lost
@@ -807,26 +847,54 @@ Template</a></li>
 <li><a href="#forgotten-wallet" id="toc-forgotten-wallet">6.1 Forgotten
 Wallet</a>
 <ul>
-<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
-<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
 </ul></li>
 <li><a href="#lost-child-in-a-mall" id="toc-lost-child-in-a-mall">6.2
 Lost Child in a Mall</a>
 <ul>
-<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
-<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
 </ul></li>
 <li><a href="#parking-ticket" id="toc-parking-ticket">6.3 Parking
 Ticket</a>
 <ul>
-<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
-<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
 </ul></li>
 <li><a href="#big-sale-rush" id="toc-big-sale-rush">6.4 Big Sale
 Rush</a>
 <ul>
-<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
-<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+<li><a href="#clothing-sale-store" id="toc-clothing-sale-store">6.5
+Clothing Sale Store ⭐</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#shopping-mall" id="toc-shopping-mall">6.6 Shopping Mall
+⭐</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#busy-street" id="toc-busy-street">6.7 Busy Street ⭐</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+</ul></li>
+<li><a href="#local-market" id="toc-local-market">6.8 Local Market
+⭐</a>
+<ul>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+</ul></li>
+<li><a href="#flower-shop" id="toc-flower-shop">6.9 Flower Shop ⭐</a>
+<ul>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#animals-children-and-unexpected-events" id="toc-animals-children-and-unexpected-events">7 Animals, Children, and
@@ -837,24 +905,52 @@ Template</a></li>
 <li><a href="#dog-and-picnic-table" id="toc-dog-and-picnic-table">7.1
 Dog and Picnic Table</a>
 <ul>
-<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
-<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
 </ul></li>
 <li><a href="#child-and-cookie-jar" id="toc-child-and-cookie-jar">7.2
 Child and Cookie Jar</a>
 <ul>
-<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
-<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cat-and-vase" id="toc-cat-and-vase">7.3 Cat and Vase</a>
 <ul>
-<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
-<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
 </ul></li>
 <li><a href="#ball-indoors" id="toc-ball-indoors">7.4 Ball Indoors</a>
 <ul>
-<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
-<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+</ul></li>
+<li><a href="#child-care-centre-with-spiral-slide" id="toc-child-care-centre-with-spiral-slide">7.5 Child-Care Centre With
+Spiral Slide ⭐</a>
+<ul>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+</ul></li>
+<li><a href="#indoor-play-centre" id="toc-indoor-play-centre">7.6 Indoor
+Play Centre ⭐</a>
+<ul>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
+</ul></li>
+<li><a href="#arcade-game-centre" id="toc-arcade-game-centre">7.7 Arcade
+Game Centre ⭐</a>
+<ul>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
+</ul></li>
+<li><a href="#pet-shop" id="toc-pet-shop">7.8 Pet Shop ⭐</a>
+<ul>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
+</ul></li>
+<li><a href="#petting-zoo" id="toc-petting-zoo">7.9 Petting Zoo ⭐</a>
+<ul>
+<li><a href="#sample-48" id="toc-sample-48">Sample</a></li>
+<li><a href="#vocabulary-48" id="toc-vocabulary-48">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#sports-and-recreation" id="toc-sports-and-recreation">8
@@ -865,25 +961,48 @@ Template</a></li>
 <li><a href="#skateboard-and-steps" id="toc-skateboard-and-steps">8.1
 Skateboard and Steps</a>
 <ul>
-<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
-<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+<li><a href="#sample-49" id="toc-sample-49">Sample</a></li>
+<li><a href="#vocabulary-49" id="toc-vocabulary-49">Vocabulary</a></li>
 </ul></li>
 <li><a href="#beginner-skier" id="toc-beginner-skier">8.2 Beginner
 Skier</a>
 <ul>
-<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
-<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+<li><a href="#sample-50" id="toc-sample-50">Sample</a></li>
+<li><a href="#vocabulary-50" id="toc-vocabulary-50">Vocabulary</a></li>
 </ul></li>
 <li><a href="#close-race" id="toc-close-race">8.3 Close Race</a>
 <ul>
-<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
-<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+<li><a href="#sample-51" id="toc-sample-51">Sample</a></li>
+<li><a href="#vocabulary-51" id="toc-vocabulary-51">Vocabulary</a></li>
 </ul></li>
 <li><a href="#bike-without-a-helmet" id="toc-bike-without-a-helmet">8.4
 Bike Without a Helmet</a>
 <ul>
-<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
-<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+<li><a href="#sample-52" id="toc-sample-52">Sample</a></li>
+<li><a href="#vocabulary-52" id="toc-vocabulary-52">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fantasy-park-with-a-dragon" id="toc-fantasy-park-with-a-dragon">8.5 Fantasy Park With a Dragon
+⭐</a>
+<ul>
+<li><a href="#sample-53" id="toc-sample-53">Sample</a></li>
+<li><a href="#vocabulary-53" id="toc-vocabulary-53">Vocabulary</a></li>
+</ul></li>
+<li><a href="#billiards-and-darts-room" id="toc-billiards-and-darts-room">8.6 Billiards and Darts Room ⭐</a>
+<ul>
+<li><a href="#sample-54" id="toc-sample-54">Sample</a></li>
+<li><a href="#vocabulary-54" id="toc-vocabulary-54">Vocabulary</a></li>
+</ul></li>
+<li><a href="#sports-centre" id="toc-sports-centre">8.7 Sports Centre
+⭐</a>
+<ul>
+<li><a href="#sample-55" id="toc-sample-55">Sample</a></li>
+<li><a href="#vocabulary-55" id="toc-vocabulary-55">Vocabulary</a></li>
+</ul></li>
+<li><a href="#sports-event-with-a-reporter" id="toc-sports-event-with-a-reporter">8.8 Sports Event With a Reporter
+⭐</a>
+<ul>
+<li><a href="#sample-56" id="toc-sample-56">Sample</a></li>
+<li><a href="#vocabulary-56" id="toc-vocabulary-56">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#travel-and-transportation" id="toc-travel-and-transportation">9 Travel and Transportation</a>
@@ -893,25 +1012,54 @@ Template</a></li>
 <li><a href="#late-for-boarding" id="toc-late-for-boarding">9.1 Late for
 Boarding</a>
 <ul>
-<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
-<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+<li><a href="#sample-57" id="toc-sample-57">Sample</a></li>
+<li><a href="#vocabulary-57" id="toc-vocabulary-57">Vocabulary</a></li>
 </ul></li>
 <li><a href="#road-trip-low-fuel" id="toc-road-trip-low-fuel">9.2 Road
 Trip, Low Fuel</a>
 <ul>
-<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
-<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+<li><a href="#sample-58" id="toc-sample-58">Sample</a></li>
+<li><a href="#vocabulary-58" id="toc-vocabulary-58">Vocabulary</a></li>
 </ul></li>
 <li><a href="#heavy-suitcase" id="toc-heavy-suitcase">9.3 Heavy
 Suitcase</a>
 <ul>
-<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
-<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+<li><a href="#sample-59" id="toc-sample-59">Sample</a></li>
+<li><a href="#vocabulary-59" id="toc-vocabulary-59">Vocabulary</a></li>
 </ul></li>
 <li><a href="#full-train" id="toc-full-train">9.4 Full Train</a>
 <ul>
-<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
-<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+<li><a href="#sample-60" id="toc-sample-60">Sample</a></li>
+<li><a href="#vocabulary-60" id="toc-vocabulary-60">Vocabulary</a></li>
+</ul></li>
+<li><a href="#subway-station" id="toc-subway-station">9.5 Subway Station
+⭐</a>
+<ul>
+<li><a href="#sample-61" id="toc-sample-61">Sample</a></li>
+<li><a href="#vocabulary-61" id="toc-vocabulary-61">Vocabulary</a></li>
+</ul></li>
+<li><a href="#crowded-bus" id="toc-crowded-bus">9.6 Crowded Bus ⭐</a>
+<ul>
+<li><a href="#sample-62" id="toc-sample-62">Sample</a></li>
+<li><a href="#vocabulary-62" id="toc-vocabulary-62">Vocabulary</a></li>
+</ul></li>
+<li><a href="#aeroplane-cabin" id="toc-aeroplane-cabin">9.7 Aeroplane
+Cabin ⭐</a>
+<ul>
+<li><a href="#sample-63" id="toc-sample-63">Sample</a></li>
+<li><a href="#vocabulary-63" id="toc-vocabulary-63">Vocabulary</a></li>
+</ul></li>
+<li><a href="#pyramids-of-egypt-with-camels" id="toc-pyramids-of-egypt-with-camels">9.8 Pyramids of Egypt With Camels
+⭐</a>
+<ul>
+<li><a href="#sample-64" id="toc-sample-64">Sample</a></li>
+<li><a href="#vocabulary-64" id="toc-vocabulary-64">Vocabulary</a></li>
+</ul></li>
+<li><a href="#great-wall-of-china" id="toc-great-wall-of-china">9.9
+Great Wall of China ⭐</a>
+<ul>
+<li><a href="#sample-65" id="toc-sample-65">Sample</a></li>
+<li><a href="#vocabulary-65" id="toc-vocabulary-65">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1495,10 +1643,83 @@ she’ll stay calm, and the team will <span class="vocab">appreciate</span> her 
 </tr>
 </tbody>
 </table>
-<h2 id="exam-day">3.2 Exam Day</h2>
+<h2 id="distracted-employees-in-a-meeting">3.2 Distracted Employees in a
+Meeting ⭐</h2>
+<p>A presenter is speaking in a meeting while several employees look
+distracted, tired, are joking or whispering. What do you think will
+happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+presenter is <span class="verb">going through</span> his slides, but
+nobody is really listening. Two employees are whispering, and another
+one is yawning.</p>
+<p><span class="tpl">I think that</span> the presenter will soon notice
+the lack of <span class="vocab">attention</span>. <span class="conn">As
+a result</span>, he will probably stop and ask a question to <span class="verb">bring the group back</span> into the discussion. <span class="conn">After that</span>, the whisperers will feel embarrassed,
+and they will <span class="verb">sit up</span> and pay attention.</p>
+<p><span class="conn">Otherwise</span>, if he keeps talking in the same
+<span class="vocab">monotone</span>, the manager may suggest a short
+break. <span class="conn">In the end</span>, I believe the team will
+<span class="verb">wrap up</span> the meeting earlier than planned, and
+the presenter will try to make his next presentation more <span class="vocab">interactive</span>.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">go through</span></td>
+<td>review one by one</td>
+<td>Let’s go through the notes.</td>
+</tr>
+<tr>
+<td><span class="verb">bring back</span></td>
+<td>return to a place or topic</td>
+<td>The question brought the class back to the lesson.</td>
+</tr>
+<tr>
+<td><span class="verb">sit up</span></td>
+<td>straighten your back and pay attention</td>
+<td>He sat up when his name was called.</td>
+</tr>
+<tr>
+<td><span class="verb">wrap up</span></td>
+<td>finish</td>
+<td>We wrapped up the call early.</td>
+</tr>
+<tr>
+<td><span class="vocab">attention</span></td>
+<td>focus of the mind</td>
+<td>The talk held our attention.</td>
+</tr>
+<tr>
+<td><span class="vocab">monotone</span></td>
+<td>a flat, unchanging voice</td>
+<td>He read the report in a monotone.</td>
+</tr>
+<tr>
+<td><span class="vocab">interactive</span></td>
+<td>involving the audience</td>
+<td>The class was interactive.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exam-day">3.3 Exam Day</h2>
 <p>Students waiting outside a classroom as a teacher arrives holding
 exam papers. Predict what will happen.</p>
-<h3 id="sample-11">Sample</h3>
+<h3 id="sample-12">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a group
 of students are standing in a hallway, and some of them are looking at
 their notes. A teacher is walking toward them with a stack of <span class="vocab">exam papers</span>.</p>
@@ -1511,7 +1732,7 @@ the papers and explain the rules, and the exam will start.</p>
 might panic. <span class="conn">In the end</span>, I think most students
 will <span class="vocab">do their best</span>, and after the exam,
 they’ll feel <span class="vocab">relieved</span>.</p>
-<h3 id="vocabulary-11">Vocabulary</h3>
+<h3 id="vocabulary-12">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1543,10 +1764,10 @@ they’ll feel <span class="vocab">relieved</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="long-checkout-line">3.3 Long Checkout Line</h2>
+<h2 id="long-checkout-line">3.4 Long Checkout Line</h2>
 <p>A very long line at a store checkout and one open cashier, with a
 manager approaching. What do you think will happen?</p>
-<h3 id="sample-12">Sample</h3>
+<h3 id="sample-13">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, there’s
 a long line of customers at the checkout, and only one cashier is
 working. Many of them look <span class="vocab">impatient</span>, and a
@@ -1559,7 +1780,7 @@ everyone for their patience.</p>
 <p><span class="conn">Otherwise</span>, if no staff are available, some
 customers might leave their baskets and go to another store. <span class="conn">In the end</span>, I think the store will learn to schedule
 more staff during <span class="vocab">peak hours</span> to <span class="vocab">improve</span> the service.</p>
-<h3 id="vocabulary-12">Vocabulary</h3>
+<h3 id="vocabulary-13">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1591,10 +1812,10 @@ more staff during <span class="vocab">peak hours</span> to <span class="vocab">i
 </tr>
 </tbody>
 </table>
-<h2 id="concert-starting">3.4 Concert Starting</h2>
+<h2 id="concert-starting">3.5 Concert Starting</h2>
 <p>A group of people waiting for a concert to begin as the lights dim
 and the band walks on stage. Predict what comes next.</p>
-<h3 id="sample-13">Sample</h3>
+<h3 id="sample-14">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a big
 crowd is standing in a dark hall, and some are holding up their phones.
 The lights are dimming, and the band is walking onto the stage.</p>
@@ -1609,7 +1830,7 @@ with the sound, the show may be delayed. <span class="conn">In the
 end</span>, I think it’ll be an <span class="vocab">unforgettable</span>
 night, and everyone will leave with <span class="vocab">ringing
 ears</span> and big smiles.</p>
-<h3 id="vocabulary-13">Vocabulary</h3>
+<h3 id="vocabulary-14">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1641,10 +1862,10 @@ ears</span> and big smiles.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="new-employees-first-day">3.5 New Employee’s First Day</h2>
+<h2 id="new-employees-first-day">3.6 New Employee’s First Day</h2>
 <p>A new employee arriving at an office on the first day, where
 colleagues are gathered with a cake. What will happen?</p>
-<h3 id="sample-14">Sample</h3>
+<h3 id="sample-15">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a young
 man with a backpack is walking into an office, and a group of colleagues
 is standing near a table with a cake and a sign that says “Welcome.”</p>
@@ -1657,7 +1878,7 @@ little overwhelmed at first. <span class="conn">In the end</span>, I
 think he’ll <span class="vocab">fit in</span> quickly and make good
 friends, and this <span class="vocab">gesture</span> will make him love
 his new job.</p>
-<h3 id="vocabulary-14">Vocabulary</h3>
+<h3 id="vocabulary-15">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1689,6 +1910,220 @@ his new job.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="roadside-cleanup">3.7 Roadside Cleanup ⭐</h2>
+<p>Workers in yellow safety vests are picking up rubbish beside a busy
+road with cars passing. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 10 and
+Oct 9.</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the crew
+is <span class="vocab">collecting</span> garbage beside a busy road, and
+the cars are driving quite close to them.</p>
+<p><span class="tpl">I think that</span> the workers will keep going
+until the whole stretch is clean. <span class="conn">As a result</span>,
+the road will look much better, and the drivers will notice the
+difference. <span class="conn">After that</span>, the team will <span class="verb">load up</span> the bags in a truck and <span class="verb">move on to</span> the next section.</p>
+<p><span class="conn">Otherwise</span>, if a car passes too fast, one of
+the workers might <span class="verb">jump back</span> and the <span class="vocab">supervisor</span> may ask the drivers to slow down, or
+<span class="verb">set up</span> more signs. <span class="conn">In the
+end</span>, the area will be safe and tidy, and the crew will go home
+proud of the <span class="vocab">cleanup</span>.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">load up</span></td>
+<td>fill a vehicle with things</td>
+<td>They loaded up the van.</td>
+</tr>
+<tr>
+<td><span class="verb">move on to</span></td>
+<td>go to the next thing</td>
+<td>Let’s move on to the next topic.</td>
+</tr>
+<tr>
+<td><span class="verb">jump back</span></td>
+<td>move quickly backward</td>
+<td>He jumped back from the curb.</td>
+</tr>
+<tr>
+<td><span class="verb">set up</span></td>
+<td>place or arrange</td>
+<td>They set up cones around the hole.</td>
+</tr>
+<tr>
+<td><span class="vocab">collect</span></td>
+<td>gather</td>
+<td>Volunteers collect plastic bottles.</td>
+</tr>
+<tr>
+<td><span class="vocab">cleanup</span></td>
+<td>an act of cleaning an area</td>
+<td>The cleanup took two hours.</td>
+</tr>
+<tr>
+<td><span class="vocab">supervisor</span></td>
+<td>a person who manages workers</td>
+<td>The supervisor checked the site.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cooking-competition">3.8 Cooking Competition ⭐</h2>
+<p>Chefs are competing on stage while a host, spectators and camera
+operators watch. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, three
+chefs are working fast, and the timer on the wall is almost at zero. The
+host is smiling, and the cameras are <span class="verb">zooming in
+on</span> the dishes.</p>
+<p><span class="tpl">I think that</span> the host will announce that the
+time is up. <span class="conn">As a result</span>, the chefs will <span class="verb">put down</span> their tools and present their food to the
+judges. <span class="conn">After that</span>, the judges will taste each
+dish and <span class="verb">weigh up</span> the flavours and the
+presentation.</p>
+<p><span class="conn">Otherwise</span>, if one chef is not finished, he
+may panic and <span class="vocab">rush</span> to add the last <span class="vocab">garnish</span>. <span class="conn">In the end</span>, the
+judges will announce the winner, and the audience will <span class="verb">burst into</span> applause. The champion will be thrilled
+with the <span class="vocab">trophy</span>.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">zoom in on</span></td>
+<td>focus a camera closely on</td>
+<td>The camera zoomed in on the cake.</td>
+</tr>
+<tr>
+<td><span class="verb">put down</span></td>
+<td>place on a surface</td>
+<td>Put down your pens.</td>
+</tr>
+<tr>
+<td><span class="verb">weigh up</span></td>
+<td>think carefully about</td>
+<td>She weighed up her options.</td>
+</tr>
+<tr>
+<td><span class="verb">burst into</span></td>
+<td>suddenly begin</td>
+<td>The crowd burst into laughter.</td>
+</tr>
+<tr>
+<td><span class="vocab">rush</span></td>
+<td>hurry</td>
+<td>He rushed to finish.</td>
+</tr>
+<tr>
+<td><span class="vocab">trophy</span></td>
+<td>a prize cup</td>
+<td>The team won a trophy.</td>
+</tr>
+<tr>
+<td><span class="vocab">garnish</span></td>
+<td>a small decoration added to food</td>
+<td>Add a garnish of parsley.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="library">3.9 Library ⭐</h2>
+<p>A library where mostly teenagers are studying, reading and talking.
+What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, most
+teenagers are studying quietly, but a group at the back table is
+chatting and <span class="vocab">giggling</span>. The librarian is
+looking at them with a serious face.</p>
+<p><span class="tpl">I think that</span> the librarian will walk over
+and <span class="vocab">politely ask</span> them to lower their voices.
+<span class="conn">As a result</span>, the group will feel a little
+embarrassed and <span class="verb">quiet down</span>. <span class="conn">After that</span>, they will <span class="verb">get back
+to</span> their books, and the other students will be able to focus.</p>
+<p><span class="conn">Otherwise</span>, if they keep making noise, the
+librarian may ask them to <span class="verb">move to</span> a different
+room. <span class="conn">In the end</span>, I believe the library will
+return to its <span class="vocab">peaceful</span> atmosphere, and the
+students will <span class="verb">pack up</span> their things
+quietly.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">quiet down</span></td>
+<td>become less noisy</td>
+<td>Please quiet down.</td>
+</tr>
+<tr>
+<td><span class="verb">get back to</span></td>
+<td>return to an activity</td>
+<td>She got back to her homework.</td>
+</tr>
+<tr>
+<td><span class="verb">move to</span></td>
+<td>go to a different place</td>
+<td>We moved to a bigger table.</td>
+</tr>
+<tr>
+<td><span class="verb">pack up</span></td>
+<td>put belongings away</td>
+<td>He packed up his bag.</td>
+</tr>
+<tr>
+<td><span class="vocab">politely ask</span></td>
+<td>request in a courteous way</td>
+<td>She politely asked us to leave.</td>
+</tr>
+<tr>
+<td><span class="vocab">peaceful</span></td>
+<td>calm and quiet</td>
+<td>A peaceful afternoon.</td>
+</tr>
+<tr>
+<td><span class="vocab">giggling</span></td>
+<td>laughing in a quiet silly way</td>
+<td>The girls were giggling.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="home-kitchen-and-diy-situations">4 Home, Kitchen, and DIY
 Situations</h1>
 <p>Topics: cooking mishaps, a ladder, a leak, moving boxes, being locked
@@ -1702,7 +2137,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="pot-boiling-over">4.1 Pot Boiling Over</h2>
 <p>A man on the phone while a pot boils over on the stove behind him.
 What will happen next?</p>
-<h3 id="sample-15">Sample</h3>
+<h3 id="sample-19">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a man is
 standing in the kitchen with his back to the stove, talking on the
 phone, and a pot behind him is <span class="vocab">boiling over</span>.
@@ -1717,7 +2152,7 @@ panic.</p>
 kitchen and turn the heat down. <span class="conn">In the end</span>, I
 think he’ll end the call, clean up, and learn not to leave the stove
 <span class="vocab">unattended</span> again.</p>
-<h3 id="vocabulary-15">Vocabulary</h3>
+<h3 id="vocabulary-19">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1752,7 +2187,7 @@ think he’ll end the call, clean up, and learn not to leave the stove
 <h2 id="ladder-and-paint-can">4.2 Ladder and Paint Can</h2>
 <p>A woman on a ladder painting a ceiling with an open paint can on the
 top step. Predict what will happen.</p>
-<h3 id="sample-16">Sample</h3>
+<h3 id="sample-20">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a woman
 is standing on a tall ladder and painting the ceiling, and there’s an
 open can of paint on the top step, right next to her foot. The ladder
@@ -1765,7 +2200,7 @@ annoyed, and start cleaning up.</p>
 the can to a safer spot. <span class="conn">In the end</span>, I think
 she’ll finish the job, but next time she’ll use a <span class="vocab">paint tray</span> and put a <span class="vocab">drop
 cloth</span> on the floor.</p>
-<h3 id="vocabulary-16">Vocabulary</h3>
+<h3 id="vocabulary-20">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1800,7 +2235,7 @@ cloth</span> on the floor.</p>
 <h2 id="moving-boxes-and-a-dog">4.3 Moving Boxes and a Dog</h2>
 <p>A family carrying boxes down a staircase on moving day while a dog
 runs between their feet. What do you predict?</p>
-<h3 id="sample-17">Sample</h3>
+<h3 id="sample-21">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a mother
 and a father are carrying heavy boxes down the stairs, and a dog is
 running in between their legs, wagging its tail. They can hardly see the
@@ -1815,7 +2250,7 @@ they’ll call it to stay behind. <span class="conn">In the end</span>, I
 believe they’ll <span class="vocab">carry on</span> more carefully, and
 the dog will be kept in a <span class="vocab">separate room</span> until
 the move is <span class="vocab">complete</span>.</p>
-<h3 id="vocabulary-17">Vocabulary</h3>
+<h3 id="vocabulary-21">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1846,7 +2281,7 @@ the move is <span class="vocab">complete</span>.</p>
 <p>A person standing outside their front door in the rain, searching
 their pockets, with keys visible on a table inside. What will
 happen?</p>
-<h3 id="sample-18">Sample</h3>
+<h3 id="sample-22">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a person
 is standing outside a front door in heavy rain and checking every
 pocket. Through the window, I can see a set of keys lying on a table
@@ -1858,7 +2293,7 @@ who has a spare key, or a <span class="vocab">locksmith</span>.</p>
 <p><span class="conn">Otherwise</span>, a neighbour may notice and offer
 shelter. <span class="conn">In the end</span>, I think they’ll get back
 inside after an hour, and they’ll hide a spare key in a <span class="vocab">safe place</span> to avoid the problem in the future.</p>
-<h3 id="vocabulary-18">Vocabulary</h3>
+<h3 id="vocabulary-22">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1893,7 +2328,7 @@ inside after an hour, and they’ll hide a spare key in a <span class="vocab">sa
 <h2 id="leaking-ceiling">4.5 Leaking Ceiling</h2>
 <p>Water dripping from the ceiling above a sofa while a family watches a
 movie. Predict what will happen.</p>
-<h3 id="sample-19">Sample</h3>
+<h3 id="sample-23">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a family
 is relaxing on a sofa with popcorn, but a few drops of water are falling
 from the ceiling right above them. They haven’t noticed it yet.</p>
@@ -1906,7 +2341,7 @@ fix it before it grows. <span class="conn">In the end</span>, I think
 they’ll call a <span class="vocab">plumber</span> or the landlord, and
 the movie night will be <span class="vocab">ruined</span>, but they’ll
 laugh about it later.</p>
-<h3 id="vocabulary-19">Vocabulary</h3>
+<h3 id="vocabulary-23">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1933,6 +2368,81 @@ laugh about it later.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="apartment-building-windows">4.6 Apartment Building Windows
+⭐</h2>
+<p>An apartment building with several windows, with a delivery person on
+a motorbike bringing pizza, a woman leaving with her dog, a man playing
+a horn and a neighbour giving soup. What do you think will happen
+next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-24">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, it’s a
+lively evening in an apartment building. A <span class="vocab">delivery
+rider</span> has just arrived with a pizza, and a woman is <span class="verb">heading out</span> with her dog.</p>
+<p><span class="tpl">I think that</span> the rider will ring the bell
+and hand the pizza to a customer. <span class="conn">As a result</span>,
+the couple on the top floor will <span class="verb">dig into</span>
+their dinner while watching a film. <span class="conn">After
+that</span>, the woman will walk her dog around the block and maybe
+<span class="verb">bump into</span> the delivery rider on the way
+out.</p>
+<p><span class="conn">Otherwise</span>, the loud horn may annoy a <span class="vocab">neighbour</span>, who could knock on the door and ask for
+<span class="vocab">peace and quiet</span>. <span class="conn">In the
+end</span>, I believe everyone will <span class="verb">settle
+down</span> for the night, and the soup will bring two neighbours closer
+together.</p>
+<h3 id="vocabulary-24">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">head out</span></td>
+<td>leave to go somewhere</td>
+<td>We headed out at noon.</td>
+</tr>
+<tr>
+<td><span class="verb">dig into</span></td>
+<td>start eating eagerly</td>
+<td>They dug into the pizza.</td>
+</tr>
+<tr>
+<td><span class="verb">bump into</span></td>
+<td>meet by chance</td>
+<td>I bumped into my neighbour.</td>
+</tr>
+<tr>
+<td><span class="verb">settle down</span></td>
+<td>become calm</td>
+<td>The kids settled down at nine.</td>
+</tr>
+<tr>
+<td><span class="vocab">neighbour</span></td>
+<td>a person living nearby</td>
+<td>My neighbour is friendly.</td>
+</tr>
+<tr>
+<td><span class="vocab">peace and quiet</span></td>
+<td>calm without noise</td>
+<td>I want some peace and quiet.</td>
+</tr>
+<tr>
+<td><span class="vocab">delivery rider</span></td>
+<td>a person who brings orders on a bike or motorbike</td>
+<td>The delivery rider knocked on the door.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="family-and-social-situations">5 Family and Social
 Situations</h1>
 <p>Topics: surprises, parties, arrivals, a gift, a family gathering, a
@@ -1946,7 +2456,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="surprise-party">5.1 Surprise Party</h2>
 <p>A group of friends hiding behind furniture while a man opens the
 front door of a dark room. What will happen next?</p>
-<h3 id="sample-20">Sample</h3>
+<h3 id="sample-25">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, several
 friends are crouching behind a sofa and a table in a dark room, holding
 balloons, and a man is opening the front door. He doesn’t suspect
@@ -1959,7 +2469,7 @@ hug him, sing “Happy Birthday,” and bring out a cake.</p>
 <p><span class="conn">Otherwise</span>, if someone sneezes, he might
 <span class="vocab">figure it out</span> early. <span class="conn">In
 the end</span>, I think it’ll be a <span class="vocab">heartwarming</span> evening, and he’ll be <span class="vocab">touched</span> that everyone made an effort.</p>
-<h3 id="vocabulary-20">Vocabulary</h3>
+<h3 id="vocabulary-25">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1994,7 +2504,7 @@ the end</span>, I think it’ll be a <span class="vocab">heartwarming</span> eve
 <h2 id="airport-welcome">5.2 Airport Welcome</h2>
 <p>A family waiting at an airport with balloons and a sign as passengers
 come through the gate. Predict what happens.</p>
-<h3 id="sample-21">Sample</h3>
+<h3 id="sample-26">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a family
 is standing at the arrivals gate holding balloons and a big sign that
 says “Welcome Home.” They’re looking eagerly at the doors.</p>
@@ -2007,7 +2517,7 @@ luggage, and head to the parking lot while everyone talks at once.</p>
 they’ll have to wait longer. <span class="conn">In the end</span>, I
 believe the <span class="vocab">reunion</span> will be very <span class="vocab">emotional</span>, and the family will celebrate with a
 <span class="vocab">home-cooked</span> dinner.</p>
-<h3 id="vocabulary-21">Vocabulary</h3>
+<h3 id="vocabulary-26">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2042,7 +2552,7 @@ believe the <span class="vocab">reunion</span> will be very <span class="vocab">
 <h2 id="child-and-gift">5.3 Child and Gift</h2>
 <p>A child holding a wrapped gift while a parent kneels with a camera.
 What do you predict?</p>
-<h3 id="sample-22">Sample</h3>
+<h3 id="sample-27">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a little
 boy is holding a <span class="vocab">wrapped gift</span> with a red
 ribbon, and his father is kneeling in front of him with a camera. The
@@ -2055,7 +2565,7 @@ them, and the father will capture the moment in photos.</p>
 <p><span class="conn">Otherwise</span>, if the gift is something
 practical, like clothes, he may look a little disappointed. <span class="conn">In the end</span>, I think the family will <span class="vocab">cherish</span> the pictures, and the boy will play with
 his new gift <span class="vocab">all day long</span>.</p>
-<h3 id="vocabulary-22">Vocabulary</h3>
+<h3 id="vocabulary-27">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2090,7 +2600,7 @@ his new gift <span class="vocab">all day long</span>.</p>
 <h2 id="old-friends-meeting">5.4 Old Friends Meeting</h2>
 <p>Two old friends spotting each other across a busy street. What will
 happen?</p>
-<h3 id="sample-23">Sample</h3>
+<h3 id="sample-28">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, two
 elderly men are on opposite sides of a busy street, and they’re both
 waving and smiling. They seem to have recognized each other after a long
@@ -2103,7 +2613,7 @@ their health.</p>
 <p><span class="conn">Otherwise</span>, if they’re in a hurry, they may
 only exchange phone numbers. <span class="conn">In the end</span>, I
 think they’ll go to a nearby café for a <span class="vocab">heart-to-heart</span> chat, and they’ll promise to <span class="vocab">keep in touch</span> from now on.</p>
-<h3 id="vocabulary-23">Vocabulary</h3>
+<h3 id="vocabulary-28">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2138,7 +2648,7 @@ think they’ll go to a nearby café for a <span class="vocab">heart-to-heart</s
 <h2 id="surprise-congratulations">5.5 Surprise Congratulations</h2>
 <p>A couple walking into a restaurant where their friends are waiting
 with a banner. Predict what happens.</p>
-<h3 id="sample-24">Sample</h3>
+<h3 id="sample-29">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a couple
 is walking into a restaurant, and a group of friends is standing behind
 a table, holding a banner. The couple hasn’t seen the group yet.</p>
@@ -2151,7 +2661,7 @@ they’ll hug everyone, and they’ll sit down to enjoy a meal together.</p>
 first, the surprise may be spoiled. <span class="conn">In the
 end</span>, I think they’ll have a <span class="vocab">delightful</span>
 evening, because the friends took the time to <span class="vocab">organize</span> something so <span class="vocab">thoughtful</span>.</p>
-<h3 id="vocabulary-24">Vocabulary</h3>
+<h3 id="vocabulary-29">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2178,6 +2688,77 @@ evening, because the friends took the time to <span class="vocab">organize</span
 </tr>
 </tbody>
 </table>
+<h2 id="patio-party">5.6 Patio Party ⭐</h2>
+<p>A party on a patio with a barbecue, a DJ, dancing guests and a woman
+walking her dog outside the fence. What do you think will happen
+next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+party is in full swing. The man at the barbecue is cooking burgers, the
+<span class="vocab">DJ</span> is playing a lively song, and the guests
+are dancing.</p>
+<p><span class="tpl">I think that</span> the host will soon announce
+that the food is ready. <span class="conn">As a result</span>, the
+dancers will <span class="verb">line up</span> at the table and <span class="verb">load their plates</span> with burgers and salads. <span class="conn">After that</span>, the woman with the dog may <span class="verb">stop by</span> the fence, and the host will invite her to
+join the party.</p>
+<p><span class="conn">Otherwise</span>, if the music is too loud, a
+neighbour might complain. <span class="conn">In the end</span>, I think
+everyone will <span class="vocab">mingle</span> until late and take
+<span class="vocab">group photos</span>, and the party will <span class="verb">wind down</span> after sunset.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">line up</span></td>
+<td>form a line</td>
+<td>People lined up for food.</td>
+</tr>
+<tr>
+<td><span class="verb">load plates</span></td>
+<td>fill plates with food</td>
+<td>They loaded their plates.</td>
+</tr>
+<tr>
+<td><span class="verb">stop by</span></td>
+<td>visit briefly</td>
+<td>Stop by for coffee.</td>
+</tr>
+<tr>
+<td><span class="verb">wind down</span></td>
+<td>slowly come to an end</td>
+<td>The party wound down at midnight.</td>
+</tr>
+<tr>
+<td><span class="vocab">DJ</span></td>
+<td>a person who plays recorded music</td>
+<td>The DJ played dance music.</td>
+</tr>
+<tr>
+<td><span class="vocab">mingle</span></td>
+<td>move around and talk with different people</td>
+<td>Guests mingled in the garden.</td>
+</tr>
+<tr>
+<td><span class="vocab">group photos</span></td>
+<td>pictures of several people together</td>
+<td>We took group photos.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="shopping-money-and-lost-items">6 Shopping, Money, and Lost
 Items</h1>
 <p>Topics: a checkout, a forgotten wallet, a lost child, a parking
@@ -2191,7 +2772,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="forgotten-wallet">6.1 Forgotten Wallet</h2>
 <p>A customer at the checkout reaching into an empty pocket while a long
 line grows behind. What will happen next?</p>
-<h3 id="sample-25">Sample</h3>
+<h3 id="sample-31">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a man is
 standing at the checkout with a full basket, and he’s reaching into an
 empty pocket with a worried face. Behind him, a long line of customers
@@ -2204,7 +2785,7 @@ or look annoyed, but some might be sympathetic.</p>
 <p><span class="conn">Otherwise</span>, he could try to pay with his
 phone. <span class="conn">In the end</span>, I think he’ll leave the
 store, go home to get his wallet, and come back later, feeling <span class="vocab">embarrassed</span> but <span class="vocab">relieved</span>.</p>
-<h3 id="vocabulary-25">Vocabulary</h3>
+<h3 id="vocabulary-31">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2239,7 +2820,7 @@ store, go home to get his wallet, and come back later, feeling <span class="voca
 <h2 id="lost-child-in-a-mall">6.2 Lost Child in a Mall</h2>
 <p>A young child looking around a crowded shopping mall while a parent
 looks at a store window. What do you predict?</p>
-<h3 id="sample-26">Sample</h3>
+<h3 id="sample-32">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a little
 girl is standing in a busy mall, looking around with a confused face,
 while her mother is facing a store window. They aren’t holding
@@ -2255,7 +2836,7 @@ and grab her hand. <span class="conn">In the end</span>, I believe they
 will be <span class="vocab">reunited</span> within minutes, and the
 mother will <span class="vocab">learn her lesson</span> and keep a close
 watch on her child.</p>
-<h3 id="vocabulary-26">Vocabulary</h3>
+<h3 id="vocabulary-32">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2290,7 +2871,7 @@ watch on her child.</p>
 <h2 id="parking-ticket">6.3 Parking Ticket</h2>
 <p>A driver returning to a car with a parking officer writing a ticket.
 Predict what will happen.</p>
-<h3 id="sample-27">Sample</h3>
+<h3 id="sample-33">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a
 parking officer is standing next to a car, writing something on a small
 device. A driver is running toward the car carrying shopping bags. The
@@ -2305,7 +2886,7 @@ he might cancel it. <span class="conn">In the end</span>, I think the
 driver will <span class="vocab">pay the fine</span> or dispute it, and
 in the future he’ll <span class="vocab">set a reminder</span> on his
 phone.</p>
-<h3 id="vocabulary-27">Vocabulary</h3>
+<h3 id="vocabulary-33">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2340,7 +2921,7 @@ phone.</p>
 <h2 id="big-sale-rush">6.4 Big Sale Rush</h2>
 <p>Shoppers rushing toward the doors of a store on the first morning of
 a big sale. What will happen?</p>
-<h3 id="sample-28">Sample</h3>
+<h3 id="sample-34">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a large
 crowd of shoppers is rushing toward the doors of a store, and a banner
 says “Biggest Sale of the Year.” Some of them are pushing each other to
@@ -2354,7 +2935,7 @@ busy.</p>
 <p><span class="conn">Otherwise</span>, if the store is well prepared,
 security guards might let people enter in small groups. <span class="conn">In the end</span>, I think most shoppers will leave with
 <span class="vocab">bargains</span> but also feel <span class="vocab">exhausted</span>.</p>
-<h3 id="vocabulary-28">Vocabulary</h3>
+<h3 id="vocabulary-34">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2381,6 +2962,364 @@ security guards might let people enter in small groups. <span class="conn">In th
 </tr>
 </tbody>
 </table>
+<h2 id="clothing-sale-store">6.5 Clothing Sale Store ⭐</h2>
+<p>A crowded warehouse or second-hand clothing sale with clothes spilled
+on the floor, shoppers searching, two people running and someone paying
+at the counter. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11
+(several reports).</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, it’s a
+busy clothing sale, and clothes are <span class="vocab">scattered</span>
+all over the floor. Two people are running toward a rack, probably
+because they spotted a <span class="vocab">bargain</span>.</p>
+<p><span class="tpl">I think that</span> someone will slip on the
+clothes on the floor. <span class="conn">As a result</span>, a staff
+member will hurry over, <span class="verb">pick up</span> the mess and
+ask people to be careful. <span class="conn">After that</span>, the two
+runners will <span class="verb">get their hands on</span> the items they
+wanted, and they will <span class="verb">queue up</span> at the
+counter.</p>
+<p><span class="conn">Otherwise</span>, they might <span class="verb">get into an argument</span> over the same jacket. <span class="conn">In the end</span>, the shoppers will leave with <span class="vocab">big savings</span>, and the store will have to tidy up
+once more.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pick up</span></td>
+<td>lift from the ground</td>
+<td>Pick up your clothes.</td>
+</tr>
+<tr>
+<td><span class="verb">get one’s hands on</span></td>
+<td>manage to obtain</td>
+<td>I finally got my hands on a ticket.</td>
+</tr>
+<tr>
+<td><span class="verb">queue up</span></td>
+<td>wait in a line</td>
+<td>We queued up for an hour.</td>
+</tr>
+<tr>
+<td><span class="verb">get into an argument</span></td>
+<td>start to quarrel</td>
+<td>They got into an argument about money.</td>
+</tr>
+<tr>
+<td><span class="vocab">bargain</span></td>
+<td>something cheaper than its normal price</td>
+<td>This coat is a bargain.</td>
+</tr>
+<tr>
+<td><span class="vocab">big savings</span></td>
+<td>a large amount of money not spent</td>
+<td>The sale offers big savings.</td>
+</tr>
+<tr>
+<td><span class="vocab">scattered</span></td>
+<td>spread in different places</td>
+<td>Toys were scattered on the floor.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shopping-mall">6.6 Shopping Mall ⭐</h2>
+<p>A shopping mall with shoppers walking and using escalators. What do
+you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the mall
+is crowded, and many shoppers are carrying bags while riding the <span class="vocab">escalators</span>. A little boy is holding a balloon and
+looking up, not at his feet.</p>
+<p><span class="tpl">I think that</span> the boy will let go of the
+balloon. <span class="conn">As a result</span>, it will float up toward
+the ceiling, and he might start to cry. <span class="conn">After
+that</span>, his parents will <span class="verb">calm him down</span>
+and promise to buy another one at the toy store.</p>
+<p><span class="conn">Otherwise</span>, a security guard may use a long
+pole to <span class="verb">reach for</span> it. <span class="conn">In
+the end</span>, I believe the family will <span class="verb">carry on
+with</span> their shopping, and the boy will hold his new balloon <span class="vocab">tightly</span>. Meanwhile, other shoppers will <span class="verb">rush past</span> to catch the <span class="vocab">sales</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">calm down</span></td>
+<td>make someone less upset</td>
+<td>She calmed down the baby.</td>
+</tr>
+<tr>
+<td><span class="verb">reach for</span></td>
+<td>stretch out a hand to take</td>
+<td>He reached for the book.</td>
+</tr>
+<tr>
+<td><span class="verb">carry on with</span></td>
+<td>continue</td>
+<td>They carried on with the trip.</td>
+</tr>
+<tr>
+<td><span class="verb">rush past</span></td>
+<td>move quickly beside</td>
+<td>A cyclist rushed past us.</td>
+</tr>
+<tr>
+<td><span class="vocab">tightly</span></td>
+<td>firmly</td>
+<td>She held the string tightly.</td>
+</tr>
+<tr>
+<td><span class="vocab">sales</span></td>
+<td>periods of lower prices</td>
+<td>The sales start on Friday.</td>
+</tr>
+<tr>
+<td><span class="vocab">escalators</span></td>
+<td>moving staircases</td>
+<td>The escalators are next to the food court.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="busy-street">6.7 Busy Street ⭐</h2>
+<p>A busy street with a café, a clothing store, a home-goods store,
+pedestrians and shoppers. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, it’s a
+busy afternoon downtown, and <span class="vocab">pedestrians</span> are
+<span class="verb">strolling past</span> the shops. A woman is carrying
+a large lamp out of the home-goods store, and she can barely see in
+front of her.</p>
+<p><span class="tpl">I think that</span> she will <span class="verb">trip over</span> the curb. <span class="conn">As a
+result</span>, she may drop the lamp, and it could break. <span class="conn">After that</span>, a <span class="vocab">passer-by</span>
+will probably <span class="verb">rush over</span> to help her, and the
+shop owner will come out.</p>
+<p><span class="conn">Otherwise</span>, if she notices the curb in time,
+she will <span class="verb">carry on</span> walking carefully. <span class="conn">In the end</span>, I think she will put the lamp in her car
+and <span class="verb">treat herself to</span> a coffee at the café,
+relieved that nothing happened. The street will return to its usual
+<span class="vocab">hustle and bustle</span>.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">stroll past</span></td>
+<td>walk slowly by</td>
+<td>We strolled past the fountain.</td>
+</tr>
+<tr>
+<td><span class="verb">trip over</span></td>
+<td>catch your foot and nearly fall</td>
+<td>He tripped over a rock.</td>
+</tr>
+<tr>
+<td><span class="verb">rush over</span></td>
+<td>hurry to a place</td>
+<td>A nurse rushed over.</td>
+</tr>
+<tr>
+<td><span class="verb">carry on</span></td>
+<td>continue</td>
+<td>Carry on walking.</td>
+</tr>
+<tr>
+<td><span class="verb">treat oneself to</span></td>
+<td>buy something nice for yourself</td>
+<td>I treated myself to dessert.</td>
+</tr>
+<tr>
+<td><span class="vocab">hustle and bustle</span></td>
+<td>busy, noisy activity</td>
+<td>I love the hustle and bustle of the city.</td>
+</tr>
+<tr>
+<td><span class="vocab">passer-by</span></td>
+<td>a person who is walking past</td>
+<td>A passer-by called for help.</td>
+</tr>
+<tr>
+<td><span class="vocab">pedestrians</span></td>
+<td>people walking on the street</td>
+<td>Pedestrians waited at the light.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-market">6.8 Local Market ⭐</h2>
+<p>A crowded outdoor local market with shoppers and vendors. What do you
+think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-38">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+market is packed, and a <span class="vocab">vendor</span> is stacking
+oranges into a tall pyramid. A customer is reaching for one at the
+bottom without noticing.</p>
+<p><span class="tpl">I think that</span> the whole pile will collapse.
+<span class="conn">As a result</span>, oranges will roll everywhere, and
+people nearby will <span class="verb">jump out of the way</span>. <span class="conn">After that</span>, several shoppers will <span class="verb">lend a hand</span> and <span class="verb">gather up</span>
+the fruit. The vendor will probably laugh and offer the customer a free
+orange as an apology.</p>
+<p><span class="conn">Otherwise</span>, if the customer chooses an
+orange from the top, nothing will happen, and she will <span class="verb">haggle over</span> the price instead. <span class="conn">In
+the end</span>, I think the vendor will build a <span class="vocab">sturdier</span> stack, and business will go on as usual
+among the <span class="vocab">lively</span> crowd.</p>
+<h3 id="vocabulary-38">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">jump out of the way</span></td>
+<td>move quickly to avoid something</td>
+<td>He jumped out of the way of the bike.</td>
+</tr>
+<tr>
+<td><span class="verb">lend a hand</span></td>
+<td>help</td>
+<td>Can you lend a hand?</td>
+</tr>
+<tr>
+<td><span class="verb">gather up</span></td>
+<td>collect</td>
+<td>She gathered up her papers.</td>
+</tr>
+<tr>
+<td><span class="verb">haggle over</span></td>
+<td>argue about a price</td>
+<td>They haggled over the price of a rug.</td>
+</tr>
+<tr>
+<td><span class="vocab">sturdier</span></td>
+<td>stronger and more stable</td>
+<td>Build a sturdier table.</td>
+</tr>
+<tr>
+<td><span class="vocab">lively</span></td>
+<td>full of energy</td>
+<td>The market was lively.</td>
+</tr>
+<tr>
+<td><span class="vocab">vendor</span></td>
+<td>a person who sells things</td>
+<td>The vendor sells fresh fruit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flower-shop">6.9 Flower Shop ⭐</h2>
+<p>A flower shop with customers choosing flowers and employees
+decorating and watering plants. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-39">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+flower shop is busy, and an employee is watering a <span class="vocab">hanging basket</span> above a customer who is smelling
+roses. The water is dripping down.</p>
+<p><span class="tpl">I think that</span> a few drops will fall on the
+customer’s head. <span class="conn">As a result</span>, she will look up
+and laugh, and the employee will <span class="verb">apologize for</span>
+the mistake. <span class="conn">After that</span>, the employee will
+<span class="verb">wipe off</span> her jacket and offer her a free
+flower to <span class="verb">make up for</span> it.</p>
+<p><span class="conn">Otherwise</span>, if the employee <span class="vocab">spots</span> her in time, he will stop watering. <span class="conn">In the end</span>, I believe the customer will <span class="verb">settle on</span> a lovely <span class="vocab">bouquet</span> and leave the shop smiling.</p>
+<h3 id="vocabulary-39">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">apologize for</span></td>
+<td>say sorry about</td>
+<td>He apologized for the delay.</td>
+</tr>
+<tr>
+<td><span class="verb">wipe off</span></td>
+<td>remove by wiping</td>
+<td>She wiped off the table.</td>
+</tr>
+<tr>
+<td><span class="verb">make up for</span></td>
+<td>compensate for</td>
+<td>A gift made up for the mistake.</td>
+</tr>
+<tr>
+<td><span class="verb">settle on</span></td>
+<td>finally choose</td>
+<td>We settled on red roses.</td>
+</tr>
+<tr>
+<td><span class="vocab">spot</span></td>
+<td>notice</td>
+<td>I spotted a mistake.</td>
+</tr>
+<tr>
+<td><span class="vocab">bouquet</span></td>
+<td>a bunch of flowers</td>
+<td>She bought a bouquet.</td>
+</tr>
+<tr>
+<td><span class="vocab">hanging basket</span></td>
+<td>a basket with plants hung from above</td>
+<td>A hanging basket decorates the porch.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="animals-children-and-unexpected-events">7 Animals, Children, and
 Unexpected Events</h1>
 <p>Topics: pets, wild animals, playing children, a runaway ball, an
@@ -2394,7 +3333,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="dog-and-picnic-table">7.1 Dog and Picnic Table</h2>
 <p>A dog running toward a picnic table while a family is eating. What
 will happen next?</p>
-<h3 id="sample-29">Sample</h3>
+<h3 id="sample-40">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a family
 is sitting at a picnic table with sandwiches, chicken, and a cake, and a
 dog is running toward them with its tongue out. Nobody has noticed it
@@ -2408,7 +3347,7 @@ quickly, the dog may stop. <span class="conn">In the end</span>, I think
 the family will clean up the <span class="vocab">mess</span>, and this
 <span class="vocab">mishap</span> will become a funny story at the next
 picnic.</p>
-<h3 id="vocabulary-29">Vocabulary</h3>
+<h3 id="vocabulary-40">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2443,7 +3382,7 @@ picnic.</p>
 <h2 id="child-and-cookie-jar">7.2 Child and Cookie Jar</h2>
 <p>A child reaching for a cookie jar on a high shelf while a parent is
 in the next room. What do you predict?</p>
-<h3 id="sample-30">Sample</h3>
+<h3 id="sample-41">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a small
 boy is standing on his toes and stretching toward a cookie jar on a
 <span class="vocab">high shelf</span>, and his mother is in the next
@@ -2456,7 +3395,7 @@ and she’ll check that he isn’t hurt.</p>
 he’ll sneak a cookie or two. <span class="conn">In the end</span>, I
 think his mother will <span class="vocab">scold</span> him gently, give
 him one cookie, and explain that he must ask for <span class="vocab">permission</span> next time.</p>
-<h3 id="vocabulary-30">Vocabulary</h3>
+<h3 id="vocabulary-41">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2491,7 +3430,7 @@ him one cookie, and explain that he must ask for <span class="vocab">permission<
 <h2 id="cat-and-vase">7.3 Cat and Vase</h2>
 <p>A cat sitting on a shelf above a vase, with a ball rolling toward it.
 Predict what happens.</p>
-<h3 id="sample-31">Sample</h3>
+<h3 id="sample-42">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a cat is
 sitting on a shelf right above an expensive-looking <span class="vocab">vase</span>, and a small ball is rolling across the floor.
 The cat is staring at it with wide eyes.</p>
@@ -2502,7 +3441,7 @@ in, and the cat will run away <span class="vocab">guiltily</span>.</p>
 <p><span class="conn">Otherwise</span>, if the cat is careful, it may
 leap past the vase. <span class="conn">In the end</span>, I think the
 owner will move the vase to a safer place, because cats are <span class="vocab">curious</span> and <span class="vocab">unpredictable</span>.</p>
-<h3 id="vocabulary-31">Vocabulary</h3>
+<h3 id="vocabulary-42">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2542,7 +3481,7 @@ owner will move the vase to a safer place, because cats are <span class="vocab">
 <h2 id="ball-indoors">7.4 Ball Indoors</h2>
 <p>A child about to throw a ball inside a living room full of fragile
 items. What will happen?</p>
-<h3 id="sample-32">Sample</h3>
+<h3 id="sample-43">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a boy is
 holding a big ball above his head in a living room, and around him there
 are glass shelves, a lamp, and a few <span class="vocab">fragile</span>
@@ -2556,7 +3495,7 @@ put the ball down and go outside. <span class="conn">In the end</span>,
 I think the parents will <span class="vocab">lay down rules</span> about
 playing inside, and the boy will feel <span class="vocab">sorry</span>
 for what he did.</p>
-<h3 id="vocabulary-32">Vocabulary</h3>
+<h3 id="vocabulary-43">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2588,6 +3527,372 @@ for what he did.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="child-care-centre-with-spiral-slide">7.5 Child-Care Centre With
+Spiral Slide ⭐</h2>
+<p>A three-storey child-care centre with a spiral slide, two girls
+waving from different balconies on the top floor, children with a
+teacher on the ground floor and a girl coming down the slide. What do
+you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11
+(several reports), Oct 10 and Oct 4.</p>
+<h3 id="sample-44">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, it’s a
+busy day at the child-care centre. A girl is <span class="verb">sliding
+down</span> the spiral slide, and two other girls are waving to each
+other from the <span class="vocab">balconies</span>.</p>
+<p><span class="tpl">I think that</span> the girl on the slide will land
+safely at the bottom and run to join the others. <span class="conn">As a
+result</span>, the teacher will <span class="vocab">clap</span> and
+encourage the other children to take turns. <span class="conn">After
+that</span>, the two girls on the balconies will probably <span class="verb">come down</span> and <span class="verb">line up for</span>
+the slide.</p>
+<p><span class="conn">Otherwise</span>, if two kids <span class="verb">crash into</span> each other at the bottom, the teacher
+will check on them. <span class="conn">In the end</span>, I believe the
+children will play happily until it’s time to go home, and the centre
+will stay full of <span class="vocab">laughter</span>.</p>
+<h3 id="vocabulary-44">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">slide down</span></td>
+<td>move smoothly down</td>
+<td>The kids slid down the hill.</td>
+</tr>
+<tr>
+<td><span class="verb">come down</span></td>
+<td>move to a lower place</td>
+<td>Come down for lunch.</td>
+</tr>
+<tr>
+<td><span class="verb">line up for</span></td>
+<td>wait in a line for</td>
+<td>They lined up for ice cream.</td>
+</tr>
+<tr>
+<td><span class="verb">crash into</span></td>
+<td>hit with force</td>
+<td>The cars crashed into each other.</td>
+</tr>
+<tr>
+<td><span class="vocab">clap</span></td>
+<td>hit hands together to show approval</td>
+<td>The audience clapped.</td>
+</tr>
+<tr>
+<td><span class="vocab">laughter</span></td>
+<td>the sound of laughing</td>
+<td>The room was full of laughter.</td>
+</tr>
+<tr>
+<td><span class="vocab">balconies</span></td>
+<td>platforms attached to the outside of a building</td>
+<td>The flats have small balconies.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="indoor-play-centre">7.6 Indoor Play Centre ⭐</h2>
+<p>An indoor play centre with a trampoline, a ball pit, punching bags
+and a slide, where a father is putting his child on the slide. What do
+you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 10, Oct 9
+and Oct 6.</p>
+<h3 id="sample-45">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the play
+centre is full of energy. A father is <span class="verb">setting
+down</span> his small child at the top of the slide, and the child looks
+a bit nervous. A mother and her daughter are bouncing nearby.</p>
+<p><span class="tpl">I think that</span> the father will give the child
+a gentle push. <span class="conn">As a result</span>, the child will
+slide down, laugh loudly and want to go again. <span class="conn">After
+that</span>, the little boy will <span class="verb">tumble into</span>
+the <span class="vocab">ball pit</span> and <span class="verb">pop
+up</span> with a big smile.</p>
+<p><span class="conn">Otherwise</span>, if the child feels too scared,
+the father will <span class="verb">climb down</span> with him. <span class="conn">In the end</span>, the kids will be <span class="vocab">worn out</span>, and the families will <span class="verb">head home</span> happy and ready for a long <span class="vocab">nap</span>.</p>
+<h3 id="vocabulary-45">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">set down</span></td>
+<td>put on a surface</td>
+<td>She set down the toddler.</td>
+</tr>
+<tr>
+<td><span class="verb">tumble into</span></td>
+<td>fall in an uncontrolled way</td>
+<td>The ball tumbled into the pit.</td>
+</tr>
+<tr>
+<td><span class="verb">pop up</span></td>
+<td>appear suddenly</td>
+<td>His head popped up.</td>
+</tr>
+<tr>
+<td><span class="verb">climb down</span></td>
+<td>go down using hands and feet</td>
+<td>Climb down slowly.</td>
+</tr>
+<tr>
+<td><span class="verb">head home</span></td>
+<td>go back to one’s house</td>
+<td>We headed home at six.</td>
+</tr>
+<tr>
+<td><span class="vocab">worn out</span></td>
+<td>very tired</td>
+<td>The kids were worn out.</td>
+</tr>
+<tr>
+<td><span class="vocab">nap</span></td>
+<td>a short sleep</td>
+<td>He took a nap.</td>
+</tr>
+<tr>
+<td><span class="vocab">ball pit</span></td>
+<td>a pool filled with plastic balls</td>
+<td>Toddlers love the ball pit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="arcade-game-centre">7.7 Arcade Game Centre ⭐</h2>
+<p>An indoor game centre where people are playing, one person is
+jumping, several are collecting tickets for prizes and one is drinking
+juice. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 3
+(several reports).</p>
+<h3 id="sample-46">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+arcade is crowded and noisy. A boy is jumping because he has just <span class="vocab">scored</span> a high number of points, and a long strip of
+tickets is coming out of the machine.</p>
+<p><span class="tpl">I think that</span> he will collect his tickets and
+go to the prize counter. <span class="conn">As a result</span>, he will
+<span class="verb">swap</span> them for a toy and show it to his
+friends. <span class="conn">After that</span>, his friends will <span class="vocab">challenge</span> him to another game, and they will <span class="verb">spend the rest of</span> the afternoon playing.</p>
+<p><span class="conn">Otherwise</span>, if he doesn’t have enough
+tickets, he may <span class="verb">save up for</span> a bigger prize
+next time. <span class="conn">In the end</span>, the group will <span class="verb">run out of</span> coins, and they will leave the arcade
+tired but <span class="vocab">satisfied</span>.</p>
+<h3 id="vocabulary-46">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">swap</span></td>
+<td>exchange</td>
+<td>They swapped seats.</td>
+</tr>
+<tr>
+<td><span class="verb">spend the rest of</span></td>
+<td>use the remaining part of a time</td>
+<td>We spent the rest of the day at the beach.</td>
+</tr>
+<tr>
+<td><span class="verb">save up for</span></td>
+<td>keep money to buy</td>
+<td>I’m saving up for a bike.</td>
+</tr>
+<tr>
+<td><span class="verb">run out of</span></td>
+<td>have none left</td>
+<td>We ran out of milk.</td>
+</tr>
+<tr>
+<td><span class="vocab">challenge</span></td>
+<td>invite to compete</td>
+<td>She challenged me to a race.</td>
+</tr>
+<tr>
+<td><span class="vocab">satisfied</span></td>
+<td>pleased</td>
+<td>He was satisfied with the result.</td>
+</tr>
+<tr>
+<td><span class="vocab">scored</span></td>
+<td>earned points</td>
+<td>He scored ten points.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pet-shop">7.8 Pet Shop ⭐</h2>
+<p>A pet shop with two dogs playing, a woman and her son with a parrot,
+a child with a mouse, an aquarium with an employee on a ladder, and the
+checkout on the left. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3 (several reports).</p>
+<h3 id="sample-47">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the pet
+shop is busy, and an employee has climbed a ladder to feed the fish in a
+tall <span class="vocab">aquarium</span>. Two dogs are playing right
+next to the ladder.</p>
+<p><span class="tpl">I think that</span> one of the dogs will bump into
+the ladder. <span class="conn">As a result</span>, the employee may lose
+his balance and <span class="verb">cling to</span> the top of the
+aquarium, and some food and water will <span class="verb">spill
+over</span> the edge. <span class="conn">After that</span>, the owner
+will <span class="verb">grab hold of</span> the dogs, and a colleague
+will <span class="vocab">steady</span> the ladder.</p>
+<p><span class="conn">Otherwise</span>, if the dogs stay calm, he will
+finish feeding the fish quickly. <span class="conn">In the end</span>,
+the staff will <span class="verb">clean up</span> the mess, and the
+customers will go back to admiring the parrot and the <span class="vocab">adorable</span> mouse.</p>
+<h3 id="vocabulary-47">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">cling to</span></td>
+<td>hold on tightly to</td>
+<td>The child clung to her mother.</td>
+</tr>
+<tr>
+<td><span class="verb">spill over</span></td>
+<td>flow over the edge</td>
+<td>The water spilled over the sink.</td>
+</tr>
+<tr>
+<td><span class="verb">grab hold of</span></td>
+<td>take firmly</td>
+<td>He grabbed hold of the leash.</td>
+</tr>
+<tr>
+<td><span class="verb">clean up</span></td>
+<td>make a place tidy</td>
+<td>We cleaned up the kitchen.</td>
+</tr>
+<tr>
+<td><span class="vocab">steady</span></td>
+<td>keep from moving or falling</td>
+<td>Steady the ladder.</td>
+</tr>
+<tr>
+<td><span class="vocab">adorable</span></td>
+<td>very cute</td>
+<td>An adorable puppy.</td>
+</tr>
+<tr>
+<td><span class="vocab">aquarium</span></td>
+<td>a glass tank for fish</td>
+<td>The shop has a huge aquarium.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="petting-zoo">7.9 Petting Zoo ⭐</h2>
+<p>A petting zoo where children interact with animals: a woman holds a
+parrot with a child beside her, and a man pets a brown dog while holding
+his own white dog. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and in
+the Oct 2 compiled list (farm / petting zoo).</p>
+<h3 id="sample-48">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+petting zoo is full of happy visitors. A woman is holding a colourful
+parrot, and a small boy is <span class="verb">reaching out to</span>
+touch it. Nearby, a man is petting a brown dog while his white dog
+waits.</p>
+<p><span class="tpl">I think that</span> the parrot will either <span class="vocab">flap its wings</span> or climb onto the boy’s arm. <span class="conn">As a result</span>, the boy will giggle, and his mother
+will take a photo. <span class="conn">After that</span>, the white dog
+may feel <span class="vocab">jealous</span> and <span class="verb">tug
+at</span> its <span class="vocab">leash</span> to get attention.</p>
+<p><span class="conn">Otherwise</span>, if the parrot gets frightened,
+the woman will <span class="verb">calm it down</span> gently. <span class="conn">In the end</span>, I believe the children will <span class="verb">say goodbye to</span> the animals, and the families will
+leave with big smiles.</p>
+<h3 id="vocabulary-48">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">reach out to</span></td>
+<td>stretch your hand toward</td>
+<td>She reached out to the horse.</td>
+</tr>
+<tr>
+<td><span class="verb">tug at</span></td>
+<td>pull with short, strong movements</td>
+<td>The dog tugged at the leash.</td>
+</tr>
+<tr>
+<td><span class="verb">calm down</span></td>
+<td>make less upset</td>
+<td>He calmed down the puppy.</td>
+</tr>
+<tr>
+<td><span class="verb">say goodbye to</span></td>
+<td>speak farewell to</td>
+<td>They said goodbye to the lambs.</td>
+</tr>
+<tr>
+<td><span class="vocab">flap its wings</span></td>
+<td>move wings up and down</td>
+<td>The bird flapped its wings.</td>
+</tr>
+<tr>
+<td><span class="vocab">jealous</span></td>
+<td>upset because someone else gets attention</td>
+<td>Her dog was jealous of the cat.</td>
+</tr>
+<tr>
+<td><span class="vocab">leash</span></td>
+<td>a strap used to lead a dog</td>
+<td>Keep your dog on a leash.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="sports-and-recreation">8 Sports and Recreation</h1>
 <p>Topics: a skateboard, skiing, fishing, a race, a bike ride, a
 playground.</p>
@@ -2600,7 +3905,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="skateboard-and-steps">8.1 Skateboard and Steps</h2>
 <p>A child on a skateboard heading toward a flight of steps. What do you
 think will happen?</p>
-<h3 id="sample-33">Sample</h3>
+<h3 id="sample-49">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a boy is
 riding a skateboard quickly down a path, and there’s a flight of
 concrete steps right ahead. He isn’t wearing a helmet or <span class="vocab">knee pads</span>.</p>
@@ -2614,7 +3919,7 @@ jump the stairs successfully. <span class="conn">In the end</span>, I
 think his parents will insist on <span class="vocab">protective
 gear</span>, and he’ll realize that <span class="vocab">taking
 risks</span> can have a price.</p>
-<h3 id="vocabulary-33">Vocabulary</h3>
+<h3 id="vocabulary-49">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2649,7 +3954,7 @@ risks</span> can have a price.</p>
 <h2 id="beginner-skier">8.2 Beginner Skier</h2>
 <p>A beginner skier standing at the top of a very steep slope while
 friends wait below. Predict what will happen.</p>
-<h3 id="sample-34">Sample</h3>
+<h3 id="sample-50">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a young
 woman is standing at the top of a very steep ski slope, holding her
 poles tightly, and her friends are waiting far below. She looks <span class="vocab">terrified</span>.</p>
@@ -2661,7 +3966,7 @@ tips, and she’ll slowly <span class="vocab">gain confidence</span>.</p>
 skis off and walk down or take an easier route. <span class="conn">In
 the end</span>, I think she’ll reach the bottom, <span class="vocab">sore</span> but proud, and she’ll probably choose a
 gentler slope next time.</p>
-<h3 id="vocabulary-34">Vocabulary</h3>
+<h3 id="vocabulary-50">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2696,7 +4001,7 @@ gentler slope next time.</p>
 <h2 id="close-race">8.3 Close Race</h2>
 <p>Two runners nearing the finish line of a race side by side. What will
 happen next?</p>
-<h3 id="sample-35">Sample</h3>
+<h3 id="sample-51">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, two
 runners are neck and neck, just a few metres from the <span class="vocab">finish line</span>, and the crowd is cheering. Both look
 exhausted, but they’re giving everything they have.</p>
@@ -2708,7 +4013,7 @@ arms in joy, and the other runner will fall to his knees, disappointed.
 the same time and share the title. <span class="conn">In the end</span>,
 I think they’ll shake hands, because they <span class="vocab">pushed
 each other</span> to run faster, and they’ll both leave <span class="vocab">with their heads held high</span>.</p>
-<h3 id="vocabulary-35">Vocabulary</h3>
+<h3 id="vocabulary-51">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2748,7 +4053,7 @@ each other</span> to run faster, and they’ll both leave <span class="vocab">wi
 <h2 id="bike-without-a-helmet">8.4 Bike Without a Helmet</h2>
 <p>A boy on a bicycle without a helmet speeding down a hill toward a
 busy road. What do you predict?</p>
-<h3 id="sample-36">Sample</h3>
+<h3 id="sample-52">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a boy is
 flying down a steep hill on his bicycle without a helmet, and at the
 bottom, there’s a busy road with cars. His eyes are wide open, and his
@@ -2761,7 +4066,7 @@ that</span>, a driver may honk and slow down, and the boy will be <span class="v
 lead to a serious accident. <span class="conn">In the end</span>, I
 think his parents will <span class="vocab">insist on</span> a helmet and
 teach him to control his speed, and he’ll be more <span class="vocab">cautious</span>.</p>
-<h3 id="vocabulary-36">Vocabulary</h3>
+<h3 id="vocabulary-52">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2793,6 +4098,291 @@ teach him to control his speed, and he’ll be more <span class="vocab">cautious
 </tr>
 </tbody>
 </table>
+<h2 id="fantasy-park-with-a-dragon">8.5 Fantasy Park With a Dragon
+⭐</h2>
+<p>A fantasy amusement park with a stone castle, a red dragon above the
+entrance, black slides, a smiling tree with a face, an oversized
+mushroom and visitors, including a woman reading while walking. What do
+you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9, Oct 8
+and Oct 7.</p>
+<h3 id="sample-53">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, it’s a
+<span class="vocab">magical</span> park, and children are climbing a
+ladder to the black slides. A woman is walking while reading a book, and
+she’s heading straight toward a low wall.</p>
+<p><span class="tpl">I think that</span> she will <span class="verb">bump into</span> the wall because she isn’t looking. <span class="conn">As a result</span>, she will drop her book, and the nearby
+children may giggle. <span class="conn">After that</span>, she will
+<span class="verb">shrug it off</span>, pick up her book and <span class="verb">carry on</span> toward the dragon.</p>
+<p><span class="conn">Otherwise</span>, a child might warn her in time.
+<span class="conn">In the end</span>, I believe the kids will <span class="verb">slide down</span> several times, and the families will
+enjoy the rest of the day among the <span class="vocab">whimsical</span>
+decorations and <span class="vocab">fantastic</span> creatures.</p>
+<h3 id="vocabulary-53">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">bump into</span></td>
+<td>hit accidentally</td>
+<td>I bumped into a pole.</td>
+</tr>
+<tr>
+<td><span class="verb">shrug off</span></td>
+<td>not let something bother you</td>
+<td>He shrugged off the insult.</td>
+</tr>
+<tr>
+<td><span class="verb">carry on</span></td>
+<td>continue</td>
+<td>Carry on walking.</td>
+</tr>
+<tr>
+<td><span class="verb">slide down</span></td>
+<td>move smoothly downward</td>
+<td>They slid down the slope.</td>
+</tr>
+<tr>
+<td><span class="vocab">whimsical</span></td>
+<td>playful and unusual</td>
+<td>A whimsical garden.</td>
+</tr>
+<tr>
+<td><span class="vocab">fantastic</span></td>
+<td>imaginary and wonderful</td>
+<td>She loves fantastic stories.</td>
+</tr>
+<tr>
+<td><span class="vocab">magical</span></td>
+<td>wonderful and special</td>
+<td>It was a magical evening.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="billiards-and-darts-room">8.6 Billiards and Darts Room ⭐</h2>
+<p>A recreation room with two billiard tables, people playing, darts
+equipment on the wall and one person lying on a sofa. What do you think
+will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8 and Oct
+7.</p>
+<h3 id="sample-54">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, a man is
+<span class="verb">lining up</span> an important shot at a billiard
+table, and everyone is watching. At the same time, another man is about
+to throw a dart near the sofa where someone is resting.</p>
+<p><span class="tpl">I think that</span> the first man will sink the
+ball in the <span class="vocab">corner pocket</span>. <span class="conn">As a result</span>, his friends will cheer, and he will
+<span class="verb">take a bow</span>. <span class="conn">After
+that</span>, the second man will <span class="verb">aim at</span> the
+dartboard carefully, so he won’t hit anyone.</p>
+<p><span class="conn">Otherwise</span>, a dart could miss and land on
+the wall, and the person on the sofa will <span class="verb">jump
+up</span> in surprise. <span class="conn">In the end</span>, I believe
+the group will <span class="vocab">rotate</span> the players and
+continue the <span class="vocab">friendly</span> competition until
+late.</p>
+<h3 id="vocabulary-54">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">line up</span></td>
+<td>position carefully</td>
+<td>She lined up the shot.</td>
+</tr>
+<tr>
+<td><span class="verb">take a bow</span></td>
+<td>bend forward to receive applause</td>
+<td>The actor took a bow.</td>
+</tr>
+<tr>
+<td><span class="verb">aim at</span></td>
+<td>point toward a target</td>
+<td>Aim at the centre.</td>
+</tr>
+<tr>
+<td><span class="verb">jump up</span></td>
+<td>stand quickly</td>
+<td>He jumped up from the sofa.</td>
+</tr>
+<tr>
+<td><span class="vocab">rotate</span></td>
+<td>take turns</td>
+<td>Players rotate every ten minutes.</td>
+</tr>
+<tr>
+<td><span class="vocab">friendly</span></td>
+<td>not serious; kind</td>
+<td>A friendly game.</td>
+</tr>
+<tr>
+<td><span class="vocab">corner pocket</span></td>
+<td>a hole at the corner of a pool table</td>
+<td>He sank the ball in the corner pocket.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sports-centre">8.7 Sports Centre ⭐</h2>
+<p>A sports centre where people are playing volleyball, badminton and
+climbing a rock wall. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-55">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+sports centre is busy. A teenager is high up on the <span class="vocab">climbing wall</span>, and an instructor is watching from
+below. Next to them, a volleyball is flying toward the badminton
+court.</p>
+<p><span class="tpl">I think that</span> the ball will land in the
+middle of the badminton game. <span class="conn">As a result</span>, the
+players will <span class="verb">stop short</span>, laugh and throw the
+ball back. <span class="conn">After that</span>, the teenager will <span class="vocab">reach the top</span> of the wall and <span class="verb">rappel down</span> slowly while the instructor gives
+tips.</p>
+<p><span class="conn">Otherwise</span>, if the ball hits someone, the
+staff will <span class="verb">check on</span> that person. <span class="conn">In the end</span>, I believe everyone will <span class="verb">cool down</span>, drink water and plan to come back,
+because it’s a great place to stay <span class="vocab">active</span>.</p>
+<h3 id="vocabulary-55">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">stop short</span></td>
+<td>suddenly stop moving</td>
+<td>The player stopped short.</td>
+</tr>
+<tr>
+<td><span class="verb">rappel down</span></td>
+<td>lower yourself down a rope</td>
+<td>The climber rappelled down the cliff.</td>
+</tr>
+<tr>
+<td><span class="verb">check on</span></td>
+<td>make sure someone is fine</td>
+<td>Check on your friend.</td>
+</tr>
+<tr>
+<td><span class="verb">cool down</span></td>
+<td>let the body relax after exercise</td>
+<td>Cool down after your run.</td>
+</tr>
+<tr>
+<td><span class="vocab">reach the top</span></td>
+<td>arrive at the highest point</td>
+<td>He reached the top of the hill.</td>
+</tr>
+<tr>
+<td><span class="vocab">active</span></td>
+<td>physically busy</td>
+<td>She stays active every day.</td>
+</tr>
+<tr>
+<td><span class="vocab">climbing wall</span></td>
+<td>an artificial wall for climbing</td>
+<td>The gym has a climbing wall.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sports-event-with-a-reporter">8.8 Sports Event With a Reporter
+⭐</h2>
+<p>A sports event with runners in the foreground, and a reporter and
+other athletes in the background. What do you think will happen
+next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-56">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, several
+runners are racing toward the camera, and one young man is slightly
+ahead of the others. In the background, a reporter is interviewing an
+<span class="vocab">athlete</span>.</p>
+<p><span class="tpl">I think that</span> the leader will <span class="vocab">cross the finish line</span> first. <span class="conn">As
+a result</span>, the crowd will cheer, and the reporter will rush over
+to <span class="verb">catch up with</span> the winner for a quick
+interview. <span class="conn">After that</span>, the other runners will
+arrive one by one, and some will <span class="verb">collapse onto</span>
+the grass, exhausted.</p>
+<p><span class="conn">Otherwise</span>, the second runner might <span class="verb">speed up</span> at the last moment and win by a few
+seconds. <span class="conn">In the end</span>, I believe the athletes
+will <span class="vocab">shake hands</span>, and the volunteers will
+hand out medals and bottles of water.</p>
+<h3 id="vocabulary-56">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">catch up with</span></td>
+<td>reach someone who is ahead</td>
+<td>She caught up with the leader.</td>
+</tr>
+<tr>
+<td><span class="verb">collapse onto</span></td>
+<td>fall down heavily on</td>
+<td>He collapsed onto the sofa.</td>
+</tr>
+<tr>
+<td><span class="verb">speed up</span></td>
+<td>go faster</td>
+<td>The runner sped up.</td>
+</tr>
+<tr>
+<td><span class="vocab">cross the finish line</span></td>
+<td>complete a race</td>
+<td>She crossed the finish line first.</td>
+</tr>
+<tr>
+<td><span class="vocab">shake hands</span></td>
+<td>greet or congratulate by gripping hands</td>
+<td>The players shook hands.</td>
+</tr>
+<tr>
+<td><span class="vocab">athlete</span></td>
+<td>a person who competes in sports</td>
+<td>The athlete trains daily.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="travel-and-transportation">9 Travel and Transportation</h1>
 <p>Topics: a flight, a train, a road trip, a hotel, luggage, being
 lost.</p>
@@ -2805,7 +4395,7 @@ situation and the clue]. <span class="tpl">I think that</span>
 <h2 id="late-for-boarding">9.1 Late for Boarding</h2>
 <p>A traveller running through an airport as the final boarding call is
 announced. What will happen?</p>
-<h3 id="sample-37">Sample</h3>
+<h3 id="sample-57">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a man is
 sprinting through the airport with a suitcase, and the screen above him
 says “Final Call.” He’s sweating, and his face looks <span class="vocab">anxious</span>.</p>
@@ -2818,7 +4408,7 @@ relieved.</p>
 he will miss the flight. <span class="conn">In the end</span>, he’d need
 to <span class="vocab">rebook</span> another one, and next time, he will
 <span class="vocab">arrive early</span> to avoid the <span class="vocab">hassle</span>.</p>
-<h3 id="vocabulary-37">Vocabulary</h3>
+<h3 id="vocabulary-57">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2858,7 +4448,7 @@ to <span class="vocab">rebook</span> another one, and next time, he will
 <h2 id="road-trip-low-fuel">9.2 Road Trip, Low Fuel</h2>
 <p>A family on a road trip checking a map at a fork while the fuel light
 is on. Predict what will happen.</p>
-<h3 id="sample-38">Sample</h3>
+<h3 id="sample-58">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a family
 is parked at a fork in a country road, and the father is looking at a
 paper map. The dashboard shows that the <span class="vocab">fuel
@@ -2871,7 +4461,7 @@ directions.</p>
 the car might <span class="vocab">run out of gas</span>. <span class="conn">In the end</span>, I think they’ll reach their destination
 late but safe, and they’ll use a <span class="vocab">GPS</span> and
 check the fuel on their next road trip.</p>
-<h3 id="vocabulary-38">Vocabulary</h3>
+<h3 id="vocabulary-58">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2906,7 +4496,7 @@ check the fuel on their next road trip.</p>
 <h2 id="heavy-suitcase">9.3 Heavy Suitcase</h2>
 <p>A tourist with a heavy suitcase facing a long staircase. What do you
 think will happen?</p>
-<h3 id="sample-39">Sample</h3>
+<h3 id="sample-59">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a
 tourist is standing at the bottom of a long staircase in a train
 station, holding a very heavy suitcase. She’s looking up with a tired
@@ -2920,7 +4510,7 @@ to her platform.</p>
 drag it step by step, which will be <span class="vocab">exhausting</span>. <span class="conn">In the end</span>, I
 think she’ll learn to <span class="vocab">pack light</span> on her next
 trip, and she’ll look for a station with an <span class="vocab">elevator</span>.</p>
-<h3 id="vocabulary-39">Vocabulary</h3>
+<h3 id="vocabulary-59">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2955,7 +4545,7 @@ trip, and she’ll look for a station with an <span class="vocab">elevator</span
 <h2 id="full-train">9.4 Full Train</h2>
 <p>A group of tourists waiting at a station as a train arrives that is
 already full. Predict what happens.</p>
-<h3 id="sample-40">Sample</h3>
+<h3 id="sample-60">Sample</h3>
 <p><span class="tpl">Based on what I see in the picture</span>, a group
 of tourists with backpacks is standing on a platform, and a train is
 stopping in front of them. Through the windows, I can see that the train
@@ -2968,7 +4558,7 @@ train.</p>
 seats at the far end. <span class="conn">In the end</span>, I think
 they’ll wait for the next train, which will be less crowded, and they’ll
 learn to avoid <span class="vocab">rush hour</span>.</p>
-<h3 id="vocabulary-40">Vocabulary</h3>
+<h3 id="vocabulary-60">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2997,6 +4587,379 @@ learn to avoid <span class="vocab">rush hour</span>.</p>
 <td>rush hour</td>
 <td>the busiest travel time</td>
 <td>Rush hour starts at five.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="subway-station">9.5 Subway Station ⭐</h2>
+<p>A subway station where a pregnant woman and another woman with a
+stroller are waiting among the passengers. What do you think will happen
+next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9 and Oct
+8.</p>
+<h3 id="sample-61">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+station is busy, and a train is approaching. A pregnant woman is holding
+a pole and looks tired, and another woman is pushing a stroller toward
+the <span class="vocab">platform</span> edge.</p>
+<p><span class="tpl">I think that</span> the train will stop, and the
+doors will open. <span class="conn">As a result</span>, there will be a
+rush of people trying to <span class="verb">get on</span>. <span class="conn">After that</span>, a kind passenger will probably <span class="verb">make room for</span> the pregnant woman and offer her a
+seat, and someone else will help to <span class="vocab">lift</span> the
+stroller on board.</p>
+<p><span class="conn">Otherwise</span>, if the train is too full, the
+two women may decide to <span class="verb">wait for</span> the next one.
+<span class="conn">In the end</span>, I believe both of them will <span class="verb">get home</span> safely, grateful for the <span class="vocab">kindness</span> of strangers.</p>
+<h3 id="vocabulary-61">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get on</span></td>
+<td>enter a train or bus</td>
+<td>We got on at the first stop.</td>
+</tr>
+<tr>
+<td><span class="verb">make room for</span></td>
+<td>move to create space for</td>
+<td>Please make room for her.</td>
+</tr>
+<tr>
+<td><span class="verb">wait for</span></td>
+<td>stay until something arrives</td>
+<td>I’m waiting for the bus.</td>
+</tr>
+<tr>
+<td><span class="verb">get home</span></td>
+<td>arrive at one’s house</td>
+<td>I got home at nine.</td>
+</tr>
+<tr>
+<td><span class="vocab">lift</span></td>
+<td>raise</td>
+<td>He lifted the box.</td>
+</tr>
+<tr>
+<td><span class="vocab">kindness</span></td>
+<td>the quality of being kind</td>
+<td>Thank you for your kindness.</td>
+</tr>
+<tr>
+<td><span class="vocab">platform</span></td>
+<td>the raised area where passengers wait for a train</td>
+<td>Stand behind the yellow line on the platform.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="crowded-bus">9.6 Crowded Bus ⭐</h2>
+<p>A crowded bus where the driver is talking to a passenger, people are
+boarding, a parent is helping a child in a stroller, and someone is
+offering a seat to an elderly passenger. What do you think will happen
+next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-62">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the bus
+is <span class="vocab">packed</span>, and the driver is talking to a
+passenger at the front. A mother is trying to <span class="verb">fold
+up</span> her stroller, and a young man is standing to give his seat to
+an elderly woman.</p>
+<p><span class="tpl">I think that</span> the elderly woman will thank
+him and sit down. <span class="conn">As a result</span>, the driver will
+<span class="verb">pull away from</span> the stop. <span class="conn">After that</span>, the mother will finally squeeze into the
+<span class="vocab">aisle</span>, and other passengers will <span class="verb">shuffle along</span> to make space.</p>
+<p><span class="conn">Otherwise</span>, if the bus is too full, the
+driver may ask a few people to <span class="verb">get off</span> and
+wait for the next one. <span class="conn">In the end</span>, I think the
+ride will continue smoothly, and the passengers will <span class="verb">feel grateful for</span> the polite young man and the <span class="vocab">considerate</span> driver.</p>
+<h3 id="vocabulary-62">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">fold up</span></td>
+<td>make smaller by folding</td>
+<td>She folded up the stroller.</td>
+</tr>
+<tr>
+<td><span class="verb">pull away from</span></td>
+<td>start moving away from</td>
+<td>The bus pulled away from the stop.</td>
+</tr>
+<tr>
+<td><span class="verb">shuffle along</span></td>
+<td>move slowly with small steps</td>
+<td>People shuffled along the aisle.</td>
+</tr>
+<tr>
+<td><span class="verb">get off</span></td>
+<td>leave a bus or train</td>
+<td>I got off at Main Street.</td>
+</tr>
+<tr>
+<td><span class="verb">feel grateful for</span></td>
+<td>be thankful for</td>
+<td>I feel grateful for your help.</td>
+</tr>
+<tr>
+<td><span class="vocab">considerate</span></td>
+<td>thoughtful about others</td>
+<td>A considerate neighbour.</td>
+</tr>
+<tr>
+<td><span class="vocab">packed</span></td>
+<td>completely full</td>
+<td>The stadium was packed.</td>
+</tr>
+<tr>
+<td><span class="vocab">aisle</span></td>
+<td>the narrow path between seats</td>
+<td>Stay in the aisle.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aeroplane-cabin">9.7 Aeroplane Cabin ⭐</h2>
+<p>Inside an aeroplane with a blue theme and many teenagers, one lifting
+a dumbbell, one listening to music, one eating a snack, and a flight
+attendant serving. What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4
+(several reports).</p>
+<h3 id="sample-63">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, the
+plane is full, and a teenager is lifting a small <span class="vocab">dumbbell</span> in his seat. A <span class="vocab">flight
+attendant</span> is pushing a cart down the narrow aisle and getting
+closer to him.</p>
+<p><span class="tpl">I think that</span> the dumbbell will hit the cart
+or slip out of his hand. <span class="conn">As a result</span>, the
+flight attendant will ask him politely to <span class="verb">put it
+away</span>. <span class="conn">After that</span>, the teen will feel a
+bit embarrassed and <span class="verb">turn his attention to</span> a
+movie, while the girl with headphones keeps <span class="verb">nodding
+along</span> to her music.</p>
+<p><span class="conn">Otherwise</span>, if the attendant doesn’t notice,
+she will continue serving drinks and snacks. <span class="conn">In the
+end</span>, I believe the passengers will <span class="verb">doze
+off</span> as the plane flies through the night, and the cabin will
+become <span class="vocab">calm</span> and dark.</p>
+<h3 id="vocabulary-63">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">put away</span></td>
+<td>place in its proper place</td>
+<td>Put away your phone.</td>
+</tr>
+<tr>
+<td><span class="verb">turn attention to</span></td>
+<td>start to focus on</td>
+<td>She turned her attention to the book.</td>
+</tr>
+<tr>
+<td><span class="verb">nod along</span></td>
+<td>move the head to the beat</td>
+<td>He nodded along to the song.</td>
+</tr>
+<tr>
+<td><span class="verb">doze off</span></td>
+<td>fall asleep lightly</td>
+<td>I dozed off on the train.</td>
+</tr>
+<tr>
+<td><span class="vocab">calm</span></td>
+<td>quiet and peaceful</td>
+<td>The sea was calm.</td>
+</tr>
+<tr>
+<td><span class="vocab">dumbbell</span></td>
+<td>a short weight used for exercise</td>
+<td>He lifted a dumbbell.</td>
+</tr>
+<tr>
+<td><span class="vocab">flight attendant</span></td>
+<td>a person who serves passengers on a plane</td>
+<td>The flight attendant offered coffee.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pyramids-of-egypt-with-camels">9.8 Pyramids of Egypt With Camels
+⭐</h2>
+<p>The Pyramids of Egypt with several camels and tourists: some riding
+camels, some eating, and others sandboarding on the dunes. What do you
+think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports).</p>
+<h3 id="sample-64">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, tourists
+are enjoying the desert in different ways. Some are riding camels toward
+the pyramids, a family is having lunch, and two teenagers are climbing a
+<span class="vocab">dune</span> with sandboards.</p>
+<p><span class="tpl">I think that</span> the teenagers will <span class="verb">slide down</span> the dune at high speed. <span class="conn">As a result</span>, they will <span class="verb">kick
+up</span> clouds of sand, and they might fall off their boards and roll
+in the sand, laughing. <span class="conn">After that</span>, the camel
+riders will <span class="verb">pose for</span> photos in front of the
+pyramids.</p>
+<p><span class="conn">Otherwise</span>, if the wind picks up, everyone
+will <span class="verb">cover up</span> and move to the shade. <span class="conn">In the end</span>, the tourists will <span class="verb">wrap up</span> the day at sunset, tired but happy with
+their <span class="vocab">unforgettable</span> desert <span class="vocab">adventure</span>.</p>
+<h3 id="vocabulary-64">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">slide down</span></td>
+<td>move smoothly downward</td>
+<td>They slid down the dune.</td>
+</tr>
+<tr>
+<td><span class="verb">kick up</span></td>
+<td>cause to rise into the air</td>
+<td>The wind kicked up sand.</td>
+</tr>
+<tr>
+<td><span class="verb">pose for</span></td>
+<td>stand still for a picture</td>
+<td>We posed for a photo.</td>
+</tr>
+<tr>
+<td><span class="verb">cover up</span></td>
+<td>protect with clothing</td>
+<td>Cover up from the sun.</td>
+</tr>
+<tr>
+<td><span class="verb">wrap up</span></td>
+<td>finish</td>
+<td>We wrapped up the tour.</td>
+</tr>
+<tr>
+<td><span class="vocab">unforgettable</span></td>
+<td>impossible to forget</td>
+<td>An unforgettable trip.</td>
+</tr>
+<tr>
+<td><span class="vocab">adventure</span></td>
+<td>an exciting experience</td>
+<td>It was a big adventure.</td>
+</tr>
+<tr>
+<td><span class="vocab">dune</span></td>
+<td>a hill of sand</td>
+<td>We climbed the dune.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="great-wall-of-china">9.9 Great Wall of China ⭐</h2>
+<p>The Great Wall of China with tourists doing different activities.
+What do you think will happen next?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-65">Sample</h3>
+<p><span class="tpl">Based on what I see in the picture</span>, a large
+group of tourists is walking along the Great Wall. Some are taking
+photos, an older couple is resting on a step, and a few children are
+running ahead of their parents.</p>
+<p><span class="tpl">I think that</span> the children will run too far,
+and their parents will <span class="verb">call them back</span>. <span class="conn">As a result</span>, the group will stop for a moment, and
+the guide will <span class="verb">point out</span> the history of the
+<span class="vocab">watchtower</span>. <span class="conn">After
+that</span>, the tourists will continue to <span class="verb">trek
+along</span> the wall and <span class="vocab">snap</span> lots of
+pictures of the mountains.</p>
+<p><span class="conn">Otherwise</span>, if the weather turns misty, they
+may need to <span class="verb">turn back</span>. <span class="conn">In
+the end</span>, I think the visitors will head to the exit with <span class="vocab">amazing</span> memories.</p>
+<h3 id="vocabulary-65">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">call back</span></td>
+<td>ask someone to return</td>
+<td>She called her son back.</td>
+</tr>
+<tr>
+<td><span class="verb">point out</span></td>
+<td>draw attention to</td>
+<td>The guide pointed out the castle.</td>
+</tr>
+<tr>
+<td><span class="verb">trek along</span></td>
+<td>walk a long distance along</td>
+<td>We trekked along the river.</td>
+</tr>
+<tr>
+<td><span class="verb">turn back</span></td>
+<td>return the way you came</td>
+<td>We turned back because of the storm.</td>
+</tr>
+<tr>
+<td><span class="vocab">snap</span></td>
+<td>take a quick photo</td>
+<td>He snapped a picture.</td>
+</tr>
+<tr>
+<td><span class="vocab">amazing</span></td>
+<td>extremely good or surprising</td>
+<td>An amazing view.</td>
+</tr>
+<tr>
+<td><span class="vocab">watchtower</span></td>
+<td>a tall tower used to look out</td>
+<td>The watchtower overlooks the valley.</td>
 </tr>
 </tbody>
 </table>
@@ -3062,7 +5025,25 @@ learn to avoid <span class="vocab">rush hour</span>.</p>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -3074,6 +5055,18 @@ learn to avoid <span class="vocab">rush hour</span>.</p>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
@@ -3275,5 +5268,557 @@ learn to avoid <span class="vocab">rush hour</span>.</p>
   });
 })();
 </script>
+<!-- _doc-audio-panel -->
+<!-- Voice panel for generated HTML documents. Baked into the files (like the read check-marks) and
+     re-injected by the app when it serves them, so it works opened from the app, from a local file or
+     from Hugging Face. With the app running, recordings are saved in the app folder; without it they
+     are saved in this browser (IndexedDB) and can be exported / imported. Edit THIS file, then run
+     bake_audio_panel.py to refresh the copies inside the HTML files. -->
+<style>
+#_aud-rec-toggle, #_aud-io { position: fixed; top: 12px; z-index: 200; width: 34px; height: 34px;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font-size: 1.05em; cursor: pointer; box-shadow: var(--shadow, none);
+  display: flex; align-items: center; justify-content: center; }
+#_aud-rec-toggle { left: 96px; } #_aud-io { left: 138px; }
+#_aud-rec-toggle:hover, #_aud-io:hover { border-color: var(--accent, #e08a5f); }
+#_aud-rec-toggle.live { background: #b91c1c; border-color: #ef4444; color: #fff; }
+#_aud-src { position: fixed; top: 12px; left: 180px; z-index: 200; height: 34px; padding: 0 10px; display: none;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font: 0.8em sans-serif; cursor: pointer; box-shadow: var(--shadow, none); }
+#_aud-src:hover { border-color: var(--accent, #e08a5f); }
+#_aud-hud, #_aud-menu { position: fixed; top: 54px; left: 12px; z-index: 200; display: none; width: 300px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border, #3e3d3a);
+  background: var(--bg-elevated, #30302e); color: var(--text, #f0efe9);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.4 sans-serif; }
+#_aud-hud { border-color: #ef4444; }
+#_aud-hud .lbl { font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#_aud-hud .tm.live { color: #ef4444; font-weight: 600; }
+#_aud-hud .row, #_aud-menu .row, #_aud-bar { display: flex; gap: 6px; align-items: center; }
+#_aud-hud .row, #_aud-menu .row { margin-top: 6px; flex-wrap: wrap; }
+#_aud-menu .hint { color: var(--text-muted, #a8a6a0); font-size: .92em; }
+#_aud-bar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 200;
+  width: min(820px, 96vw); display: none; padding: 6px 10px; border-radius: 12px;
+  border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.3 sans-serif; }
+#_aud-bar input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent, #e08a5f); }
+#_aud-bar .tt { font-variant-numeric: tabular-nums; color: var(--text-muted, #a8a6a0); white-space: nowrap; }
+#_aud-toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 210; display: none;
+  padding: 4px 12px; border-radius: 8px; background: var(--bg-elevated, #30302e); color: var(--accent, #e08a5f);
+  border: 1px solid var(--border, #3e3d3a); font: 0.85em sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+#_aud-hud button, #_aud-menu button, #_aud-bar button, #_aud-bar select { padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 1em; border: 1px solid var(--border, #3e3d3a); background: transparent;
+  color: var(--text, #f0efe9); }
+#_aud-bar select option { background: var(--bg-elevated, #30302e); }
+#_aud-hud button:hover, #_aud-menu button:hover, #_aud-bar button:hover, #_aud-bar button.on {
+  border-color: var(--accent, #e08a5f); color: var(--accent, #e08a5f); }
+#_aud-bar button { white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+._aud-hrec { margin-right: 8px; padding: 0 6px; font-size: 0.55em; line-height: 1.7; vertical-align: middle;
+  border-radius: 6px; cursor: pointer; opacity: .5; border: 1px solid var(--border, #3e3d3a);
+  background: transparent; color: var(--text, #f0efe9); }
+._aud-hrec:hover { opacity: 1; border-color: var(--accent, #e08a5f); }
+._aud-hrec.has { opacity: 1; border-color: #ef4444; background: #ef4444; color: #fff; }
+._aud-hrec.live { opacity: 1; border-color: #ef4444; background: #b91c1c; color: #fff; }
+a._aud-has::after { content: ' \1F50A'; font-size: .8em; }
+a._aud-now { color: var(--accent, #e08a5f) !important; font-weight: 700; }
+@media print { #_aud-src, #_aud-rec-toggle, #_aud-io, #_aud-hud, #_aud-menu, #_aud-bar, #_aud-toast, ._aud-hrec { display: none !important; } }
+</style>
+<script>
+(function () {
+  if (window.__audPanel) return;
+  if (!window.MediaRecorder || !window.indexedDB || !window.fetch || !window.Promise) return;  /* e.g. wkhtmltopdf */
+  window.__audPanel = true;
+  const docKey = decodeURIComponent(location.pathname);
+  const docName = docKey.split('/').pop().replace(/\.html?$/i, '');
+  let speed = 2;  /* same default as the library player */
+  try { speed = parseFloat(localStorage.getItem('_aud_speed')) || 2; } catch (e) {}
+
+  /* ── Sections of the document: TOC order, heading element per id ── */
+  const clean = el => { const c = el.cloneNode(true); c.querySelectorAll('._aud-hrec').forEach(n => n.remove());
+    return c.textContent.replace(/\s+/g, ' ').trim(); };
+  const tocAnchors = () => Array.from(document.querySelectorAll('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]'));
+  const idOf = a => decodeURIComponent((a.getAttribute('href') || '').slice(1));
+  const heads = [];
+  (function () {
+    const seen = new Set();
+    const add = id => {
+      const t = id && document.getElementById(id);
+      if (!t || seen.has(id)) return;
+      const h = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (!h || h.closest('#TOC') || h.closest('#_toc-sidebar')) return;
+      seen.add(id); heads.push({ id: id, el: h, title: clean(h) });
+    };
+    tocAnchors().forEach(a => add(idOf(a)));
+    if (!heads.length) document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => add(h.id));
+  })();
+  if (!heads.length) return;
+  const titleOf = id => (heads.find(h => h.id === id) || {}).title || id;
+  const headPos = id => heads.findIndex(h => h.id === id);
+
+  /* The active section = last heading scrolled to the top area of the screen. */
+  function activeId() {
+    let cur = heads[0];
+    for (const h of heads) { if (h.el.getBoundingClientRect().top <= 90) cur = h; else break; }
+    return cur.id;
+  }
+
+  /* ── Storage: the app (when it is running) or this browser (IndexedDB) ── */
+  let mode = 'local';   /* 'api' = the app saves recordings in the library folder; 'local' = this browser */
+  const apiInfo = async () => {
+    const r = await fetch('/api/library/get-audio?html_url=' + encodeURIComponent(docKey));
+    if (!r.ok) throw new Error('no app');
+    const d = await r.json();
+    if (!d || typeof d.has_audio === 'undefined') throw new Error('no app');
+    return d;
+  };
+  const idb = (function () {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('_doc_voice', 1);
+      r.onupgradeneeded = () => { r.result.createObjectStore('clips', { keyPath: 'k' }).createIndex('doc', 'doc'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+    const run = (access, fn) => open().then(db => new Promise((res, rej) => {
+      const t = db.transaction('clips', access), req = fn(t.objectStore('clips'));
+      t.oncomplete = () => res(req.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    return {
+      all: doc => run('readonly', s => s.index('doc').getAll(doc)),
+      put: c => run('readwrite', s => s.put(c)),
+      del: k => run('readwrite', s => s.delete(k)),
+    };
+  })();
+  const clipKey = id => docKey + '||' + id;
+
+  /* ── UI ── */
+  const recToggle = document.createElement('button');
+  recToggle.id = '_aud-rec-toggle'; recToggle.textContent = '🎙';
+  recToggle.title = 'Record my voice for the section I am reading';
+  const ioBtn = document.createElement('button');
+  ioBtn.id = '_aud-io'; ioBtn.textContent = '💾'; ioBtn.title = 'Where my recordings are saved / export / import';
+  const srcBtn = document.createElement('button');
+  srcBtn.id = '_aud-src';
+  const hud = document.createElement('div');
+  hud.id = '_aud-hud';
+  hud.innerHTML = '<div class="lbl"></div><div class="tm"></div><div class="row">' +
+    '<button data-a="pause">⏸ Pause</button><button data-a="save">⏹ Stop &amp; save</button>' +
+    '<button data-a="cancel">Cancel</button></div>';
+  const menu = document.createElement('div');
+  menu.id = '_aud-menu';
+  menu.innerHTML = '<div class="hint" id="_aud-where"></div><div class="row">' +
+    '<button data-a="export">⬇ Export recordings</button><button data-a="import">⬆ Import recordings…</button></div>' +
+    '<input type="file" accept=".voicebundle" style="display:none">';
+  const bar = document.createElement('div');
+  bar.id = '_aud-bar';
+  bar.innerHTML = '<button id="_aud-all">▶ Full audio</button>' +
+    '<button id="_aud-sec" title="Play only the section I am reading">▶ This section</button>' +
+    '<button id="_aud-follow" title="Jump the audio to the section I scroll to">⇣ Follow</button>' +
+    '<input type="range" min="0" max="1000" value="0" step="1"><span class="tt">0:00 / 0:00</span>' +
+    '<select title="Speed"></select><audio preload="none" style="display:none"></audio>';
+  const toast = document.createElement('div');
+  toast.id = '_aud-toast';
+  document.body.append(recToggle, ioBtn, srcBtn, hud, menu, bar, toast);
+  const player = bar.querySelector('audio'), allBtn = bar.querySelector('#_aud-all'),
+        secBtn = bar.querySelector('#_aud-sec'), followBtn = bar.querySelector('#_aud-follow'),
+        slider = bar.querySelector('input[type=range]'), timeLbl = bar.querySelector('.tt'),
+        speedSel = bar.querySelector('select'), fileIn = menu.querySelector('input[type=file]');
+  [1, 1.25, 1.5, 2].forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s + '×'; speedSel.appendChild(o);
+  });
+  speedSel.value = speed;
+  function flash(t) { toast.textContent = t; toast.style.display = 'block'; clearTimeout(flash.t);
+    flash.t = setTimeout(() => { toast.style.display = 'none'; }, 2800); }
+  const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  /* ── State ── */
+  let clips = [];   /* my recordings, in play order: {id, src, off, dur, vStart} (seconds) */
+  let blobUrls = [];
+  let hasApp = false, appUrl = null, hasMine = false, mineUrl = null;
+  let source = 'mine', pick = null;   /* 'mine' = my own recordings (default when they exist), 'app' = the document's app audio */
+  let follow = true, lastActive = null, curIdx = -1, cont = false, dragging = false;
+  const isMine = () => source === 'mine';
+  const idxOf = id => clips.findIndex(c => c.id === id);
+  const hasClip = id => idxOf(id) >= 0;
+
+  function applySpeed() {
+    player.playbackRate = speed;
+    player.preservesPitch = true; player.mozPreservesPitch = true; player.webkitPreservesPitch = true;
+  }
+  speedSel.addEventListener('change', () => {
+    speed = parseFloat(speedSel.value);
+    try { localStorage.setItem('_aud_speed', String(speed)); } catch (e) {}
+    applySpeed();
+  });
+  player.addEventListener('loadedmetadata', applySpeed);
+  player.addEventListener('play', applySpeed);
+
+  /* ── Playback engine ── */
+  /* Recorded blobs have no length in their header; this makes the browser work it out. */
+  function whenReady(then) {
+    if (player.duration === Infinity) {
+      const back = () => { player.removeEventListener('timeupdate', back); player.currentTime = 0; then(); };
+      player.addEventListener('timeupdate', back);
+      player.currentTime = 1e101;
+    } else then();
+  }
+  function setSrc(src, then) {
+    if (player.dataset.s === src) {
+      if (player.readyState >= 1) then(); else player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+      return;
+    }
+    player.dataset.s = src; player.src = src;
+    player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+    player.load();
+  }
+  /* Start (or just cue) my clip i at `offset` seconds into it. cnt = keep going into the next clips afterwards. */
+  function cue(i, offset, play, cnt) {
+    const c = clips[i]; if (!c) return;
+    curIdx = i; cont = cnt;
+    setSrc(c.src, () => {
+      player.currentTime = c.off + offset; applySpeed();
+      if (play) player.play().catch(() => {});
+      updateSlider();
+    });
+  }
+  function vTime() {
+    if (!isMine()) return player.currentTime || 0;
+    const c = clips[curIdx];
+    return c ? c.vStart + Math.max(0, Math.min(c.dur, player.currentTime - c.off)) : 0;
+  }
+  function vTotal() {
+    if (!isMine()) return isFinite(player.duration) ? player.duration : 0;
+    const l = clips[clips.length - 1]; return l ? l.vStart + l.dur : 0;
+  }
+  function updateSlider() {
+    const tot = vTotal(), v = vTime();
+    if (!dragging) slider.value = tot ? Math.round(1000 * v / tot) : 0;
+    timeLbl.textContent = fmt(v * 1000) + ' / ' + fmt(tot * 1000);
+  }
+  function clipAt(v) {   /* my clip containing virtual time v */
+    let i = clips.length - 1;
+    for (let k = 0; k < clips.length; k++) if (v < clips[k].vStart + clips[k].dur) { i = k; break; }
+    return i;
+  }
+  /* A clip finished: carry on with the next one, or stop. */
+  function clipEnded() {
+    if (!isMine()) return;
+    if (cont && curIdx + 1 < clips.length) cue(curIdx + 1, 0, true, true);
+    else { player.pause(); cont = false; }
+  }
+  player.addEventListener('ended', clipEnded);
+  player.addEventListener('timeupdate', () => {
+    const t = player.currentTime;
+    if (isMine() && mode === 'api' && clips.length) {
+      /* One shared file: follow the clock to know which clip is playing, stop at a section's end. */
+      const j = clips.findIndex(x => t >= x.off - 0.02 && t < x.off + x.dur);
+      if (j >= 0) curIdx = j;
+      const c = clips[curIdx];
+      if (c && !cont && !player.paused && t >= c.off + c.dur - 0.04) player.pause();
+    }
+    updateSlider();
+    const cur = isMine() && clips[curIdx] && !player.paused ? clips[curIdx].id : null;
+    tocAnchors().forEach(a => a.classList.toggle('_aud-now', !!cur && idOf(a) === cur));
+  });
+  slider.addEventListener('input', () => {
+    dragging = true;
+    const tot = vTotal(); timeLbl.textContent = fmt(slider.value / 1000 * tot * 1000) + ' / ' + fmt(tot * 1000);
+  });
+  slider.addEventListener('change', () => {
+    dragging = false;
+    const tot = vTotal(), v = slider.value / 1000 * tot, playing = !player.paused;
+    if (!isMine()) { player.currentTime = v; return; }
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), playing, true);   /* moving the bar by hand lifts any section-only limit */
+  });
+  allBtn.addEventListener('click', () => {
+    if (!player.paused && cont) { player.pause(); return; }
+    if (!isMine()) { player.play().catch(() => {}); return; }
+    let v = vTime(); const tot = vTotal();
+    if (v >= tot - 0.2) v = 0;
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), true, true);
+  });
+  secBtn.addEventListener('click', () => {
+    const id = activeId(), i = idxOf(id);
+    if (!isMine()) { flash('Sections only work with my recordings'); return; }
+    if (i < 0) { flash('No recording for "' + titleOf(id).slice(0, 40) + '" yet'); return; }
+    if (!player.paused && !cont && curIdx === i) { player.pause(); return; }
+    cue(i, 0, true, false);
+  });
+  function labelSecBtn() {
+    const id = activeId();
+    secBtn.textContent = '▶ ' + titleOf(id);
+    secBtn.classList.toggle('on', isMine() && hasClip(id));
+    secBtn.style.opacity = isMine() && hasClip(id) ? '1' : '.55';
+  }
+  /* Follow: when the section I am reading changes, the audio moves to it. */
+  function followScroll() {
+    const id = activeId();
+    if (id === lastActive) return;
+    lastActive = id;
+    const i = idxOf(id);
+    if (!follow || !isMine() || i < 0 || !bar.style.display || bar.style.display === 'none') return;
+    cue(i, 0, !player.paused, true);   /* playing: jump and keep going; paused: just cue it */
+  }
+  followBtn.classList.add('on');
+  followBtn.addEventListener('click', () => {
+    follow = !follow; followBtn.classList.toggle('on', follow);
+    flash(follow ? 'Audio will follow the section you scroll to' : 'Follow is off');
+  });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { ticking = false; labelSecBtn(); followScroll(); });
+  }, { passive: true });
+  /* Clicking a Contents item: the page scrolls as usual AND the audio jumps to that section. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]');
+    const i = a && isMine() ? idxOf(idOf(a)) : -1;
+    if (i >= 0) cue(i, 0, true, true);
+  });
+
+  /* ── Heading buttons (beside the read check-mark) ── */
+  heads.forEach(h => {
+    const b = document.createElement('button');
+    b.className = '_aud-hrec'; b.dataset.id = h.id; b.textContent = '🎙';
+    b.addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); onHeadingButton(h.id); });
+    h.el.insertBefore(b, h.el.firstChild);
+  });
+  function markButtons() {
+    document.querySelectorAll('._aud-hrec').forEach(b => {
+      const id = b.dataset.id, live = rec && target === id;
+      b.classList.toggle('live', !!live);
+      b.classList.toggle('has', !live && hasClip(id));
+      b.textContent = live ? '⏹' : '🎙';
+      b.title = live ? 'Stop & save this recording'
+        : hasClip(id) ? 'Recorded — click to remove this recording' : 'Record my voice for this section';
+    });
+    tocAnchors().forEach(a => a.classList.toggle('_aud-has', hasClip(idOf(a))));
+    labelSecBtn();
+  }
+
+  /* ── Loading what exists ── */
+  async function probeAppAudio() {   /* the document's own audio, if it sits next to the HTML on a web server */
+    if (!/^https?:$/.test(location.protocol)) return null;
+    const raw = location.pathname.split('/'), file = raw.pop(), base = decodeURIComponent(file).replace(/\.html?$/i, '');
+    const dirs = [raw.join('/')];
+    if (decodeURIComponent(raw[raw.length - 1] || '') === 'HTML') dirs.push(raw.slice(0, -1).join('/'));
+    const cands = [];
+    dirs.forEach(d => ['m4a', 'mp3', 'wav', 'ogg', 'aac', 'flac', 'mp4', 'webm'].forEach(x =>
+      cands.push(d + '/' + encodeURIComponent(base) + '.' + x)));
+    const hits = await Promise.all(cands.map(u => fetch(u, { method: 'HEAD' }).then(r => {
+      const ct = r.headers.get('content-type') || '';
+      return r.ok && !/text\/html/i.test(ct) ? u : null;
+    }).catch(() => null)));
+    return hits.find(Boolean) || null;
+  }
+  let probed = false, ready = Promise.resolve();
+  /* Every action waits for the latest refresh, so nothing runs before we know whether the app is there. */
+  function refresh() { ready = doRefresh(); return ready; }
+  async function doRefresh() {
+    blobUrls.forEach(u => URL.revokeObjectURL(u)); blobUrls = [];
+    try {
+      const d = await apiInfo();
+      mode = 'api';
+      hasApp = !!d.has_audio; appUrl = d.url || null;
+      hasMine = !!d.my_voice; mineUrl = d.my_url || null;
+      const S = d.sections || {}, stamp = (mineUrl && mineUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      clips = Object.keys(S).map(id => ({ id: id, src: mineUrl + stamp, off: S[id].start,
+        dur: S[id].end - S[id].start, vStart: S[id].start })).sort((a, b) => a.off - b.off);
+      if (!hasMine) clips = [];
+    } catch (e) {
+      mode = 'local';
+      if (!probed) { probed = true; try { appUrl = await probeAppAudio(); } catch (er) { appUrl = null; } }
+      hasApp = !!appUrl;
+      let rows = [];
+      try { rows = await idb.all(docKey); } catch (er) { flash('Browser storage is not available here'); }
+      const byId = new Map(rows.map(r => [r.id, r]));
+      let v = 0; clips = [];
+      heads.forEach(h => {
+        const r = byId.get(h.id); if (!r) return;
+        const u = URL.createObjectURL(r.blob); blobUrls.push(u);
+        clips.push({ id: h.id, src: u, off: 0, dur: r.dur, vStart: v }); v += r.dur;
+      });
+      hasMine = clips.length > 0;
+    }
+    if ((pick === 'mine' && !hasMine) || (pick === 'app' && !hasApp)) pick = null;
+    source = pick || (hasMine ? 'mine' : 'app');   /* my own voice wins by default */
+    loadSource();
+  }
+  function loadSource() {
+    player.pause(); player.removeAttribute('src'); player.dataset.s = ''; curIdx = -1; cont = false;
+    const available = isMine() ? hasMine : hasApp;
+    if (!available) { bar.style.display = 'none'; document.body.style.paddingBottom = ''; }
+    else {
+      bar.style.display = 'flex'; document.body.style.paddingBottom = '64px';
+      if (!isMine()) { player.dataset.s = appUrl; player.src = appUrl + (appUrl.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+    }
+    srcBtn.style.display = hasApp && hasMine ? 'block' : 'none';
+    srcBtn.textContent = isMine() ? '🎙 My voice' : '🔈 App voice';
+    srcBtn.title = isMine() ? "Playing my own recordings. Click to play the app's audio instead"
+                            : "Playing the app's audio. Click to play my own recordings instead";
+    allBtn.title = isMine() ? 'Play all my recordings from the start' : 'Play the app audio from the start';
+    followBtn.style.display = isMine() ? '' : 'none';
+    updateSlider(); markButtons();
+  }
+  srcBtn.addEventListener('click', () => { pick = isMine() ? 'app' : 'mine'; source = pick; loadSource(); });
+  player.addEventListener('loadedmetadata', updateSlider);
+
+  /* ── Removing ── */
+  async function removeSection(id) {
+    await ready;
+    if (!confirm('Remove your recording for "' + titleOf(id) + '"?')) return;
+    let ok = true, err = '';
+    if (mode === 'api') {
+      try {
+        const d = await (await fetch('/api/library/delete-section', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html_url: docKey, section_id: id }) })).json();
+        ok = !!d.success; err = d.error || '';
+      } catch (e) { ok = false; err = 'Network error'; }
+    } else {
+      try { await idb.del(clipKey(id)); } catch (e) { ok = false; err = 'Browser storage error'; }
+    }
+    flash(ok ? 'Recording removed' : (err || 'Could not remove'));
+    refresh();
+  }
+
+  /* ── Recording ── */
+  let stream = null, rec = null, chunks = [], t0 = 0, acc = 0, timer = null, target = null;
+  const lbl = hud.querySelector('.lbl'), tm = hud.querySelector('.tm'), pauseBtn = hud.querySelector('[data-a=pause]');
+  function tick() {
+    const paused = rec && rec.state === 'paused';
+    tm.textContent = (paused ? 'Paused ' : '● Recording ') + fmt(acc + (rec && !paused ? Date.now() - t0 : 0));
+    tm.classList.toggle('live', !paused);
+  }
+  function release() {
+    clearInterval(timer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = rec = target = null; chunks = []; acc = 0;
+    hud.style.display = 'none'; recToggle.classList.remove('live'); recToggle.textContent = '🎙';
+    markButtons();
+  }
+  async function startRecording(id) {
+    if (rec) return;
+    await ready;
+    if (rec) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { flash('Recording is not supported here'); return; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false, noiseSuppression: false, autoGainControl: false, sampleRate: 48000 } });
+    } catch (e) { flash('Microphone blocked: ' + e.message); return; }
+    player.pause();
+    target = id;
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : undefined);
+    rec.addEventListener('dataavailable', e => { if (e.data && e.data.size) chunks.push(e.data); });
+    rec.start(); t0 = Date.now(); acc = 0;
+    lbl.textContent = (hasClip(id) ? 'Re-recording: ' : 'Recording: ') + titleOf(id);
+    pauseBtn.textContent = '⏸ Pause';
+    hud.style.display = 'block'; recToggle.classList.add('live'); recToggle.textContent = '⏹';
+    timer = setInterval(tick, 200); tick(); markButtons();
+  }
+  async function stopAndSave() {
+    if (!rec) return;
+    const id = target, ms = acc + (rec.state === 'recording' ? Date.now() - t0 : 0);
+    const stopped = new Promise(res => rec.addEventListener('stop', res, { once: true }));
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: (rec && rec.mimeType) || 'audio/webm' });
+    clearInterval(timer); tm.classList.remove('live'); tm.textContent = 'Saving…';
+    let ok = false, err = '';
+    if (mode === 'api') {
+      const fd = new FormData();
+      fd.append('html_url', docKey); fd.append('section_id', id); fd.append('file', blob, 'recording.webm');
+      try { const d = await (await fetch('/api/library/record-section', { method: 'POST', body: fd })).json();
+        ok = !!d.success; err = d.error || ''; }
+      catch (e) { err = 'Network error while saving'; }
+    } else {
+      try { await idb.put({ k: clipKey(id), doc: docKey, id: id, blob: blob, dur: ms / 1000, ts: Date.now() }); ok = true; }
+      catch (e) { err = 'Browser storage error: ' + (e && e.message || e); }
+    }
+    release();
+    flash(ok ? (mode === 'api' ? 'Saved ✔' : 'Saved in this browser ✔ — use 💾 to export a backup') : (err || 'Save failed'));
+    if (ok) pick = 'mine';
+    refresh();
+  }
+  function onHeadingButton(id) {
+    if (rec) { if (target === id) stopAndSave(); else flash('Finish the current recording first'); return; }
+    if (hasClip(id)) removeSection(id); else startRecording(id);
+  }
+  recToggle.addEventListener('click', () => { if (rec) stopAndSave(); else startRecording(activeId()); });
+  hud.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'save') stopAndSave();
+    else if (a === 'cancel') { if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (er) {} } release(); }
+    else if (a === 'pause' && rec) {
+      if (rec.state === 'recording') { rec.pause(); acc += Date.now() - t0; pauseBtn.textContent = '▶ Resume'; }
+      else if (rec.state === 'paused') { rec.resume(); t0 = Date.now(); pauseBtn.textContent = '⏸ Pause'; }
+      tick();
+    }
+  });
+
+  /* ── Export / import (a .voicebundle: "MYVOICE1", 4-byte header length, JSON header, then the clips) ── */
+  function menuText() {
+    menu.querySelector('#_aud-where').textContent = mode === 'api'
+      ? 'Recordings are saved in the app folder next to this document. Import brings in a backup exported from a browser.'
+      : 'No app here: recordings are kept in this browser only (like the ✓ marks) and are lost if its data is cleared. Export a backup file; open the document in the app and use Import to move it into your library.';
+    menu.querySelector('[data-a=export]').style.display = mode === 'local' && hasMine ? '' : 'none';
+  }
+  ioBtn.addEventListener('click', () => {
+    menuText(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+  async function exportBundle() {
+    let rows = [];
+    try { rows = await idb.all(docKey); } catch (e) {}
+    rows.sort((a, b) => headPos(a.id) - headPos(b.id));
+    if (!rows.length) { flash('Nothing to export'); return; }
+    const enc = new TextEncoder();
+    const head = enc.encode(JSON.stringify({ v: 1, doc: docKey, name: docName,
+      clips: rows.map(r => ({ id: r.id, dur: r.dur, size: r.blob.size, type: r.blob.type || 'audio/webm' })) }));
+    const len = new Uint8Array(4); new DataView(len.buffer).setUint32(0, head.length);
+    const out = new Blob([enc.encode('MYVOICE1'), len, head].concat(rows.map(r => r.blob)), { type: 'application/octet-stream' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out); a.download = docName + '.voicebundle';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    flash('Exported ' + rows.length + ' recording' + (rows.length > 1 ? 's' : ''));
+  }
+  async function parseBundle(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (new TextDecoder().decode(u8.slice(0, 8)) !== 'MYVOICE1') throw new Error('Not a voice bundle');
+    const hl = new DataView(buf).getUint32(8), head = JSON.parse(new TextDecoder().decode(u8.slice(12, 12 + hl)));
+    let pos = 12 + hl;
+    head.clips.forEach(c => { c.blob = new Blob([u8.slice(pos, pos + c.size)], { type: c.type }); pos += c.size; });
+    return head;
+  }
+  fileIn.addEventListener('change', async () => {
+    const f = fileIn.files[0]; fileIn.value = '';
+    if (!f) return;
+    await ready;
+    try {
+      const b = await parseBundle(f);
+      if (b.name && b.name !== docName && !confirm('This backup is from "' + b.name + '", not this document. Import anyway?')) return;
+      if (mode === 'api') {
+        flash('Importing…');
+        const fd = new FormData(); fd.append('html_url', docKey); fd.append('file', f, f.name);
+        const d = await (await fetch('/api/library/import-voice', { method: 'POST', body: fd })).json();
+        if (!d.success) throw new Error(d.error || 'Import failed');
+        flash('Imported ' + d.imported + ' recording' + (d.imported === 1 ? '' : 's') + ' into the app');
+      } else {
+        for (const c of b.clips) await idb.put({ k: clipKey(c.id), doc: docKey, id: c.id, blob: c.blob, dur: c.dur, ts: Date.now() });
+        flash('Imported ' + b.clips.length + ' recording' + (b.clips.length === 1 ? '' : 's'));
+      }
+      pick = 'mine'; menu.style.display = 'none'; refresh();
+    } catch (e) { flash('Import failed: ' + (e && e.message || e)); }
+  });
+  menu.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'export') exportBundle(); else if (a === 'import') fileIn.click();
+  });
+
+  refresh();
+})();
+</script>
+<!-- /_doc-audio-panel -->
 </body>
 </html>

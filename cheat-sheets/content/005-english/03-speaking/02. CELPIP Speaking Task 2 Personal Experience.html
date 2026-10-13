@@ -38,10 +38,11 @@
   --tok-op:      #ff9d42;
   --tok-alert:   #ff5c5c;
   --tok-other:   #caa15a;
-  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} / {.verb} */
   --wt-tpl:      #4ade80;
   --wt-conn:     #22d3ee;
   --wt-vocab:    #ff7b72;
+  --wt-verb:     #ff79c6;
 }
 [data-theme="light"] {
   --bg-page:      #ffffff;
@@ -78,6 +79,7 @@
   --wt-tpl:      #15803d;
   --wt-conn:     #0e7490;
   --wt-vocab:    #b91c1c;
+  --wt-verb:     #db2777;
 }
 /* No prefers-color-scheme media query — dark is the default regardless
    of system preference; only an explicit [data-theme="light"] (set via
@@ -183,13 +185,15 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -347,6 +351,7 @@ html, body {
 #_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
 #_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
 #_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+#_main-content span.verb  { color: var(--wt-verb)  !important; font-weight: 600; }
 
 #_main-content table {
   width: 100%; border-collapse: collapse; margin: 18px 0;
@@ -428,6 +433,7 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content span.verb  { color: #db2777 !important; }
   #_main-content .read-toggle::before { display: none !important; }
 }
 
@@ -662,37 +668,99 @@ Nervous</a>
 <li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
 <li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
 </ul></li>
+<li><a href="#family-event-at-home" id="toc-family-event-at-home">1.6
+Family Event at Home ⭐</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#exciting-memory" id="toc-exciting-memory">1.7 Exciting
+Memory ⭐</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#trips-places-and-travel" id="toc-trips-places-and-travel">2 Trips, Places, and Travel</a>
 <ul>
 <li><a href="#general-template-1" id="toc-general-template-1">General
 Template</a></li>
-<li><a href="#memorable-trip" id="toc-memorable-trip">2.1 Memorable
-Trip</a>
-<ul>
-<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
-<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
-</ul></li>
-<li><a href="#a-place-to-revisit" id="toc-a-place-to-revisit">2.2 A
-Place to Revisit</a>
-<ul>
-<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
-<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
-</ul></li>
-<li><a href="#unexpected-travel-problem" id="toc-unexpected-travel-problem">2.3 Unexpected Travel Problem</a>
+<li><a href="#memorable-trip" id="toc-memorable-trip">2.1 Memorable Trip
+⭐</a>
 <ul>
 <li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
 <li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
 </ul></li>
-<li><a href="#day-trip" id="toc-day-trip">2.4 Day Trip</a>
+<li><a href="#a-place-to-revisit" id="toc-a-place-to-revisit">2.2 A
+Place to Revisit</a>
 <ul>
 <li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
 <li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
 </ul></li>
-<li><a href="#arriving-in-a-new-city" id="toc-arriving-in-a-new-city">2.5 Arriving in a New City</a>
+<li><a href="#visit-to-a-natural-place" id="toc-visit-to-a-natural-place">2.3 Visit to a Natural Place ⭐</a>
 <ul>
 <li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
 <li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#interesting-animal-or-plant" id="toc-interesting-animal-or-plant">2.4 Interesting Animal or Plant
+⭐</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#visiting-a-remote-place" id="toc-visiting-a-remote-place">2.5 Visiting a Remote Place ⭐</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unexpected-travel-problem" id="toc-unexpected-travel-problem">2.6 Unexpected Travel Problem</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unexpected-weather" id="toc-unexpected-weather">2.7
+Unexpected Weather ⭐</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#language-barrier" id="toc-language-barrier">2.8 Language
+Barrier ⭐</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#scary-animal-or-insect" id="toc-scary-animal-or-insect">2.9 Scary Animal or Insect ⭐</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#day-trip" id="toc-day-trip">2.10 Day Trip</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#day-out-with-a-friend" id="toc-day-out-with-a-friend">2.11
+Day Out With a Friend ⭐</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#arriving-in-a-new-city" id="toc-arriving-in-a-new-city">2.12 Arriving in a New City</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#first-visit-to-a-new-place" id="toc-first-visit-to-a-new-place">2.13 First Visit to a New Place
+⭐</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+<li><a href="#unusual-transportation" id="toc-unusual-transportation">2.14 Unusual Transportation ⭐</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#people-and-relationships" id="toc-people-and-relationships">3 People and Relationships</a>
@@ -702,31 +770,60 @@ Template</a></li>
 <li><a href="#influential-person" id="toc-influential-person">3.1
 Influential Person</a>
 <ul>
-<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
-<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
 </ul></li>
-<li><a href="#help-from-a-family-member" id="toc-help-from-a-family-member">3.2 Help From a Family Member</a>
+<li><a href="#interesting-person" id="toc-interesting-person">3.2
+Interesting Person ⭐</a>
 <ul>
-<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
-<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
 </ul></li>
-<li><a href="#memorable-teacher" id="toc-memorable-teacher">3.3
+<li><a href="#help-from-a-family-member" id="toc-help-from-a-family-member">3.3 Help From a Family Member</a>
+<ul>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+</ul></li>
+<li><a href="#memorable-teacher" id="toc-memorable-teacher">3.4
 Memorable Teacher</a>
 <ul>
-<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
-<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
 </ul></li>
-<li><a href="#meeting-a-friend" id="toc-meeting-a-friend">3.4 Meeting a
+<li><a href="#meeting-a-friend" id="toc-meeting-a-friend">3.5 Meeting a
 Friend</a>
 <ul>
-<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
-<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
 </ul></li>
-<li><a href="#helping-someone" id="toc-helping-someone">3.5 Helping
-Someone</a>
+<li><a href="#your-best-friend" id="toc-your-best-friend">3.6 Your Best
+Friend ⭐</a>
 <ul>
-<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
-<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#helping-someone" id="toc-helping-someone">3.7 Helping
+Someone ⭐</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+</ul></li>
+<li><a href="#offering-something-to-someone" id="toc-offering-something-to-someone">3.8 Offering Something to Someone
+⭐</a>
+<ul>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+</ul></li>
+<li><a href="#giving-advice-to-a-friend" id="toc-giving-advice-to-a-friend">3.9 Giving Advice to a Friend ⭐</a>
+<ul>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+</ul></li>
+<li><a href="#encouraging-message" id="toc-encouraging-message">3.10
+Encouraging Message ⭐</a>
+<ul>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#work-school-and-achievements" id="toc-work-school-and-achievements">4 Work, School, and
@@ -734,32 +831,43 @@ Achievements</a>
 <ul>
 <li><a href="#general-template-3" id="toc-general-template-3">General
 Template</a></li>
-<li><a href="#first-day" id="toc-first-day">4.1 First Day</a>
+<li><a href="#first-day" id="toc-first-day">4.1 First Day ⭐</a>
 <ul>
-<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
-<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
 </ul></li>
 <li><a href="#overcoming-a-challenge" id="toc-overcoming-a-challenge">4.2 Overcoming a Challenge</a>
 <ul>
-<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
-<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
 </ul></li>
 <li><a href="#learning-a-new-skill" id="toc-learning-a-new-skill">4.3
 Learning a New Skill</a>
 <ul>
-<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
-<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
 </ul></li>
 <li><a href="#proud-project" id="toc-proud-project">4.4 Proud
 Project</a>
 <ul>
-<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
-<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
 </ul></li>
 <li><a href="#learning-from-a-mistake" id="toc-learning-from-a-mistake">4.5 Learning From a Mistake</a>
 <ul>
-<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
-<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#physical-challenge" id="toc-physical-challenge">4.6
+Physical Challenge ⭐</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+</ul></li>
+<li><a href="#competition" id="toc-competition">4.7 Competition ⭐</a>
+<ul>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#childhood-traditions-and-memories" id="toc-childhood-traditions-and-memories">5 Childhood, Traditions, and
@@ -770,31 +878,31 @@ Template</a></li>
 <li><a href="#childhood-memory" id="toc-childhood-memory">5.1 Childhood
 Memory</a>
 <ul>
-<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
-<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
 </ul></li>
 <li><a href="#family-tradition" id="toc-family-tradition">5.2 Family
 Tradition</a>
 <ul>
-<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
-<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
 </ul></li>
 <li><a href="#childhood-place" id="toc-childhood-place">5.3 Childhood
 Place</a>
 <ul>
-<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
-<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
 </ul></li>
 <li><a href="#childhood-toy" id="toc-childhood-toy">5.4 Childhood
 Toy</a>
 <ul>
-<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
-<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
 </ul></li>
 <li><a href="#time-with-a-grandparent" id="toc-time-with-a-grandparent">5.5 Time With a Grandparent</a>
 <ul>
-<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
-<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#everyday-life-and-hobbies" id="toc-everyday-life-and-hobbies">6 Everyday Life and Hobbies</a>
@@ -804,31 +912,46 @@ Template</a></li>
 <li><a href="#meaningful-gift" id="toc-meaningful-gift">6.1 Meaningful
 Gift</a>
 <ul>
-<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
-<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
 </ul></li>
 <li><a href="#memorable-meal" id="toc-memorable-meal">6.2 Memorable
 Meal</a>
 <ul>
-<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
-<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
 </ul></li>
-<li><a href="#new-hobby" id="toc-new-hobby">6.3 New Hobby</a>
+<li><a href="#recommended-restaurant" id="toc-recommended-restaurant">6.3 Recommended Restaurant ⭐</a>
 <ul>
-<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
-<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
 </ul></li>
-<li><a href="#attending-an-event" id="toc-attending-an-event">6.4
+<li><a href="#new-hobby" id="toc-new-hobby">6.4 New Hobby</a>
+<ul>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
+</ul></li>
+<li><a href="#attending-an-event" id="toc-attending-an-event">6.5
 Attending an Event</a>
 <ul>
-<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
-<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
 </ul></li>
-<li><a href="#happy-purchase" id="toc-happy-purchase">6.5 Happy
+<li><a href="#winter-event-or-festival" id="toc-winter-event-or-festival">6.6 Winter Event or Festival ⭐</a>
+<ul>
+<li><a href="#sample-48" id="toc-sample-48">Sample</a></li>
+<li><a href="#vocabulary-48" id="toc-vocabulary-48">Vocabulary</a></li>
+</ul></li>
+<li><a href="#happy-purchase" id="toc-happy-purchase">6.7 Happy
 Purchase</a>
 <ul>
-<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
-<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+<li><a href="#sample-49" id="toc-sample-49">Sample</a></li>
+<li><a href="#vocabulary-49" id="toc-vocabulary-49">Vocabulary</a></li>
+</ul></li>
+<li><a href="#special-object-you-kept" id="toc-special-object-you-kept">6.8 Special Object You Kept ⭐</a>
+<ul>
+<li><a href="#sample-50" id="toc-sample-50">Sample</a></li>
+<li><a href="#vocabulary-50" id="toc-vocabulary-50">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#decisions-embarrassment-and-trying-new-things" id="toc-decisions-embarrassment-and-trying-new-things">7 Decisions,
@@ -839,31 +962,37 @@ Template</a></li>
 <li><a href="#difficult-decision" id="toc-difficult-decision">7.1
 Difficult Decision</a>
 <ul>
-<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
-<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+<li><a href="#sample-51" id="toc-sample-51">Sample</a></li>
+<li><a href="#vocabulary-51" id="toc-vocabulary-51">Vocabulary</a></li>
 </ul></li>
 <li><a href="#embarrassing-moment" id="toc-embarrassing-moment">7.2
 Embarrassing Moment</a>
 <ul>
-<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
-<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+<li><a href="#sample-52" id="toc-sample-52">Sample</a></li>
+<li><a href="#vocabulary-52" id="toc-vocabulary-52">Vocabulary</a></li>
 </ul></li>
 <li><a href="#trying-new-food" id="toc-trying-new-food">7.3 Trying New
 Food</a>
 <ul>
-<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
-<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+<li><a href="#sample-53" id="toc-sample-53">Sample</a></li>
+<li><a href="#vocabulary-53" id="toc-vocabulary-53">Vocabulary</a></li>
 </ul></li>
 <li><a href="#volunteering-experience" id="toc-volunteering-experience">7.4 Volunteering Experience</a>
 <ul>
-<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
-<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+<li><a href="#sample-54" id="toc-sample-54">Sample</a></li>
+<li><a href="#vocabulary-54" id="toc-vocabulary-54">Vocabulary</a></li>
 </ul></li>
 <li><a href="#changing-your-mind" id="toc-changing-your-mind">7.5
 Changing Your Mind</a>
 <ul>
-<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
-<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+<li><a href="#sample-55" id="toc-sample-55">Sample</a></li>
+<li><a href="#vocabulary-55" id="toc-vocabulary-55">Vocabulary</a></li>
+</ul></li>
+<li><a href="#lifestyle-change" id="toc-lifestyle-change">7.6 Lifestyle
+Change ⭐</a>
+<ul>
+<li><a href="#sample-56" id="toc-sample-56">Sample</a></li>
+<li><a href="#vocabulary-56" id="toc-vocabulary-56">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#favourites-and-present-day-preferences" id="toc-favourites-and-present-day-preferences">8 Favourites and
@@ -874,30 +1003,36 @@ Template</a></li>
 <li><a href="#place-to-relax" id="toc-place-to-relax">8.1 Place to
 Relax</a>
 <ul>
-<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
-<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+<li><a href="#sample-57" id="toc-sample-57">Sample</a></li>
+<li><a href="#vocabulary-57" id="toc-vocabulary-57">Vocabulary</a></li>
 </ul></li>
 <li><a href="#favourite-season" id="toc-favourite-season">8.2 Favourite
 Season</a>
 <ul>
-<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
-<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
+<li><a href="#sample-58" id="toc-sample-58">Sample</a></li>
+<li><a href="#vocabulary-58" id="toc-vocabulary-58">Vocabulary</a></li>
 </ul></li>
 <li><a href="#item-you-cant-live-without" id="toc-item-you-cant-live-without">8.3 Item You Can’t Live Without</a>
 <ul>
-<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
-<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
+<li><a href="#sample-59" id="toc-sample-59">Sample</a></li>
+<li><a href="#vocabulary-59" id="toc-vocabulary-59">Vocabulary</a></li>
 </ul></li>
-<li><a href="#influential-book-or-movie" id="toc-influential-book-or-movie">8.4 Influential Book or Movie</a>
+<li><a href="#influential-book-or-movie" id="toc-influential-book-or-movie">8.4 Influential Book or Movie ⭐</a>
 <ul>
-<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
-<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
+<li><a href="#sample-60" id="toc-sample-60">Sample</a></li>
+<li><a href="#vocabulary-60" id="toc-vocabulary-60">Vocabulary</a></li>
 </ul></li>
-<li><a href="#skill-to-learn" id="toc-skill-to-learn">8.5 Skill to
+<li><a href="#important-reading" id="toc-important-reading">8.5
+Important Reading ⭐</a>
+<ul>
+<li><a href="#sample-61" id="toc-sample-61">Sample</a></li>
+<li><a href="#vocabulary-61" id="toc-vocabulary-61">Vocabulary</a></li>
+</ul></li>
+<li><a href="#skill-to-learn" id="toc-skill-to-learn">8.6 Skill to
 Learn</a>
 <ul>
-<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
-<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
+<li><a href="#sample-62" id="toc-sample-62">Sample</a></li>
+<li><a href="#vocabulary-62" id="toc-vocabulary-62">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#difficult-or-unexpected-situations" id="toc-difficult-or-unexpected-situations">9 Difficult or Unexpected
@@ -907,36 +1042,41 @@ Situations</a>
 Template</a></li>
 <li><a href="#losing-something-important" id="toc-losing-something-important">9.1 Losing Something Important</a>
 <ul>
-<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
-<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+<li><a href="#sample-63" id="toc-sample-63">Sample</a></li>
+<li><a href="#vocabulary-63" id="toc-vocabulary-63">Vocabulary</a></li>
 </ul></li>
 <li><a href="#solving-a-problem" id="toc-solving-a-problem">9.2 Solving
 a Problem</a>
 <ul>
-<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
-<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
+<li><a href="#sample-64" id="toc-sample-64">Sample</a></li>
+<li><a href="#vocabulary-64" id="toc-vocabulary-64">Vocabulary</a></li>
 </ul></li>
 <li><a href="#a-day-gone-wrong" id="toc-a-day-gone-wrong">9.3 A Day Gone
 Wrong</a>
 <ul>
-<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
-<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
+<li><a href="#sample-65" id="toc-sample-65">Sample</a></li>
+<li><a href="#vocabulary-65" id="toc-vocabulary-65">Vocabulary</a></li>
 </ul></li>
 <li><a href="#help-from-a-stranger" id="toc-help-from-a-stranger">9.4
 Help From a Stranger</a>
 <ul>
-<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
-<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
+<li><a href="#sample-66" id="toc-sample-66">Sample</a></li>
+<li><a href="#vocabulary-66" id="toc-vocabulary-66">Vocabulary</a></li>
 </ul></li>
-<li><a href="#being-late" id="toc-being-late">9.5 Being Late</a>
+<li><a href="#chatting-with-a-stranger" id="toc-chatting-with-a-stranger">9.5 Chatting With a Stranger ⭐</a>
 <ul>
-<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
-<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
+<li><a href="#sample-67" id="toc-sample-67">Sample</a></li>
+<li><a href="#vocabulary-67" id="toc-vocabulary-67">Vocabulary</a></li>
 </ul></li>
-<li><a href="#long-wait" id="toc-long-wait">9.6 Long Wait</a>
+<li><a href="#being-late" id="toc-being-late">9.6 Being Late</a>
 <ul>
-<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
-<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
+<li><a href="#sample-68" id="toc-sample-68">Sample</a></li>
+<li><a href="#vocabulary-68" id="toc-vocabulary-68">Vocabulary</a></li>
+</ul></li>
+<li><a href="#long-wait" id="toc-long-wait">9.7 Long Wait</a>
+<ul>
+<li><a href="#sample-69" id="toc-sample-69">Sample</a></li>
+<li><a href="#vocabulary-69" id="toc-vocabulary-69">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1214,6 +1354,136 @@ relief</span>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="family-event-at-home">1.6 Family Event at Home ⭐</h2>
+<p>Talk about a memorable event you had with your family at home. What
+was it, when was it, who was there, what happened, and why was it
+memorable?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-5">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my parents’ thirtieth
+<span class="vocab">anniversary</span>, which we celebrated at home two
+years ago. My sisters and I wanted to <span class="verb">pull off</span>
+a surprise, so we kept it a secret for weeks.</p>
+<p><span class="conn">At first</span>, we cleaned the house and <span class="verb">put up</span> lights and photos from every decade. <span class="conn">Then</span>, we invited all the relatives and told them to
+hide in the living room. When my parents walked in, everyone shouted
+“Congratulations!”, and my mother burst into tears. There was a huge
+cake, and my uncle gave a <span class="vocab">heartfelt</span>
+speech.</p>
+<p><span class="conn">In the end</span>, we danced and shared stories
+until midnight, and the whole family <span class="verb">bonded
+over</span> old memories.</p>
+<p><span class="tpl">Looking back</span>, it was special because it
+brought three generations together under one roof, and I will <span class="vocab">treasure</span> it forever.</p>
+<h3 id="vocabulary-5">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pull off</span></td>
+<td>succeed in doing something difficult</td>
+<td>They pulled off a perfect surprise.</td>
+</tr>
+<tr>
+<td><span class="verb">put up</span></td>
+<td>hang or place on a wall</td>
+<td>We put up balloons.</td>
+</tr>
+<tr>
+<td><span class="verb">bond over</span></td>
+<td>become closer by sharing something</td>
+<td>We bonded over our love of music.</td>
+</tr>
+<tr>
+<td><span class="vocab">heartfelt</span></td>
+<td>sincere and deeply felt</td>
+<td>She gave a heartfelt thank-you.</td>
+</tr>
+<tr>
+<td><span class="vocab">treasure</span></td>
+<td>keep and care about deeply</td>
+<td>I treasure those photos.</td>
+</tr>
+<tr>
+<td><span class="vocab">anniversary</span></td>
+<td>a yearly celebration of a past event</td>
+<td>They celebrated their anniversary.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exciting-memory">1.7 Exciting Memory ⭐</h2>
+<p>Tell about an exciting memory in your life.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the day I went
+skydiving for the first time. I had always been afraid of heights, but I
+wanted to <span class="vocab">push myself out of my comfort zone</span>,
+so I signed up with a friend.</p>
+<p><span class="conn">At first</span>, my heart was racing as we <span class="vocab">boarded</span> the small plane. <span class="conn">Then</span>, when the door opened, I <span class="verb">took a deep breath</span> and jumped. The first few seconds
+were terrifying, but suddenly I felt free. I could see the whole city
+below me, and I <span class="verb">let out</span> a loud scream of
+joy.</p>
+<p><span class="conn">In the end</span>, we landed safely in a green
+field, and I could not stop smiling.</p>
+<p><span class="tpl">Looking back</span>, it was the most <span class="vocab">thrilling</span> moment of my life, and it taught me to
+<span class="verb">face up to</span> my fears.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">take a deep breath</span></td>
+<td>breathe in slowly to calm down</td>
+<td>I took a deep breath before the speech.</td>
+</tr>
+<tr>
+<td><span class="verb">let out</span></td>
+<td>make a sound</td>
+<td>He let out a sigh of relief.</td>
+</tr>
+<tr>
+<td><span class="verb">face up to</span></td>
+<td>accept and deal with</td>
+<td>She faced up to her mistake.</td>
+</tr>
+<tr>
+<td><span class="vocab">push myself out of my comfort zone</span></td>
+<td>try something difficult and new</td>
+<td>Travelling alone pushed me out of my comfort zone.</td>
+</tr>
+<tr>
+<td><span class="vocab">board</span></td>
+<td>get on a plane, train or ship</td>
+<td>Passengers board at gate five.</td>
+</tr>
+<tr>
+<td><span class="vocab">thrilling</span></td>
+<td>very exciting</td>
+<td>The ride was thrilling.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="trips-places-and-travel">2 Trips, Places, and Travel</h1>
 <p>Topics: a holiday, a memorable trip, a place you visited, a getaway,
 getting lost.</p>
@@ -1226,10 +1496,13 @@ details and feelings].</p>
 <p><span class="conn">In the end</span>, [the result].</p>
 <p><span class="tpl">Looking back</span>, [why it was special or what
 you learned].</p>
-<h2 id="memorable-trip">2.1 Memorable Trip</h2>
+<h2 id="memorable-trip">2.1 Memorable Trip ⭐</h2>
 <p>Talk about a memorable trip you have taken. Where did you go and what
 did you do?</p>
-<h3 id="sample-5">Sample</h3>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 3 (a long
+question with several examples, such as a memorable trip, a special
+experience or a day with family).</p>
+<h3 id="sample-7">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my trip to Banff
 National Park two summers ago. I went with three close friends, and we
 drove from Calgary.</p>
@@ -1243,7 +1516,7 @@ wonderful.</p>
 totally <span class="vocab">disconnected from</span> the city life. I
 came home feeling <span class="vocab">refreshed</span>, and I’m already
 dreaming of going back.</p>
-<h3 id="vocabulary-5">Vocabulary</h3>
+<h3 id="vocabulary-7">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1282,7 +1555,7 @@ dreaming of going back.</p>
 </table>
 <h2 id="a-place-to-revisit">2.2 A Place to Revisit</h2>
 <p>Describe a place that you visited and would like to go back to.</p>
-<h3 id="sample-6">Sample</h3>
+<h3 id="sample-8">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> Lisbon, the capital of
 Portugal. I spent a week there last autumn, and I fell in love with
 it.</p>
@@ -1296,7 +1569,7 @@ listened to live music in small bars, and the people were incredibly
 <p><span class="tpl">Looking back</span>, I’d love to return because I
 only saw a small part of the city. I’d like to explore the nearby
 beaches and <span class="vocab">soak up</span> the <span class="vocab">laid-back</span> atmosphere again.</p>
-<h3 id="vocabulary-6">Vocabulary</h3>
+<h3 id="vocabulary-8">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1328,10 +1601,212 @@ beaches and <span class="vocab">soak up</span> the <span class="vocab">laid-back
 </tr>
 </tbody>
 </table>
-<h2 id="unexpected-travel-problem">2.3 Unexpected Travel Problem</h2>
+<h2 id="visit-to-a-natural-place">2.3 Visit to a Natural Place ⭐</h2>
+<p>Talk about a time you visited a place in nature. What did you see and
+hear there, and why do you remember it?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11
+(several reports) and Oct 10.</p>
+<h3 id="sample-9">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a trip to a national
+park last summer. A friend and I decided to <span class="verb">get away
+from</span> the city for a weekend, so we drove two hours into the
+mountains.</p>
+<p><span class="conn">At first</span>, I was amazed by the <span class="vocab">breathtaking</span> view of a turquoise lake surrounded by
+tall pine trees. <span class="conn">Then</span>, we <span class="verb">set off on</span> a trail, and all I could hear was birds
+singing and a small stream running nearby. The air smelled so fresh that
+I <span class="verb">soaked up</span> every moment.</p>
+<p><span class="conn">In the end</span>, we sat by the water and watched
+the sunset in perfect <span class="vocab">tranquility</span>.</p>
+<p><span class="tpl">Looking back</span>, it was memorable because it
+was so peaceful. I felt completely <span class="vocab">recharged</span>
+afterward.</p>
+<h3 id="vocabulary-9">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get away from</span></td>
+<td>escape from a place or routine</td>
+<td>We needed to get away from the noise.</td>
+</tr>
+<tr>
+<td><span class="verb">set off on</span></td>
+<td>start a journey</td>
+<td>They set off on a long hike.</td>
+</tr>
+<tr>
+<td><span class="verb">soak up</span></td>
+<td>enjoy fully</td>
+<td>I soaked up the sunshine.</td>
+</tr>
+<tr>
+<td><span class="vocab">breathtaking</span></td>
+<td>extremely beautiful</td>
+<td>The view was breathtaking.</td>
+</tr>
+<tr>
+<td><span class="vocab">tranquility</span></td>
+<td>peace and quiet</td>
+<td>I love the tranquility of the forest.</td>
+</tr>
+<tr>
+<td><span class="vocab">recharged</span></td>
+<td>full of new energy</td>
+<td>She came back from the trip recharged.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="interesting-animal-or-plant">2.4 Interesting Animal or Plant
+⭐</h2>
+<p>Describe an experience walking in or visiting a natural place where
+you saw an interesting animal or an unusual plant or flower.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a walk I took in a
+botanical garden two years ago. I went there with my sister on a quiet
+Sunday morning, and we were just <span class="verb">strolling
+along</span> the path when something unusual caught our eyes.</p>
+<p><span class="conn">At first</span>, I thought it was a rock, but it
+was actually a huge flower, as tall as a child, with deep purple petals.
+<span class="conn">Then</span>, a guide told us that it was a rare plant
+that <span class="vocab">blooms</span> only once every few years. We
+<span class="verb">stood in awe of</span> it for a long time and took
+many pictures.</p>
+<p><span class="conn">In the end</span>, I <span class="verb">came
+across</span> a tiny hummingbird feeding from it, which made the moment
+even more <span class="vocab">magical</span>.</p>
+<p><span class="tpl">Looking back</span>, I remember it because it
+taught me to <span class="vocab">appreciate</span> the small wonders of
+nature.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">stroll along</span></td>
+<td>walk slowly and calmly</td>
+<td>We strolled along the beach.</td>
+</tr>
+<tr>
+<td><span class="verb">stand in awe of</span></td>
+<td>feel great wonder about</td>
+<td>They stood in awe of the waterfall.</td>
+</tr>
+<tr>
+<td><span class="verb">come across</span></td>
+<td>find by chance</td>
+<td>I came across an old photo.</td>
+</tr>
+<tr>
+<td><span class="vocab">magical</span></td>
+<td>wonderful and special</td>
+<td>It was a magical evening.</td>
+</tr>
+<tr>
+<td><span class="vocab">appreciate</span></td>
+<td>value and enjoy</td>
+<td>I appreciate quiet places.</td>
+</tr>
+<tr>
+<td><span class="vocab">bloom</span></td>
+<td>produce flowers</td>
+<td>Tulips bloom in spring.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="visiting-a-remote-place">2.5 Visiting a Remote Place ⭐</h2>
+<p>Talk about a time you visited a remote place outside a city.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-11">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a weekend I spent in a
+small village far from any city. My cousin invited me to <span class="verb">check out</span> her family’s cabin, and the road there was
+<span class="vocab">remote</span>, with almost no houses on the way.</p>
+<p><span class="conn">At first</span>, I felt a little nervous because
+my phone had no signal. <span class="conn">Then</span>, I realized how
+relaxing it was to <span class="vocab">unplug</span> from technology. We
+<span class="vocab">spent our days</span> fishing, cooking over a fire
+and playing board games. At night, the sky was full of stars, which I
+had never seen in the city.</p>
+<p><span class="conn">However</span>, the trip was also challenging,
+because we had to <span class="verb">make do with</span> very simple
+food and no shower for two days.</p>
+<p><span class="conn">In the end</span>, I was sad to leave.</p>
+<p><span class="tpl">Looking back</span>, it showed me that I could
+<span class="verb">live without</span> constant connection.</p>
+<h3 id="vocabulary-11">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">check out</span></td>
+<td>go and see</td>
+<td>Let’s check out the new park.</td>
+</tr>
+<tr>
+<td><span class="verb">make do with</span></td>
+<td>manage with what is available</td>
+<td>We made do with a small tent.</td>
+</tr>
+<tr>
+<td><span class="verb">live without</span></td>
+<td>manage without</td>
+<td>I can’t live without coffee.</td>
+</tr>
+<tr>
+<td><span class="vocab">remote</span></td>
+<td>far from towns or cities</td>
+<td>They live in a remote area.</td>
+</tr>
+<tr>
+<td><span class="vocab">unplug</span></td>
+<td>stop using electronic devices</td>
+<td>I unplug on weekends.</td>
+</tr>
+<tr>
+<td><span class="vocab">spend our days</span></td>
+<td>pass our time</td>
+<td>We spent our days hiking.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unexpected-travel-problem">2.6 Unexpected Travel Problem</h2>
 <p>Talk about a time when something unexpected happened while you were
 travelling.</p>
-<h3 id="sample-7">Sample</h3>
+<h3 id="sample-12">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time I missed my
 connecting flight in Frankfurt. I was travelling to Toronto to see my
 cousin, and my first plane was delayed by an hour.</p>
@@ -1344,7 +1819,7 @@ me a hotel voucher.</p>
 the old town, which I’d never planned to see.</p>
 <p><span class="tpl">Looking back</span>, it turned out to be a <span class="vocab">blessing in disguise</span>. I learned to stay calm and
 <span class="vocab">make the best of</span> unexpected situations.</p>
-<h3 id="vocabulary-7">Vocabulary</h3>
+<h3 id="vocabulary-12">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1381,9 +1856,210 @@ the old town, which I’d never planned to see.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="day-trip">2.4 Day Trip</h2>
+<h2 id="unexpected-weather">2.7 Unexpected Weather ⭐</h2>
+<p>Talk about a time when the weather changed unexpectedly or affected
+your plans. Where and when was it, who were you with, and how did it
+affect you?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11, Oct 9
+and in the Oct 2 compiled list.</p>
+<h3 id="sample-13">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a picnic I planned
+with my friends last June. The <span class="vocab">forecast</span> said
+it would be sunny all day, so we <span class="verb">headed out to</span>
+the lake with sandwiches and a speaker.</p>
+<p><span class="conn">At first</span>, everything was perfect. <span class="conn">Then</span>, around two o’clock, dark clouds <span class="verb">rolled in</span> and a sudden <span class="vocab">downpour</span> began. We grabbed our things and ran to a
+small shelter, laughing the whole time. Our clothes were <span class="vocab">soaked</span>, and the food was ruined.</p>
+<p><span class="conn">However</span>, we decided to <span class="verb">make the best of</span> it. We shared the dry snacks,
+played cards and watched the storm over the lake.</p>
+<p><span class="conn">In the end</span>, it became one of my funniest
+memories.</p>
+<p><span class="tpl">Looking back</span>, the surprise rain made the day
+more unforgettable than a perfect one would have been.</p>
+<h3 id="vocabulary-13">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">head out to</span></td>
+<td>leave for a place</td>
+<td>We headed out to the beach early.</td>
+</tr>
+<tr>
+<td><span class="verb">roll in</span></td>
+<td>arrive slowly, like clouds or fog</td>
+<td>Fog rolled in over the harbour.</td>
+</tr>
+<tr>
+<td><span class="verb">make the best of</span></td>
+<td>do as well as possible in a bad situation</td>
+<td>Let’s make the best of the delay.</td>
+</tr>
+<tr>
+<td><span class="vocab">downpour</span></td>
+<td>a heavy fall of rain</td>
+<td>A downpour flooded the street.</td>
+</tr>
+<tr>
+<td><span class="vocab">soaked</span></td>
+<td>completely wet</td>
+<td>I got soaked on the way home.</td>
+</tr>
+<tr>
+<td><span class="vocab">forecast</span></td>
+<td>a prediction of the weather</td>
+<td>The forecast says it will snow.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="language-barrier">2.8 Language Barrier ⭐</h2>
+<p>Talk about a situation where you and another person could not
+understand each other’s language, for example while travelling.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a trip to a small town
+in Italy. I was looking for a pharmacy, but the people I asked did not
+speak English, and I did not speak Italian.</p>
+<p><span class="conn">At first</span>, I felt helpless. <span class="conn">Then</span>, I tried to <span class="verb">get my message
+across</span> with <span class="vocab">gestures</span>. I pointed to my
+head and pretended to have a <span class="vocab">headache</span>. The
+pharmacist laughed, understood me right away, and gave me the right
+medicine.</p>
+<p><span class="conn">Also</span>, an elderly woman who was in the shop
+<span class="verb">walked me through</span> the directions back to my
+hotel, using a map and lots of smiling. We could not <span class="vocab">hold a conversation</span>, but we <span class="verb">communicated with</span> each other perfectly well.</p>
+<p><span class="conn">In the end</span>, I left the shop feeling
+grateful.</p>
+<p><span class="tpl">Looking back</span>, I learned that kindness is a
+universal language.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get my message across</span></td>
+<td>make someone understand me</td>
+<td>He got his message across with drawings.</td>
+</tr>
+<tr>
+<td><span class="verb">walk through</span></td>
+<td>explain step by step</td>
+<td>She walked me through the process.</td>
+</tr>
+<tr>
+<td><span class="verb">communicate with</span></td>
+<td>share information with</td>
+<td>We communicate with each other by text.</td>
+</tr>
+<tr>
+<td><span class="vocab">headache</span></td>
+<td>a pain in the head</td>
+<td>I have a terrible headache.</td>
+</tr>
+<tr>
+<td><span class="vocab">hold a conversation</span></td>
+<td>talk with someone for a while</td>
+<td>She can hold a conversation in French.</td>
+</tr>
+<tr>
+<td><span class="vocab">gestures</span></td>
+<td>movements of the hands or body that carry meaning</td>
+<td>He used gestures to explain.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scary-animal-or-insect">2.9 Scary Animal or Insect ⭐</h2>
+<p>Talk about a time when you saw an animal, an insect or something
+scary. What happened?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 3.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a night I will never
+forget. I was camping with my brother, and we were sitting by the fire
+when I felt something crawling up my leg. I looked down and saw a huge
+spider.</p>
+<p><span class="conn">At first</span>, I <span class="vocab">froze</span> in fear. <span class="conn">Then</span>, I
+shouted and <span class="verb">shook off</span> the spider, which ran
+away into the dark. My brother was laughing so hard that he could barely
+speak. I was shaking, and my heart was <span class="vocab">pounding</span>.</p>
+<p><span class="conn">However</span>, it turned out to be a <span class="vocab">harmless</span> one. After I <span class="verb">calmed
+down</span>, my brother explained that the spider was more scared of me
+than I was of it.</p>
+<p><span class="conn">In the end</span>, I <span class="verb">checked
+for</span> insects in my sleeping bag every night of the trip.</p>
+<p><span class="tpl">Looking back</span>, it makes me laugh now, but it
+was terrifying at that moment.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">shake off</span></td>
+<td>remove by shaking</td>
+<td>He shook off the snow.</td>
+</tr>
+<tr>
+<td><span class="verb">calm down</span></td>
+<td>become less upset</td>
+<td>Take a deep breath and calm down.</td>
+</tr>
+<tr>
+<td><span class="verb">check for</span></td>
+<td>look to see whether something is there</td>
+<td>Check for mistakes before you submit.</td>
+</tr>
+<tr>
+<td><span class="vocab">froze</span></td>
+<td>suddenly stop moving, often from fear</td>
+<td>I froze when I heard the noise.</td>
+</tr>
+<tr>
+<td><span class="vocab">pounding</span></td>
+<td>beating strongly</td>
+<td>My heart was pounding.</td>
+</tr>
+<tr>
+<td><span class="vocab">harmless</span></td>
+<td>not able to cause damage</td>
+<td>The snake was harmless.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="day-trip">2.10 Day Trip</h2>
 <p>Describe a day trip that you enjoyed with friends or family.</p>
-<h3 id="sample-8">Sample</h3>
+<h3 id="sample-16">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a day trip my family
 took to a small lake last July. We left early in the morning and packed
 sandwiches, fruit, and plenty of water.</p>
@@ -1397,7 +2073,7 @@ happy.</p>
 <p><span class="tpl">Looking back</span>, it was a simple day, but we
 really <span class="vocab">bonded</span> as a family, and I’ll always
 remember the peaceful scenery.</p>
-<h3 id="vocabulary-8">Vocabulary</h3>
+<h3 id="vocabulary-16">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1429,9 +2105,72 @@ remember the peaceful scenery.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="arriving-in-a-new-city">2.5 Arriving in a New City</h2>
+<h2 id="day-out-with-a-friend">2.11 Day Out With a Friend ⭐</h2>
+<p>Talk about an experience you had with a friend. What did you do?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 10.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a day I spent with my
+best friend last spring. We had both been very busy with work, so we
+decided to <span class="verb">catch up</span> over a long walk and lunch
+downtown.</p>
+<p><span class="conn">At first</span>, we just wandered through the
+market and tasted samples of cheese and fresh bread. <span class="conn">Then</span>, we found a small bookstore and <span class="vocab">spent hours browsing</span> the shelves. In the afternoon,
+we <span class="verb">stumbled upon</span> a street musician, and we
+stayed to listen for half an hour.</p>
+<p><span class="conn">In the end</span>, we had dinner at a <span class="vocab">cozy</span> café and talked about our dreams.</p>
+<p><span class="tpl">Looking back</span>, it was special because nothing
+was planned. We <span class="vocab">lived in the moment</span>, and it
+<span class="verb">strengthened</span> our friendship.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">catch up</span></td>
+<td>share recent news with someone</td>
+<td>Let’s catch up over coffee.</td>
+</tr>
+<tr>
+<td><span class="verb">stumble upon</span></td>
+<td>find by accident</td>
+<td>We stumbled upon a lovely park.</td>
+</tr>
+<tr>
+<td><span class="verb">strengthen</span></td>
+<td>make stronger</td>
+<td>Travel strengthened our bond.</td>
+</tr>
+<tr>
+<td><span class="vocab">spend hours browsing</span></td>
+<td>look through things for a long time</td>
+<td>I spend hours browsing online.</td>
+</tr>
+<tr>
+<td><span class="vocab">live in the moment</span></td>
+<td>enjoy the present without worrying</td>
+<td>On holiday, I try to live in the moment.</td>
+</tr>
+<tr>
+<td><span class="vocab">cozy</span></td>
+<td>warm and comfortable</td>
+<td>The café was small and cozy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="arriving-in-a-new-city">2.12 Arriving in a New City</h2>
 <p>Talk about the first time you visited a new city or country.</p>
-<h3 id="sample-9">Sample</h3>
+<h3 id="sample-18">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the first time I
 arrived in Canada, three years ago. I landed in Toronto in the middle of
 winter, and it was minus fifteen degrees, which was a shock for me.</p>
@@ -1444,7 +2183,7 @@ and the food.</p>
 <p><span class="tpl">Looking back</span>, that day was both difficult
 and exciting. It was the moment I started to <span class="vocab">adapt</span> to a new life, and I’m very grateful for
 it.</p>
-<h3 id="vocabulary-9">Vocabulary</h3>
+<h3 id="vocabulary-18">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1476,6 +2215,139 @@ it.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="first-visit-to-a-new-place">2.13 First Visit to a New Place
+⭐</h2>
+<p>Talk about a place you went to for the first time. How did you feel,
+what happened, and what did you learn? (Examples: a new school, a new
+neighbourhood or a science museum.)</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8 (two
+reports) and Oct 7.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the first time I
+visited the science museum in my city. I had always wanted to go, so I
+went with my niece on a rainy Saturday.</p>
+<p><span class="conn">At first</span>, I felt a little <span class="vocab">overwhelmed</span> because the building was enormous and
+full of people. <span class="conn">Then</span>, we <span class="verb">made our way through</span> the <span class="vocab">exhibits</span>, and I was fascinated by a giant model of
+the solar system. My niece <span class="verb">got a kick out of</span>
+the hands-on experiments, such as making a small lightning storm.</p>
+<p><span class="conn">In the end</span>, we stayed until closing time
+and <span class="verb">tore ourselves away</span> only because the staff
+asked us to leave.</p>
+<p><span class="tpl">Looking back</span>, I learned that curiosity makes
+every visit more <span class="vocab">rewarding</span>, and I felt like a
+child again.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">make our way through</span></td>
+<td>move through a place with some effort</td>
+<td>We made our way through the crowd.</td>
+</tr>
+<tr>
+<td><span class="verb">get a kick out of</span></td>
+<td>enjoy very much</td>
+<td>He gets a kick out of old movies.</td>
+</tr>
+<tr>
+<td><span class="verb">tear ourselves away</span></td>
+<td>force ourselves to leave something enjoyable</td>
+<td>I could not tear myself away from the book.</td>
+</tr>
+<tr>
+<td><span class="vocab">overwhelmed</span></td>
+<td>feeling too much emotion or too many things</td>
+<td>She felt overwhelmed on her first day.</td>
+</tr>
+<tr>
+<td><span class="vocab">rewarding</span></td>
+<td>giving satisfaction</td>
+<td>Teaching is a rewarding job.</td>
+</tr>
+<tr>
+<td><span class="vocab">exhibits</span></td>
+<td>objects shown to the public</td>
+<td>The museum has hundreds of exhibits.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unusual-transportation">2.14 Unusual Transportation ⭐</h2>
+<p>Talk about a time you used an unusual or unfamiliar form of
+transportation.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the time I rode a
+tuk-tuk in Thailand. I had never seen one before, and I wanted to <span class="verb">try out</span> something different on my vacation.</p>
+<p><span class="conn">At first</span>, I was a bit nervous, because the
+vehicle was small and open on the sides. <span class="conn">Then</span>,
+the driver <span class="verb">weaved through</span> the busy traffic,
+and I held on tightly. The wind in my face and the colourful street
+signs made it a real <span class="vocab">adventure</span>. I also <span class="vocab">bargained</span> with the driver and got a fair price.</p>
+<p><span class="conn">However</span>, it was also very loud, and I <span class="verb">ended up</span> with a headache.</p>
+<p><span class="conn">In the end</span>, I arrived at the temple,
+smiling and a little <span class="vocab">dizzy</span>.</p>
+<p><span class="tpl">Looking back</span>, it was the best way to feel
+the local culture.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">try out</span></td>
+<td>test something new</td>
+<td>I want to try out the new bike.</td>
+</tr>
+<tr>
+<td><span class="verb">weave through</span></td>
+<td>move quickly around obstacles</td>
+<td>The cyclist weaved through the traffic.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up taking a taxi.</td>
+</tr>
+<tr>
+<td><span class="vocab">adventure</span></td>
+<td>an exciting experience</td>
+<td>The trip was a real adventure.</td>
+</tr>
+<tr>
+<td><span class="vocab">bargain</span></td>
+<td>negotiate a lower price</td>
+<td>She bargained with the seller.</td>
+</tr>
+<tr>
+<td><span class="vocab">dizzy</span></td>
+<td>feeling that everything is spinning</td>
+<td>I felt dizzy after the ride.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="people-and-relationships">3 People and Relationships</h1>
 <p>Topics: a person who influenced you, a friend, a teacher, a family
 member, meeting someone new.</p>
@@ -1490,7 +2362,7 @@ with details and feelings].</p>
 learned].</p>
 <h2 id="influential-person">3.1 Influential Person</h2>
 <p>Talk about a person who has had a big influence on your life.</p>
-<h3 id="sample-10">Sample</h3>
+<h3 id="sample-21">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my grandmother, who
 has had the biggest influence on my life. She raised five children on a
 small farm, and she never complained.</p>
@@ -1504,7 +2376,7 @@ with me and encouraged me every evening.</p>
 she was the proudest person in the room.</p>
 <p><span class="tpl">Looking back</span>, she taught me the value of
 hard work and <span class="vocab">humility</span>. She’s my <span class="vocab">role model</span>, and I want to be like her.</p>
-<h3 id="vocabulary-10">Vocabulary</h3>
+<h3 id="vocabulary-21">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1536,9 +2408,76 @@ hard work and <span class="vocab">humility</span>. She’s my <span class="vocab
 </tr>
 </tbody>
 </table>
-<h2 id="help-from-a-family-member">3.2 Help From a Family Member</h2>
+<h2 id="interesting-person">3.2 Interesting Person ⭐</h2>
+<p>Talk about an interesting person you met. How did you meet them and
+why were they interesting?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-22">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> an elderly man I met
+on a train three years ago. I was travelling alone and had no plans to
+talk to anyone, but he <span class="vocab">struck up a
+conversation</span> by asking about my book.</p>
+<p><span class="conn">At first</span>, I only gave short answers. <span class="conn">Then</span>, he told me that he had sailed around the world
+as a young man and had lived in six different countries. He <span class="verb">went on to</span> describe storms, festivals and
+friendships that changed his life. I was <span class="vocab">fascinated</span> by every story.</p>
+<p><span class="conn">Also</span>, he gave me a piece of advice: always
+<span class="vocab">follow your curiosity</span>.</p>
+<p><span class="conn">In the end</span>, we <span class="verb">parted
+ways</span> at his station, and I wished I could <span class="verb">keep
+in touch with</span> him.</p>
+<p><span class="tpl">Looking back</span>, he inspired me to travel
+more.</p>
+<h3 id="vocabulary-22">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">go on to</span></td>
+<td>continue by doing something else</td>
+<td>She went on to become a doctor.</td>
+</tr>
+<tr>
+<td><span class="verb">part ways</span></td>
+<td>separate and go in different directions</td>
+<td>We parted ways at the airport.</td>
+</tr>
+<tr>
+<td><span class="verb">keep in touch with</span></td>
+<td>stay in contact with</td>
+<td>I keep in touch with my old teacher.</td>
+</tr>
+<tr>
+<td><span class="vocab">strike up a conversation</span></td>
+<td>begin talking to someone</td>
+<td>He struck up a conversation at the bus stop.</td>
+</tr>
+<tr>
+<td><span class="vocab">fascinated</span></td>
+<td>very interested</td>
+<td>I was fascinated by her story.</td>
+</tr>
+<tr>
+<td><span class="vocab">follow your curiosity</span></td>
+<td>do what interests you</td>
+<td>Follow your curiosity and learn new things.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="help-from-a-family-member">3.3 Help From a Family Member</h2>
 <p>Describe a time when a friend or family member helped you.</p>
-<h3 id="sample-11">Sample</h3>
+<h3 id="sample-23">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time my older
 brother helped me when I lost my job. It happened two years ago, and I
 was feeling hopeless.</p>
@@ -1553,7 +2492,7 @@ weeks.</p>
 <p><span class="tpl">Looking back</span>, I’m deeply <span class="vocab">grateful</span> for his support. He showed me that family
 will always <span class="vocab">have your back</span> when times are
 tough.</p>
-<h3 id="vocabulary-11">Vocabulary</h3>
+<h3 id="vocabulary-23">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1580,9 +2519,9 @@ tough.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="memorable-teacher">3.3 Memorable Teacher</h2>
+<h2 id="memorable-teacher">3.4 Memorable Teacher</h2>
 <p>Talk about a teacher or mentor you remember well.</p>
-<h3 id="sample-12">Sample</h3>
+<h3 id="sample-24">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> Mr. Hassan, my high
 school math teacher. I was struggling with algebra, and I was convinced
 that I was simply bad at math.</p>
@@ -1597,7 +2536,7 @@ eighty-five percent.</p>
 <p><span class="tpl">Looking back</span>, he taught me that anyone can
 learn with the right guidance. He <span class="vocab">inspired</span> me
 to become a teacher myself.</p>
-<h3 id="vocabulary-12">Vocabulary</h3>
+<h3 id="vocabulary-24">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1629,9 +2568,9 @@ to become a teacher myself.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="meeting-a-friend">3.4 Meeting a Friend</h2>
+<h2 id="meeting-a-friend">3.5 Meeting a Friend</h2>
 <p>Describe how you met a good friend.</p>
-<h3 id="sample-13">Sample</h3>
+<h3 id="sample-25">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> how I met my best
 friend, Lena. It was the first day of university, and I knew nobody on
 campus.</p>
@@ -1645,7 +2584,7 @@ day, and we <span class="vocab">hit it off</span> immediately.</p>
 Ten years later, we’re still <span class="vocab">inseparable</span>, and
 I’m so happy that I <span class="vocab">struck up a conversation</span>
 that day.</p>
-<h3 id="vocabulary-13">Vocabulary</h3>
+<h3 id="vocabulary-25">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1682,9 +2621,77 @@ that day.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="helping-someone">3.5 Helping Someone</h2>
+<h2 id="your-best-friend">3.6 Your Best Friend ⭐</h2>
+<p>Talk about and describe your best friend.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and Oct
+3.</p>
+<h3 id="sample-26">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> my best friend, Sara.
+We met in high school, when we were seated next to each other in math
+class, and we have been <span class="vocab">inseparable</span> ever
+since.</p>
+<p><span class="conn">First of all</span>, she is one of the most <span class="vocab">reliable</span> people I know. Whenever I have a problem,
+she <span class="verb">shows up for</span> me, even in the middle of the
+night. <span class="conn">Also</span>, she has a great sense of humour,
+and she can <span class="verb">cheer me up</span> on my worst days. We
+<span class="verb">have a lot in common</span>, such as a love for
+hiking and old movies.</p>
+<p><span class="conn">However</span>, we are also different. She is
+outgoing, and I am quiet.</p>
+<p><span class="conn">In the end</span>, I think that is why we <span class="vocab">balance</span> each other so well.</p>
+<p><span class="tpl">Looking back</span>, I feel lucky to have her.</p>
+<h3 id="vocabulary-26">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">show up for</span></td>
+<td>be present to support someone</td>
+<td>Good friends show up for each other.</td>
+</tr>
+<tr>
+<td><span class="verb">cheer up</span></td>
+<td>make someone feel happier</td>
+<td>A funny movie cheered me up.</td>
+</tr>
+<tr>
+<td><span class="verb">have a lot in common</span></td>
+<td>share many interests</td>
+<td>They have a lot in common.</td>
+</tr>
+<tr>
+<td><span class="vocab">inseparable</span></td>
+<td>always together</td>
+<td>The twins are inseparable.</td>
+</tr>
+<tr>
+<td><span class="vocab">reliable</span></td>
+<td>able to be trusted</td>
+<td>He is a reliable worker.</td>
+</tr>
+<tr>
+<td><span class="vocab">balance</span></td>
+<td>keep in a steady, equal state</td>
+<td>Her calm nature balances his energy.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="helping-someone">3.7 Helping Someone ⭐</h2>
 <p>Talk about a time when you helped someone else.</p>
-<h3 id="sample-14">Sample</h3>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-27">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time I helped an
 elderly neighbour with her groceries. It happened last winter after a
 heavy snowstorm.</p>
@@ -1700,7 +2707,7 @@ her eyes and gave me a <span class="vocab">heartfelt</span> hug.</p>
 kindness, but it made me feel <span class="vocab">fulfilled</span>. I
 realized how much a little <span class="vocab">generosity</span> can
 matter.</p>
-<h3 id="vocabulary-14">Vocabulary</h3>
+<h3 id="vocabulary-27">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1732,6 +2739,201 @@ matter.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="offering-something-to-someone">3.8 Offering Something to Someone
+⭐</h2>
+<p>Talk about a time when you offered someone something. What was it,
+who was it for, and why did you offer it?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9.</p>
+<h3 id="sample-28">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a cold winter evening
+when I offered my seat and my coat to a stranger. I was waiting for the
+bus, and an elderly woman was standing next to me, <span class="vocab">shivering</span> in a thin jacket.</p>
+<p><span class="conn">At first</span>, I hesitated, because I did not
+want to seem <span class="vocab">intrusive</span>. <span class="conn">Then</span>, I <span class="verb">gave up</span> my seat on
+the bench and offered her my scarf. She smiled and said she was
+grateful. We chatted until her bus arrived, and she <span class="verb">thanked me for</span> being so kind.</p>
+<p><span class="conn">In the end</span>, I walked home feeling warm
+inside, even without my scarf.</p>
+<p><span class="tpl">Looking back</span>, I learned that a small <span class="vocab">act of kindness</span> can <span class="verb">brighten
+up</span> someone’s day, and mine as well.</p>
+<h3 id="vocabulary-28">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">give up</span></td>
+<td>let someone else have</td>
+<td>He gave up his seat on the train.</td>
+</tr>
+<tr>
+<td><span class="verb">thank for</span></td>
+<td>express gratitude for</td>
+<td>She thanked me for my help.</td>
+</tr>
+<tr>
+<td><span class="verb">brighten up</span></td>
+<td>make happier</td>
+<td>Flowers brighten up a room.</td>
+</tr>
+<tr>
+<td><span class="vocab">intrusive</span></td>
+<td>disturbing someone’s privacy</td>
+<td>I did not want to sound intrusive.</td>
+</tr>
+<tr>
+<td><span class="vocab">act of kindness</span></td>
+<td>a kind thing you do for someone</td>
+<td>A small act of kindness means a lot.</td>
+</tr>
+<tr>
+<td><span class="vocab">shiver</span></td>
+<td>shake slightly from cold</td>
+<td>She was shivering at the stop.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="giving-advice-to-a-friend">3.9 Giving Advice to a Friend ⭐</h2>
+<p>Talk about a time you gave useful advice to a friend or coworker.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-29">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a time I helped a
+coworker who was struggling with stress. She was working late every day,
+and I could see that she was <span class="vocab">burned out</span>.</p>
+<p><span class="conn">At first</span>, she did not want to talk about
+it. <span class="conn">Then</span>, during lunch, I told her gently that
+she needed to <span class="verb">slow down</span> and ask for help. I
+suggested that she <span class="vocab">delegate</span> some tasks and
+take a short walk each afternoon. I also encouraged her to <span class="verb">talk it over with</span> her manager.</p>
+<p><span class="conn">In the end</span>, she followed my advice, and
+within a month she looked much happier and more relaxed. She even
+thanked me for <span class="verb">looking out for</span> her.</p>
+<p><span class="tpl">Looking back</span>, I am glad I spoke up, because
+being <span class="vocab">supportive</span> can truly change someone’s
+life.</p>
+<h3 id="vocabulary-29">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">slow down</span></td>
+<td>reduce speed or activity</td>
+<td>You should slow down and rest.</td>
+</tr>
+<tr>
+<td><span class="verb">talk over with</span></td>
+<td>discuss with</td>
+<td>Talk it over with your family.</td>
+</tr>
+<tr>
+<td><span class="verb">look out for</span></td>
+<td>take care of</td>
+<td>Friends look out for each other.</td>
+</tr>
+<tr>
+<td><span class="vocab">burned out</span></td>
+<td>extremely tired from too much work</td>
+<td>He felt burned out after the project.</td>
+</tr>
+<tr>
+<td><span class="vocab">delegate</span></td>
+<td>give tasks to others</td>
+<td>A good manager knows how to delegate.</td>
+</tr>
+<tr>
+<td><span class="vocab">supportive</span></td>
+<td>giving help and encouragement</td>
+<td>My family is very supportive.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="encouraging-message">3.10 Encouraging Message ⭐</h2>
+<p>Talk about an encouraging message or piece of advice you
+received.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-30">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a message I received
+from my grandfather when I was very <span class="vocab">discouraged</span>. I had just failed an important exam,
+and I was thinking of giving up on my studies.</p>
+<p><span class="conn">At first</span>, I did not want to answer his
+call. <span class="conn">Then</span>, I saw his text: “Failure is just a
+step on the road to success. Keep going.” Those simple words <span class="vocab">lifted my spirits</span>. He reminded me that he had also
+failed many times before he built his business, and that he never <span class="verb">gave in to</span> despair.</p>
+<p><span class="conn">Also</span>, he told me to <span class="verb">believe in</span> myself and <span class="verb">learn
+from</span> my mistakes.</p>
+<p><span class="conn">In the end</span>, I studied harder, and I passed
+the next time.</p>
+<p><span class="tpl">Looking back</span>, his message gave me the <span class="vocab">resilience</span> to keep trying.</p>
+<h3 id="vocabulary-30">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">give in to</span></td>
+<td>surrender to</td>
+<td>Don’t give in to pressure.</td>
+</tr>
+<tr>
+<td><span class="verb">believe in</span></td>
+<td>have confidence in</td>
+<td>I believe in your talent.</td>
+</tr>
+<tr>
+<td><span class="verb">learn from</span></td>
+<td>gain knowledge from</td>
+<td>We learn from our mistakes.</td>
+</tr>
+<tr>
+<td><span class="vocab">lift my spirits</span></td>
+<td>make me feel happier</td>
+<td>Her visit lifted my spirits.</td>
+</tr>
+<tr>
+<td><span class="vocab">resilience</span></td>
+<td>the ability to recover from difficulty</td>
+<td>She showed great resilience.</td>
+</tr>
+<tr>
+<td><span class="vocab">discouraged</span></td>
+<td>having lost confidence or hope</td>
+<td>He felt discouraged after the loss.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="work-school-and-achievements">4 Work, School, and
 Achievements</h1>
 <p>Topics: a first day, a challenge, an accomplishment, a project,
@@ -1745,9 +2947,11 @@ and feelings].</p>
 <p><span class="conn">In the end</span>, [the result].</p>
 <p><span class="tpl">Looking back</span>, [what you learned or why it
 mattered].</p>
-<h2 id="first-day">4.1 First Day</h2>
+<h2 id="first-day">4.1 First Day ⭐</h2>
 <p>Talk about your first day at school or work. What was it like?</p>
-<h3 id="sample-15">Sample</h3>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list (the first day of school or university).</p>
+<h3 id="sample-31">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my first day at my
 current job as a graphic designer. I was both excited and anxious, so I
 arrived thirty minutes early.</p>
@@ -1760,7 +2964,7 @@ lunch. In the afternoon, I attended a short <span class="vocab">orientation</spa
 happy.</p>
 <p><span class="tpl">Looking back</span>, I realized that most of my
 fears were unnecessary. The team was <span class="vocab">supportive</span>, and I quickly started to feel <span class="vocab">at home</span>.</p>
-<h3 id="vocabulary-15">Vocabulary</h3>
+<h3 id="vocabulary-31">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1794,7 +2998,7 @@ fears were unnecessary. The team was <span class="vocab">supportive</span>, and 
 </table>
 <h2 id="overcoming-a-challenge">4.2 Overcoming a Challenge</h2>
 <p>Describe a challenge you overcame at work or school.</p>
-<h3 id="sample-16">Sample</h3>
+<h3 id="sample-32">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a <span class="vocab">tight deadline</span> I faced at work last year. My
 manager asked me to finish a major report in just three days, and I
 normally need a week.</p>
@@ -1807,7 +3011,7 @@ and my manager praised the quality.</p>
 <p><span class="tpl">Looking back</span>, I learned the importance of
 <span class="vocab">time management</span> and teamwork. Now I feel more
 <span class="vocab">confident</span> about handling pressure.</p>
-<h3 id="vocabulary-16">Vocabulary</h3>
+<h3 id="vocabulary-32">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1846,7 +3050,7 @@ and my manager praised the quality.</p>
 </table>
 <h2 id="learning-a-new-skill">4.3 Learning a New Skill</h2>
 <p>Talk about a time you learned a new skill. How did you learn it?</p>
-<h3 id="sample-17">Sample</h3>
+<h3 id="sample-33">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> how I learned to play
 the guitar. I was thirty, and I had always wanted to play but never had
 time.</p>
@@ -1860,7 +3064,7 @@ favourite songs, and I performed for my family on New Year’s Eve.</p>
 <p><span class="tpl">Looking back</span>, it taught me that <span class="vocab">consistency</span> matters more than talent. Learning
 something new also <span class="vocab">boosted my
 self-esteem</span>.</p>
-<h3 id="vocabulary-17">Vocabulary</h3>
+<h3 id="vocabulary-33">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1894,7 +3098,7 @@ self-esteem</span>.</p>
 </table>
 <h2 id="proud-project">4.4 Proud Project</h2>
 <p>Describe a project you completed that you are proud of.</p>
-<h3 id="sample-18">Sample</h3>
+<h3 id="sample-34">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a community garden
 project that I led at my university. We wanted to turn an empty lot
 behind the library into a green space.</p>
@@ -1909,7 +3113,7 @@ students could take fresh produce for free.</p>
 idea into reality. It taught me <span class="vocab">leadership</span>
 and how to <span class="vocab">collaborate</span> with different
 people.</p>
-<h3 id="vocabulary-18">Vocabulary</h3>
+<h3 id="vocabulary-34">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1943,7 +3147,7 @@ people.</p>
 </table>
 <h2 id="learning-from-a-mistake">4.5 Learning From a Mistake</h2>
 <p>Talk about a time when you made a mistake and learned from it.</p>
-<h3 id="sample-19">Sample</h3>
+<h3 id="sample-35">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a mistake I made
 during my first month at a restaurant. I was a new waiter, and I was
 trying to work quickly.</p>
@@ -1957,7 +3161,7 @@ Instead, she explained the importance of <span class="vocab">double-checking</sp
 more careful and to take <span class="vocab">responsibility</span>. Now
 I always confirm <span class="vocab">allergies</span> with the
 kitchen.</p>
-<h3 id="vocabulary-19">Vocabulary</h3>
+<h3 id="vocabulary-35">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1994,6 +3198,149 @@ kitchen.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="physical-challenge">4.6 Physical Challenge ⭐</h2>
+<p>Talk about a challenging physical activity you did. What was it, how
+did you prepare, and how did you feel afterward?</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the first time I ran a
+ten-kilometre race. I had never run more than three kilometres, so I
+knew I had to <span class="vocab">train hard</span>.</p>
+<p><span class="conn">At first</span>, I <span class="verb">worked up
+to</span> longer distances, adding a little more each week. <span class="conn">Then</span>, I changed my diet and <span class="verb">cut
+out</span> sugary snacks. On the day of the race, I felt nervous, but
+the crowd’s cheering <span class="verb">pumped me up</span>.</p>
+<p><span class="conn">However</span>, around the seventh kilometre, my
+legs felt like lead, and I almost quit. I <span class="verb">pushed
+through</span> by telling myself that the finish line was close.</p>
+<p><span class="conn">In the end</span>, I crossed it in under an hour,
+exhausted but proud.</p>
+<p><span class="tpl">Looking back</span>, it showed me that I can
+overcome any <span class="vocab">obstacle</span> with <span class="vocab">determination</span>.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">work up to</span></td>
+<td>gradually reach a higher level</td>
+<td>I worked up to a longer swim.</td>
+</tr>
+<tr>
+<td><span class="verb">cut out</span></td>
+<td>stop eating or doing</td>
+<td>He cut out fast food.</td>
+</tr>
+<tr>
+<td><span class="verb">pump up</span></td>
+<td>fill with energy and excitement</td>
+<td>The music pumped us up.</td>
+</tr>
+<tr>
+<td><span class="verb">push through</span></td>
+<td>continue despite difficulty</td>
+<td>She pushed through the pain.</td>
+</tr>
+<tr>
+<td><span class="vocab">train hard</span></td>
+<td>exercise with great effort</td>
+<td>Athletes train hard every day.</td>
+</tr>
+<tr>
+<td><span class="vocab">obstacle</span></td>
+<td>something that blocks progress</td>
+<td>Fear is the biggest obstacle.</td>
+</tr>
+<tr>
+<td><span class="vocab">determination</span></td>
+<td>strong will to succeed</td>
+<td>Her determination impressed everyone.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="competition">4.7 Competition ⭐</h2>
+<p>Talk about a competition you participated in.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-37">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a cooking contest I
+entered at my workplace last year. My team decided to <span class="verb">take part in</span> it for fun, but we soon became very
+serious.</p>
+<p><span class="conn">At first</span>, we argued about the menu. <span class="conn">Then</span>, we agreed to make a spicy soup and a lemon
+dessert, and we <span class="verb">practised for</span> two weeks in my
+kitchen. On the day, the pressure was high, and one of us accidentally
+<span class="vocab">burned</span> the first <span class="vocab">batch</span>.</p>
+<p><span class="conn">However</span>, we stayed calm and <span class="verb">started over</span>. The judges loved the result and
+praised our <span class="vocab">creativity</span>.</p>
+<p><span class="conn">In the end</span>, we won second place, and we
+celebrated with a big lunch.</p>
+<p><span class="tpl">Looking back</span>, the prize was nice, but the
+best part was working as a team and <span class="verb">cheering each
+other on</span>.</p>
+<h3 id="vocabulary-37">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">take part in</span></td>
+<td>participate in</td>
+<td>Many schools took part in the contest.</td>
+</tr>
+<tr>
+<td><span class="verb">practise for</span></td>
+<td>prepare by repeating</td>
+<td>We practised for the show.</td>
+</tr>
+<tr>
+<td><span class="verb">start over</span></td>
+<td>begin again</td>
+<td>I deleted the file and started over.</td>
+</tr>
+<tr>
+<td><span class="verb">cheer on</span></td>
+<td>encourage by shouting</td>
+<td>Fans cheered on the runners.</td>
+</tr>
+<tr>
+<td><span class="vocab">burn</span></td>
+<td>damage by fire or heat</td>
+<td>I burned the toast.</td>
+</tr>
+<tr>
+<td><span class="vocab">creativity</span></td>
+<td>the ability to produce original ideas</td>
+<td>The project needs creativity.</td>
+</tr>
+<tr>
+<td><span class="vocab">batch</span></td>
+<td>a quantity of food made at one time</td>
+<td>She baked a batch of cookies.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="childhood-traditions-and-memories">5 Childhood, Traditions, and
 Memories</h1>
 <p>Topics: a childhood memory, a family tradition, a favourite holiday,
@@ -2009,7 +3356,7 @@ feelings].</p>
 you].</p>
 <h2 id="childhood-memory">5.1 Childhood Memory</h2>
 <p>Talk about a favourite childhood memory.</p>
-<h3 id="sample-20">Sample</h3>
+<h3 id="sample-38">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the summers I spent at
 my grandparents’ farm. Every July, my parents drove me there, and I
 stayed for two weeks.</p>
@@ -2022,7 +3369,7 @@ river, and picked fresh strawberries. At night, my grandmother told us
 <p><span class="conn">In the end</span>, I always cried when it was time
 to go home.</p>
 <p><span class="tpl">Looking back</span>, those days were <span class="vocab">carefree</span> and full of laughter. I feel <span class="vocab">nostalgic</span> whenever I smell fresh hay.</p>
-<h3 id="vocabulary-20">Vocabulary</h3>
+<h3 id="vocabulary-38">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2061,7 +3408,7 @@ to go home.</p>
 </table>
 <h2 id="family-tradition">5.2 Family Tradition</h2>
 <p>Describe a family tradition or holiday you enjoyed as a child.</p>
-<h3 id="sample-21">Sample</h3>
+<h3 id="sample-39">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the Eid celebration my
 family held every year. It started early in the morning, when we put on
 new clothes and went to the mosque for prayers.</p>
@@ -2074,7 +3421,7 @@ games.</p>
 stories until late at night.</p>
 <p><span class="tpl">Looking back</span>, this <span class="vocab">tradition</span> taught me the value of <span class="vocab">togetherness</span>. I still <span class="vocab">keep it
 alive</span> with my own kids.</p>
-<h3 id="vocabulary-21">Vocabulary</h3>
+<h3 id="vocabulary-39">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2108,7 +3455,7 @@ alive</span> with my own kids.</p>
 </table>
 <h2 id="childhood-place">5.3 Childhood Place</h2>
 <p>Talk about a place from your childhood that you remember well.</p>
-<h3 id="sample-22">Sample</h3>
+<h3 id="sample-40">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the small park near my
 childhood home. It had a big <span class="vocab">oak tree</span>, a
 rusty swing set, and a sandy football field.</p>
@@ -2122,7 +3469,7 @@ piles to jump into.</p>
 my social life.</p>
 <p><span class="tpl">Looking back</span>, it was a place full of <span class="vocab">innocence</span> and friendship. When I visit my hometown,
 I always walk through it and <span class="vocab">reminisce</span>.</p>
-<h3 id="vocabulary-22">Vocabulary</h3>
+<h3 id="vocabulary-40">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2161,7 +3508,7 @@ I always walk through it and <span class="vocab">reminisce</span>.</p>
 </table>
 <h2 id="childhood-toy">5.4 Childhood Toy</h2>
 <p>Describe a game, toy, or activity you loved as a child.</p>
-<h3 id="sample-23">Sample</h3>
+<h3 id="sample-41">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my favourite childhood
 toy, a set of wooden building blocks. My uncle gave them to me for my
 fifth birthday.</p>
@@ -2176,7 +3523,7 @@ teenager.</p>
 <p><span class="tpl">Looking back</span>, they developed my <span class="vocab">imagination</span> and my love for design. Today, I work
 as an architect, so they <span class="vocab">sparked</span> my
 career.</p>
-<h3 id="vocabulary-23">Vocabulary</h3>
+<h3 id="vocabulary-41">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2210,7 +3557,7 @@ career.</p>
 </table>
 <h2 id="time-with-a-grandparent">5.5 Time With a Grandparent</h2>
 <p>Talk about a time you spent with a grandparent or older relative.</p>
-<h3 id="sample-24">Sample</h3>
+<h3 id="sample-42">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> an afternoon I spent
 with my grandfather when I was twelve. He took me fishing at a quiet
 lake, which was one of his favourite <span class="vocab">pastimes</span>.</p>
@@ -2224,7 +3571,7 @@ and ate it together.</p>
 <p><span class="tpl">Looking back</span>, that day made me appreciate
 his <span class="vocab">wisdom</span> and patience. It’s a <span class="vocab">cherished</span> memory, especially since he passed
 away.</p>
-<h3 id="vocabulary-24">Vocabulary</h3>
+<h3 id="vocabulary-42">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2274,7 +3621,7 @@ feelings].</p>
 <p><span class="tpl">Looking back</span>, [why it mattered to you].</p>
 <h2 id="meaningful-gift">6.1 Meaningful Gift</h2>
 <p>Talk about a gift you gave or received that meant a lot.</p>
-<h3 id="sample-25">Sample</h3>
+<h3 id="sample-43">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a handmade photo album
 that my best friend gave me before I moved abroad. She presented it at
 my farewell party.</p>
@@ -2288,7 +3635,7 @@ both cried.</p>
 <p><span class="tpl">Looking back</span>, it was the most <span class="vocab">thoughtful</span> gift I’ve ever received. It isn’t about
 the price. It’s a <span class="vocab">sentimental</span> treasure that
 keeps us close.</p>
-<h3 id="vocabulary-25">Vocabulary</h3>
+<h3 id="vocabulary-43">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2322,7 +3669,7 @@ keeps us close.</p>
 </table>
 <h2 id="memorable-meal">6.2 Memorable Meal</h2>
 <p>Describe a meal you enjoyed with family or friends.</p>
-<h3 id="sample-26">Sample</h3>
+<h3 id="sample-44">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a dinner I had with my
 family last Christmas. My mother had been preparing the meal since the
 morning, and the house smelled wonderful.</p>
@@ -2336,7 +3683,7 @@ was <span class="vocab">chatting away</span>.</p>
 almost three hours.</p>
 <p><span class="tpl">Looking back</span>, the food was delicious, but
 the best part was the company. That evening gave me a strong <span class="vocab">sense of belonging</span>.</p>
-<h3 id="vocabulary-26">Vocabulary</h3>
+<h3 id="vocabulary-44">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2368,9 +3715,76 @@ the best part was the company. That evening gave me a strong <span class="vocab"
 </tr>
 </tbody>
 </table>
-<h2 id="new-hobby">6.3 New Hobby</h2>
+<h2 id="recommended-restaurant">6.3 Recommended Restaurant ⭐</h2>
+<p>Talk about a good restaurant or new place that someone recommended to
+you. Who recommended it, and how did you feel and what did you do
+there?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4.</p>
+<h3 id="sample-45">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a Greek restaurant
+that my coworker recommended last winter. She <span class="verb">raved
+about</span> the lamb, so I invited my husband to try it on our
+anniversary.</p>
+<p><span class="conn">At first</span>, we were surprised, because the
+restaurant was tiny and tucked away in a quiet alley. <span class="conn">Then</span>, the owner welcomed us warmly and <span class="verb">talked us through</span> the menu. We ordered lamb, a fresh
+salad and a <span class="vocab">mouth-watering</span> dessert made with
+honey and nuts.</p>
+<p><span class="conn">Also</span>, the atmosphere was <span class="vocab">cozy</span>, with candles and soft music.</p>
+<p><span class="conn">In the end</span>, we <span class="verb">ended
+up</span> staying for three hours, and we left completely satisfied.</p>
+<p><span class="tpl">Looking back</span>, I’m grateful for her tip, and
+now we go back every year. It was a real <span class="vocab">hidden
+gem</span>.</p>
+<h3 id="vocabulary-45">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">rave about</span></td>
+<td>talk with great excitement about</td>
+<td>He raves about that bakery.</td>
+</tr>
+<tr>
+<td><span class="verb">talk through</span></td>
+<td>explain in detail</td>
+<td>The waiter talked us through the specials.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up ordering dessert.</td>
+</tr>
+<tr>
+<td><span class="vocab">mouth-watering</span></td>
+<td>looking or smelling delicious</td>
+<td>The pie was mouth-watering.</td>
+</tr>
+<tr>
+<td><span class="vocab">cozy</span></td>
+<td>warm and comfortable</td>
+<td>We found a cozy table.</td>
+</tr>
+<tr>
+<td><span class="vocab">hidden gem</span></td>
+<td>a wonderful place few people know</td>
+<td>The café is a hidden gem.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-hobby">6.4 New Hobby</h2>
 <p>Talk about a hobby you picked up and why you enjoy it.</p>
-<h3 id="sample-27">Sample</h3>
+<h3 id="sample-46">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> photography, a hobby I
 picked up two years ago. It started when I bought a second-hand camera
 for a trip.</p>
@@ -2383,7 +3797,7 @@ some of my work on their walls.</p>
 <p><span class="tpl">Looking back</span>, I enjoy photography because it
 helps me notice beauty in ordinary things. It’s also a great way to
 <span class="vocab">unwind</span> after a busy week.</p>
-<h3 id="vocabulary-27">Vocabulary</h3>
+<h3 id="vocabulary-46">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2415,9 +3829,9 @@ helps me notice beauty in ordinary things. It’s also a great way to
 </tr>
 </tbody>
 </table>
-<h2 id="attending-an-event">6.4 Attending an Event</h2>
+<h2 id="attending-an-event">6.5 Attending an Event</h2>
 <p>Describe a time when you attended a concert, game, or festival.</p>
-<h3 id="sample-28">Sample</h3>
+<h3 id="sample-47">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a music festival I
 attended last summer with my friends. It was a three-day outdoor event
 near the lake.</p>
@@ -2431,7 +3845,7 @@ extremely happy.</p>
 <p><span class="tpl">Looking back</span>, it was an <span class="vocab">unforgettable</span> experience. Being part of such a big,
 joyful <span class="vocab">crowd</span> made me feel connected to
 strangers.</p>
-<h3 id="vocabulary-28">Vocabulary</h3>
+<h3 id="vocabulary-47">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2468,9 +3882,77 @@ strangers.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="happy-purchase">6.5 Happy Purchase</h2>
+<h2 id="winter-event-or-festival">6.6 Winter Event or Festival ⭐</h2>
+<p>Talk about something you did in winter, such as an event or a
+festival.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8.</p>
+<h3 id="sample-48">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the Winter Carnival I
+attended in Quebec City a few years ago. I went with my friends in
+February, and we <span class="verb">bundled up</span> in thick coats,
+hats and gloves.</p>
+<p><span class="conn">At first</span>, I was amazed by the giant <span class="vocab">ice sculptures</span>, which were lit up in many colours.
+<span class="conn">Then</span>, we <span class="verb">lined up
+for</span> a sleigh ride and tried hot chocolate and maple taffy on the
+snow. A live band was playing on a stage, and everyone was dancing to
+<span class="vocab">keep warm</span>.</p>
+<p><span class="conn">However</span>, it was so cold that my fingers
+became numb, and we had to <span class="verb">warm up</span> inside a
+café.</p>
+<p><span class="conn">In the end</span>, we stayed until the
+fireworks.</p>
+<p><span class="tpl">Looking back</span>, it was a <span class="vocab">magical</span> evening, and it changed how I feel about
+winter.</p>
+<h3 id="vocabulary-48">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">bundle up</span></td>
+<td>dress warmly</td>
+<td>Bundle up before you go out.</td>
+</tr>
+<tr>
+<td><span class="verb">line up for</span></td>
+<td>wait in a line to get something</td>
+<td>People lined up for tickets.</td>
+</tr>
+<tr>
+<td><span class="verb">warm up</span></td>
+<td>become warm again</td>
+<td>We warmed up by the fire.</td>
+</tr>
+<tr>
+<td><span class="vocab">ice sculptures</span></td>
+<td>art pieces carved from ice</td>
+<td>The park displays ice sculptures every winter.</td>
+</tr>
+<tr>
+<td><span class="vocab">keep warm</span></td>
+<td>stay at a comfortable temperature</td>
+<td>She wore a scarf to keep warm.</td>
+</tr>
+<tr>
+<td><span class="vocab">magical</span></td>
+<td>wonderful and special</td>
+<td>The snow made the night magical.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="happy-purchase">6.7 Happy Purchase</h2>
 <p>Talk about something you bought that you were very happy with.</p>
-<h3 id="sample-29">Sample</h3>
+<h3 id="sample-49">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a pair of
 noise-cancelling headphones I bought last year. I had been commuting by
 subway for an hour each day, and the noise was exhausting.</p>
@@ -2483,7 +3965,7 @@ enjoy my music and podcasts in peace.</p>
 even at home.</p>
 <p><span class="tpl">Looking back</span>, it was <span class="vocab">worth every penny</span>. It improved my mood and made my
 commute much more <span class="vocab">bearable</span>.</p>
-<h3 id="vocabulary-29">Vocabulary</h3>
+<h3 id="vocabulary-49">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2515,6 +3997,78 @@ commute much more <span class="vocab">bearable</span>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="special-object-you-kept">6.8 Special Object You Kept ⭐</h2>
+<p>Describe a special or valuable object that you have kept. What is it,
+how did you get it, why is it important, and why did you keep it?</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 7 and in
+the Oct 2 compiled list.</p>
+<h3 id="sample-50">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a silver watch that my
+grandfather gave me before he passed away. He had worn it for forty
+years, and it was his most <span class="vocab">cherished</span>
+possession.</p>
+<p><span class="conn">At first</span>, I did not wear it because I was
+afraid of breaking it. <span class="conn">Then</span>, I had it <span class="verb">cleaned up</span> by a jeweller, and it works perfectly
+now. He <span class="verb">handed it down to</span> me on my eighteenth
+birthday, along with a short note that I still keep in the box.</p>
+<p><span class="conn">Also</span>, it’s a family <span class="vocab">heirloom</span> that reminds me of his kindness and the
+stories he used to tell.</p>
+<p><span class="conn">In the end</span>, I decided to <span class="verb">hold on to</span> it for life, and I plan to <span class="verb">pass it on to</span> my own children.</p>
+<p><span class="tpl">Looking back</span>, the watch is not valuable for
+its price, but it has great <span class="vocab">sentimental
+value</span>.</p>
+<h3 id="vocabulary-50">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">clean up</span></td>
+<td>make clean</td>
+<td>She cleaned up the old frame.</td>
+</tr>
+<tr>
+<td><span class="verb">hand down to</span></td>
+<td>give to a younger person</td>
+<td>The ring was handed down to her.</td>
+</tr>
+<tr>
+<td><span class="verb">hold on to</span></td>
+<td>keep</td>
+<td>Hold on to your memories.</td>
+</tr>
+<tr>
+<td><span class="verb">pass on to</span></td>
+<td>give to the next generation</td>
+<td>He passed the recipe on to his son.</td>
+</tr>
+<tr>
+<td><span class="vocab">cherished</span></td>
+<td>greatly loved</td>
+<td>It is my most cherished photograph.</td>
+</tr>
+<tr>
+<td><span class="vocab">sentimental value</span></td>
+<td>importance because of personal feelings</td>
+<td>The gift has sentimental value.</td>
+</tr>
+<tr>
+<td><span class="vocab">heirloom</span></td>
+<td>a valuable object passed down in a family</td>
+<td>The clock is a family heirloom.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="decisions-embarrassment-and-trying-new-things">7 Decisions,
 Embarrassment, and Trying New Things</h1>
 <p>Topics: a hard decision, an embarrassing moment, new food, a new
@@ -2530,7 +4084,7 @@ with details].</p>
 <h2 id="difficult-decision">7.1 Difficult Decision</h2>
 <p>Talk about a difficult decision you had to make. What did you decide
 and why?</p>
-<h3 id="sample-30">Sample</h3>
+<h3 id="sample-51">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the hardest decision
 of my life, which was leaving my country to study in Canada. I had a
 good job and a close family, so I was <span class="vocab">torn</span>.</p>
@@ -2543,7 +4097,7 @@ it was both sad and exciting.</p>
 <p><span class="tpl">Looking back</span>, it was the right choice. It
 required me to <span class="vocab">step out of my comfort zone</span>,
 and I’ve grown so much more independent.</p>
-<h3 id="vocabulary-30">Vocabulary</h3>
+<h3 id="vocabulary-51">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2577,7 +4131,7 @@ and I’ve grown so much more independent.</p>
 </table>
 <h2 id="embarrassing-moment">7.2 Embarrassing Moment</h2>
 <p>Describe an embarrassing moment you can laugh about now.</p>
-<h3 id="sample-31">Sample</h3>
+<h3 id="sample-52">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> an embarrassing moment
 at a job interview. I was wearing my best suit and trying to look
 professional.</p>
@@ -2590,7 +4144,7 @@ apologized about ten times.</p>
 laughing and said it was the most memorable entrance she’d seen.
 Surprisingly, I got the job.</p>
 <p><span class="tpl">Looking back</span>, it’s now my favourite <span class="vocab">anecdote</span>. I learned that people respect <span class="vocab">a sense of humour</span>.</p>
-<h3 id="vocabulary-31">Vocabulary</h3>
+<h3 id="vocabulary-52">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2630,7 +4184,7 @@ Surprisingly, I got the job.</p>
 <h2 id="trying-new-food">7.3 Trying New Food</h2>
 <p>Talk about a time you tried a new food or experienced a new
 culture.</p>
-<h3 id="sample-32">Sample</h3>
+<h3 id="sample-53">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the first time I tried
 sushi. A Japanese colleague took me to a small restaurant during my
 first year in Canada.</p>
@@ -2642,7 +4196,7 @@ much better than I’d imagined.</p>
 ordered more.</p>
 <p><span class="tpl">Looking back</span>, I’m glad I <span class="vocab">kept an open mind</span>. Trying new foods is a delicious
 way to <span class="vocab">learn about</span> other cultures.</p>
-<h3 id="vocabulary-32">Vocabulary</h3>
+<h3 id="vocabulary-53">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2681,7 +4235,7 @@ way to <span class="vocab">learn about</span> other cultures.</p>
 </table>
 <h2 id="volunteering-experience">7.4 Volunteering Experience</h2>
 <p>Describe a time you volunteered or helped your community.</p>
-<h3 id="sample-33">Sample</h3>
+<h3 id="sample-54">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time I volunteered
 at a local food bank. I went there last winter with a coworker, planning
 to help for just one Saturday.</p>
@@ -2693,7 +4247,7 @@ neighbourhood were <span class="vocab">struggling</span>.</p>
 <p><span class="conn">In the end</span>, I kept going every Saturday for
 the whole season.</p>
 <p><span class="tpl">Looking back</span>, volunteering gave me a <span class="vocab">sense of purpose</span>. It’s rewarding to <span class="vocab">give back</span> to the community and to see a <span class="vocab">tangible</span> difference.</p>
-<h3 id="vocabulary-33">Vocabulary</h3>
+<h3 id="vocabulary-54">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2732,7 +4286,7 @@ the whole season.</p>
 </table>
 <h2 id="changing-your-mind">7.5 Changing Your Mind</h2>
 <p>Talk about a time you changed your mind about something.</p>
-<h3 id="sample-34">Sample</h3>
+<h3 id="sample-55">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> how I changed my mind
 about winter sports. I grew up in a warm country, so I always believed
 that skiing was dangerous and pointless.</p>
@@ -2744,7 +4298,7 @@ small hill without falling, and I felt a rush of excitement.</p>
 <p><span class="conn">In the end</span>, I bought a season pass for the
 next winter.</p>
 <p><span class="tpl">Looking back</span>, I learned not to <span class="vocab">judge</span> something before I try it. It also <span class="vocab">broadened my horizons</span>.</p>
-<h3 id="vocabulary-34">Vocabulary</h3>
+<h3 id="vocabulary-55">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2776,6 +4330,76 @@ next winter.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="lifestyle-change">7.6 Lifestyle Change ⭐</h2>
+<p>Talk about an important change in your lifestyle, such as eating
+healthier or exercising more.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-56">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> the year I decided to
+live a healthier life. After a <span class="vocab">check-up</span>, my
+doctor warned me that I was <span class="vocab">out of shape</span>, and
+I knew I had to act.</p>
+<p><span class="conn">At first</span>, I found it very hard to <span class="verb">give up</span> fast food and sugary drinks. <span class="conn">Then</span>, I started cooking at home and <span class="verb">signed up for</span> a gym near my office. I went three
+times a week and <span class="verb">stuck with</span> my plan even when
+I felt tired. I also began to <span class="verb">wind down</span> with a
+short walk after dinner instead of watching TV.</p>
+<p><span class="conn">In the end</span>, I lost ten kilograms and gained
+a lot of energy.</p>
+<p><span class="tpl">Looking back</span>, the change was difficult, but
+it improved my mood, my sleep and my overall <span class="vocab">well-being</span>.</p>
+<h3 id="vocabulary-56">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">give up</span></td>
+<td>stop doing or having</td>
+<td>He gave up smoking.</td>
+</tr>
+<tr>
+<td><span class="verb">sign up for</span></td>
+<td>register to join</td>
+<td>I signed up for a yoga class.</td>
+</tr>
+<tr>
+<td><span class="verb">stick with</span></td>
+<td>continue to do</td>
+<td>Stick with your routine.</td>
+</tr>
+<tr>
+<td><span class="verb">wind down</span></td>
+<td>relax after a busy time</td>
+<td>I wind down with a book.</td>
+</tr>
+<tr>
+<td><span class="vocab">out of shape</span></td>
+<td>not physically fit</td>
+<td>I’m out of shape after the winter.</td>
+</tr>
+<tr>
+<td><span class="vocab">well-being</span></td>
+<td>a state of good health and happiness</td>
+<td>Exercise improves well-being.</td>
+</tr>
+<tr>
+<td><span class="vocab">check-up</span></td>
+<td>a routine medical examination</td>
+<td>I have a check-up every year.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="favourites-and-present-day-preferences">8 Favourites and
 Present-Day Preferences</h1>
 <p>Topics: a favourite place, season, item, book or movie, a skill you
@@ -2791,7 +4415,7 @@ details].</p>
 <h2 id="place-to-relax">8.1 Place to Relax</h2>
 <p>Talk about your favourite place in your city to relax. Why do you
 like it?</p>
-<h3 id="sample-35">Sample</h3>
+<h3 id="sample-57">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my favourite place to
 relax, which is a small park by the river. It’s only ten minutes from my
 apartment.</p>
@@ -2802,7 +4426,7 @@ and watch the boats go by. There are tall trees that provide <span class="vocab"
 families having picnics and joggers running along the <span class="vocab">riverside path</span>.</p>
 <p><span class="conn">In the end</span>, I leave feeling calm and <span class="vocab">recharged</span>.</p>
 <p><span class="tpl">Looking back</span>, I love it because it’s a <span class="vocab">tranquil</span> escape from the noise of the city.</p>
-<h3 id="vocabulary-35">Vocabulary</h3>
+<h3 id="vocabulary-57">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2842,7 +4466,7 @@ families having picnics and joggers running along the <span class="vocab">rivers
 <h2 id="favourite-season">8.2 Favourite Season</h2>
 <p>Describe your favourite season and what you enjoy doing during
 it.</p>
-<h3 id="sample-36">Sample</h3>
+<h3 id="sample-58">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my favourite season,
 autumn. I love it because the weather is cool but not freezing.</p>
 <p><span class="conn">At first</span>, I enjoy the way the leaves change
@@ -2856,7 +4480,7 @@ because autumn gives me a <span class="vocab">fresh start</span> before
 winter.</p>
 <p><span class="tpl">Looking back</span>, no other season gives me such
 a <span class="vocab">serene</span> mood.</p>
-<h3 id="vocabulary-36">Vocabulary</h3>
+<h3 id="vocabulary-58">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2890,7 +4514,7 @@ a <span class="vocab">serene</span> mood.</p>
 </table>
 <h2 id="item-you-cant-live-without">8.3 Item You Can’t Live Without</h2>
 <p>Talk about an item you could not live without.</p>
-<h3 id="sample-37">Sample</h3>
+<h3 id="sample-59">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> my smartphone, the
 item I couldn’t live without. I got it three years ago, and now it’s
 part of my daily routine.</p>
@@ -2901,7 +4525,7 @@ list</span>, so I never forget appointments. I can even learn English
 with a language app on my commute.</p>
 <p><span class="conn">In the end</span>, it saves me a lot of time.</p>
 <p><span class="tpl">Looking back</span>, I’m <span class="vocab">dependent on</span> it, but it’s also an incredibly <span class="vocab">convenient</span> tool that keeps me connected.</p>
-<h3 id="vocabulary-37">Vocabulary</h3>
+<h3 id="vocabulary-59">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2933,9 +4557,11 @@ with a language app on my commute.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="influential-book-or-movie">8.4 Influential Book or Movie</h2>
+<h2 id="influential-book-or-movie">8.4 Influential Book or Movie ⭐</h2>
 <p>Describe a book, movie, or show that influenced you.</p>
-<h3 id="sample-38">Sample</h3>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list (a movie that had a strong impact on you).</p>
+<h3 id="sample-60">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a book called “The
 Alchemist,” which really influenced me. A friend recommended it when I
 was twenty, and I wasn’t sure about my future.</p>
@@ -2949,7 +4575,7 @@ universe helps you achieve it.</p>
 change my major and study what I loved.</p>
 <p><span class="tpl">Looking back</span>, the book was <span class="vocab">thought-provoking</span> and <span class="vocab">life-changing</span>. I’ve read it three times since
 then.</p>
-<h3 id="vocabulary-38">Vocabulary</h3>
+<h3 id="vocabulary-60">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2981,9 +4607,81 @@ then.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="skill-to-learn">8.5 Skill to Learn</h2>
+<h2 id="important-reading">8.5 Important Reading ⭐</h2>
+<p>Talk about something you read that was important to you.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-61">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a book that changed
+the way I think about money. A friend lent it to me when I was twenty,
+and I <span class="verb">flipped through</span> the pages without much
+interest.</p>
+<p><span class="conn">At first</span>, I found some parts hard to
+understand. <span class="conn">Then</span>, I <span class="verb">got
+hooked on</span> the author’s simple examples about saving and
+investing. I started taking notes, and I even <span class="verb">looked
+back on</span> the main ideas each month. The book taught me to <span class="vocab">live within my means</span> and to avoid unnecessary
+debt.</p>
+<p><span class="conn">In the end</span>, I opened a savings account and
+<span class="verb">set up</span> an automatic transfer, which helped me
+build a <span class="vocab">safety net</span>.</p>
+<p><span class="tpl">Looking back</span>, it was a <span class="vocab">practical</span> guide that I still recommend to
+everyone.</p>
+<h3 id="vocabulary-61">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">flip through</span></td>
+<td>turn pages quickly</td>
+<td>I flipped through the magazine.</td>
+</tr>
+<tr>
+<td><span class="verb">get hooked on</span></td>
+<td>become very interested in</td>
+<td>She got hooked on mystery novels.</td>
+</tr>
+<tr>
+<td><span class="verb">look back on</span></td>
+<td>think about the past</td>
+<td>I look back on those years fondly.</td>
+</tr>
+<tr>
+<td><span class="verb">set up</span></td>
+<td>arrange or establish</td>
+<td>He set up a savings plan.</td>
+</tr>
+<tr>
+<td><span class="vocab">live within my means</span></td>
+<td>spend only what I earn</td>
+<td>We try to live within our means.</td>
+</tr>
+<tr>
+<td><span class="vocab">safety net</span></td>
+<td>money saved for emergencies</td>
+<td>A safety net helps in hard times.</td>
+</tr>
+<tr>
+<td><span class="vocab">practical</span></td>
+<td>useful in real life</td>
+<td>The advice was practical.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="skill-to-learn">8.6 Skill to Learn</h2>
 <p>Talk about a skill you would like to learn and why.</p>
-<h3 id="sample-39">Sample</h3>
+<h3 id="sample-62">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a skill I’d love to
 learn, which is playing the piano. I’ve always loved listening to
 classical music, but I’ve never had lessons.</p>
@@ -2999,7 +4697,7 @@ song at a family gathering.</p>
 instrument is <span class="vocab">rewarding</span> and good for the
 brain. It’s also a wonderful way to <span class="vocab">express
 myself</span>.</p>
-<h3 id="vocabulary-39">Vocabulary</h3>
+<h3 id="vocabulary-62">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3049,7 +4747,7 @@ feelings].</p>
 <p><span class="tpl">Looking back</span>, [what you learned].</p>
 <h2 id="losing-something-important">9.1 Losing Something Important</h2>
 <p>Describe a time when you lost something important. What happened?</p>
-<h3 id="sample-40">Sample</h3>
+<h3 id="sample-63">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the day I lost my
 wallet on a crowded bus. It was last November, and I realized it was
 gone when I tried to pay for coffee.</p>
@@ -3060,7 +4758,7 @@ company’s <span class="vocab">lost and found</span> office.</p>
 <p><span class="conn">In the end</span>, a kind passenger had handed it
 in, and everything was still inside.</p>
 <p><span class="tpl">Looking back</span>, I was extremely <span class="vocab">relieved</span>. It taught me to keep my belongings <span class="vocab">secure</span> and to trust that honest people exist.</p>
-<h3 id="vocabulary-40">Vocabulary</h3>
+<h3 id="vocabulary-63">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3094,7 +4792,7 @@ in, and everything was still inside.</p>
 </table>
 <h2 id="solving-a-problem">9.2 Solving a Problem</h2>
 <p>Talk about a time when you had to solve an unexpected problem.</p>
-<h3 id="sample-41">Sample</h3>
+<h3 id="sample-64">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time my laptop
 crashed an hour before an important online presentation. I was working
 from home, and my files were stored on the laptop.</p>
@@ -3106,7 +4804,7 @@ five minutes to spare.</p>
 smoothly.</p>
 <p><span class="tpl">Looking back</span>, it taught me to always keep a
 <span class="vocab">backup</span>. It also showed me that I can <span class="vocab">think on my feet</span> when things go wrong.</p>
-<h3 id="vocabulary-41">Vocabulary</h3>
+<h3 id="vocabulary-64">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3140,7 +4838,7 @@ smoothly.</p>
 </table>
 <h2 id="a-day-gone-wrong">9.3 A Day Gone Wrong</h2>
 <p>Describe a time when everything seemed to go wrong in a day.</p>
-<h3 id="sample-42">Sample</h3>
+<h3 id="sample-65">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> a day when absolutely
 everything went wrong. It was a Monday, and my alarm didn’t ring, so I
 woke up an hour late.</p>
@@ -3156,7 +4854,7 @@ and my boss lent me a spare jacket.</p>
 forget, but it showed me how to <span class="vocab">laugh it off</span>.
 It was just a <span class="vocab">bad day</span>, and tomorrow was
 better.</p>
-<h3 id="vocabulary-42">Vocabulary</h3>
+<h3 id="vocabulary-65">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3190,7 +4888,7 @@ better.</p>
 </table>
 <h2 id="help-from-a-stranger">9.4 Help From a Stranger</h2>
 <p>Talk about a time when you received help from a stranger.</p>
-<h3 id="sample-43">Sample</h3>
+<h3 id="sample-66">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time my car broke
 down on a quiet country road. It was late at night, my phone battery was
 almost dead, and I was alone.</p>
@@ -3201,7 +4899,7 @@ refused to accept any money.</p>
 him over and over.</p>
 <p><span class="tpl">Looking back</span>, I was touched by his <span class="vocab">kindness</span>. That night restored my <span class="vocab">faith in humanity</span>, and now I try to help others in
 need, too.</p>
-<h3 id="vocabulary-43">Vocabulary</h3>
+<h3 id="vocabulary-66">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3233,9 +4931,83 @@ need, too.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="being-late">9.5 Being Late</h2>
+<h2 id="chatting-with-a-stranger">9.5 Chatting With a Stranger ⭐</h2>
+<p>Talk about a time you met a stranger somewhere and started talking,
+for example on a trip or on a plane. Explain where you met, what you
+talked about, how you felt and whether you stayed in touch.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (three
+reports) and Oct 4 (several reports).</p>
+<h3 id="sample-67">Sample</h3>
+<p><span class="tpl">Let me tell you about</span> a long flight to
+Vancouver last year. I was sitting next to a young woman, and we <span class="verb">got talking</span> when she asked me for a pen to fill out
+the <span class="vocab">customs form</span>.</p>
+<p><span class="conn">At first</span>, our conversation was polite and
+short. <span class="conn">Then</span>, we discovered that we both loved
+photography, and the hours passed quickly. She told me about her trip to
+Iceland, and I shared my favourite <span class="vocab">travel
+tips</span>. We even <span class="verb">swapped</span> some of our best
+photos on our phones.</p>
+<p><span class="conn">In the end</span>, we exchanged numbers, and we
+still <span class="verb">keep in touch</span> online.</p>
+<p><span class="tpl">Looking back</span>, I was surprised by how easy it
+was to <span class="verb">connect with</span> a complete stranger. It
+was a <span class="vocab">pleasant</span> reminder that people are
+friendly when you give them a chance.</p>
+<h3 id="vocabulary-67">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get talking</span></td>
+<td>begin a conversation</td>
+<td>We got talking at the bus stop.</td>
+</tr>
+<tr>
+<td><span class="verb">swap</span></td>
+<td>exchange</td>
+<td>They swapped stories.</td>
+</tr>
+<tr>
+<td><span class="verb">keep in touch</span></td>
+<td>stay in contact</td>
+<td>We keep in touch by email.</td>
+</tr>
+<tr>
+<td><span class="verb">connect with</span></td>
+<td>form a friendly bond with</td>
+<td>It is easy to connect with kind people.</td>
+</tr>
+<tr>
+<td><span class="vocab">travel tips</span></td>
+<td>useful advice for travelling</td>
+<td>She shared her travel tips with me.</td>
+</tr>
+<tr>
+<td><span class="vocab">pleasant</span></td>
+<td>nice and enjoyable</td>
+<td>We had a pleasant chat.</td>
+</tr>
+<tr>
+<td><span class="vocab">customs form</span></td>
+<td>a document declaring items you bring into a country</td>
+<td>Fill out the customs form on the plane.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="being-late">9.6 Being Late</h2>
 <p>Describe a time you were late and missed something important.</p>
-<h3 id="sample-44">Sample</h3>
+<h3 id="sample-68">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the day I was late for
 my driving test. I had booked it three months earlier, and I was very
 excited.</p>
@@ -3249,7 +5021,7 @@ months for a new test.</p>
 <p><span class="tpl">Looking back</span>, I learned to <span class="vocab">allow extra time</span> for unexpected delays. Now I
 always <span class="vocab">plan ahead</span> for important
 appointments.</p>
-<h3 id="vocabulary-44">Vocabulary</h3>
+<h3 id="vocabulary-68">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3281,10 +5053,10 @@ appointments.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="long-wait">9.6 Long Wait</h2>
+<h2 id="long-wait">9.7 Long Wait</h2>
 <p>Talk about a time you had to wait a very long time. What
 happened?</p>
-<h3 id="sample-45">Sample</h3>
+<h3 id="sample-69">Sample</h3>
 <p><span class="tpl">Let me tell you about</span> the time I waited six
 hours in an emergency room. I had cut my hand badly while cooking, and
 my friend drove me to the hospital.</p>
@@ -3298,7 +5070,7 @@ just ten minutes.</p>
 <p><span class="tpl">Looking back</span>, it was a <span class="vocab">frustrating</span> evening, but it taught me to be patient
 and to understand how <span class="vocab">overworked</span> medical
 staff are.</p>
-<h3 id="vocabulary-45">Vocabulary</h3>
+<h3 id="vocabulary-69">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -3397,7 +5169,25 @@ staff are.</p>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -3409,6 +5199,18 @@ staff are.</p>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
@@ -3610,5 +5412,557 @@ staff are.</p>
   });
 })();
 </script>
+<!-- _doc-audio-panel -->
+<!-- Voice panel for generated HTML documents. Baked into the files (like the read check-marks) and
+     re-injected by the app when it serves them, so it works opened from the app, from a local file or
+     from Hugging Face. With the app running, recordings are saved in the app folder; without it they
+     are saved in this browser (IndexedDB) and can be exported / imported. Edit THIS file, then run
+     bake_audio_panel.py to refresh the copies inside the HTML files. -->
+<style>
+#_aud-rec-toggle, #_aud-io { position: fixed; top: 12px; z-index: 200; width: 34px; height: 34px;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font-size: 1.05em; cursor: pointer; box-shadow: var(--shadow, none);
+  display: flex; align-items: center; justify-content: center; }
+#_aud-rec-toggle { left: 96px; } #_aud-io { left: 138px; }
+#_aud-rec-toggle:hover, #_aud-io:hover { border-color: var(--accent, #e08a5f); }
+#_aud-rec-toggle.live { background: #b91c1c; border-color: #ef4444; color: #fff; }
+#_aud-src { position: fixed; top: 12px; left: 180px; z-index: 200; height: 34px; padding: 0 10px; display: none;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font: 0.8em sans-serif; cursor: pointer; box-shadow: var(--shadow, none); }
+#_aud-src:hover { border-color: var(--accent, #e08a5f); }
+#_aud-hud, #_aud-menu { position: fixed; top: 54px; left: 12px; z-index: 200; display: none; width: 300px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border, #3e3d3a);
+  background: var(--bg-elevated, #30302e); color: var(--text, #f0efe9);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.4 sans-serif; }
+#_aud-hud { border-color: #ef4444; }
+#_aud-hud .lbl { font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#_aud-hud .tm.live { color: #ef4444; font-weight: 600; }
+#_aud-hud .row, #_aud-menu .row, #_aud-bar { display: flex; gap: 6px; align-items: center; }
+#_aud-hud .row, #_aud-menu .row { margin-top: 6px; flex-wrap: wrap; }
+#_aud-menu .hint { color: var(--text-muted, #a8a6a0); font-size: .92em; }
+#_aud-bar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 200;
+  width: min(820px, 96vw); display: none; padding: 6px 10px; border-radius: 12px;
+  border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.3 sans-serif; }
+#_aud-bar input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent, #e08a5f); }
+#_aud-bar .tt { font-variant-numeric: tabular-nums; color: var(--text-muted, #a8a6a0); white-space: nowrap; }
+#_aud-toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 210; display: none;
+  padding: 4px 12px; border-radius: 8px; background: var(--bg-elevated, #30302e); color: var(--accent, #e08a5f);
+  border: 1px solid var(--border, #3e3d3a); font: 0.85em sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+#_aud-hud button, #_aud-menu button, #_aud-bar button, #_aud-bar select { padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 1em; border: 1px solid var(--border, #3e3d3a); background: transparent;
+  color: var(--text, #f0efe9); }
+#_aud-bar select option { background: var(--bg-elevated, #30302e); }
+#_aud-hud button:hover, #_aud-menu button:hover, #_aud-bar button:hover, #_aud-bar button.on {
+  border-color: var(--accent, #e08a5f); color: var(--accent, #e08a5f); }
+#_aud-bar button { white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+._aud-hrec { margin-right: 8px; padding: 0 6px; font-size: 0.55em; line-height: 1.7; vertical-align: middle;
+  border-radius: 6px; cursor: pointer; opacity: .5; border: 1px solid var(--border, #3e3d3a);
+  background: transparent; color: var(--text, #f0efe9); }
+._aud-hrec:hover { opacity: 1; border-color: var(--accent, #e08a5f); }
+._aud-hrec.has { opacity: 1; border-color: #ef4444; background: #ef4444; color: #fff; }
+._aud-hrec.live { opacity: 1; border-color: #ef4444; background: #b91c1c; color: #fff; }
+a._aud-has::after { content: ' \1F50A'; font-size: .8em; }
+a._aud-now { color: var(--accent, #e08a5f) !important; font-weight: 700; }
+@media print { #_aud-src, #_aud-rec-toggle, #_aud-io, #_aud-hud, #_aud-menu, #_aud-bar, #_aud-toast, ._aud-hrec { display: none !important; } }
+</style>
+<script>
+(function () {
+  if (window.__audPanel) return;
+  if (!window.MediaRecorder || !window.indexedDB || !window.fetch || !window.Promise) return;  /* e.g. wkhtmltopdf */
+  window.__audPanel = true;
+  const docKey = decodeURIComponent(location.pathname);
+  const docName = docKey.split('/').pop().replace(/\.html?$/i, '');
+  let speed = 2;  /* same default as the library player */
+  try { speed = parseFloat(localStorage.getItem('_aud_speed')) || 2; } catch (e) {}
+
+  /* ── Sections of the document: TOC order, heading element per id ── */
+  const clean = el => { const c = el.cloneNode(true); c.querySelectorAll('._aud-hrec').forEach(n => n.remove());
+    return c.textContent.replace(/\s+/g, ' ').trim(); };
+  const tocAnchors = () => Array.from(document.querySelectorAll('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]'));
+  const idOf = a => decodeURIComponent((a.getAttribute('href') || '').slice(1));
+  const heads = [];
+  (function () {
+    const seen = new Set();
+    const add = id => {
+      const t = id && document.getElementById(id);
+      if (!t || seen.has(id)) return;
+      const h = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (!h || h.closest('#TOC') || h.closest('#_toc-sidebar')) return;
+      seen.add(id); heads.push({ id: id, el: h, title: clean(h) });
+    };
+    tocAnchors().forEach(a => add(idOf(a)));
+    if (!heads.length) document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => add(h.id));
+  })();
+  if (!heads.length) return;
+  const titleOf = id => (heads.find(h => h.id === id) || {}).title || id;
+  const headPos = id => heads.findIndex(h => h.id === id);
+
+  /* The active section = last heading scrolled to the top area of the screen. */
+  function activeId() {
+    let cur = heads[0];
+    for (const h of heads) { if (h.el.getBoundingClientRect().top <= 90) cur = h; else break; }
+    return cur.id;
+  }
+
+  /* ── Storage: the app (when it is running) or this browser (IndexedDB) ── */
+  let mode = 'local';   /* 'api' = the app saves recordings in the library folder; 'local' = this browser */
+  const apiInfo = async () => {
+    const r = await fetch('/api/library/get-audio?html_url=' + encodeURIComponent(docKey));
+    if (!r.ok) throw new Error('no app');
+    const d = await r.json();
+    if (!d || typeof d.has_audio === 'undefined') throw new Error('no app');
+    return d;
+  };
+  const idb = (function () {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('_doc_voice', 1);
+      r.onupgradeneeded = () => { r.result.createObjectStore('clips', { keyPath: 'k' }).createIndex('doc', 'doc'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+    const run = (access, fn) => open().then(db => new Promise((res, rej) => {
+      const t = db.transaction('clips', access), req = fn(t.objectStore('clips'));
+      t.oncomplete = () => res(req.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    return {
+      all: doc => run('readonly', s => s.index('doc').getAll(doc)),
+      put: c => run('readwrite', s => s.put(c)),
+      del: k => run('readwrite', s => s.delete(k)),
+    };
+  })();
+  const clipKey = id => docKey + '||' + id;
+
+  /* ── UI ── */
+  const recToggle = document.createElement('button');
+  recToggle.id = '_aud-rec-toggle'; recToggle.textContent = '🎙';
+  recToggle.title = 'Record my voice for the section I am reading';
+  const ioBtn = document.createElement('button');
+  ioBtn.id = '_aud-io'; ioBtn.textContent = '💾'; ioBtn.title = 'Where my recordings are saved / export / import';
+  const srcBtn = document.createElement('button');
+  srcBtn.id = '_aud-src';
+  const hud = document.createElement('div');
+  hud.id = '_aud-hud';
+  hud.innerHTML = '<div class="lbl"></div><div class="tm"></div><div class="row">' +
+    '<button data-a="pause">⏸ Pause</button><button data-a="save">⏹ Stop &amp; save</button>' +
+    '<button data-a="cancel">Cancel</button></div>';
+  const menu = document.createElement('div');
+  menu.id = '_aud-menu';
+  menu.innerHTML = '<div class="hint" id="_aud-where"></div><div class="row">' +
+    '<button data-a="export">⬇ Export recordings</button><button data-a="import">⬆ Import recordings…</button></div>' +
+    '<input type="file" accept=".voicebundle" style="display:none">';
+  const bar = document.createElement('div');
+  bar.id = '_aud-bar';
+  bar.innerHTML = '<button id="_aud-all">▶ Full audio</button>' +
+    '<button id="_aud-sec" title="Play only the section I am reading">▶ This section</button>' +
+    '<button id="_aud-follow" title="Jump the audio to the section I scroll to">⇣ Follow</button>' +
+    '<input type="range" min="0" max="1000" value="0" step="1"><span class="tt">0:00 / 0:00</span>' +
+    '<select title="Speed"></select><audio preload="none" style="display:none"></audio>';
+  const toast = document.createElement('div');
+  toast.id = '_aud-toast';
+  document.body.append(recToggle, ioBtn, srcBtn, hud, menu, bar, toast);
+  const player = bar.querySelector('audio'), allBtn = bar.querySelector('#_aud-all'),
+        secBtn = bar.querySelector('#_aud-sec'), followBtn = bar.querySelector('#_aud-follow'),
+        slider = bar.querySelector('input[type=range]'), timeLbl = bar.querySelector('.tt'),
+        speedSel = bar.querySelector('select'), fileIn = menu.querySelector('input[type=file]');
+  [1, 1.25, 1.5, 2].forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s + '×'; speedSel.appendChild(o);
+  });
+  speedSel.value = speed;
+  function flash(t) { toast.textContent = t; toast.style.display = 'block'; clearTimeout(flash.t);
+    flash.t = setTimeout(() => { toast.style.display = 'none'; }, 2800); }
+  const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  /* ── State ── */
+  let clips = [];   /* my recordings, in play order: {id, src, off, dur, vStart} (seconds) */
+  let blobUrls = [];
+  let hasApp = false, appUrl = null, hasMine = false, mineUrl = null;
+  let source = 'mine', pick = null;   /* 'mine' = my own recordings (default when they exist), 'app' = the document's app audio */
+  let follow = true, lastActive = null, curIdx = -1, cont = false, dragging = false;
+  const isMine = () => source === 'mine';
+  const idxOf = id => clips.findIndex(c => c.id === id);
+  const hasClip = id => idxOf(id) >= 0;
+
+  function applySpeed() {
+    player.playbackRate = speed;
+    player.preservesPitch = true; player.mozPreservesPitch = true; player.webkitPreservesPitch = true;
+  }
+  speedSel.addEventListener('change', () => {
+    speed = parseFloat(speedSel.value);
+    try { localStorage.setItem('_aud_speed', String(speed)); } catch (e) {}
+    applySpeed();
+  });
+  player.addEventListener('loadedmetadata', applySpeed);
+  player.addEventListener('play', applySpeed);
+
+  /* ── Playback engine ── */
+  /* Recorded blobs have no length in their header; this makes the browser work it out. */
+  function whenReady(then) {
+    if (player.duration === Infinity) {
+      const back = () => { player.removeEventListener('timeupdate', back); player.currentTime = 0; then(); };
+      player.addEventListener('timeupdate', back);
+      player.currentTime = 1e101;
+    } else then();
+  }
+  function setSrc(src, then) {
+    if (player.dataset.s === src) {
+      if (player.readyState >= 1) then(); else player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+      return;
+    }
+    player.dataset.s = src; player.src = src;
+    player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+    player.load();
+  }
+  /* Start (or just cue) my clip i at `offset` seconds into it. cnt = keep going into the next clips afterwards. */
+  function cue(i, offset, play, cnt) {
+    const c = clips[i]; if (!c) return;
+    curIdx = i; cont = cnt;
+    setSrc(c.src, () => {
+      player.currentTime = c.off + offset; applySpeed();
+      if (play) player.play().catch(() => {});
+      updateSlider();
+    });
+  }
+  function vTime() {
+    if (!isMine()) return player.currentTime || 0;
+    const c = clips[curIdx];
+    return c ? c.vStart + Math.max(0, Math.min(c.dur, player.currentTime - c.off)) : 0;
+  }
+  function vTotal() {
+    if (!isMine()) return isFinite(player.duration) ? player.duration : 0;
+    const l = clips[clips.length - 1]; return l ? l.vStart + l.dur : 0;
+  }
+  function updateSlider() {
+    const tot = vTotal(), v = vTime();
+    if (!dragging) slider.value = tot ? Math.round(1000 * v / tot) : 0;
+    timeLbl.textContent = fmt(v * 1000) + ' / ' + fmt(tot * 1000);
+  }
+  function clipAt(v) {   /* my clip containing virtual time v */
+    let i = clips.length - 1;
+    for (let k = 0; k < clips.length; k++) if (v < clips[k].vStart + clips[k].dur) { i = k; break; }
+    return i;
+  }
+  /* A clip finished: carry on with the next one, or stop. */
+  function clipEnded() {
+    if (!isMine()) return;
+    if (cont && curIdx + 1 < clips.length) cue(curIdx + 1, 0, true, true);
+    else { player.pause(); cont = false; }
+  }
+  player.addEventListener('ended', clipEnded);
+  player.addEventListener('timeupdate', () => {
+    const t = player.currentTime;
+    if (isMine() && mode === 'api' && clips.length) {
+      /* One shared file: follow the clock to know which clip is playing, stop at a section's end. */
+      const j = clips.findIndex(x => t >= x.off - 0.02 && t < x.off + x.dur);
+      if (j >= 0) curIdx = j;
+      const c = clips[curIdx];
+      if (c && !cont && !player.paused && t >= c.off + c.dur - 0.04) player.pause();
+    }
+    updateSlider();
+    const cur = isMine() && clips[curIdx] && !player.paused ? clips[curIdx].id : null;
+    tocAnchors().forEach(a => a.classList.toggle('_aud-now', !!cur && idOf(a) === cur));
+  });
+  slider.addEventListener('input', () => {
+    dragging = true;
+    const tot = vTotal(); timeLbl.textContent = fmt(slider.value / 1000 * tot * 1000) + ' / ' + fmt(tot * 1000);
+  });
+  slider.addEventListener('change', () => {
+    dragging = false;
+    const tot = vTotal(), v = slider.value / 1000 * tot, playing = !player.paused;
+    if (!isMine()) { player.currentTime = v; return; }
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), playing, true);   /* moving the bar by hand lifts any section-only limit */
+  });
+  allBtn.addEventListener('click', () => {
+    if (!player.paused && cont) { player.pause(); return; }
+    if (!isMine()) { player.play().catch(() => {}); return; }
+    let v = vTime(); const tot = vTotal();
+    if (v >= tot - 0.2) v = 0;
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), true, true);
+  });
+  secBtn.addEventListener('click', () => {
+    const id = activeId(), i = idxOf(id);
+    if (!isMine()) { flash('Sections only work with my recordings'); return; }
+    if (i < 0) { flash('No recording for "' + titleOf(id).slice(0, 40) + '" yet'); return; }
+    if (!player.paused && !cont && curIdx === i) { player.pause(); return; }
+    cue(i, 0, true, false);
+  });
+  function labelSecBtn() {
+    const id = activeId();
+    secBtn.textContent = '▶ ' + titleOf(id);
+    secBtn.classList.toggle('on', isMine() && hasClip(id));
+    secBtn.style.opacity = isMine() && hasClip(id) ? '1' : '.55';
+  }
+  /* Follow: when the section I am reading changes, the audio moves to it. */
+  function followScroll() {
+    const id = activeId();
+    if (id === lastActive) return;
+    lastActive = id;
+    const i = idxOf(id);
+    if (!follow || !isMine() || i < 0 || !bar.style.display || bar.style.display === 'none') return;
+    cue(i, 0, !player.paused, true);   /* playing: jump and keep going; paused: just cue it */
+  }
+  followBtn.classList.add('on');
+  followBtn.addEventListener('click', () => {
+    follow = !follow; followBtn.classList.toggle('on', follow);
+    flash(follow ? 'Audio will follow the section you scroll to' : 'Follow is off');
+  });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { ticking = false; labelSecBtn(); followScroll(); });
+  }, { passive: true });
+  /* Clicking a Contents item: the page scrolls as usual AND the audio jumps to that section. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]');
+    const i = a && isMine() ? idxOf(idOf(a)) : -1;
+    if (i >= 0) cue(i, 0, true, true);
+  });
+
+  /* ── Heading buttons (beside the read check-mark) ── */
+  heads.forEach(h => {
+    const b = document.createElement('button');
+    b.className = '_aud-hrec'; b.dataset.id = h.id; b.textContent = '🎙';
+    b.addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); onHeadingButton(h.id); });
+    h.el.insertBefore(b, h.el.firstChild);
+  });
+  function markButtons() {
+    document.querySelectorAll('._aud-hrec').forEach(b => {
+      const id = b.dataset.id, live = rec && target === id;
+      b.classList.toggle('live', !!live);
+      b.classList.toggle('has', !live && hasClip(id));
+      b.textContent = live ? '⏹' : '🎙';
+      b.title = live ? 'Stop & save this recording'
+        : hasClip(id) ? 'Recorded — click to remove this recording' : 'Record my voice for this section';
+    });
+    tocAnchors().forEach(a => a.classList.toggle('_aud-has', hasClip(idOf(a))));
+    labelSecBtn();
+  }
+
+  /* ── Loading what exists ── */
+  async function probeAppAudio() {   /* the document's own audio, if it sits next to the HTML on a web server */
+    if (!/^https?:$/.test(location.protocol)) return null;
+    const raw = location.pathname.split('/'), file = raw.pop(), base = decodeURIComponent(file).replace(/\.html?$/i, '');
+    const dirs = [raw.join('/')];
+    if (decodeURIComponent(raw[raw.length - 1] || '') === 'HTML') dirs.push(raw.slice(0, -1).join('/'));
+    const cands = [];
+    dirs.forEach(d => ['m4a', 'mp3', 'wav', 'ogg', 'aac', 'flac', 'mp4', 'webm'].forEach(x =>
+      cands.push(d + '/' + encodeURIComponent(base) + '.' + x)));
+    const hits = await Promise.all(cands.map(u => fetch(u, { method: 'HEAD' }).then(r => {
+      const ct = r.headers.get('content-type') || '';
+      return r.ok && !/text\/html/i.test(ct) ? u : null;
+    }).catch(() => null)));
+    return hits.find(Boolean) || null;
+  }
+  let probed = false, ready = Promise.resolve();
+  /* Every action waits for the latest refresh, so nothing runs before we know whether the app is there. */
+  function refresh() { ready = doRefresh(); return ready; }
+  async function doRefresh() {
+    blobUrls.forEach(u => URL.revokeObjectURL(u)); blobUrls = [];
+    try {
+      const d = await apiInfo();
+      mode = 'api';
+      hasApp = !!d.has_audio; appUrl = d.url || null;
+      hasMine = !!d.my_voice; mineUrl = d.my_url || null;
+      const S = d.sections || {}, stamp = (mineUrl && mineUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      clips = Object.keys(S).map(id => ({ id: id, src: mineUrl + stamp, off: S[id].start,
+        dur: S[id].end - S[id].start, vStart: S[id].start })).sort((a, b) => a.off - b.off);
+      if (!hasMine) clips = [];
+    } catch (e) {
+      mode = 'local';
+      if (!probed) { probed = true; try { appUrl = await probeAppAudio(); } catch (er) { appUrl = null; } }
+      hasApp = !!appUrl;
+      let rows = [];
+      try { rows = await idb.all(docKey); } catch (er) { flash('Browser storage is not available here'); }
+      const byId = new Map(rows.map(r => [r.id, r]));
+      let v = 0; clips = [];
+      heads.forEach(h => {
+        const r = byId.get(h.id); if (!r) return;
+        const u = URL.createObjectURL(r.blob); blobUrls.push(u);
+        clips.push({ id: h.id, src: u, off: 0, dur: r.dur, vStart: v }); v += r.dur;
+      });
+      hasMine = clips.length > 0;
+    }
+    if ((pick === 'mine' && !hasMine) || (pick === 'app' && !hasApp)) pick = null;
+    source = pick || (hasMine ? 'mine' : 'app');   /* my own voice wins by default */
+    loadSource();
+  }
+  function loadSource() {
+    player.pause(); player.removeAttribute('src'); player.dataset.s = ''; curIdx = -1; cont = false;
+    const available = isMine() ? hasMine : hasApp;
+    if (!available) { bar.style.display = 'none'; document.body.style.paddingBottom = ''; }
+    else {
+      bar.style.display = 'flex'; document.body.style.paddingBottom = '64px';
+      if (!isMine()) { player.dataset.s = appUrl; player.src = appUrl + (appUrl.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+    }
+    srcBtn.style.display = hasApp && hasMine ? 'block' : 'none';
+    srcBtn.textContent = isMine() ? '🎙 My voice' : '🔈 App voice';
+    srcBtn.title = isMine() ? "Playing my own recordings. Click to play the app's audio instead"
+                            : "Playing the app's audio. Click to play my own recordings instead";
+    allBtn.title = isMine() ? 'Play all my recordings from the start' : 'Play the app audio from the start';
+    followBtn.style.display = isMine() ? '' : 'none';
+    updateSlider(); markButtons();
+  }
+  srcBtn.addEventListener('click', () => { pick = isMine() ? 'app' : 'mine'; source = pick; loadSource(); });
+  player.addEventListener('loadedmetadata', updateSlider);
+
+  /* ── Removing ── */
+  async function removeSection(id) {
+    await ready;
+    if (!confirm('Remove your recording for "' + titleOf(id) + '"?')) return;
+    let ok = true, err = '';
+    if (mode === 'api') {
+      try {
+        const d = await (await fetch('/api/library/delete-section', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html_url: docKey, section_id: id }) })).json();
+        ok = !!d.success; err = d.error || '';
+      } catch (e) { ok = false; err = 'Network error'; }
+    } else {
+      try { await idb.del(clipKey(id)); } catch (e) { ok = false; err = 'Browser storage error'; }
+    }
+    flash(ok ? 'Recording removed' : (err || 'Could not remove'));
+    refresh();
+  }
+
+  /* ── Recording ── */
+  let stream = null, rec = null, chunks = [], t0 = 0, acc = 0, timer = null, target = null;
+  const lbl = hud.querySelector('.lbl'), tm = hud.querySelector('.tm'), pauseBtn = hud.querySelector('[data-a=pause]');
+  function tick() {
+    const paused = rec && rec.state === 'paused';
+    tm.textContent = (paused ? 'Paused ' : '● Recording ') + fmt(acc + (rec && !paused ? Date.now() - t0 : 0));
+    tm.classList.toggle('live', !paused);
+  }
+  function release() {
+    clearInterval(timer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = rec = target = null; chunks = []; acc = 0;
+    hud.style.display = 'none'; recToggle.classList.remove('live'); recToggle.textContent = '🎙';
+    markButtons();
+  }
+  async function startRecording(id) {
+    if (rec) return;
+    await ready;
+    if (rec) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { flash('Recording is not supported here'); return; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false, noiseSuppression: false, autoGainControl: false, sampleRate: 48000 } });
+    } catch (e) { flash('Microphone blocked: ' + e.message); return; }
+    player.pause();
+    target = id;
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : undefined);
+    rec.addEventListener('dataavailable', e => { if (e.data && e.data.size) chunks.push(e.data); });
+    rec.start(); t0 = Date.now(); acc = 0;
+    lbl.textContent = (hasClip(id) ? 'Re-recording: ' : 'Recording: ') + titleOf(id);
+    pauseBtn.textContent = '⏸ Pause';
+    hud.style.display = 'block'; recToggle.classList.add('live'); recToggle.textContent = '⏹';
+    timer = setInterval(tick, 200); tick(); markButtons();
+  }
+  async function stopAndSave() {
+    if (!rec) return;
+    const id = target, ms = acc + (rec.state === 'recording' ? Date.now() - t0 : 0);
+    const stopped = new Promise(res => rec.addEventListener('stop', res, { once: true }));
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: (rec && rec.mimeType) || 'audio/webm' });
+    clearInterval(timer); tm.classList.remove('live'); tm.textContent = 'Saving…';
+    let ok = false, err = '';
+    if (mode === 'api') {
+      const fd = new FormData();
+      fd.append('html_url', docKey); fd.append('section_id', id); fd.append('file', blob, 'recording.webm');
+      try { const d = await (await fetch('/api/library/record-section', { method: 'POST', body: fd })).json();
+        ok = !!d.success; err = d.error || ''; }
+      catch (e) { err = 'Network error while saving'; }
+    } else {
+      try { await idb.put({ k: clipKey(id), doc: docKey, id: id, blob: blob, dur: ms / 1000, ts: Date.now() }); ok = true; }
+      catch (e) { err = 'Browser storage error: ' + (e && e.message || e); }
+    }
+    release();
+    flash(ok ? (mode === 'api' ? 'Saved ✔' : 'Saved in this browser ✔ — use 💾 to export a backup') : (err || 'Save failed'));
+    if (ok) pick = 'mine';
+    refresh();
+  }
+  function onHeadingButton(id) {
+    if (rec) { if (target === id) stopAndSave(); else flash('Finish the current recording first'); return; }
+    if (hasClip(id)) removeSection(id); else startRecording(id);
+  }
+  recToggle.addEventListener('click', () => { if (rec) stopAndSave(); else startRecording(activeId()); });
+  hud.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'save') stopAndSave();
+    else if (a === 'cancel') { if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (er) {} } release(); }
+    else if (a === 'pause' && rec) {
+      if (rec.state === 'recording') { rec.pause(); acc += Date.now() - t0; pauseBtn.textContent = '▶ Resume'; }
+      else if (rec.state === 'paused') { rec.resume(); t0 = Date.now(); pauseBtn.textContent = '⏸ Pause'; }
+      tick();
+    }
+  });
+
+  /* ── Export / import (a .voicebundle: "MYVOICE1", 4-byte header length, JSON header, then the clips) ── */
+  function menuText() {
+    menu.querySelector('#_aud-where').textContent = mode === 'api'
+      ? 'Recordings are saved in the app folder next to this document. Import brings in a backup exported from a browser.'
+      : 'No app here: recordings are kept in this browser only (like the ✓ marks) and are lost if its data is cleared. Export a backup file; open the document in the app and use Import to move it into your library.';
+    menu.querySelector('[data-a=export]').style.display = mode === 'local' && hasMine ? '' : 'none';
+  }
+  ioBtn.addEventListener('click', () => {
+    menuText(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+  async function exportBundle() {
+    let rows = [];
+    try { rows = await idb.all(docKey); } catch (e) {}
+    rows.sort((a, b) => headPos(a.id) - headPos(b.id));
+    if (!rows.length) { flash('Nothing to export'); return; }
+    const enc = new TextEncoder();
+    const head = enc.encode(JSON.stringify({ v: 1, doc: docKey, name: docName,
+      clips: rows.map(r => ({ id: r.id, dur: r.dur, size: r.blob.size, type: r.blob.type || 'audio/webm' })) }));
+    const len = new Uint8Array(4); new DataView(len.buffer).setUint32(0, head.length);
+    const out = new Blob([enc.encode('MYVOICE1'), len, head].concat(rows.map(r => r.blob)), { type: 'application/octet-stream' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out); a.download = docName + '.voicebundle';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    flash('Exported ' + rows.length + ' recording' + (rows.length > 1 ? 's' : ''));
+  }
+  async function parseBundle(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (new TextDecoder().decode(u8.slice(0, 8)) !== 'MYVOICE1') throw new Error('Not a voice bundle');
+    const hl = new DataView(buf).getUint32(8), head = JSON.parse(new TextDecoder().decode(u8.slice(12, 12 + hl)));
+    let pos = 12 + hl;
+    head.clips.forEach(c => { c.blob = new Blob([u8.slice(pos, pos + c.size)], { type: c.type }); pos += c.size; });
+    return head;
+  }
+  fileIn.addEventListener('change', async () => {
+    const f = fileIn.files[0]; fileIn.value = '';
+    if (!f) return;
+    await ready;
+    try {
+      const b = await parseBundle(f);
+      if (b.name && b.name !== docName && !confirm('This backup is from "' + b.name + '", not this document. Import anyway?')) return;
+      if (mode === 'api') {
+        flash('Importing…');
+        const fd = new FormData(); fd.append('html_url', docKey); fd.append('file', f, f.name);
+        const d = await (await fetch('/api/library/import-voice', { method: 'POST', body: fd })).json();
+        if (!d.success) throw new Error(d.error || 'Import failed');
+        flash('Imported ' + d.imported + ' recording' + (d.imported === 1 ? '' : 's') + ' into the app');
+      } else {
+        for (const c of b.clips) await idb.put({ k: clipKey(c.id), doc: docKey, id: c.id, blob: c.blob, dur: c.dur, ts: Date.now() });
+        flash('Imported ' + b.clips.length + ' recording' + (b.clips.length === 1 ? '' : 's'));
+      }
+      pick = 'mine'; menu.style.display = 'none'; refresh();
+    } catch (e) { flash('Import failed: ' + (e && e.message || e)); }
+  });
+  menu.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'export') exportBundle(); else if (a === 'import') fileIn.click();
+  });
+
+  refresh();
+})();
+</script>
+<!-- /_doc-audio-panel -->
 </body>
 </html>

@@ -38,10 +38,11 @@
   --tok-op:      #ff9d42;
   --tok-alert:   #ff5c5c;
   --tok-other:   #caa15a;
-  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} */
+  /* Writing-template spans: [text]{.tpl} / {.conn} / {.vocab} / {.verb} */
   --wt-tpl:      #4ade80;
   --wt-conn:     #22d3ee;
   --wt-vocab:    #ff7b72;
+  --wt-verb:     #ff79c6;
 }
 [data-theme="light"] {
   --bg-page:      #ffffff;
@@ -78,6 +79,7 @@
   --wt-tpl:      #15803d;
   --wt-conn:     #0e7490;
   --wt-vocab:    #b91c1c;
+  --wt-verb:     #db2777;
 }
 /* No prefers-color-scheme media query — dark is the default regardless
    of system preference; only an explicit [data-theme="light"] (set via
@@ -183,13 +185,15 @@ html, body {
 #TOC a:hover        { background: var(--accent-soft); color: var(--accent) !important; }
 #TOC a.toc-active   { background: var(--accent-soft); color: var(--accent) !important; font-weight: 600; }
 #TOC li.toc-hide { display: none !important; }
+#TOC li.toc-nostar { display: none !important; }
+#TOC li.toc-star-ctx > a { opacity: 0.55; }
 #_toc-levels {
-  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted);
+  display: flex; align-items: center; gap: 3px; flex-wrap: nowrap;
+  margin-bottom: 10px; font-size: 0.76em; color: var(--text-muted); white-space: nowrap;
 }
 #_toc-levels button {
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
-  border-radius: 4px; padding: 1px 7px; font: inherit; cursor: pointer;
+  border-radius: 4px; padding: 1px 5px; font: inherit; cursor: pointer;
 }
 #_toc-levels button:hover { border-color: var(--accent); color: var(--accent); }
 #_toc-levels button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -347,6 +351,7 @@ html, body {
 #_main-content span.tpl   { color: var(--wt-tpl)   !important; font-weight: 600; }
 #_main-content span.conn  { color: var(--wt-conn)  !important; font-weight: 600; }
 #_main-content span.vocab { color: var(--wt-vocab) !important; font-weight: 600; }
+#_main-content span.verb  { color: var(--wt-verb)  !important; font-weight: 600; }
 
 #_main-content table {
   width: 100%; border-collapse: collapse; margin: 18px 0;
@@ -428,6 +433,7 @@ header#title-block-header { display: none; }
   #_main-content span.tpl   { color: #15803d !important; }
   #_main-content span.conn  { color: #0e7490 !important; }
   #_main-content span.vocab { color: #b91c1c !important; }
+  #_main-content span.verb  { color: #db2777 !important; }
   #_main-content .read-toggle::before { display: none !important; }
 }
 
@@ -644,21 +650,33 @@ House</a>
 <li><a href="#sample-1" id="toc-sample-1">Sample</a></li>
 <li><a href="#vocabulary-1" id="toc-vocabulary-1">Vocabulary</a></li>
 </ul></li>
-<li><a href="#living-alone-vs-sharing" id="toc-living-alone-vs-sharing">1.3 Living Alone vs Sharing</a>
+<li><a href="#campus-home-vs-city-centre" id="toc-campus-home-vs-city-centre">1.3 Campus Home vs City Centre
+⭐</a>
 <ul>
 <li><a href="#sample-2" id="toc-sample-2">Sample</a></li>
 <li><a href="#vocabulary-2" id="toc-vocabulary-2">Vocabulary</a></li>
 </ul></li>
-<li><a href="#renting-vs-buying" id="toc-renting-vs-buying">1.4 Renting
-vs Buying</a>
+<li><a href="#living-alone-vs-sharing" id="toc-living-alone-vs-sharing">1.4 Living Alone vs Sharing</a>
 <ul>
 <li><a href="#sample-3" id="toc-sample-3">Sample</a></li>
 <li><a href="#vocabulary-3" id="toc-vocabulary-3">Vocabulary</a></li>
 </ul></li>
-<li><a href="#town-vs-city" id="toc-town-vs-city">1.5 Town vs City</a>
+<li><a href="#renting-vs-buying" id="toc-renting-vs-buying">1.5 Renting
+vs Buying</a>
 <ul>
 <li><a href="#sample-4" id="toc-sample-4">Sample</a></li>
 <li><a href="#vocabulary-4" id="toc-vocabulary-4">Vocabulary</a></li>
+</ul></li>
+<li><a href="#town-vs-city" id="toc-town-vs-city">1.6 Town vs City</a>
+<ul>
+<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
+<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+</ul></li>
+<li><a href="#which-city-to-move-to" id="toc-which-city-to-move-to">1.7
+Which City to Move To ⭐</a>
+<ul>
+<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
+<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#shopping-and-purchases" id="toc-shopping-and-purchases">2
@@ -669,31 +687,83 @@ Template</a></li>
 <li><a href="#small-car-vs-suv" id="toc-small-car-vs-suv">2.1 Small Car
 vs SUV</a>
 <ul>
-<li><a href="#sample-5" id="toc-sample-5">Sample</a></li>
-<li><a href="#vocabulary-5" id="toc-vocabulary-5">Vocabulary</a></li>
+<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
+<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
 </ul></li>
 <li><a href="#lightweight-vs-powerful-laptop" id="toc-lightweight-vs-powerful-laptop">2.2 Lightweight vs Powerful
 Laptop</a>
 <ul>
-<li><a href="#sample-6" id="toc-sample-6">Sample</a></li>
-<li><a href="#vocabulary-6" id="toc-vocabulary-6">Vocabulary</a></li>
-</ul></li>
-<li><a href="#stylish-vs-comfortable-sofa" id="toc-stylish-vs-comfortable-sofa">2.3 Stylish vs Comfortable Sofa</a>
-<ul>
-<li><a href="#sample-7" id="toc-sample-7">Sample</a></li>
-<li><a href="#vocabulary-7" id="toc-vocabulary-7">Vocabulary</a></li>
-</ul></li>
-<li><a href="#jewellery-vs-trip" id="toc-jewellery-vs-trip">2.4
-Jewellery vs Trip</a>
-<ul>
 <li><a href="#sample-8" id="toc-sample-8">Sample</a></li>
 <li><a href="#vocabulary-8" id="toc-vocabulary-8">Vocabulary</a></li>
 </ul></li>
-<li><a href="#two-smartphones" id="toc-two-smartphones">2.5 Two
-Smartphones</a>
+<li><a href="#stylish-vs-comfortable-sofa" id="toc-stylish-vs-comfortable-sofa">2.3 Stylish vs Comfortable Sofa</a>
 <ul>
 <li><a href="#sample-9" id="toc-sample-9">Sample</a></li>
 <li><a href="#vocabulary-9" id="toc-vocabulary-9">Vocabulary</a></li>
+</ul></li>
+<li><a href="#new-vs-second-hand-furniture" id="toc-new-vs-second-hand-furniture">2.4 New vs Second-Hand Furniture
+⭐</a>
+<ul>
+<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
+<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+</ul></li>
+<li><a href="#jewellery-vs-trip" id="toc-jewellery-vs-trip">2.5
+Jewellery vs Trip</a>
+<ul>
+<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
+<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+</ul></li>
+<li><a href="#headphones-vs-mug" id="toc-headphones-vs-mug">2.6
+Headphones vs Mug ⭐</a>
+<ul>
+<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
+<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+</ul></li>
+<li><a href="#two-smartphones" id="toc-two-smartphones">2.7 Two
+Smartphones</a>
+<ul>
+<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
+<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+</ul></li>
+<li><a href="#wheelbarrows" id="toc-wheelbarrows">2.8 Wheelbarrows
+⭐</a>
+<ul>
+<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
+<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+</ul></li>
+<li><a href="#snow-removal-equipment" id="toc-snow-removal-equipment">2.9 Snow Removal Equipment ⭐</a>
+<ul>
+<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
+<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+</ul></li>
+<li><a href="#notebook-or-planner-gift" id="toc-notebook-or-planner-gift">2.10 Notebook or Planner Gift ⭐</a>
+<ul>
+<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
+<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+</ul></li>
+<li><a href="#washing-machines" id="toc-washing-machines">2.11 Washing
+Machines ⭐</a>
+<ul>
+<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
+<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+</ul></li>
+<li><a href="#choosing-a-camera" id="toc-choosing-a-camera">2.12
+Choosing a Camera ⭐</a>
+<ul>
+<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
+<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+</ul></li>
+<li><a href="#summer-running-shoes" id="toc-summer-running-shoes">2.13
+Summer Running Shoes ⭐</a>
+<ul>
+<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
+<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+</ul></li>
+<li><a href="#delivery-companies" id="toc-delivery-companies">2.14
+Delivery Companies ⭐</a>
+<ul>
+<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
+<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#travel-and-vacations" id="toc-travel-and-vacations">3
@@ -704,31 +774,42 @@ Template</a></li>
 <li><a href="#resort-vs-sightseeing" id="toc-resort-vs-sightseeing">3.1
 Resort vs Sightseeing</a>
 <ul>
-<li><a href="#sample-10" id="toc-sample-10">Sample</a></li>
-<li><a href="#vocabulary-10" id="toc-vocabulary-10">Vocabulary</a></li>
+<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
+<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
 </ul></li>
 <li><a href="#hotel-vs-rental" id="toc-hotel-vs-rental">3.2 Hotel vs
 Rental</a>
 <ul>
-<li><a href="#sample-11" id="toc-sample-11">Sample</a></li>
-<li><a href="#vocabulary-11" id="toc-vocabulary-11">Vocabulary</a></li>
+<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
+<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
 </ul></li>
-<li><a href="#bus-tour-vs-independent" id="toc-bus-tour-vs-independent">3.3 Bus Tour vs Independent</a>
+<li><a href="#family-holiday-house" id="toc-family-holiday-house">3.3
+Family Holiday House ⭐</a>
 <ul>
-<li><a href="#sample-12" id="toc-sample-12">Sample</a></li>
-<li><a href="#vocabulary-12" id="toc-vocabulary-12">Vocabulary</a></li>
+<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
+<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
 </ul></li>
-<li><a href="#cabin-vs-camping" id="toc-cabin-vs-camping">3.4 Cabin vs
+<li><a href="#bus-tour-vs-independent" id="toc-bus-tour-vs-independent">3.4 Bus Tour vs Independent</a>
+<ul>
+<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
+<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+</ul></li>
+<li><a href="#cabin-vs-camping" id="toc-cabin-vs-camping">3.5 Cabin vs
 Camping</a>
 <ul>
-<li><a href="#sample-13" id="toc-sample-13">Sample</a></li>
-<li><a href="#vocabulary-13" id="toc-vocabulary-13">Vocabulary</a></li>
+<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
+<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
 </ul></li>
-<li><a href="#flying-vs-driving" id="toc-flying-vs-driving">3.5 Flying
+<li><a href="#flying-vs-driving" id="toc-flying-vs-driving">3.6 Flying
 vs Driving</a>
 <ul>
-<li><a href="#sample-14" id="toc-sample-14">Sample</a></li>
-<li><a href="#vocabulary-14" id="toc-vocabulary-14">Vocabulary</a></li>
+<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
+<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+</ul></li>
+<li><a href="#camper-vans" id="toc-camper-vans">3.7 Camper Vans ⭐</a>
+<ul>
+<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
+<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#events-activities-and-entertainment" id="toc-events-activities-and-entertainment">4 Events, Activities, and
@@ -738,30 +819,54 @@ Entertainment</a>
 Template</a></li>
 <li><a href="#restaurant-vs-park-party" id="toc-restaurant-vs-park-party">4.1 Restaurant vs Park Party</a>
 <ul>
-<li><a href="#sample-15" id="toc-sample-15">Sample</a></li>
-<li><a href="#vocabulary-15" id="toc-vocabulary-15">Vocabulary</a></li>
+<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
+<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
 </ul></li>
 <li><a href="#bowling-vs-hike" id="toc-bowling-vs-hike">4.2 Bowling vs
 Hike</a>
 <ul>
-<li><a href="#sample-16" id="toc-sample-16">Sample</a></li>
-<li><a href="#vocabulary-16" id="toc-vocabulary-16">Vocabulary</a></li>
+<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
+<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
 </ul></li>
 <li><a href="#team-dinner-restaurant" id="toc-team-dinner-restaurant">4.3 Team Dinner Restaurant</a>
 <ul>
-<li><a href="#sample-17" id="toc-sample-17">Sample</a></li>
-<li><a href="#vocabulary-17" id="toc-vocabulary-17">Vocabulary</a></li>
+<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
+<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
 </ul></li>
-<li><a href="#gym-vs-yoga" id="toc-gym-vs-yoga">4.4 Gym vs Yoga</a>
+<li><a href="#pizza-vs-sandwiches" id="toc-pizza-vs-sandwiches">4.4
+Pizza vs Sandwiches ⭐</a>
 <ul>
-<li><a href="#sample-18" id="toc-sample-18">Sample</a></li>
-<li><a href="#vocabulary-18" id="toc-vocabulary-18">Vocabulary</a></li>
+<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
+<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
 </ul></li>
-<li><a href="#movie-night-in-vs-out" id="toc-movie-night-in-vs-out">4.5
+<li><a href="#gym-vs-yoga" id="toc-gym-vs-yoga">4.5 Gym vs Yoga</a>
+<ul>
+<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
+<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+</ul></li>
+<li><a href="#movie-night-in-vs-out" id="toc-movie-night-in-vs-out">4.6
 Movie Night In vs Out</a>
 <ul>
-<li><a href="#sample-19" id="toc-sample-19">Sample</a></li>
-<li><a href="#vocabulary-19" id="toc-vocabulary-19">Vocabulary</a></li>
+<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
+<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+</ul></li>
+<li><a href="#ice-cream-cake-vs-simple-dessert" id="toc-ice-cream-cake-vs-simple-dessert">4.7 Ice Cream Cake vs Simple
+Dessert ⭐</a>
+<ul>
+<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
+<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+</ul></li>
+<li><a href="#summer-activity-for-children-tv-or-pool" id="toc-summer-activity-for-children-tv-or-pool">4.8 Summer Activity for
+Children: TV or Pool ⭐</a>
+<ul>
+<li><a href="#sample-35" id="toc-sample-35">Sample</a></li>
+<li><a href="#vocabulary-35" id="toc-vocabulary-35">Vocabulary</a></li>
+</ul></li>
+<li><a href="#two-movie-theatres" id="toc-two-movie-theatres">4.9 Two
+Movie Theatres ⭐</a>
+<ul>
+<li><a href="#sample-36" id="toc-sample-36">Sample</a></li>
+<li><a href="#vocabulary-36" id="toc-vocabulary-36">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#transportation-and-commuting" id="toc-transportation-and-commuting">5 Transportation and Commuting</a>
@@ -771,31 +876,36 @@ Template</a></li>
 <li><a href="#driving-vs-bus" id="toc-driving-vs-bus">5.1 Driving vs
 Bus</a>
 <ul>
-<li><a href="#sample-20" id="toc-sample-20">Sample</a></li>
-<li><a href="#vocabulary-20" id="toc-vocabulary-20">Vocabulary</a></li>
+<li><a href="#sample-37" id="toc-sample-37">Sample</a></li>
+<li><a href="#vocabulary-37" id="toc-vocabulary-37">Vocabulary</a></li>
 </ul></li>
 <li><a href="#electric-vs-gas-car" id="toc-electric-vs-gas-car">5.2
 Electric vs Gas Car</a>
 <ul>
-<li><a href="#sample-21" id="toc-sample-21">Sample</a></li>
-<li><a href="#vocabulary-21" id="toc-vocabulary-21">Vocabulary</a></li>
+<li><a href="#sample-38" id="toc-sample-38">Sample</a></li>
+<li><a href="#vocabulary-38" id="toc-vocabulary-38">Vocabulary</a></li>
 </ul></li>
 <li><a href="#cycling-vs-train" id="toc-cycling-vs-train">5.3 Cycling vs
 Train</a>
 <ul>
-<li><a href="#sample-22" id="toc-sample-22">Sample</a></li>
-<li><a href="#vocabulary-22" id="toc-vocabulary-22">Vocabulary</a></li>
+<li><a href="#sample-39" id="toc-sample-39">Sample</a></li>
+<li><a href="#vocabulary-39" id="toc-vocabulary-39">Vocabulary</a></li>
 </ul></li>
-<li><a href="#train-vs-plane" id="toc-train-vs-plane">5.4 Train vs
+<li><a href="#bicycle-vs-bus-or-taxi" id="toc-bicycle-vs-bus-or-taxi">5.4 Bicycle vs Bus or Taxi ⭐</a>
+<ul>
+<li><a href="#sample-40" id="toc-sample-40">Sample</a></li>
+<li><a href="#vocabulary-40" id="toc-vocabulary-40">Vocabulary</a></li>
+</ul></li>
+<li><a href="#train-vs-plane" id="toc-train-vs-plane">5.5 Train vs
 Plane</a>
 <ul>
-<li><a href="#sample-23" id="toc-sample-23">Sample</a></li>
-<li><a href="#vocabulary-23" id="toc-vocabulary-23">Vocabulary</a></li>
+<li><a href="#sample-41" id="toc-sample-41">Sample</a></li>
+<li><a href="#vocabulary-41" id="toc-vocabulary-41">Vocabulary</a></li>
 </ul></li>
-<li><a href="#car-vs-taxis-and-transit" id="toc-car-vs-taxis-and-transit">5.5 Car vs Taxis and Transit</a>
+<li><a href="#car-vs-taxis-and-transit" id="toc-car-vs-taxis-and-transit">5.6 Car vs Taxis and Transit</a>
 <ul>
-<li><a href="#sample-24" id="toc-sample-24">Sample</a></li>
-<li><a href="#vocabulary-24" id="toc-vocabulary-24">Vocabulary</a></li>
+<li><a href="#sample-42" id="toc-sample-42">Sample</a></li>
+<li><a href="#vocabulary-42" id="toc-vocabulary-42">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#work-study-and-community" id="toc-work-study-and-community">6 Work, Study, and Community</a>
@@ -805,28 +915,54 @@ Template</a></li>
 <li><a href="#pay-vs-benefits" id="toc-pay-vs-benefits">6.1 Pay vs
 Benefits</a>
 <ul>
-<li><a href="#sample-25" id="toc-sample-25">Sample</a></li>
-<li><a href="#vocabulary-25" id="toc-vocabulary-25">Vocabulary</a></li>
+<li><a href="#sample-43" id="toc-sample-43">Sample</a></li>
+<li><a href="#vocabulary-43" id="toc-vocabulary-43">Vocabulary</a></li>
 </ul></li>
 <li><a href="#nearby-vs-famous-school" id="toc-nearby-vs-famous-school">6.2 Nearby vs Famous School</a>
 <ul>
-<li><a href="#sample-26" id="toc-sample-26">Sample</a></li>
-<li><a href="#vocabulary-26" id="toc-vocabulary-26">Vocabulary</a></li>
+<li><a href="#sample-44" id="toc-sample-44">Sample</a></li>
+<li><a href="#vocabulary-44" id="toc-vocabulary-44">Vocabulary</a></li>
 </ul></li>
 <li><a href="#spacious-vs-cozy-office" id="toc-spacious-vs-cozy-office">6.3 Spacious vs Cozy Office</a>
 <ul>
-<li><a href="#sample-27" id="toc-sample-27">Sample</a></li>
-<li><a href="#vocabulary-27" id="toc-vocabulary-27">Vocabulary</a></li>
+<li><a href="#sample-45" id="toc-sample-45">Sample</a></li>
+<li><a href="#vocabulary-45" id="toc-vocabulary-45">Vocabulary</a></li>
 </ul></li>
 <li><a href="#hospital-vs-animal-shelter" id="toc-hospital-vs-animal-shelter">6.4 Hospital vs Animal Shelter</a>
 <ul>
-<li><a href="#sample-28" id="toc-sample-28">Sample</a></li>
-<li><a href="#vocabulary-28" id="toc-vocabulary-28">Vocabulary</a></li>
+<li><a href="#sample-46" id="toc-sample-46">Sample</a></li>
+<li><a href="#vocabulary-46" id="toc-vocabulary-46">Vocabulary</a></li>
 </ul></li>
 <li><a href="#museum-vs-science-centre" id="toc-museum-vs-science-centre">6.5 Museum vs Science Centre</a>
 <ul>
-<li><a href="#sample-29" id="toc-sample-29">Sample</a></li>
-<li><a href="#vocabulary-29" id="toc-vocabulary-29">Vocabulary</a></li>
+<li><a href="#sample-47" id="toc-sample-47">Sample</a></li>
+<li><a href="#vocabulary-47" id="toc-vocabulary-47">Vocabulary</a></li>
+</ul></li>
+<li><a href="#lawn-care-for-an-elderly-uncle" id="toc-lawn-care-for-an-elderly-uncle">6.6 Lawn Care for an Elderly
+Uncle ⭐</a>
+<ul>
+<li><a href="#sample-48" id="toc-sample-48">Sample</a></li>
+<li><a href="#vocabulary-48" id="toc-vocabulary-48">Vocabulary</a></li>
+</ul></li>
+<li><a href="#later-school-start-times" id="toc-later-school-start-times">6.7 Later School Start Times ⭐</a>
+<ul>
+<li><a href="#sample-49" id="toc-sample-49">Sample</a></li>
+<li><a href="#vocabulary-49" id="toc-vocabulary-49">Vocabulary</a></li>
+</ul></li>
+<li><a href="#furniture-store-location" id="toc-furniture-store-location">6.8 Furniture Store Location ⭐</a>
+<ul>
+<li><a href="#sample-50" id="toc-sample-50">Sample</a></li>
+<li><a href="#vocabulary-50" id="toc-vocabulary-50">Vocabulary</a></li>
+</ul></li>
+<li><a href="#indoor-vs-outdoor-plants" id="toc-indoor-vs-outdoor-plants">6.9 Indoor vs Outdoor Plants ⭐</a>
+<ul>
+<li><a href="#sample-51" id="toc-sample-51">Sample</a></li>
+<li><a href="#vocabulary-51" id="toc-vocabulary-51">Vocabulary</a></li>
+</ul></li>
+<li><a href="#artwork-for-the-office" id="toc-artwork-for-the-office">6.10 Artwork for the Office ⭐</a>
+<ul>
+<li><a href="#sample-52" id="toc-sample-52">Sample</a></li>
+<li><a href="#vocabulary-52" id="toc-vocabulary-52">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#pets-classes-and-dining" id="toc-pets-classes-and-dining">7 Pets, Classes, and Dining</a>
@@ -835,29 +971,52 @@ Benefits</a>
 Template</a></li>
 <li><a href="#dog-vs-cat" id="toc-dog-vs-cat">7.1 Dog vs Cat</a>
 <ul>
-<li><a href="#sample-30" id="toc-sample-30">Sample</a></li>
-<li><a href="#vocabulary-30" id="toc-vocabulary-30">Vocabulary</a></li>
+<li><a href="#sample-53" id="toc-sample-53">Sample</a></li>
+<li><a href="#vocabulary-53" id="toc-vocabulary-53">Vocabulary</a></li>
 </ul></li>
-<li><a href="#evening-vs-online-class" id="toc-evening-vs-online-class">7.2 Evening vs Online Class</a>
+<li><a href="#dog-walkers" id="toc-dog-walkers">7.2 Dog Walkers ⭐</a>
 <ul>
-<li><a href="#sample-31" id="toc-sample-31">Sample</a></li>
-<li><a href="#vocabulary-31" id="toc-vocabulary-31">Vocabulary</a></li>
+<li><a href="#sample-54" id="toc-sample-54">Sample</a></li>
+<li><a href="#vocabulary-54" id="toc-vocabulary-54">Vocabulary</a></li>
 </ul></li>
-<li><a href="#trade-school-vs-university" id="toc-trade-school-vs-university">7.3 Trade School vs University</a>
+<li><a href="#evening-vs-online-class" id="toc-evening-vs-online-class">7.3 Evening vs Online Class ⭐</a>
 <ul>
-<li><a href="#sample-32" id="toc-sample-32">Sample</a></li>
-<li><a href="#vocabulary-32" id="toc-vocabulary-32">Vocabulary</a></li>
+<li><a href="#sample-55" id="toc-sample-55">Sample</a></li>
+<li><a href="#vocabulary-55" id="toc-vocabulary-55">Vocabulary</a></li>
 </ul></li>
-<li><a href="#fancy-vs-home-cooked-dinner" id="toc-fancy-vs-home-cooked-dinner">7.4 Fancy vs Home-Cooked Dinner</a>
+<li><a href="#trade-school-vs-university" id="toc-trade-school-vs-university">7.4 Trade School vs University</a>
 <ul>
-<li><a href="#sample-33" id="toc-sample-33">Sample</a></li>
-<li><a href="#vocabulary-33" id="toc-vocabulary-33">Vocabulary</a></li>
+<li><a href="#sample-56" id="toc-sample-56">Sample</a></li>
+<li><a href="#vocabulary-56" id="toc-vocabulary-56">Vocabulary</a></li>
 </ul></li>
-<li><a href="#catering-vs-cooking" id="toc-catering-vs-cooking">7.5
+<li><a href="#technical-courses" id="toc-technical-courses">7.5
+Technical Courses ⭐</a>
+<ul>
+<li><a href="#sample-57" id="toc-sample-57">Sample</a></li>
+<li><a href="#vocabulary-57" id="toc-vocabulary-57">Vocabulary</a></li>
+</ul></li>
+<li><a href="#fancy-vs-home-cooked-dinner" id="toc-fancy-vs-home-cooked-dinner">7.6 Fancy vs Home-Cooked Dinner</a>
+<ul>
+<li><a href="#sample-58" id="toc-sample-58">Sample</a></li>
+<li><a href="#vocabulary-58" id="toc-vocabulary-58">Vocabulary</a></li>
+</ul></li>
+<li><a href="#catering-vs-cooking" id="toc-catering-vs-cooking">7.7
 Catering vs Cooking</a>
 <ul>
-<li><a href="#sample-34" id="toc-sample-34">Sample</a></li>
-<li><a href="#vocabulary-34" id="toc-vocabulary-34">Vocabulary</a></li>
+<li><a href="#sample-59" id="toc-sample-59">Sample</a></li>
+<li><a href="#vocabulary-59" id="toc-vocabulary-59">Vocabulary</a></li>
+</ul></li>
+<li><a href="#childrens-book-vs-long-book" id="toc-childrens-book-vs-long-book">7.8 Children’s Book vs Long Book
+⭐</a>
+<ul>
+<li><a href="#sample-60" id="toc-sample-60">Sample</a></li>
+<li><a href="#vocabulary-60" id="toc-vocabulary-60">Vocabulary</a></li>
+</ul></li>
+<li><a href="#responsibility-gift-for-a-child" id="toc-responsibility-gift-for-a-child">7.9 Responsibility Gift for a
+Child ⭐</a>
+<ul>
+<li><a href="#sample-61" id="toc-sample-61">Sample</a></li>
+<li><a href="#vocabulary-61" id="toc-vocabulary-61">Vocabulary</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -980,10 +1139,80 @@ you.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="living-alone-vs-sharing">1.3 Living Alone vs Sharing</h2>
+<h2 id="campus-home-vs-city-centre">1.3 Campus Home vs City Centre
+⭐</h2>
+<p>You and a friend or your sister are looking for a place to live. One
+is near a university, cheaper, on the campus; the other is in the city
+centre, more expensive and close to many companies and workplaces.
+Choose one and persuade her.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 and
+Oct 10.</p>
+<h3 id="sample-2">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the place on the
+university campus. <span class="conn">First of all</span>, it’s much
+cheaper, so we could <span class="verb">cut down on</span> our monthly
+expenses and <span class="verb">put aside</span> some money for
+emergencies. The savings alone would be a big <span class="vocab">relief</span>.</p>
+<p><span class="conn">On top of that</span>, we’d be a short walk from
+classes, the library and the gym, so we wouldn’t waste time in traffic.
+The campus is also quiet and safe, and it has a <span class="vocab">strong sense of community</span>.</p>
+<p><span class="conn">Admittedly</span>, the city centre is close to
+many companies, <span class="conn">but</span> we can <span class="verb">get around</span> easily by bus, and we could look for
+internships online.</p>
+<p><span class="tpl">That’s why I really think</span> the campus home is
+the better option for us. It’s affordable, convenient and perfect for
+our <span class="vocab">lifestyle</span>.</p>
+<h3 id="vocabulary-2">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">cut down on</span></td>
+<td>reduce</td>
+<td>We cut down on eating out.</td>
+</tr>
+<tr>
+<td><span class="verb">put aside</span></td>
+<td>save for later</td>
+<td>She puts aside fifty dollars a week.</td>
+</tr>
+<tr>
+<td><span class="verb">get around</span></td>
+<td>move from place to place</td>
+<td>It’s easy to get around by subway.</td>
+</tr>
+<tr>
+<td><span class="vocab">relief</span></td>
+<td>a feeling of comfort after worry</td>
+<td>It was a relief to find cheap rent.</td>
+</tr>
+<tr>
+<td><span class="vocab">strong sense of community</span></td>
+<td>a feeling of belonging to a group</td>
+<td>The neighbourhood has a strong sense of community.</td>
+</tr>
+<tr>
+<td><span class="vocab">lifestyle</span></td>
+<td>the way a person lives</td>
+<td>A student lifestyle is simple.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="living-alone-vs-sharing">1.4 Living Alone vs Sharing</h2>
 <p>Your sister is choosing between living alone and sharing an apartment
 with friends. Persuade her.</p>
-<h3 id="sample-2">Sample</h3>
+<h3 id="sample-3">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> sharing an
 apartment with friends. <span class="conn">First of all</span>, you’d
 split the rent and the bills, so you’d pay much less than you would on
@@ -999,7 +1228,7 @@ agree on <span class="vocab">house rules</span> to keep things
 peaceful.</p>
 <p><span class="tpl">That’s why I really think</span> sharing is the
 better option. It’s <span class="vocab">affordable</span> and fun.</p>
-<h3 id="vocabulary-2">Vocabulary</h3>
+<h3 id="vocabulary-3">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1031,10 +1260,10 @@ better option. It’s <span class="vocab">affordable</span> and fun.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="renting-vs-buying">1.4 Renting vs Buying</h2>
+<h2 id="renting-vs-buying">1.5 Renting vs Buying</h2>
 <p>Your parents are deciding between renting a large place and buying a
 smaller one. Persuade them.</p>
-<h3 id="sample-3">Sample</h3>
+<h3 id="sample-4">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> buying the
 smaller place. <span class="conn">First of all</span>, when you rent,
 you pay every month and own nothing. With a purchase, your payments
@@ -1048,7 +1277,7 @@ space, <span class="conn">but</span> at your age, you don’t need much
 room, and a smaller home is cheaper to heat and clean.</p>
 <p><span class="tpl">That’s why I really think</span> buying is the
 wiser choice for your <span class="vocab">retirement</span>.</p>
-<h3 id="vocabulary-3">Vocabulary</h3>
+<h3 id="vocabulary-4">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1085,10 +1314,10 @@ wiser choice for your <span class="vocab">retirement</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="town-vs-city">1.5 Town vs City</h2>
+<h2 id="town-vs-city">1.6 Town vs City</h2>
 <p>Your friend has to choose between a quiet town and a lively city.
 Persuade them to pick one.</p>
-<h3 id="sample-4">Sample</h3>
+<h3 id="sample-5">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the lively city.
 <span class="conn">First of all</span>, a city offers many more job
 <span class="vocab">opportunities</span>, and you can find work in
@@ -1101,7 +1330,7 @@ months. In a city, you can always find a <span class="vocab">vibrant</span> comm
 weekends.</p>
 <p><span class="tpl">That’s why I really think</span> the city is the
 better option for you.</p>
-<h3 id="vocabulary-4">Vocabulary</h3>
+<h3 id="vocabulary-5">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1138,6 +1367,76 @@ better option for you.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="which-city-to-move-to">1.7 Which City to Move To ⭐</h2>
+<p>You are moving to another city. Your choice is sunny and nice with a
+good work-life balance and cheaper rents; your family’s choice has very
+high rents, a more industrial area and very cold winters. Convince your
+family that yours is better.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4
+(several reports) and Oct 3.</p>
+<h3 id="sample-6">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the sunny city.
+<span class="conn">First of all</span>, the rent is much lower, so we
+could <span class="vocab">afford</span> a bigger apartment and still
+save money every month. Housing is the biggest expense for any family,
+and this would <span class="verb">take a load off</span> our budget.</p>
+<p><span class="conn">On top of that</span>, the <span class="vocab">work-life balance</span> there is excellent. People finish
+work early and <span class="vocab">spend time outdoors</span>, which is
+great for our health. The mild winters would also <span class="verb">spare us from</span> months of snow and freezing
+temperatures.</p>
+<p><span class="conn">Admittedly</span>, the other city is bigger and
+offers more jobs, <span class="conn">but</span> it’s industrial, very
+expensive and quite cold. We would <span class="verb">end up</span>
+working harder just to pay the bills.</p>
+<p><span class="tpl">That’s why I really think</span> the sunny city is
+the better option for all of us.</p>
+<h3 id="vocabulary-6">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">take a load off</span></td>
+<td>reduce a burden</td>
+<td>Cheaper rent takes a load off my mind.</td>
+</tr>
+<tr>
+<td><span class="verb">spare from</span></td>
+<td>save someone from an unpleasant experience</td>
+<td>The mild climate spares us from harsh winters.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up paying more.</td>
+</tr>
+<tr>
+<td><span class="vocab">afford</span></td>
+<td>have enough money to pay for</td>
+<td>We can’t afford a big house.</td>
+</tr>
+<tr>
+<td><span class="vocab">work-life balance</span></td>
+<td>a healthy balance between job and personal time</td>
+<td>Good work-life balance reduces stress.</td>
+</tr>
+<tr>
+<td><span class="vocab">spend time outdoors</span></td>
+<td>be outside in nature</td>
+<td>I like to spend time outdoors.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="shopping-and-purchases">2 Shopping and Purchases</h1>
 <p>Topics: choosing a car, a phone, a laptop, furniture, appliances,
 gifts.</p>
@@ -1153,7 +1452,7 @@ better].</p>
 <h2 id="small-car-vs-suv">2.1 Small Car vs SUV</h2>
 <p>Your family is choosing between a small, fuel-efficient car and a
 large SUV. Choose one and persuade them.</p>
-<h3 id="sample-5">Sample</h3>
+<h3 id="sample-7">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the small,
 fuel-efficient car. <span class="conn">First of all</span>, gas prices
 are very high, and a small car uses much less fuel, so we’d save
@@ -1167,7 +1466,7 @@ time, and for big trips, we can rent a larger vehicle. A small car is
 also less expensive to <span class="vocab">maintain</span>.</p>
 <p><span class="tpl">That’s why I really think</span> the small car is
 the more <span class="vocab">practical</span> choice for our family.</p>
-<h3 id="vocabulary-5">Vocabulary</h3>
+<h3 id="vocabulary-7">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1203,7 +1502,7 @@ the more <span class="vocab">practical</span> choice for our family.</p>
 Laptop</h2>
 <p>Your friend is picking between two laptops, one lightweight and one
 with more power. Persuade them.</p>
-<h3 id="sample-6">Sample</h3>
+<h3 id="sample-8">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the lightweight
 laptop. <span class="conn">First of all</span>, it’s much easier to
 carry around, so you can take it to class, to a café, or on a trip
@@ -1218,7 +1517,7 @@ expensive, and you’d pay for performance you’ll never use.</p>
 <p><span class="tpl">That’s why I really think</span> the lightweight
 laptop is the <span class="vocab">smarter</span> choice for your
 lifestyle.</p>
-<h3 id="vocabulary-6">Vocabulary</h3>
+<h3 id="vocabulary-8">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1254,7 +1553,7 @@ lifestyle.</p>
 Sofa</h2>
 <p>You are helping your parents choose a sofa, one stylish and one
 comfortable. Persuade them to pick one.</p>
-<h3 id="sample-7">Sample</h3>
+<h3 id="sample-9">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the comfortable
 sofa. <span class="conn">First of all</span>, you’ll sit on it every
 day, so comfort matters more than looks. A soft sofa helps you relax
@@ -1270,7 +1569,7 @@ stay long. You can always add <span class="vocab">colourful</span>
 pillows and a nice blanket to improve the look.</p>
 <p><span class="tpl">That’s why I really think</span> the comfortable
 sofa is the better <span class="vocab">investment</span>.</p>
-<h3 id="vocabulary-7">Vocabulary</h3>
+<h3 id="vocabulary-9">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1302,10 +1601,79 @@ sofa is the better <span class="vocab">investment</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="jewellery-vs-trip">2.4 Jewellery vs Trip</h2>
+<h2 id="new-vs-second-hand-furniture">2.4 New vs Second-Hand Furniture
+⭐</h2>
+<p>You are furnishing a home and must choose between new furniture and
+cheaper antique or second-hand furniture. Persuade the other person to
+accept your choice.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-10">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> buying
+second-hand furniture. <span class="conn">First of all</span>, it costs
+far less, so we can <span class="vocab">furnish</span> the whole
+apartment without going over our budget. We could <span class="verb">pick up</span> a solid wooden table for a fraction of the
+price of a new one.</p>
+<p><span class="conn">On top of that</span>, older pieces are usually
+better built, and many of them have a <span class="vocab">timeless</span> style. Buying them is also kinder to the
+planet, because we keep good items out of the landfill.</p>
+<p><span class="conn">Admittedly</span>, new furniture comes with a
+warranty, <span class="conn">but</span> we can <span class="verb">fix
+up</span> any small scratches ourselves, and we’d enjoy the project.</p>
+<p><span class="tpl">That’s why I really think</span> second-hand
+furniture is the smarter choice. It’s cheaper, sturdier and more <span class="vocab">sustainable</span>, and we’ll <span class="verb">end up
+with</span> a home full of character.</p>
+<h3 id="vocabulary-10">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pick up</span></td>
+<td>buy cheaply or by chance</td>
+<td>I picked up a lamp at a garage sale.</td>
+</tr>
+<tr>
+<td><span class="verb">fix up</span></td>
+<td>repair and improve</td>
+<td>He fixed up an old chair.</td>
+</tr>
+<tr>
+<td><span class="verb">end up with</span></td>
+<td>finally have</td>
+<td>We ended up with two sofas.</td>
+</tr>
+<tr>
+<td><span class="vocab">furnish</span></td>
+<td>fill a home with furniture</td>
+<td>They furnished the flat with antiques.</td>
+</tr>
+<tr>
+<td><span class="vocab">timeless</span></td>
+<td>not going out of fashion</td>
+<td>A timeless design.</td>
+</tr>
+<tr>
+<td><span class="vocab">sustainable</span></td>
+<td>good for the environment in the long term</td>
+<td>Second-hand shopping is sustainable.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jewellery-vs-trip">2.5 Jewellery vs Trip</h2>
 <p>Your brother needs a gift for his wife and is choosing between
 jewellery and a trip. Persuade him.</p>
-<h3 id="sample-8">Sample</h3>
+<h3 id="sample-11">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the trip. <span class="conn">First of all</span>, jewellery is nice, but a trip creates
 <span class="vocab">lasting memories</span> that you’ll enjoy together
 for years. You’ll talk about it long after you come home.</p>
@@ -1321,7 +1689,7 @@ more personal.</p>
 <p><span class="tpl">That’s why I really think</span> the trip is the
 better gift. It’s an <span class="vocab">experience</span> money can’t
 replace.</p>
-<h3 id="vocabulary-8">Vocabulary</h3>
+<h3 id="vocabulary-11">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1358,10 +1726,78 @@ replace.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="two-smartphones">2.5 Two Smartphones</h2>
+<h2 id="headphones-vs-mug">2.6 Headphones vs Mug ⭐</h2>
+<p>A coworker got a new job. You and another coworker want to buy a
+gift, and there are two options: headphones and a mug. Choose one and
+persuade your coworker.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 8.</p>
+<h3 id="sample-12">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the headphones.
+<span class="conn">First of all</span>, they’re useful every day,
+whether our colleague is commuting, working or relaxing at home. A new
+job often involves long hours at a desk, so <span class="vocab">noise-cancelling</span> headphones would help him <span class="verb">tune out</span> distractions.</p>
+<p><span class="conn">On top of that</span>, headphones feel like a
+<span class="vocab">premium</span> gift, so we could <span class="verb">chip in</span> together and still stay within our budget. A
+mug is cute, <span class="conn">but</span> he probably already owns
+several.</p>
+<p><span class="conn">Admittedly</span>, a mug is cheaper and has a
+<span class="vocab">personal touch</span>, <span class="conn">but</span>
+we could <span class="verb">add on</span> a small card with a warm
+message to make the headphones more personal.</p>
+<p><span class="tpl">That’s why I really think</span> the headphones are
+the better option. They show we care about his success in the new
+job.</p>
+<h3 id="vocabulary-12">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">tune out</span></td>
+<td>stop paying attention to</td>
+<td>I tune out the noise when I read.</td>
+</tr>
+<tr>
+<td><span class="verb">chip in</span></td>
+<td>each give a share of money</td>
+<td>We chipped in for the gift.</td>
+</tr>
+<tr>
+<td><span class="verb">add on</span></td>
+<td>include as an extra</td>
+<td>I’ll add on a card.</td>
+</tr>
+<tr>
+<td><span class="vocab">noise-cancelling</span></td>
+<td>blocking outside sound</td>
+<td>Noise-cancelling headphones are great for flights.</td>
+</tr>
+<tr>
+<td><span class="vocab">premium</span></td>
+<td>of high quality</td>
+<td>It’s a premium brand.</td>
+</tr>
+<tr>
+<td><span class="vocab">personal touch</span></td>
+<td>something that shows individual care</td>
+<td>A handwritten note adds a personal touch.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-smartphones">2.7 Two Smartphones</h2>
 <p>Your friend is choosing between two smartphones with different prices
 and features. Persuade them.</p>
-<h3 id="sample-9">Sample</h3>
+<h3 id="sample-13">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the cheaper
 smartphone. <span class="conn">First of all</span>, it still has all the
 main features you need, such as a good camera, a fast processor, and
@@ -1377,7 +1813,7 @@ daily life, and they’re not worth the <span class="vocab">extra
 cost</span>.</p>
 <p><span class="tpl">That’s why I really think</span> the cheaper phone
 offers better value for you.</p>
-<h3 id="vocabulary-9">Vocabulary</h3>
+<h3 id="vocabulary-13">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1409,6 +1845,505 @@ offers better value for you.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="wheelbarrows">2.8 Wheelbarrows ⭐</h2>
+<p>You need a wheelbarrow. Option 1 is used, metal, with two wheels,
+free but delivery costs $40. Option 2 is lightweight plastic with one
+wheel and costs $65. Compare the two and persuade your sister or a
+friend to choose one.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11
+(several reports), Oct 10 and in undated reports.</p>
+<h3 id="sample-14">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the used metal
+wheelbarrow. <span class="conn">First of all</span>, even with the
+forty-dollar delivery fee, it costs less than the plastic one, and the
+metal frame is much <span class="vocab">more durable</span>. It can
+carry heavy loads of soil or bricks without <span class="verb">giving
+way</span>.</p>
+<p><span class="conn">On top of that</span>, the two wheels make it more
+stable, so it won’t <span class="verb">tip over</span> on uneven ground.
+The plastic model might be lighter, <span class="conn">but</span> a
+single wheel is harder to <span class="vocab">keep balanced</span>,
+especially when it’s full.</p>
+<p><span class="conn">Admittedly</span>, the metal one is heavier and
+used, <span class="conn">but</span> we can <span class="verb">wipe
+down</span> the rust and it will last for years.</p>
+<p><span class="tpl">That’s why I really think</span> the metal
+wheelbarrow is the better option. It’s cheaper, sturdier and a better
+<span class="vocab">investment</span>.</p>
+<h3 id="vocabulary-14">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">give way</span></td>
+<td>break under pressure</td>
+<td>The old shelf gave way.</td>
+</tr>
+<tr>
+<td><span class="verb">tip over</span></td>
+<td>fall on its side</td>
+<td>The cart tipped over.</td>
+</tr>
+<tr>
+<td><span class="verb">wipe down</span></td>
+<td>clean by wiping</td>
+<td>Wipe down the tools after use.</td>
+</tr>
+<tr>
+<td><span class="vocab">more durable</span></td>
+<td>able to last a long time</td>
+<td>Steel is more durable than plastic.</td>
+</tr>
+<tr>
+<td><span class="vocab">keep balanced</span></td>
+<td>stay steady</td>
+<td>It’s hard to keep balanced on one wheel.</td>
+</tr>
+<tr>
+<td><span class="vocab">investment</span></td>
+<td>something bought for long-term value</td>
+<td>Good tools are an investment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="snow-removal-equipment">2.9 Snow Removal Equipment ⭐</h2>
+<p>Your family wants to buy equipment to clear snow from the driveway.
+Compare the options (for example a plastic or wooden shovel, a
+walk-behind snow blower, or a small snowplow) and persuade a family
+member that your choice is better.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9, Oct 8
+(several reports) and Oct 7.</p>
+<h3 id="sample-15">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the walk-behind
+snow blower. <span class="conn">First of all</span>, it clears a
+driveway in minutes, while a shovel takes an hour of exhausting work.
+After a <span class="vocab">heavy snowfall</span>, that saves a lot of
+energy, and we won’t have to <span class="verb">put up with</span> sore
+backs.</p>
+<p><span class="conn">On top of that</span>, it costs four hundred
+dollars, which is far cheaper than the enclosed-cab snowplow at seven
+hundred. It’s also easy to <span class="vocab">store</span> in the
+garage, and it will <span class="verb">pay for itself</span> over the
+winters.</p>
+<p><span class="conn">Admittedly</span>, the plastic shovel is the
+cheapest, <span class="conn">but</span> it’s hard to <span class="verb">keep up with</span> a big storm, and shovelling can lead to
+injuries. The plow is comfortable, <span class="conn">but</span> it’s
+<span class="vocab">excessive</span> for an ordinary driveway.</p>
+<p><span class="tpl">That’s why I really think</span> the snow blower is
+the better option. It’s <span class="vocab">efficient</span>, affordable
+and perfect for our needs.</p>
+<h3 id="vocabulary-15">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pay for itself</span></td>
+<td>earn back its cost</td>
+<td>A good coat pays for itself.</td>
+</tr>
+<tr>
+<td><span class="verb">keep up with</span></td>
+<td>stay at the same level as</td>
+<td>I can’t keep up with the housework.</td>
+</tr>
+<tr>
+<td><span class="vocab">heavy snowfall</span></td>
+<td>a lot of snow</td>
+<td>Heavy snowfall closed the roads.</td>
+</tr>
+<tr>
+<td><span class="vocab">store</span></td>
+<td>keep for later use</td>
+<td>We store tools in the shed.</td>
+</tr>
+<tr>
+<td><span class="vocab">excessive</span></td>
+<td>more than necessary</td>
+<td>The price is excessive.</td>
+</tr>
+<tr>
+<td><span class="vocab">efficient</span></td>
+<td>working well without wasting time or effort</td>
+<td>A very efficient machine.</td>
+</tr>
+<tr>
+<td><span class="verb">put up with</span></td>
+<td>tolerate</td>
+<td>I can’t put up with the noise.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notebook-or-planner-gift">2.10 Notebook or Planner Gift ⭐</h2>
+<p>You need to choose a gift for a niece who is going to university.
+Compare two notebooks, or a planner or diary, and convince your sister
+which is the best gift.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 (two
+reports).</p>
+<h3 id="sample-16">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the hardcover
+planner. <span class="conn">First of all</span>, it combines a calendar
+and a notebook, so my niece can <span class="verb">keep track of</span>
+classes, assignments and exams in one place. University life is <span class="vocab">hectic</span>, and good organization will help her <span class="verb">stay on top of</span> deadlines.</p>
+<p><span class="conn">On top of that</span>, it has a sturdy cover and
+plenty of pages, so it will last the whole year. The plain notebook is
+cheaper, <span class="conn">but</span> it has no dates, and she would
+have to <span class="verb">draw up</span> a schedule herself.</p>
+<p><span class="conn">Admittedly</span>, the planner costs a few dollars
+more, <span class="conn">but</span> it is a <span class="vocab">practical</span> gift that she’ll use every day.</p>
+<p><span class="tpl">That’s why I really think</span> the planner is the
+better option. It shows that we want her to <span class="vocab">get off
+to a good start</span> at university.</p>
+<h3 id="vocabulary-16">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">keep track of</span></td>
+<td>follow and remember</td>
+<td>I keep track of my expenses.</td>
+</tr>
+<tr>
+<td><span class="verb">stay on top of</span></td>
+<td>manage well and not fall behind</td>
+<td>She stays on top of her homework.</td>
+</tr>
+<tr>
+<td><span class="verb">draw up</span></td>
+<td>prepare in writing</td>
+<td>We drew up a plan.</td>
+</tr>
+<tr>
+<td><span class="vocab">hectic</span></td>
+<td>very busy</td>
+<td>A hectic week.</td>
+</tr>
+<tr>
+<td><span class="vocab">practical</span></td>
+<td>useful in real life</td>
+<td>A practical present.</td>
+</tr>
+<tr>
+<td><span class="vocab">get off to a good start</span></td>
+<td>begin well</td>
+<td>He got off to a good start at work.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="washing-machines">2.11 Washing Machines ⭐</h2>
+<p>You are choosing between two washing machines. Compare them and
+persuade a family member to buy the one you prefer.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-17">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the <span class="vocab">front-loading</span> washing machine. <span class="conn">First of all</span>, it is <span class="vocab">energy-efficient</span>, so it will <span class="verb">bring down</span> our electricity and water bills every
+month. Over ten years, the savings will be significant.</p>
+<p><span class="conn">On top of that</span>, it cleans clothes more
+gently, so our sweaters and jeans will last longer. It’s also quieter
+and has a large <span class="vocab">capacity</span>, which is perfect
+for a family that does laundry several times a week.</p>
+<p><span class="conn">Admittedly</span>, the top-loading model is
+cheaper at first, <span class="conn">but</span> it uses more water, and
+we would <span class="verb">end up</span> paying more in the long
+run.</p>
+<p><span class="tpl">That’s why I really think</span> the front-loader
+is the better option. It’s a smart purchase that will <span class="verb">pay off</span> and <span class="verb">hold up</span> for
+years.</p>
+<h3 id="vocabulary-17">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">bring down</span></td>
+<td>reduce</td>
+<td>The new window brought down our heating costs.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up buying both.</td>
+</tr>
+<tr>
+<td><span class="verb">pay off</span></td>
+<td>bring a good result over time</td>
+<td>Saving now will pay off later.</td>
+</tr>
+<tr>
+<td><span class="verb">hold up</span></td>
+<td>stay in good condition</td>
+<td>These boots hold up well.</td>
+</tr>
+<tr>
+<td><span class="vocab">energy-efficient</span></td>
+<td>using little power</td>
+<td>An energy-efficient fridge.</td>
+</tr>
+<tr>
+<td><span class="vocab">capacity</span></td>
+<td>the amount something can hold</td>
+<td>The drum has a large capacity.</td>
+</tr>
+<tr>
+<td><span class="vocab">front-loading</span></td>
+<td>opening at the front instead of the top</td>
+<td>A front-loading washer is gentle on clothes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="choosing-a-camera">2.12 Choosing a Camera ⭐</h2>
+<p>You need a camera. Compare an inexpensive easy-to-use video camera, a
+professional camera and an older camera, and persuade a friend to choose
+one.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-18">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the easy-to-use
+video camera. <span class="conn">First of all</span>, it’s affordable
+and simple, so you can <span class="verb">get the hang of</span> it in a
+day. You don’t need to read a thick manual or <span class="verb">fiddle
+with</span> complicated settings.</p>
+<p><span class="conn">On top of that</span>, it’s light and compact, so
+you can carry it on trips and <span class="vocab">film on the go</span>.
+The picture quality is good enough for family videos and social
+media.</p>
+<p><span class="conn">Admittedly</span>, a professional camera takes
+sharper images, <span class="conn">but</span> it’s expensive, heavy and
+takes months to <span class="vocab">master</span>. An older camera may
+look charming, <span class="conn">but</span> it could <span class="verb">break down</span> at any moment.</p>
+<p><span class="tpl">That’s why I really think</span> the easy-to-use
+camera is the better option. It’s good <span class="vocab">value for
+money</span>, and you’ll actually enjoy using it.</p>
+<h3 id="vocabulary-18">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get the hang of</span></td>
+<td>learn how to do something</td>
+<td>I’m getting the hang of this app.</td>
+</tr>
+<tr>
+<td><span class="verb">fiddle with</span></td>
+<td>touch and adjust nervously</td>
+<td>He fiddled with the dial.</td>
+</tr>
+<tr>
+<td><span class="verb">break down</span></td>
+<td>stop working</td>
+<td>My car broke down.</td>
+</tr>
+<tr>
+<td><span class="vocab">film on the go</span></td>
+<td>record videos while moving around</td>
+<td>I like to film on the go.</td>
+</tr>
+<tr>
+<td><span class="vocab">master</span></td>
+<td>learn completely</td>
+<td>It takes years to master the piano.</td>
+</tr>
+<tr>
+<td><span class="vocab">value for money</span></td>
+<td>good quality for the price</td>
+<td>This is great value for money.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summer-running-shoes">2.13 Summer Running Shoes ⭐</h2>
+<p>You are choosing shoes for summer running. Compare two pairs and
+persuade a friend which pair to buy.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-19">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the lightweight
+mesh running shoes. <span class="conn">First of all</span>, they’re
+<span class="vocab">breathable</span>, so your feet stay cool even on a
+hot day. Heavy, thick shoes can make your feet sweat and <span class="verb">wear you out</span> quickly.</p>
+<p><span class="conn">On top of that</span>, the soles have excellent
+<span class="vocab">cushioning</span>, which protects your knees on hard
+<span class="vocab">pavement</span>. They also dry fast if you <span class="verb">get caught in</span> a summer rainstorm.</p>
+<p><span class="conn">Admittedly</span>, the other pair looks stylish
+and lasts longer, <span class="conn">but</span> it’s much warmer and
+heavier, and it would <span class="verb">weigh you down</span> on long
+runs.</p>
+<p><span class="tpl">That’s why I really think</span> the mesh shoes are
+the better option. They’re comfortable, practical and ideal if you want
+to <span class="verb">work up to</span> a ten-kilometre race this
+summer.</p>
+<h3 id="vocabulary-19">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">wear out</span></td>
+<td>make very tired</td>
+<td>The heat wore me out.</td>
+</tr>
+<tr>
+<td><span class="verb">get caught in</span></td>
+<td>be surprised by bad weather or a bad situation</td>
+<td>We got caught in the rain.</td>
+</tr>
+<tr>
+<td><span class="verb">weigh down</span></td>
+<td>make heavy or burdened</td>
+<td>The bag weighed me down.</td>
+</tr>
+<tr>
+<td><span class="verb">work up to</span></td>
+<td>gradually reach a higher level</td>
+<td>She worked up to a marathon.</td>
+</tr>
+<tr>
+<td><span class="vocab">breathable</span></td>
+<td>allowing air to pass through</td>
+<td>A breathable fabric.</td>
+</tr>
+<tr>
+<td><span class="vocab">cushioning</span></td>
+<td>soft material that absorbs impact</td>
+<td>Good cushioning protects your feet.</td>
+</tr>
+<tr>
+<td><span class="vocab">pavement</span></td>
+<td>the hard surface of a road or sidewalk</td>
+<td>Running on pavement is hard on the knees.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="delivery-companies">2.14 Delivery Companies ⭐</h2>
+<p>You need to send a package to your sister in another city. Compare
+two delivery companies and persuade her or a family member which to
+use.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-20">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the faster
+delivery company. <span class="conn">First of all</span>, it guarantees
+<span class="vocab">delivery within two days</span>, and the package is
+important, so I don’t want to <span class="verb">sit around</span>
+waiting for a week. It also offers real-time <span class="vocab">tracking</span>, so we can see where the box is at any
+time.</p>
+<p><span class="conn">On top of that</span>, it includes insurance,
+which means we’re covered if the parcel is damaged or gets <span class="vocab">lost in transit</span>. I’d feel much calmer knowing my
+sister will <span class="verb">receive</span> it safely.</p>
+<p><span class="conn">Admittedly</span>, the other company is cheaper,
+<span class="conn">but</span> the difference is only a few dollars, and
+I’d rather not <span class="verb">take a chance</span> with a gift.</p>
+<p><span class="tpl">That’s why I really think</span> the faster company
+is the better option. It’s reliable and worth the extra money.</p>
+<h3 id="vocabulary-20">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">sit around</span></td>
+<td>wait or relax without doing much</td>
+<td>I don’t want to sit around all day.</td>
+</tr>
+<tr>
+<td><span class="verb">receive</span></td>
+<td>get</td>
+<td>She received the parcel on Monday.</td>
+</tr>
+<tr>
+<td><span class="verb">take a chance</span></td>
+<td>risk something</td>
+<td>Don’t take a chance with fragile items.</td>
+</tr>
+<tr>
+<td><span class="vocab">delivery within two days</span></td>
+<td>arrival of the package in two days</td>
+<td>They promise delivery within two days.</td>
+</tr>
+<tr>
+<td><span class="vocab">tracking</span></td>
+<td>following the location of a parcel</td>
+<td>I used tracking to check my order.</td>
+</tr>
+<tr>
+<td><span class="vocab">lost in transit</span></td>
+<td>lost while being delivered</td>
+<td>The parcel was lost in transit.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="travel-and-vacations">3 Travel and Vacations</h1>
 <p>Topics: choosing a destination, hotel versus rental, beach versus
 city, a tour, how to travel.</p>
@@ -1424,7 +2359,7 @@ better].</p>
 <h2 id="resort-vs-sightseeing">3.1 Resort vs Sightseeing</h2>
 <p>Your family is choosing between a beach resort and a city sightseeing
 tour for vacation. Persuade them.</p>
-<h3 id="sample-10">Sample</h3>
+<h3 id="sample-21">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the beach resort.
 <span class="conn">First of all</span>, we all work and study hard, so
 we need a real break. At a resort, we can <span class="vocab">unwind</span> by the pool, swim in the ocean, and let
@@ -1440,7 +2375,7 @@ before.</p>
 <p><span class="tpl">That’s why I really think</span> the beach resort
 is the better way to <span class="vocab">recharge</span> as a
 family.</p>
-<h3 id="vocabulary-10">Vocabulary</h3>
+<h3 id="vocabulary-21">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1475,7 +2410,7 @@ family.</p>
 <h2 id="hotel-vs-rental">3.2 Hotel vs Rental</h2>
 <p>Your friends are deciding between a hotel and a vacation rental.
 Choose one and persuade them.</p>
-<h3 id="sample-11">Sample</h3>
+<h3 id="sample-22">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the vacation
 rental. <span class="conn">First of all</span>, with a group of friends,
 it works out cheaper. We can split the cost, and we’d get a whole house
@@ -1491,7 +2426,7 @@ rental too.</p>
 <p><span class="tpl">That’s why I really think</span> the rental gives
 us more flexibility and better <span class="vocab">value for
 money</span>.</p>
-<h3 id="vocabulary-11">Vocabulary</h3>
+<h3 id="vocabulary-22">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1523,10 +2458,83 @@ money</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="bus-tour-vs-independent">3.3 Bus Tour vs Independent</h2>
+<h2 id="family-holiday-house">3.3 Family Holiday House ⭐</h2>
+<p>You are going on holiday with your father, grandparents and the rest
+of the family and will rent a house. Your father prefers an old, cheaper
+wooden house; you prefer a beautiful house with an elevator, a nice view
+or a private lake. Compare and persuade your father.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11 (two
+reports).</p>
+<h3 id="sample-23">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the modern house
+with the elevator. <span class="conn">First of all</span>, our
+grandparents will be with us, and climbing stairs is hard for them. An
+elevator means they can <span class="verb">get around</span> comfortably
+and join every activity.</p>
+<p><span class="conn">On top of that</span>, the house is spacious and
+has a breathtaking view and a private lake, so the kids can swim, and
+the adults can <span class="vocab">unwind</span> on the terrace. A
+holiday like that will create wonderful <span class="vocab">family
+memories</span>.</p>
+<p><span class="conn">Admittedly</span>, the old wooden house is
+cheaper, <span class="conn">but</span> it’s likely to be cramped, noisy
+and <span class="vocab">inconvenient</span> for older people. We would
+<span class="verb">end up</span> spending the trip worrying instead of
+relaxing.</p>
+<p><span class="tpl">That’s why I really think</span> the modern house
+is the better option. It’s worth paying a bit more so that everyone can
+<span class="verb">make the most of</span> the trip.</p>
+<h3 id="vocabulary-23">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get around</span></td>
+<td>move from place to place</td>
+<td>He gets around with a cane.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up in a tiny room.</td>
+</tr>
+<tr>
+<td><span class="verb">make the most of</span></td>
+<td>use as well as possible</td>
+<td>Make the most of the sunshine.</td>
+</tr>
+<tr>
+<td><span class="vocab">unwind</span></td>
+<td>relax</td>
+<td>I unwind with a book.</td>
+</tr>
+<tr>
+<td><span class="vocab">family memories</span></td>
+<td>happy moments shared by relatives</td>
+<td>Trips create family memories.</td>
+</tr>
+<tr>
+<td><span class="vocab">inconvenient</span></td>
+<td>causing difficulty</td>
+<td>The stairs are inconvenient.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bus-tour-vs-independent">3.4 Bus Tour vs Independent</h2>
 <p>Your parents are picking between a bus tour and exploring on their
 own. Persuade them.</p>
-<h3 id="sample-12">Sample</h3>
+<h3 id="sample-24">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the bus tour.
 <span class="conn">First of all</span>, everything is organized for you.
 The hotels, the transport, and the sightseeing are all arranged, so you
@@ -1541,7 +2549,7 @@ freedom, <span class="conn">but</span> it can be stressful, especially
 with a language barrier, and you could waste time getting lost.</p>
 <p><span class="tpl">That’s why I really think</span> the bus tour is
 the more <span class="vocab">hassle-free</span> and <span class="vocab">enjoyable</span> option for you.</p>
-<h3 id="vocabulary-12">Vocabulary</h3>
+<h3 id="vocabulary-24">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1578,10 +2586,10 @@ the more <span class="vocab">hassle-free</span> and <span class="vocab">enjoyabl
 </tr>
 </tbody>
 </table>
-<h2 id="cabin-vs-camping">3.4 Cabin vs Camping</h2>
+<h2 id="cabin-vs-camping">3.5 Cabin vs Camping</h2>
 <p>Your friend is choosing between a mountain cabin and a camping trip.
 Persuade them.</p>
-<h3 id="sample-13">Sample</h3>
+<h3 id="sample-25">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the mountain
 cabin. <span class="conn">First of all</span>, you’d have a comfortable
 bed, a roof over your head, and a warm fireplace. After a long hike,
@@ -1595,7 +2603,7 @@ more adventurous, <span class="conn">but</span> it needs a lot of <span class="v
 <p><span class="tpl">That’s why I really think</span> the cabin is the
 better choice. You’ll enjoy the <span class="vocab">scenery</span> and
 <span class="vocab">peace</span> without the discomfort.</p>
-<h3 id="vocabulary-13">Vocabulary</h3>
+<h3 id="vocabulary-25">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1622,10 +2630,10 @@ better choice. You’ll enjoy the <span class="vocab">scenery</span> and
 </tr>
 </tbody>
 </table>
-<h2 id="flying-vs-driving">3.5 Flying vs Driving</h2>
+<h2 id="flying-vs-driving">3.6 Flying vs Driving</h2>
 <p>Your family is picking between flying and driving to a destination.
 Persuade them.</p>
-<h3 id="sample-14">Sample</h3>
+<h3 id="sample-26">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> flying. <span class="conn">First of all</span>, it’s much faster. A flight takes two
 hours, whereas driving would take almost ten, and we’d spend a whole day
 on the road instead of at our destination.</p>
@@ -1637,7 +2645,7 @@ and a hotel stop, the price of the tickets may be <span class="vocab">comparable
 traffic and <span class="vocab">road construction</span>.</p>
 <p><span class="tpl">That’s why I really think</span> flying is the more
 efficient and comfortable choice.</p>
-<h3 id="vocabulary-14">Vocabulary</h3>
+<h3 id="vocabulary-26">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1669,6 +2677,70 @@ efficient and comfortable choice.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="camper-vans">3.7 Camper Vans ⭐</h2>
+<p>You are planning a family trip. Compare two vans or camper vans and
+persuade a family member which one to rent.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-27">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the larger camper
+van. <span class="conn">First of all</span>, there are six of us, so we
+need enough room to sleep comfortably and <span class="vocab">store</span> our luggage. The bigger van has a small
+kitchen and a bathroom, which makes the trip far more <span class="vocab">convenient</span>.</p>
+<p><span class="conn">On top of that</span>, we won’t have to <span class="verb">check in</span> to a hotel every night, so we can <span class="verb">stop off at</span> any beautiful lake or park along the
+way. That freedom is the best part of a road trip.</p>
+<p><span class="conn">Admittedly</span>, the smaller van uses less fuel
+and costs less, <span class="conn">but</span> we’d be <span class="verb">squeezed in</span> like sardines, and the kids would get
+cranky.</p>
+<p><span class="tpl">That’s why I really think</span> the larger van is
+the better option. It’s comfortable and gives us the <span class="vocab">flexibility</span> to enjoy the journey.</p>
+<h3 id="vocabulary-27">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">check in</span></td>
+<td>register at a hotel</td>
+<td>We checked in at noon.</td>
+</tr>
+<tr>
+<td><span class="verb">stop off at</span></td>
+<td>make a short stop at a place</td>
+<td>Let’s stop off at the lake.</td>
+</tr>
+<tr>
+<td><span class="verb">squeeze in</span></td>
+<td>fit into a small space</td>
+<td>Six of us squeezed in the car.</td>
+</tr>
+<tr>
+<td><span class="vocab">store</span></td>
+<td>keep in a place</td>
+<td>Store your bags under the bed.</td>
+</tr>
+<tr>
+<td><span class="vocab">convenient</span></td>
+<td>easy and suitable</td>
+<td>The location is convenient.</td>
+</tr>
+<tr>
+<td><span class="vocab">flexibility</span></td>
+<td>the freedom to change plans</td>
+<td>The trip offers flexibility.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="events-activities-and-entertainment">4 Events, Activities, and
 Entertainment</h1>
 <p>Topics: a venue for a party, a restaurant, a weekend activity, a
@@ -1685,7 +2757,7 @@ better].</p>
 <h2 id="restaurant-vs-park-party">4.1 Restaurant vs Park Party</h2>
 <p>Your friends are choosing a venue for a birthday party: a restaurant
 or a park. Persuade them.</p>
-<h3 id="sample-15">Sample</h3>
+<h3 id="sample-28">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the park. <span class="conn">First of all</span>, it’s free, so we can spend the money
 on food, a cake, and decorations. A restaurant bill for a big group can
 be very expensive.</p>
@@ -1699,7 +2771,7 @@ the weather, <span class="conn">but</span> we can check the forecast and
 book a shelter just in case.</p>
 <p><span class="tpl">That’s why I really think</span> the park is the
 better <span class="vocab">venue</span>. It will be more <span class="vocab">relaxed</span>, more fun, and more <span class="vocab">memorable</span>.</p>
-<h3 id="vocabulary-15">Vocabulary</h3>
+<h3 id="vocabulary-28">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1729,7 +2801,7 @@ better <span class="vocab">venue</span>. It will be more <span class="vocab">rel
 <h2 id="bowling-vs-hike">4.2 Bowling vs Hike</h2>
 <p>Your group is choosing a weekend activity: bowling or a hike.
 Persuade them.</p>
-<h3 id="sample-16">Sample</h3>
+<h3 id="sample-29">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the hike. <span class="conn">First of all</span>, spending time in nature is great for
 our health, and we’d get exercise and fresh air. After a week of work,
 it’s the best way to clear our heads.</p>
@@ -1743,7 +2815,7 @@ hike on a beautiful weekend is a rare chance.</p>
 <p><span class="tpl">That’s why I really think</span> the hike is the
 better choice. We’ll come home <span class="vocab">refreshed</span> and
 in a <span class="vocab">positive</span> mood.</p>
-<h3 id="vocabulary-16">Vocabulary</h3>
+<h3 id="vocabulary-29">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1773,7 +2845,7 @@ in a <span class="vocab">positive</span> mood.</p>
 <h2 id="team-dinner-restaurant">4.3 Team Dinner Restaurant</h2>
 <p>Your coworkers are picking between two restaurants for the team
 dinner. Persuade them.</p>
-<h3 id="sample-17">Sample</h3>
+<h3 id="sample-30">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the Italian
 restaurant. <span class="conn">First of all</span>, the menu has
 something for everyone, including vegetarian and gluten-free dishes, and
@@ -1788,7 +2860,7 @@ parking is <span class="vocab">limited</span>. The Italian restaurant is
 five minutes away.</p>
 <p><span class="tpl">That’s why I really think</span> the Italian
 restaurant is the better option. It’s <span class="vocab">convenient</span> and welcoming for the whole team.</p>
-<h3 id="vocabulary-17">Vocabulary</h3>
+<h3 id="vocabulary-30">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1815,10 +2887,82 @@ restaurant is the better option. It’s <span class="vocab">convenient</span> an
 </tr>
 </tbody>
 </table>
-<h2 id="gym-vs-yoga">4.4 Gym vs Yoga</h2>
+<h2 id="pizza-vs-sandwiches">4.4 Pizza vs Sandwiches ⭐</h2>
+<p>Your company has an event and wants to order food. Compare pizza with
+sandwiches (or what a manager suggests), and persuade them. The
+sandwiches have more variety and are healthier, but the price differs
+from pizza by only $1.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11.</p>
+<h3 id="sample-31">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> ordering the
+sandwiches. <span class="conn">First of all</span>, they offer much more
+variety, with fresh vegetables, different meats and vegetarian options.
+That means every guest can find something they like, even those with
+<span class="vocab">dietary restrictions</span>.</p>
+<p><span class="conn">On top of that</span>, sandwiches are healthier
+and lighter than greasy pizza, so our colleagues won’t feel sleepy and
+can <span class="vocab">stay focused</span> during the event. They’re
+also easier to <span class="vocab">handle</span> while people
+mingle.</p>
+<p><span class="conn">Admittedly</span>, pizza is a classic
+crowd-pleaser, <span class="conn">but</span> the price difference is
+only one dollar per person, so we wouldn’t <span class="verb">go over
+budget</span>.</p>
+<p><span class="tpl">That’s why I really think</span> sandwiches are the
+better option. It’s an easy way to <span class="verb">cater to</span>
+everyone and to <span class="verb">leave a good impression</span> on our
+guests.</p>
+<h3 id="vocabulary-31">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">go over budget</span></td>
+<td>spend more than planned</td>
+<td>We went over budget on food.</td>
+</tr>
+<tr>
+<td><span class="verb">cater to</span></td>
+<td>provide what someone needs</td>
+<td>The menu caters to vegetarians.</td>
+</tr>
+<tr>
+<td><span class="verb">leave a good impression</span></td>
+<td>make people think well of you</td>
+<td>He left a good impression at the interview.</td>
+</tr>
+<tr>
+<td><span class="vocab">dietary restrictions</span></td>
+<td>foods someone cannot or will not eat</td>
+<td>Ask about dietary restrictions.</td>
+</tr>
+<tr>
+<td><span class="vocab">stay focused</span></td>
+<td>keep your attention on a task</td>
+<td>It’s hard to stay focused after a heavy lunch.</td>
+</tr>
+<tr>
+<td><span class="vocab">handle</span></td>
+<td>hold or manage</td>
+<td>Sandwiches are easy to handle.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gym-vs-yoga">4.5 Gym vs Yoga</h2>
 <p>Your friend is choosing between joining a gym or a yoga class.
 Persuade them.</p>
-<h3 id="sample-18">Sample</h3>
+<h3 id="sample-32">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the yoga class.
 <span class="conn">First of all</span>, you’ve told me that you feel
 stressed lately, and yoga is excellent for both the body and the mind.
@@ -1832,7 +2976,7 @@ is usually higher.</p>
 <p><span class="tpl">That’s why I really think</span> yoga is the better
 option. It’s <span class="vocab">gentle</span>, and it will fit your
 lifestyle.</p>
-<h3 id="vocabulary-18">Vocabulary</h3>
+<h3 id="vocabulary-32">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -1859,10 +3003,10 @@ lifestyle.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="movie-night-in-vs-out">4.5 Movie Night In vs Out</h2>
+<h2 id="movie-night-in-vs-out">4.6 Movie Night In vs Out</h2>
 <p>Your family is picking between a movie night at home and an evening
 at the theatre. Persuade them.</p>
-<h3 id="sample-19">Sample</h3>
+<h3 id="sample-33">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> a movie night at
 home. <span class="conn">First of all</span>, it’s much cheaper. Theatre
 tickets for the whole family, plus parking and snacks, would cost a lot,
@@ -1878,7 +3022,7 @@ little kids, and they might get <span class="vocab">restless</span> or
 sleepy.</p>
 <p><span class="tpl">That’s why I really think</span> staying home is
 the better option. It’s relaxing, affordable, and perfect for <span class="vocab">family bonding</span>.</p>
-<h3 id="vocabulary-19">Vocabulary</h3>
+<h3 id="vocabulary-33">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1915,6 +3059,210 @@ the better option. It’s relaxing, affordable, and perfect for <span class="voc
 </tr>
 </tbody>
 </table>
+<h2 id="ice-cream-cake-vs-simple-dessert">4.7 Ice Cream Cake vs Simple
+Dessert ⭐</h2>
+<p>You are choosing a dessert for a celebration. Compare a simple cake
+or dessert with an ice-cream cake ($25, serves more people, attractive
+decorations) and persuade someone to choose yours.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9.</p>
+<h3 id="sample-34">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the ice-cream
+cake. <span class="conn">First of all</span>, it serves more people, and
+we’re expecting a big group. For twenty-five dollars, that’s <span class="vocab">excellent value</span>, because a simple dessert would run
+out quickly.</p>
+<p><span class="conn">On top of that</span>, its decorations are
+beautiful, so it will become the <span class="vocab">centrepiece</span>
+of the party and look great in photos. It’s also refreshing, which is
+perfect for a warm day, and it won’t <span class="verb">melt away</span>
+too quickly if we keep it in the freezer until the last minute.</p>
+<p><span class="conn">Admittedly</span>, a simple cake is easier to
+<span class="vocab">slice</span>, <span class="conn">but</span> people
+can always <span class="verb">dig in</span> to the ice-cream cake with a
+large spoon.</p>
+<p><span class="tpl">That’s why I really think</span> the ice-cream cake
+is the better option. It will <span class="verb">wow</span> our guests
+and make the celebration unforgettable.</p>
+<h3 id="vocabulary-34">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">melt away</span></td>
+<td>disappear by melting</td>
+<td>The snow melted away.</td>
+</tr>
+<tr>
+<td><span class="verb">dig in</span></td>
+<td>start eating eagerly</td>
+<td>Everyone dug in to the cake.</td>
+</tr>
+<tr>
+<td><span class="verb">wow</span></td>
+<td>impress greatly</td>
+<td>The fireworks wowed the crowd.</td>
+</tr>
+<tr>
+<td><span class="vocab">excellent value</span></td>
+<td>very good quality for the price</td>
+<td>The meal was excellent value.</td>
+</tr>
+<tr>
+<td><span class="vocab">centrepiece</span></td>
+<td>the main attraction</td>
+<td>The cake was the centrepiece.</td>
+</tr>
+<tr>
+<td><span class="vocab">slice</span></td>
+<td>cut into thin pieces</td>
+<td>Slice the bread.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summer-activity-for-children-tv-or-pool">4.8 Summer Activity for
+Children: TV or Pool ⭐</h2>
+<p>Two summer activities are available for children: watching TV, or
+installing a pool in the yard. Choose one and convince your friend that
+yours is better.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 7.</p>
+<h3 id="sample-35">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> installing a pool
+in the yard. <span class="conn">First of all</span>, kids need to be
+active in summer, and swimming is a wonderful way to <span class="verb">burn off</span> their energy. Watching TV for hours will
+only make them lazy and <span class="vocab">restless</span>.</p>
+<p><span class="conn">On top of that</span>, a pool brings the whole
+neighbourhood together, so the children can <span class="vocab">make
+friends</span> and learn to swim safely. It’s a skill that will <span class="verb">stay with</span> them for life. Also, spending time
+outdoors is great for their health.</p>
+<p><span class="conn">Admittedly</span>, a pool is a bigger investment
+than a TV, <span class="conn">but</span> it will <span class="verb">pay
+for itself</span> in family fun for many summers.</p>
+<p><span class="tpl">That’s why I really think</span> the pool is the
+better option. It keeps the kids <span class="vocab">fit</span>, happy
+and busy all summer.</p>
+<h3 id="vocabulary-35">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">burn off</span></td>
+<td>use up energy</td>
+<td>The kids burned off their energy at the park.</td>
+</tr>
+<tr>
+<td><span class="verb">stay with</span></td>
+<td>remain with someone</td>
+<td>The lesson stayed with me.</td>
+</tr>
+<tr>
+<td><span class="verb">pay for itself</span></td>
+<td>earn back its cost</td>
+<td>The pool paid for itself.</td>
+</tr>
+<tr>
+<td><span class="vocab">restless</span></td>
+<td>unable to stay still</td>
+<td>The children were restless.</td>
+</tr>
+<tr>
+<td><span class="vocab">make friends</span></td>
+<td>form friendships</td>
+<td>It’s easy to make friends at camp.</td>
+</tr>
+<tr>
+<td><span class="vocab">fit</span></td>
+<td>healthy and strong</td>
+<td>Swimming keeps you fit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-movie-theatres">4.9 Two Movie Theatres ⭐</h2>
+<p>You are choosing between two movie theatres that differ in ticket
+prices, showtimes, number of screens and food options. Persuade a friend
+to go to your choice.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-36">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the bigger cinema
+downtown. <span class="conn">First of all</span>, it has twelve screens
+and many <span class="vocab">showtimes</span>, so we can always find a
+film that fits our schedule. We won’t have to <span class="verb">rearrange</span> our evening around a single late show.</p>
+<p><span class="conn">On top of that</span>, it offers a wide choice of
+food, including real meals and healthy snacks. Its seats are comfortable
+and have plenty of <span class="vocab">legroom</span>. We can <span class="verb">grab a bite</span> before the film and <span class="verb">catch up on</span> the week.</p>
+<p><span class="conn">Admittedly</span>, the small theatre has cheaper
+tickets, <span class="conn">but</span> the price gap is only three
+dollars, and the choice of movies is very limited.</p>
+<p><span class="tpl">That’s why I really think</span> the big cinema is
+the better option. It gives us more <span class="vocab">flexibility</span>, comfort and a better night out.</p>
+<h3 id="vocabulary-36">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">rearrange</span></td>
+<td>change the order or time of</td>
+<td>We rearranged the meeting.</td>
+</tr>
+<tr>
+<td><span class="verb">grab a bite</span></td>
+<td>eat something quickly</td>
+<td>Let’s grab a bite after work.</td>
+</tr>
+<tr>
+<td><span class="verb">catch up on</span></td>
+<td>learn recent news about</td>
+<td>We caught up on each other’s lives.</td>
+</tr>
+<tr>
+<td><span class="vocab">showtimes</span></td>
+<td>the times when a film is shown</td>
+<td>Check the showtimes online.</td>
+</tr>
+<tr>
+<td><span class="vocab">legroom</span></td>
+<td>space for your legs</td>
+<td>The seats have lots of legroom.</td>
+</tr>
+<tr>
+<td><span class="vocab">flexibility</span></td>
+<td>the freedom to change plans</td>
+<td>The pass offers flexibility.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="transportation-and-commuting">5 Transportation and
 Commuting</h1>
 <p>Topics: car, bus, bike, electric or gas, train or plane, a
@@ -1931,7 +3279,7 @@ better].</p>
 <h2 id="driving-vs-bus">5.1 Driving vs Bus</h2>
 <p>Your friend is choosing how to get to work: driving or taking the
 bus. Persuade them.</p>
-<h3 id="sample-20">Sample</h3>
+<h3 id="sample-37">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> taking the bus.
 <span class="conn">First of all</span>, you’d avoid the stress of heavy
 traffic. Instead of gripping the steering wheel, you could read, answer
@@ -1946,7 +3294,7 @@ footprint</span>.</p>
 never have to search for a spot.</p>
 <p><span class="tpl">That’s why I really think</span> the bus is the
 better option. It’s <span class="vocab">economical</span> and <span class="vocab">stress-free</span>.</p>
-<h3 id="vocabulary-20">Vocabulary</h3>
+<h3 id="vocabulary-37">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1986,7 +3334,7 @@ better option. It’s <span class="vocab">economical</span> and <span class="voc
 <h2 id="electric-vs-gas-car">5.2 Electric vs Gas Car</h2>
 <p>Your brother is deciding between an electric car and a gas car.
 Persuade him.</p>
-<h3 id="sample-21">Sample</h3>
+<h3 id="sample-38">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the electric car.
 <span class="conn">First of all</span>, it costs far less to run.
 Electricity is cheaper than gas, and electric cars need almost no <span class="vocab">maintenance</span>, since there are no oil changes.</p>
@@ -2000,7 +3348,7 @@ quickly.</p>
 <p><span class="tpl">That’s why I really think</span> the electric car
 is the better option. It’s <span class="vocab">sustainable</span>,
 quiet, and a smart choice for the future.</p>
-<h3 id="vocabulary-21">Vocabulary</h3>
+<h3 id="vocabulary-38">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2040,7 +3388,7 @@ quiet, and a smart choice for the future.</p>
 <h2 id="cycling-vs-train">5.3 Cycling vs Train</h2>
 <p>Your friend is choosing between cycling to work and taking the train.
 Persuade them.</p>
-<h3 id="sample-22">Sample</h3>
+<h3 id="sample-39">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> cycling to work.
 <span class="conn">First of all</span>, you’d get regular exercise
 without needing a <span class="vocab">gym membership</span>, and you’ve
@@ -2055,7 +3403,7 @@ weather, you could take the train just that day. Many offices also have
 <span class="vocab">showers</span> and bike parking.</p>
 <p><span class="tpl">That’s why I really think</span> cycling is the
 better option. It’s <span class="vocab">healthy</span> and reliable.</p>
-<h3 id="vocabulary-22">Vocabulary</h3>
+<h3 id="vocabulary-39">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2087,10 +3435,84 @@ better option. It’s <span class="vocab">healthy</span> and reliable.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="train-vs-plane">5.4 Train vs Plane</h2>
+<h2 id="bicycle-vs-bus-or-taxi">5.4 Bicycle vs Bus or Taxi ⭐</h2>
+<p>You are choosing how to commute: by bicycle or by bus and taxi.
+Persuade a friend to choose your option.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-40">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> commuting by
+bicycle. <span class="conn">First of all</span>, it saves a lot of
+money, because you don’t have to pay for tickets, fuel or expensive taxi
+fares. A good bike is a one-time cost that will <span class="verb">pay
+off</span> within months.</p>
+<p><span class="conn">On top of that</span>, cycling is a great form of
+daily exercise. You’ll <span class="vocab">get your heart rate up</span>
+and arrive at work feeling <span class="vocab">energized</span>. You
+also won’t <span class="verb">get stuck in</span> traffic or wait for
+late buses.</p>
+<p><span class="conn">Admittedly</span>, the bus is more comfortable in
+bad weather, <span class="conn">but</span> you can always <span class="verb">dress for</span> rain, and on really bad days you can take
+the bus.</p>
+<p><span class="tpl">That’s why I really think</span> the bicycle is the
+better option. It’s cheap, healthy and <span class="vocab">eco-friendly</span>, and it will <span class="verb">do
+wonders for</span> your mood.</p>
+<h3 id="vocabulary-40">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pay off</span></td>
+<td>bring a good result over time</td>
+<td>The investment paid off.</td>
+</tr>
+<tr>
+<td><span class="verb">get stuck in</span></td>
+<td>be unable to move in</td>
+<td>We got stuck in traffic.</td>
+</tr>
+<tr>
+<td><span class="verb">dress for</span></td>
+<td>wear suitable clothes for</td>
+<td>Dress for the weather.</td>
+</tr>
+<tr>
+<td><span class="verb">do wonders for</span></td>
+<td>have a very good effect on</td>
+<td>Exercise does wonders for your mood.</td>
+</tr>
+<tr>
+<td><span class="vocab">get your heart rate up</span></td>
+<td>make your heart beat faster through exercise</td>
+<td>Cycling gets your heart rate up.</td>
+</tr>
+<tr>
+<td><span class="vocab">energized</span></td>
+<td>full of energy</td>
+<td>I feel energized after a run.</td>
+</tr>
+<tr>
+<td><span class="vocab">eco-friendly</span></td>
+<td>not harmful to the environment</td>
+<td>Cycling is eco-friendly.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="train-vs-plane">5.5 Train vs Plane</h2>
 <p>Your family is picking between a train and a plane for a trip.
 Persuade them.</p>
-<h3 id="sample-23">Sample</h3>
+<h3 id="sample-41">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the train. <span class="conn">First of all</span>, it’s far more relaxing. We don’t need
 to arrive three hours early, go through <span class="vocab">security
 checks</span>, or worry about luggage fees. We just walk in and sit
@@ -2103,7 +3525,7 @@ airport and waiting, the difference is small, and the train takes us
 right to the city centre.</p>
 <p><span class="tpl">That’s why I really think</span> the train is the
 better option. It’s comfortable and fun for the <span class="vocab">entire</span> family.</p>
-<h3 id="vocabulary-23">Vocabulary</h3>
+<h3 id="vocabulary-41">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2135,10 +3557,10 @@ better option. It’s comfortable and fun for the <span class="vocab">entire</sp
 </tr>
 </tbody>
 </table>
-<h2 id="car-vs-taxis-and-transit">5.5 Car vs Taxis and Transit</h2>
+<h2 id="car-vs-taxis-and-transit">5.6 Car vs Taxis and Transit</h2>
 <p>Your parents are choosing between buying a car and using taxis and
 public transit. Persuade them.</p>
-<h3 id="sample-24">Sample</h3>
+<h3 id="sample-42">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> using taxis and
 public transit. <span class="conn">First of all</span>, owning a car is
 costly. Besides the purchase price, you’d pay for insurance, gas,
@@ -2153,7 +3575,7 @@ problems, and at your age, driving at night can be tiring.</p>
 <p><span class="tpl">That’s why I really think</span> public options are
 the better choice. They’re <span class="vocab">affordable</span> and
 <span class="vocab">hassle-free</span>.</p>
-<h3 id="vocabulary-24">Vocabulary</h3>
+<h3 id="vocabulary-42">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2200,7 +3622,7 @@ better].</p>
 <h2 id="pay-vs-benefits">6.1 Pay vs Benefits</h2>
 <p>Your friend is picking between two job offers with different pay and
 benefits. Persuade them.</p>
-<h3 id="sample-25">Sample</h3>
+<h3 id="sample-43">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the job with
 better benefits. <span class="conn">First of all</span>, a good package,
 with health insurance, paid vacation, and a pension plan, is worth
@@ -2214,7 +3636,7 @@ workload would probably be heavier.</p>
 <p><span class="tpl">That’s why I really think</span> the first offer is
 the better option. It’s <span class="vocab">rewarding</span> in the long
 run.</p>
-<h3 id="vocabulary-25">Vocabulary</h3>
+<h3 id="vocabulary-43">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2254,7 +3676,7 @@ run.</p>
 <h2 id="nearby-vs-famous-school">6.2 Nearby vs Famous School</h2>
 <p>Your sibling is choosing between two schools for their child.
 Persuade them.</p>
-<h3 id="sample-26">Sample</h3>
+<h3 id="sample-44">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the school that
 is closer to home. <span class="conn">First of all</span>, your child
 wouldn’t have to spend an hour on the bus every day. A short trip means
@@ -2269,7 +3691,7 @@ environment matter more than a reputation.</p>
 <p><span class="tpl">That’s why I really think</span> the nearby school
 is the better option. It’s <span class="vocab">practical</span> and
 gives your child a <span class="vocab">balanced</span> life.</p>
-<h3 id="vocabulary-26">Vocabulary</h3>
+<h3 id="vocabulary-44">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2304,7 +3726,7 @@ gives your child a <span class="vocab">balanced</span> life.</p>
 <h2 id="spacious-vs-cozy-office">6.3 Spacious vs Cozy Office</h2>
 <p>Your office is choosing between a more spacious setup and a cozier
 one. Persuade your manager.</p>
-<h3 id="sample-27">Sample</h3>
+<h3 id="sample-45">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the more spacious
 setup. <span class="conn">First of all</span>, when people have room,
 they feel less stressed and more productive. A crowded office leads to
@@ -2318,7 +3740,7 @@ and costs less, <span class="conn">but</span> we can add plants and soft
 lighting to make the larger space just as <span class="vocab">inviting</span>.</p>
 <p><span class="tpl">That’s why I really think</span> the spacious
 option is the better choice. It supports our <span class="vocab">long-term</span> goals.</p>
-<h3 id="vocabulary-27">Vocabulary</h3>
+<h3 id="vocabulary-45">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2348,7 +3770,7 @@ option is the better choice. It supports our <span class="vocab">long-term</span
 <h2 id="hospital-vs-animal-shelter">6.4 Hospital vs Animal Shelter</h2>
 <p>Your friend wants to volunteer and is choosing between a hospital and
 an animal shelter. Persuade them.</p>
-<h3 id="sample-28">Sample</h3>
+<h3 id="sample-46">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the animal
 shelter. <span class="conn">First of all</span>, the animals really need
 help, and you love dogs and cats. You’d walk them, feed them, and give
@@ -2362,7 +3784,7 @@ the environment can be emotionally heavy.</p>
 <p><span class="tpl">That’s why I really think</span> the shelter is the
 better option. It’s <span class="vocab">fulfilling</span>, and you’d
 help animals find a <span class="vocab">loving</span> home.</p>
-<h3 id="vocabulary-28">Vocabulary</h3>
+<h3 id="vocabulary-46">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2392,7 +3814,7 @@ help animals find a <span class="vocab">loving</span> home.</p>
 <h2 id="museum-vs-science-centre">6.5 Museum vs Science Centre</h2>
 <p>Your class is choosing a field trip destination: a museum or a
 science centre. Persuade your teacher.</p>
-<h3 id="sample-29">Sample</h3>
+<h3 id="sample-47">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the science
 centre. <span class="conn">First of all</span>, it offers <span class="vocab">hands-on</span> activities, so students can touch, build,
 and experiment instead of just looking. That makes learning more
@@ -2406,7 +3828,7 @@ one, and we’d spend the time walking past glass cases.</p>
 <p><span class="tpl">That’s why I really think</span> the science centre
 is the better choice. It’s <span class="vocab">educational</span> and
 fun at the same time.</p>
-<h3 id="vocabulary-29">Vocabulary</h3>
+<h3 id="vocabulary-47">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2433,6 +3855,363 @@ fun at the same time.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="lawn-care-for-an-elderly-uncle">6.6 Lawn Care for an Elderly
+Uncle ⭐</h2>
+<p>Your elderly uncle can no longer mow his lawn. You and your cousin
+are considering two lawn-care options. Your cousin prefers one and you
+think the other is better. Compare and persuade your cousin.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 11.</p>
+<h3 id="sample-48">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> hiring a
+professional lawn-care service. <span class="conn">First of all</span>,
+it takes all the work off my uncle’s shoulders. He’s elderly, and mowing
+in the heat could be dangerous for him. A team can <span class="verb">take care of</span> everything, including trimming and
+<span class="vocab">edging</span>.</p>
+<p><span class="conn">On top of that</span>, professionals have the
+right equipment and will <span class="vocab">keep the lawn in good
+shape</span> all summer. We wouldn’t have to <span class="verb">drop
+everything</span> every weekend to visit him with a mower.</p>
+<p><span class="conn">Admittedly</span>, buying an electric mower for
+him costs less, <span class="conn">but</span> he would still need to
+<span class="vocab">push</span> it, and he might <span class="verb">overexert himself</span>.</p>
+<p><span class="tpl">That’s why I really think</span> the service is the
+better option. It’s safe, reliable and gives us <span class="vocab">peace of mind</span>.</p>
+<h3 id="vocabulary-48">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">take care of</span></td>
+<td>deal with</td>
+<td>She took care of the paperwork.</td>
+</tr>
+<tr>
+<td><span class="verb">drop everything</span></td>
+<td>stop all other activities suddenly</td>
+<td>I dropped everything to help him.</td>
+</tr>
+<tr>
+<td><span class="verb">overexert oneself</span></td>
+<td>work too hard physically</td>
+<td>Don’t overexert yourself in the heat.</td>
+</tr>
+<tr>
+<td><span class="vocab">edging</span></td>
+<td>trimming the edges of a lawn</td>
+<td>Edging makes the garden look neat.</td>
+</tr>
+<tr>
+<td><span class="vocab">keep the lawn in good shape</span></td>
+<td>maintain in good condition</td>
+<td>He keeps his lawn in good shape.</td>
+</tr>
+<tr>
+<td><span class="vocab">push</span></td>
+<td>move with force from behind</td>
+<td>Push the mower slowly.</td>
+</tr>
+<tr>
+<td><span class="vocab">peace of mind</span></td>
+<td>a feeling of being free from worry</td>
+<td>Insurance gives me peace of mind.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="later-school-start-times">6.7 Later School Start Times ⭐</h2>
+<p>Should schools change their starting times to later in the day?
+Discuss and persuade someone of your position.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 9.</p>
+<h3 id="sample-49">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> starting school
+later in the morning. <span class="conn">First of all</span>, teenagers
+naturally stay up later, so an early start leaves them <span class="vocab">sleep-deprived</span>. Tired students can’t <span class="verb">pay attention</span> or <span class="vocab">retain</span>
+what they learn.</p>
+<p><span class="conn">On top of that</span>, studies show that later
+start times <span class="verb">boost</span> grades and improve mood.
+Students would have time to eat a proper breakfast instead of <span class="verb">rushing off</span> to class with an empty stomach.</p>
+<p><span class="conn">Admittedly</span>, a later start means a later
+finish, which could affect sports and part-time jobs, <span class="conn">but</span> schools can <span class="vocab">adjust</span>
+the timetable to make it work.</p>
+<p><span class="tpl">That’s why I really think</span> a later start is
+the better option. It helps students <span class="vocab">perform at
+their best</span> and look after their health.</p>
+<h3 id="vocabulary-49">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">pay attention</span></td>
+<td>focus on</td>
+<td>Please pay attention in class.</td>
+</tr>
+<tr>
+<td><span class="verb">boost</span></td>
+<td>increase</td>
+<td>Sleep boosts memory.</td>
+</tr>
+<tr>
+<td><span class="verb">rush off</span></td>
+<td>leave in a hurry</td>
+<td>He rushed off without breakfast.</td>
+</tr>
+<tr>
+<td><span class="vocab">sleep-deprived</span></td>
+<td>not getting enough sleep</td>
+<td>The sleep-deprived driver yawned.</td>
+</tr>
+<tr>
+<td><span class="vocab">retain</span></td>
+<td>keep in memory</td>
+<td>I retain new words easily.</td>
+</tr>
+<tr>
+<td><span class="vocab">adjust</span></td>
+<td>change slightly</td>
+<td>We adjusted the schedule.</td>
+</tr>
+<tr>
+<td><span class="vocab">perform at their best</span></td>
+<td>do something as well as possible</td>
+<td>Athletes perform at their best when rested.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="furniture-store-location">6.8 Furniture Store Location ⭐</h2>
+<p>You and a business partner are choosing a location for a furniture
+store. One option is downtown with heavy foot traffic, tourists and
+nearby homes and apartments, or a larger warehouse-like place far from
+homes and shops. Your partner prefers an older, cheaper building near a
+highway, smaller and needing renovation. Justify your choice.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 3.</p>
+<h3 id="sample-50">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the downtown
+location. <span class="conn">First of all</span>, the <span class="vocab">foot traffic</span> is heavy, and thousands of tourists
+and residents walk past every day. Many of them will <span class="verb">drop in</span> on impulse, which is priceless for a new
+store.</p>
+<p><span class="conn">On top of that</span>, there are many homes and
+apartments nearby, and people who move in often need furniture. We could
+<span class="verb">tap into</span> that steady demand. A good address
+also helps us <span class="vocab">build a reputation</span>.</p>
+<p><span class="conn">Admittedly</span>, the older building near the
+highway is cheaper, <span class="conn">but</span> it needs painting and
+renovation, and it’s too far for casual shoppers. We would <span class="verb">end up</span> spending the savings on repairs and
+advertising.</p>
+<p><span class="tpl">That’s why I really think</span> downtown is the
+better option. It’s a <span class="vocab">sound</span> choice that will
+help the business <span class="verb">take off</span>.</p>
+<h3 id="vocabulary-50">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">drop in</span></td>
+<td>visit without planning</td>
+<td>Customers dropped in all day.</td>
+</tr>
+<tr>
+<td><span class="verb">tap into</span></td>
+<td>make use of</td>
+<td>The company tapped into a new market.</td>
+</tr>
+<tr>
+<td><span class="verb">end up</span></td>
+<td>finally be in a situation</td>
+<td>We ended up paying twice.</td>
+</tr>
+<tr>
+<td><span class="verb">take off</span></td>
+<td>become successful</td>
+<td>Her business took off quickly.</td>
+</tr>
+<tr>
+<td><span class="vocab">foot traffic</span></td>
+<td>the number of people walking past a place</td>
+<td>The street has heavy foot traffic.</td>
+</tr>
+<tr>
+<td><span class="vocab">build a reputation</span></td>
+<td>become known for quality</td>
+<td>He built a reputation for honesty.</td>
+</tr>
+<tr>
+<td><span class="vocab">sound</span></td>
+<td>sensible and reliable</td>
+<td>A sound investment.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="indoor-vs-outdoor-plants">6.9 Indoor vs Outdoor Plants ⭐</h2>
+<p>For a community garden, compare indoor plants with outdoor plants and
+persuade others to choose one.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-51">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> choosing outdoor
+plants. <span class="conn">First of all</span>, they <span class="vocab">thrive</span> in natural sunlight and rain, so they need
+less care and <span class="vocab">maintenance</span>. Volunteers can
+focus on weeding instead of constant watering.</p>
+<p><span class="conn">On top of that</span>, outdoor plants can <span class="verb">bring in</span> bees and butterflies, which are good for
+the whole neighbourhood. A lively garden will <span class="verb">draw
+in</span> visitors and make people proud of their community.</p>
+<p><span class="conn">Admittedly</span>, indoor plants are protected
+from frost, <span class="conn">but</span> they need space inside a
+building, which we don’t have. Outdoor vegetables and flowers are easier
+to <span class="verb">look after</span>, and they <span class="verb">make the most of</span> the open space.</p>
+<p><span class="tpl">That’s why I really think</span> outdoor plants are
+the better option. They are natural, <span class="vocab">affordable</span> and perfect for a community project.</p>
+<h3 id="vocabulary-51">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">bring in</span></td>
+<td>attract</td>
+<td>Flowers bring in bees.</td>
+</tr>
+<tr>
+<td><span class="verb">draw in</span></td>
+<td>attract</td>
+<td>The festival drew in crowds.</td>
+</tr>
+<tr>
+<td><span class="verb">look after</span></td>
+<td>take care of</td>
+<td>She looks after the garden.</td>
+</tr>
+<tr>
+<td><span class="verb">make the most of</span></td>
+<td>use as well as possible</td>
+<td>Make the most of the sun.</td>
+</tr>
+<tr>
+<td><span class="vocab">maintenance</span></td>
+<td>the work of keeping something in good condition</td>
+<td>The garden needs little maintenance.</td>
+</tr>
+<tr>
+<td><span class="vocab">affordable</span></td>
+<td>not too expensive</td>
+<td>Seeds are affordable.</td>
+</tr>
+<tr>
+<td><span class="vocab">thrive</span></td>
+<td>grow well</td>
+<td>Tomatoes thrive in sunlight.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="artwork-for-the-office">6.10 Artwork for the Office ⭐</h2>
+<p>For your office, choose between an expensive original painting and a
+smaller, cheaper one. Persuade your manager to choose your option.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-52">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the smaller,
+cheaper painting. <span class="conn">First of all</span>, it fits our
+budget, and we can use the extra money for things that employees really
+need, like better chairs. A painting should not <span class="verb">eat
+up</span> funds that could be spent on staff.</p>
+<p><span class="conn">On top of that</span>, the smaller piece is just
+as colourful, and it can <span class="verb">brighten up</span> a meeting
+room or the entrance. It’s easier to hang, <span class="vocab">transport</span> and replace if we ever redecorate.</p>
+<p><span class="conn">Admittedly</span>, an original painting looks
+impressive and might increase in value, <span class="conn">but</span> it
+also requires insurance and careful <span class="vocab">handling</span>.
+We would constantly <span class="verb">worry about</span> damage.</p>
+<p><span class="tpl">That’s why I really think</span> the smaller
+painting is the better option. It’s a <span class="vocab">cost-effective</span> way to create a pleasant
+atmosphere.</p>
+<h3 id="vocabulary-52">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">eat up</span></td>
+<td>use up</td>
+<td>Rent eats up half my salary.</td>
+</tr>
+<tr>
+<td><span class="verb">brighten up</span></td>
+<td>make more cheerful</td>
+<td>Flowers brighten up the room.</td>
+</tr>
+<tr>
+<td><span class="verb">worry about</span></td>
+<td>feel anxious about</td>
+<td>Don’t worry about the cost.</td>
+</tr>
+<tr>
+<td><span class="vocab">transport</span></td>
+<td>move from one place to another</td>
+<td>The paintings are easy to transport.</td>
+</tr>
+<tr>
+<td><span class="vocab">handling</span></td>
+<td>the way something is touched or moved</td>
+<td>Careful handling is essential.</td>
+</tr>
+<tr>
+<td><span class="vocab">cost-effective</span></td>
+<td>good value for the money spent</td>
+<td>A cost-effective solution.</td>
+</tr>
+</tbody>
+</table>
 <h1 id="pets-classes-and-dining">7 Pets, Classes, and Dining</h1>
 <p>Topics: a dog or cat, a course, a language school, a restaurant,
 catering.</p>
@@ -2448,7 +4227,7 @@ better].</p>
 <h2 id="dog-vs-cat">7.1 Dog vs Cat</h2>
 <p>Your family is choosing between adopting a dog and a cat. Persuade
 them.</p>
-<h3 id="sample-30">Sample</h3>
+<h3 id="sample-53">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> adopting a cat.
 <span class="conn">First of all</span>, cats are independent. Since
 we’re all out at work and school during the day, a cat will be fine on
@@ -2464,7 +4243,7 @@ affectionate, and it will curl up on our laps in the evening.</p>
 <p><span class="tpl">That’s why I really think</span> a cat is the
 better option for us. It’s <span class="vocab">low-maintenance</span>
 and a great <span class="vocab">companion</span>.</p>
-<h3 id="vocabulary-30">Vocabulary</h3>
+<h3 id="vocabulary-53">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2496,10 +4275,82 @@ and a great <span class="vocab">companion</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="evening-vs-online-class">7.2 Evening vs Online Class</h2>
+<h2 id="dog-walkers">7.2 Dog Walkers ⭐</h2>
+<p>You need a dog walker. Compare two dog walkers and persuade a friend
+or family member which one to hire.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-54">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> hiring the
+experienced dog walker. <span class="conn">First of all</span>, she has
+worked with dogs for ten years, and she knows how to <span class="vocab">handle</span> them safely, even if they pull on the leash.
+Our dog will be in good hands, and I won’t have to <span class="verb">worry about</span> accidents.</p>
+<p><span class="conn">On top of that</span>, she offers longer walks and
+sends photos and updates, which gives me <span class="vocab">peace of
+mind</span> while I’m at work. She even <span class="verb">takes care
+of</span> feeding and fresh water.</p>
+<p><span class="conn">Admittedly</span>, the other walker charges less,
+<span class="conn">but</span> he is new and has no <span class="vocab">references</span>, and I wouldn’t want to <span class="verb">take a risk</span> with a member of our family.</p>
+<p><span class="tpl">That’s why I really think</span> the experienced
+walker is the better option. She’s reliable, and our dog will <span class="verb">look forward to</span> every visit.</p>
+<h3 id="vocabulary-54">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">worry about</span></td>
+<td>feel anxious about</td>
+<td>I worry about my dog.</td>
+</tr>
+<tr>
+<td><span class="verb">take care of</span></td>
+<td>look after</td>
+<td>She takes care of our pets.</td>
+</tr>
+<tr>
+<td><span class="verb">take a risk</span></td>
+<td>do something that may go wrong</td>
+<td>Don’t take a risk with safety.</td>
+</tr>
+<tr>
+<td><span class="verb">look forward to</span></td>
+<td>be excited about something in the future</td>
+<td>He looks forward to his walk.</td>
+</tr>
+<tr>
+<td><span class="vocab">handle</span></td>
+<td>manage or control</td>
+<td>She can handle large dogs.</td>
+</tr>
+<tr>
+<td><span class="vocab">peace of mind</span></td>
+<td>freedom from worry</td>
+<td>A reliable sitter gives peace of mind.</td>
+</tr>
+<tr>
+<td><span class="vocab">references</span></td>
+<td>people who can recommend someone</td>
+<td>She gave three references.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evening-vs-online-class">7.3 Evening vs Online Class ⭐</h2>
 <p>Your friend is choosing between an evening class and an online
 course. Persuade them.</p>
-<h3 id="sample-31">Sample</h3>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list (an online course vs an in-person course).</p>
+<h3 id="sample-55">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the online
 course. <span class="conn">First of all</span>, you can study whenever
 it suits you, such as early in the morning or on weekends. With your
@@ -2514,7 +4365,7 @@ instructor with questions.</p>
 <p><span class="tpl">That’s why I really think</span> the online course
 is the better option. It’s <span class="vocab">convenient</span> and
 fits your <span class="vocab">busy lifestyle</span>.</p>
-<h3 id="vocabulary-31">Vocabulary</h3>
+<h3 id="vocabulary-55">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2546,10 +4397,10 @@ fits your <span class="vocab">busy lifestyle</span>.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="trade-school-vs-university">7.3 Trade School vs University</h2>
+<h2 id="trade-school-vs-university">7.4 Trade School vs University</h2>
 <p>Your cousin is choosing between a trade school and a university.
 Persuade them.</p>
-<h3 id="sample-32">Sample</h3>
+<h3 id="sample-56">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> the trade school.
 <span class="conn">First of all</span>, the programs are shorter, so
 you’d start working in two years instead of four, and you’d begin
@@ -2565,7 +4416,7 @@ many doors, <span class="conn">but</span> it doesn’t guarantee a job,
 and you like working with your hands.</p>
 <p><span class="tpl">That’s why I really think</span> the trade school
 is the better option. It’s a practical path to a secure career.</p>
-<h3 id="vocabulary-32">Vocabulary</h3>
+<h3 id="vocabulary-56">Vocabulary</h3>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -2597,11 +4448,79 @@ is the better option. It’s a practical path to a secure career.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="fancy-vs-home-cooked-dinner">7.4 Fancy vs Home-Cooked
+<h2 id="technical-courses">7.5 Technical Courses ⭐</h2>
+<p>You are choosing among technical courses such as electrician
+training, carpentry and plumbing. Persuade a friend or relative to
+choose one.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-57">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the electrician
+training. <span class="conn">First of all</span>, there is a high demand
+for electricians, so graduates can <span class="verb">land a job</span>
+quickly, and the salary is excellent. Every home and company needs
+skilled people to <span class="vocab">keep the lights on</span>.</p>
+<p><span class="conn">On top of that</span>, you can <span class="verb">branch out into</span> different areas, such as solar
+panels or smart homes, and you may even start your own business. The
+training is also hands-on, which suits people who <span class="vocab">learn by doing</span>.</p>
+<p><span class="conn">Admittedly</span>, carpentry and plumbing are
+valuable too, <span class="conn">but</span> the electrical field has
+more opportunities for <span class="vocab">advancement</span>.</p>
+<p><span class="tpl">That’s why I really think</span> electrician
+training is the better option. It will <span class="verb">set you up
+for</span> a secure and well-paid career.</p>
+<h3 id="vocabulary-57">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">land a job</span></td>
+<td>successfully get a job</td>
+<td>She landed a job at a bank.</td>
+</tr>
+<tr>
+<td><span class="verb">branch out into</span></td>
+<td>expand to a new area</td>
+<td>He branched out into design.</td>
+</tr>
+<tr>
+<td><span class="verb">set up for</span></td>
+<td>prepare for success in</td>
+<td>This degree sets you up for success.</td>
+</tr>
+<tr>
+<td><span class="vocab">keep the lights on</span></td>
+<td>keep things running</td>
+<td>Electricians keep the lights on.</td>
+</tr>
+<tr>
+<td><span class="vocab">learn by doing</span></td>
+<td>learn through practical experience</td>
+<td>I learn by doing, not by reading.</td>
+</tr>
+<tr>
+<td><span class="vocab">advancement</span></td>
+<td>progress in a career</td>
+<td>The company offers advancement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fancy-vs-home-cooked-dinner">7.6 Fancy vs Home-Cooked
 Dinner</h2>
 <p>Your family is picking a place for an anniversary dinner: a fancy
 restaurant or a home-cooked meal. Persuade them.</p>
-<h3 id="sample-33">Sample</h3>
+<h3 id="sample-58">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> a home-cooked
 meal. <span class="conn">First of all</span>, it’s more personal.
 Preparing the dishes ourselves shows love and effort, and we can cook
@@ -2617,7 +4536,7 @@ rushed.</p>
 <p><span class="tpl">That’s why I really think</span> a home-cooked
 dinner is the better option. It’s <span class="vocab">heartfelt</span>
 and unforgettable.</p>
-<h3 id="vocabulary-33">Vocabulary</h3>
+<h3 id="vocabulary-58">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2649,10 +4568,10 @@ and unforgettable.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="catering-vs-cooking">7.5 Catering vs Cooking</h2>
+<h2 id="catering-vs-cooking">7.7 Catering vs Cooking</h2>
 <p>You are organizing a party and must choose between catering and
 cooking yourself. Persuade your friend.</p>
-<h3 id="sample-34">Sample</h3>
+<h3 id="sample-59">Sample</h3>
 <p><span class="tpl">I would strongly recommend</span> hiring a caterer.
 <span class="conn">First of all</span>, it saves a huge amount of time.
 We won’t spend days shopping, chopping, and cooking, so we can focus on
@@ -2668,7 +4587,7 @@ wouldn’t enjoy our own party.</p>
 <p><span class="tpl">That’s why I really think</span> catering is the
 better option. It’s <span class="vocab">stress-free</span>, and the
 guests will be impressed.</p>
-<h3 id="vocabulary-34">Vocabulary</h3>
+<h3 id="vocabulary-59">Vocabulary</h3>
 <table>
 <thead>
 <tr>
@@ -2692,6 +4611,154 @@ guests will be impressed.</p>
 <td>stress-free</td>
 <td>without worry</td>
 <td>A stress-free evening.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="childrens-book-vs-long-book">7.8 Children’s Book vs Long Book
+⭐</h2>
+<p>Choose between two books: a children’s book by a local author, an
+838-page book on how to fix pipes, or an old novel with a long story.
+Choose one and say why yours is better.</p>
+<p><strong>Recent exam, October 2026:</strong> reported on Oct 4 and in
+the Oct 2 compiled list.</p>
+<h3 id="sample-60">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> the children’s
+book by the local author. <span class="conn">First of all</span>, it is
+short, colourful and easy to read, so a child can <span class="verb">get
+through</span> it in one evening and feel proud. A book with 838 pages
+would <span class="verb">put off</span> any young reader.</p>
+<p><span class="conn">On top of that</span>, it has a meaningful message
+and charming pictures that help children <span class="vocab">develop a
+love of reading</span>. It also supports a local writer, which is good
+for the community.</p>
+<p><span class="conn">Admittedly</span>, the big book is full of
+information, <span class="conn">but</span> it’s about fixing pipes, and
+a child would <span class="verb">lose interest</span> after a page. The
+old novel is too long and <span class="vocab">dense</span> for
+beginners.</p>
+<p><span class="tpl">That’s why I really think</span> the children’s
+book is the better option. It’s <span class="vocab">age-appropriate</span> and will <span class="verb">spark</span> their imagination.</p>
+<h3 id="vocabulary-60">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">get through</span></td>
+<td>finish</td>
+<td>I got through the book in two days.</td>
+</tr>
+<tr>
+<td><span class="verb">put off</span></td>
+<td>discourage</td>
+<td>The length put me off.</td>
+</tr>
+<tr>
+<td><span class="verb">lose interest</span></td>
+<td>stop being interested</td>
+<td>She lost interest quickly.</td>
+</tr>
+<tr>
+<td><span class="verb">spark</span></td>
+<td>start or cause</td>
+<td>The story sparked her curiosity.</td>
+</tr>
+<tr>
+<td><span class="vocab">develop a love of reading</span></td>
+<td>begin to enjoy reading</td>
+<td>Stories help kids develop a love of reading.</td>
+</tr>
+<tr>
+<td><span class="vocab">dense</span></td>
+<td>difficult to read because of too much information</td>
+<td>The text was dense.</td>
+</tr>
+<tr>
+<td><span class="vocab">age-appropriate</span></td>
+<td>suitable for a particular age</td>
+<td>Choose age-appropriate books.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="responsibility-gift-for-a-child">7.9 Responsibility Gift for a
+Child ⭐</h2>
+<p>You want to give a child a gift that teaches responsibility. Compare
+a plant with another object, such as a pet-like item, and persuade
+someone to choose yours.</p>
+<p><strong>Recent exam, October 2026:</strong> reported in the Oct 2
+compiled list.</p>
+<h3 id="sample-61">Sample</h3>
+<p><span class="tpl">I would strongly recommend</span> giving the child
+a plant. <span class="conn">First of all</span>, a plant needs regular
+water and sunlight, so the child learns to <span class="verb">look
+after</span> something every day. It’s a gentle way to teach <span class="vocab">responsibility</span>, because the plant will <span class="vocab">wilt</span> if it’s forgotten.</p>
+<p><span class="conn">On top of that</span>, watching the plant grow is
+very rewarding, and the child will feel proud when it <span class="vocab">blooms</span>. A plant is cheap and low risk, and it won’t
+<span class="verb">make a mess</span> or make noise.</p>
+<p><span class="conn">Admittedly</span>, a pet-like toy is fun, <span class="conn">but</span> it doesn’t need any care, so the child will
+<span class="verb">grow tired of</span> it quickly.</p>
+<p><span class="tpl">That’s why I really think</span> the plant is the
+better option. It builds good habits and will <span class="verb">teach
+them the value of</span> patience.</p>
+<h3 id="vocabulary-61">Vocabulary</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Example sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="verb">look after</span></td>
+<td>take care of</td>
+<td>He looks after his little sister.</td>
+</tr>
+<tr>
+<td><span class="verb">make a mess</span></td>
+<td>create disorder</td>
+<td>The puppy made a mess.</td>
+</tr>
+<tr>
+<td><span class="verb">grow tired of</span></td>
+<td>gradually become bored of</td>
+<td>They grew tired of the game.</td>
+</tr>
+<tr>
+<td><span class="verb">teach the value of</span></td>
+<td>help someone understand the importance of</td>
+<td>Chores teach the value of work.</td>
+</tr>
+<tr>
+<td><span class="vocab">responsibility</span></td>
+<td>a duty to take care of something</td>
+<td>Pets teach responsibility.</td>
+</tr>
+<tr>
+<td><span class="vocab">wilt</span></td>
+<td>become weak and droop</td>
+<td>The flowers wilted.</td>
+</tr>
+<tr>
+<td><span class="vocab">bloom</span></td>
+<td>produce flowers</td>
+<td>Roses bloom in June.</td>
 </tr>
 </tbody>
 </table>
@@ -2757,7 +4824,25 @@ guests will be impressed.</p>
       levelBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.level) === n));
       try { localStorage.setItem('_toc-level', String(n)); } catch (e) {}
       document.dispatchEvent(new Event('_toc-level'));
+      applyStarFilter();
       if (tocReady) updateActive();
+    }
+    /* Star filter: only offered when some heading contains a star emoji.
+       Keeps starred items (at any depth) plus their ancestors, dimmed. */
+    const STAR_RE = /[⭐★🌟]/;
+    let starOnly = false;
+    let starBtn = null;
+    function applyStarFilter() {
+      toc.classList.toggle('toc-star-only', starOnly);
+      toc.querySelectorAll('li').forEach(li => {
+        const own = li.querySelector(':scope > a');
+        const isStar = !!own && STAR_RE.test(own.textContent);
+        const hasStar = starOnly && STAR_RE.test(li.textContent);
+        li.classList.toggle('toc-nostar', starOnly && !hasStar);
+        li.classList.toggle('toc-star-ctx', starOnly && hasStar && !isStar);
+        if (starOnly && hasStar) li.classList.remove('toc-hide');
+      });
+      if (starBtn) starBtn.classList.toggle('active', starOnly);
     }
     [1, 2, 3, 4, 5, 6].forEach(n => {
       const b = document.createElement('button');
@@ -2769,6 +4854,18 @@ guests will be impressed.</p>
       levelBtns.push(b);
       levelBar.appendChild(b);
     });
+    if (STAR_RE.test(toc.textContent)) {
+      starBtn = document.createElement('button');
+      starBtn.type = 'button';
+      starBtn.textContent = '⭐';
+      starBtn.title = 'Show only starred sections';
+      starBtn.addEventListener('click', () => {
+        starOnly = !starOnly;
+        const active = levelBtns.find(b => b.classList.contains('active'));
+        applyTocLevel(active ? Number(active.dataset.level) : 2);
+      });
+      levelBar.appendChild(starBtn);
+    }
     sidebar.appendChild(levelBar);
     sidebar.appendChild(toc);
 
@@ -2970,5 +5067,557 @@ guests will be impressed.</p>
   });
 })();
 </script>
+<!-- _doc-audio-panel -->
+<!-- Voice panel for generated HTML documents. Baked into the files (like the read check-marks) and
+     re-injected by the app when it serves them, so it works opened from the app, from a local file or
+     from Hugging Face. With the app running, recordings are saved in the app folder; without it they
+     are saved in this browser (IndexedDB) and can be exported / imported. Edit THIS file, then run
+     bake_audio_panel.py to refresh the copies inside the HTML files. -->
+<style>
+#_aud-rec-toggle, #_aud-io { position: fixed; top: 12px; z-index: 200; width: 34px; height: 34px;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font-size: 1.05em; cursor: pointer; box-shadow: var(--shadow, none);
+  display: flex; align-items: center; justify-content: center; }
+#_aud-rec-toggle { left: 96px; } #_aud-io { left: 138px; }
+#_aud-rec-toggle:hover, #_aud-io:hover { border-color: var(--accent, #e08a5f); }
+#_aud-rec-toggle.live { background: #b91c1c; border-color: #ef4444; color: #fff; }
+#_aud-src { position: fixed; top: 12px; left: 180px; z-index: 200; height: 34px; padding: 0 10px; display: none;
+  border-radius: 8px; border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); font: 0.8em sans-serif; cursor: pointer; box-shadow: var(--shadow, none); }
+#_aud-src:hover { border-color: var(--accent, #e08a5f); }
+#_aud-hud, #_aud-menu { position: fixed; top: 54px; left: 12px; z-index: 200; display: none; width: 300px;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border, #3e3d3a);
+  background: var(--bg-elevated, #30302e); color: var(--text, #f0efe9);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.4 sans-serif; }
+#_aud-hud { border-color: #ef4444; }
+#_aud-hud .lbl { font-weight: 600; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#_aud-hud .tm.live { color: #ef4444; font-weight: 600; }
+#_aud-hud .row, #_aud-menu .row, #_aud-bar { display: flex; gap: 6px; align-items: center; }
+#_aud-hud .row, #_aud-menu .row { margin-top: 6px; flex-wrap: wrap; }
+#_aud-menu .hint { color: var(--text-muted, #a8a6a0); font-size: .92em; }
+#_aud-bar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 200;
+  width: min(820px, 96vw); display: none; padding: 6px 10px; border-radius: 12px;
+  border: 1px solid var(--border, #3e3d3a); background: var(--bg-elevated, #30302e);
+  color: var(--text, #f0efe9); box-shadow: 0 6px 24px rgba(0,0,0,.35); font: 0.85em/1.3 sans-serif; }
+#_aud-bar input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent, #e08a5f); }
+#_aud-bar .tt { font-variant-numeric: tabular-nums; color: var(--text-muted, #a8a6a0); white-space: nowrap; }
+#_aud-toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 210; display: none;
+  padding: 4px 12px; border-radius: 8px; background: var(--bg-elevated, #30302e); color: var(--accent, #e08a5f);
+  border: 1px solid var(--border, #3e3d3a); font: 0.85em sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+#_aud-hud button, #_aud-menu button, #_aud-bar button, #_aud-bar select { padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 1em; border: 1px solid var(--border, #3e3d3a); background: transparent;
+  color: var(--text, #f0efe9); }
+#_aud-bar select option { background: var(--bg-elevated, #30302e); }
+#_aud-hud button:hover, #_aud-menu button:hover, #_aud-bar button:hover, #_aud-bar button.on {
+  border-color: var(--accent, #e08a5f); color: var(--accent, #e08a5f); }
+#_aud-bar button { white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+._aud-hrec { margin-right: 8px; padding: 0 6px; font-size: 0.55em; line-height: 1.7; vertical-align: middle;
+  border-radius: 6px; cursor: pointer; opacity: .5; border: 1px solid var(--border, #3e3d3a);
+  background: transparent; color: var(--text, #f0efe9); }
+._aud-hrec:hover { opacity: 1; border-color: var(--accent, #e08a5f); }
+._aud-hrec.has { opacity: 1; border-color: #ef4444; background: #ef4444; color: #fff; }
+._aud-hrec.live { opacity: 1; border-color: #ef4444; background: #b91c1c; color: #fff; }
+a._aud-has::after { content: ' \1F50A'; font-size: .8em; }
+a._aud-now { color: var(--accent, #e08a5f) !important; font-weight: 700; }
+@media print { #_aud-src, #_aud-rec-toggle, #_aud-io, #_aud-hud, #_aud-menu, #_aud-bar, #_aud-toast, ._aud-hrec { display: none !important; } }
+</style>
+<script>
+(function () {
+  if (window.__audPanel) return;
+  if (!window.MediaRecorder || !window.indexedDB || !window.fetch || !window.Promise) return;  /* e.g. wkhtmltopdf */
+  window.__audPanel = true;
+  const docKey = decodeURIComponent(location.pathname);
+  const docName = docKey.split('/').pop().replace(/\.html?$/i, '');
+  let speed = 2;  /* same default as the library player */
+  try { speed = parseFloat(localStorage.getItem('_aud_speed')) || 2; } catch (e) {}
+
+  /* ── Sections of the document: TOC order, heading element per id ── */
+  const clean = el => { const c = el.cloneNode(true); c.querySelectorAll('._aud-hrec').forEach(n => n.remove());
+    return c.textContent.replace(/\s+/g, ' ').trim(); };
+  const tocAnchors = () => Array.from(document.querySelectorAll('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]'));
+  const idOf = a => decodeURIComponent((a.getAttribute('href') || '').slice(1));
+  const heads = [];
+  (function () {
+    const seen = new Set();
+    const add = id => {
+      const t = id && document.getElementById(id);
+      if (!t || seen.has(id)) return;
+      const h = /^H[1-6]$/.test(t.tagName) ? t : t.querySelector('h1,h2,h3,h4,h5,h6');
+      if (!h || h.closest('#TOC') || h.closest('#_toc-sidebar')) return;
+      seen.add(id); heads.push({ id: id, el: h, title: clean(h) });
+    };
+    tocAnchors().forEach(a => add(idOf(a)));
+    if (!heads.length) document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => add(h.id));
+  })();
+  if (!heads.length) return;
+  const titleOf = id => (heads.find(h => h.id === id) || {}).title || id;
+  const headPos = id => heads.findIndex(h => h.id === id);
+
+  /* The active section = last heading scrolled to the top area of the screen. */
+  function activeId() {
+    let cur = heads[0];
+    for (const h of heads) { if (h.el.getBoundingClientRect().top <= 90) cur = h; else break; }
+    return cur.id;
+  }
+
+  /* ── Storage: the app (when it is running) or this browser (IndexedDB) ── */
+  let mode = 'local';   /* 'api' = the app saves recordings in the library folder; 'local' = this browser */
+  const apiInfo = async () => {
+    const r = await fetch('/api/library/get-audio?html_url=' + encodeURIComponent(docKey));
+    if (!r.ok) throw new Error('no app');
+    const d = await r.json();
+    if (!d || typeof d.has_audio === 'undefined') throw new Error('no app');
+    return d;
+  };
+  const idb = (function () {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('_doc_voice', 1);
+      r.onupgradeneeded = () => { r.result.createObjectStore('clips', { keyPath: 'k' }).createIndex('doc', 'doc'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+    const run = (access, fn) => open().then(db => new Promise((res, rej) => {
+      const t = db.transaction('clips', access), req = fn(t.objectStore('clips'));
+      t.oncomplete = () => res(req.result); t.onerror = t.onabort = () => rej(t.error);
+    }));
+    return {
+      all: doc => run('readonly', s => s.index('doc').getAll(doc)),
+      put: c => run('readwrite', s => s.put(c)),
+      del: k => run('readwrite', s => s.delete(k)),
+    };
+  })();
+  const clipKey = id => docKey + '||' + id;
+
+  /* ── UI ── */
+  const recToggle = document.createElement('button');
+  recToggle.id = '_aud-rec-toggle'; recToggle.textContent = '🎙';
+  recToggle.title = 'Record my voice for the section I am reading';
+  const ioBtn = document.createElement('button');
+  ioBtn.id = '_aud-io'; ioBtn.textContent = '💾'; ioBtn.title = 'Where my recordings are saved / export / import';
+  const srcBtn = document.createElement('button');
+  srcBtn.id = '_aud-src';
+  const hud = document.createElement('div');
+  hud.id = '_aud-hud';
+  hud.innerHTML = '<div class="lbl"></div><div class="tm"></div><div class="row">' +
+    '<button data-a="pause">⏸ Pause</button><button data-a="save">⏹ Stop &amp; save</button>' +
+    '<button data-a="cancel">Cancel</button></div>';
+  const menu = document.createElement('div');
+  menu.id = '_aud-menu';
+  menu.innerHTML = '<div class="hint" id="_aud-where"></div><div class="row">' +
+    '<button data-a="export">⬇ Export recordings</button><button data-a="import">⬆ Import recordings…</button></div>' +
+    '<input type="file" accept=".voicebundle" style="display:none">';
+  const bar = document.createElement('div');
+  bar.id = '_aud-bar';
+  bar.innerHTML = '<button id="_aud-all">▶ Full audio</button>' +
+    '<button id="_aud-sec" title="Play only the section I am reading">▶ This section</button>' +
+    '<button id="_aud-follow" title="Jump the audio to the section I scroll to">⇣ Follow</button>' +
+    '<input type="range" min="0" max="1000" value="0" step="1"><span class="tt">0:00 / 0:00</span>' +
+    '<select title="Speed"></select><audio preload="none" style="display:none"></audio>';
+  const toast = document.createElement('div');
+  toast.id = '_aud-toast';
+  document.body.append(recToggle, ioBtn, srcBtn, hud, menu, bar, toast);
+  const player = bar.querySelector('audio'), allBtn = bar.querySelector('#_aud-all'),
+        secBtn = bar.querySelector('#_aud-sec'), followBtn = bar.querySelector('#_aud-follow'),
+        slider = bar.querySelector('input[type=range]'), timeLbl = bar.querySelector('.tt'),
+        speedSel = bar.querySelector('select'), fileIn = menu.querySelector('input[type=file]');
+  [1, 1.25, 1.5, 2].forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s + '×'; speedSel.appendChild(o);
+  });
+  speedSel.value = speed;
+  function flash(t) { toast.textContent = t; toast.style.display = 'block'; clearTimeout(flash.t);
+    flash.t = setTimeout(() => { toast.style.display = 'none'; }, 2800); }
+  const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+  /* ── State ── */
+  let clips = [];   /* my recordings, in play order: {id, src, off, dur, vStart} (seconds) */
+  let blobUrls = [];
+  let hasApp = false, appUrl = null, hasMine = false, mineUrl = null;
+  let source = 'mine', pick = null;   /* 'mine' = my own recordings (default when they exist), 'app' = the document's app audio */
+  let follow = true, lastActive = null, curIdx = -1, cont = false, dragging = false;
+  const isMine = () => source === 'mine';
+  const idxOf = id => clips.findIndex(c => c.id === id);
+  const hasClip = id => idxOf(id) >= 0;
+
+  function applySpeed() {
+    player.playbackRate = speed;
+    player.preservesPitch = true; player.mozPreservesPitch = true; player.webkitPreservesPitch = true;
+  }
+  speedSel.addEventListener('change', () => {
+    speed = parseFloat(speedSel.value);
+    try { localStorage.setItem('_aud_speed', String(speed)); } catch (e) {}
+    applySpeed();
+  });
+  player.addEventListener('loadedmetadata', applySpeed);
+  player.addEventListener('play', applySpeed);
+
+  /* ── Playback engine ── */
+  /* Recorded blobs have no length in their header; this makes the browser work it out. */
+  function whenReady(then) {
+    if (player.duration === Infinity) {
+      const back = () => { player.removeEventListener('timeupdate', back); player.currentTime = 0; then(); };
+      player.addEventListener('timeupdate', back);
+      player.currentTime = 1e101;
+    } else then();
+  }
+  function setSrc(src, then) {
+    if (player.dataset.s === src) {
+      if (player.readyState >= 1) then(); else player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+      return;
+    }
+    player.dataset.s = src; player.src = src;
+    player.addEventListener('loadedmetadata', () => whenReady(then), { once: true });
+    player.load();
+  }
+  /* Start (or just cue) my clip i at `offset` seconds into it. cnt = keep going into the next clips afterwards. */
+  function cue(i, offset, play, cnt) {
+    const c = clips[i]; if (!c) return;
+    curIdx = i; cont = cnt;
+    setSrc(c.src, () => {
+      player.currentTime = c.off + offset; applySpeed();
+      if (play) player.play().catch(() => {});
+      updateSlider();
+    });
+  }
+  function vTime() {
+    if (!isMine()) return player.currentTime || 0;
+    const c = clips[curIdx];
+    return c ? c.vStart + Math.max(0, Math.min(c.dur, player.currentTime - c.off)) : 0;
+  }
+  function vTotal() {
+    if (!isMine()) return isFinite(player.duration) ? player.duration : 0;
+    const l = clips[clips.length - 1]; return l ? l.vStart + l.dur : 0;
+  }
+  function updateSlider() {
+    const tot = vTotal(), v = vTime();
+    if (!dragging) slider.value = tot ? Math.round(1000 * v / tot) : 0;
+    timeLbl.textContent = fmt(v * 1000) + ' / ' + fmt(tot * 1000);
+  }
+  function clipAt(v) {   /* my clip containing virtual time v */
+    let i = clips.length - 1;
+    for (let k = 0; k < clips.length; k++) if (v < clips[k].vStart + clips[k].dur) { i = k; break; }
+    return i;
+  }
+  /* A clip finished: carry on with the next one, or stop. */
+  function clipEnded() {
+    if (!isMine()) return;
+    if (cont && curIdx + 1 < clips.length) cue(curIdx + 1, 0, true, true);
+    else { player.pause(); cont = false; }
+  }
+  player.addEventListener('ended', clipEnded);
+  player.addEventListener('timeupdate', () => {
+    const t = player.currentTime;
+    if (isMine() && mode === 'api' && clips.length) {
+      /* One shared file: follow the clock to know which clip is playing, stop at a section's end. */
+      const j = clips.findIndex(x => t >= x.off - 0.02 && t < x.off + x.dur);
+      if (j >= 0) curIdx = j;
+      const c = clips[curIdx];
+      if (c && !cont && !player.paused && t >= c.off + c.dur - 0.04) player.pause();
+    }
+    updateSlider();
+    const cur = isMine() && clips[curIdx] && !player.paused ? clips[curIdx].id : null;
+    tocAnchors().forEach(a => a.classList.toggle('_aud-now', !!cur && idOf(a) === cur));
+  });
+  slider.addEventListener('input', () => {
+    dragging = true;
+    const tot = vTotal(); timeLbl.textContent = fmt(slider.value / 1000 * tot * 1000) + ' / ' + fmt(tot * 1000);
+  });
+  slider.addEventListener('change', () => {
+    dragging = false;
+    const tot = vTotal(), v = slider.value / 1000 * tot, playing = !player.paused;
+    if (!isMine()) { player.currentTime = v; return; }
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), playing, true);   /* moving the bar by hand lifts any section-only limit */
+  });
+  allBtn.addEventListener('click', () => {
+    if (!player.paused && cont) { player.pause(); return; }
+    if (!isMine()) { player.play().catch(() => {}); return; }
+    let v = vTime(); const tot = vTotal();
+    if (v >= tot - 0.2) v = 0;
+    const i = clipAt(v);
+    cue(i, Math.max(0, v - clips[i].vStart), true, true);
+  });
+  secBtn.addEventListener('click', () => {
+    const id = activeId(), i = idxOf(id);
+    if (!isMine()) { flash('Sections only work with my recordings'); return; }
+    if (i < 0) { flash('No recording for "' + titleOf(id).slice(0, 40) + '" yet'); return; }
+    if (!player.paused && !cont && curIdx === i) { player.pause(); return; }
+    cue(i, 0, true, false);
+  });
+  function labelSecBtn() {
+    const id = activeId();
+    secBtn.textContent = '▶ ' + titleOf(id);
+    secBtn.classList.toggle('on', isMine() && hasClip(id));
+    secBtn.style.opacity = isMine() && hasClip(id) ? '1' : '.55';
+  }
+  /* Follow: when the section I am reading changes, the audio moves to it. */
+  function followScroll() {
+    const id = activeId();
+    if (id === lastActive) return;
+    lastActive = id;
+    const i = idxOf(id);
+    if (!follow || !isMine() || i < 0 || !bar.style.display || bar.style.display === 'none') return;
+    cue(i, 0, !player.paused, true);   /* playing: jump and keep going; paused: just cue it */
+  }
+  followBtn.classList.add('on');
+  followBtn.addEventListener('click', () => {
+    follow = !follow; followBtn.classList.toggle('on', follow);
+    flash(follow ? 'Audio will follow the section you scroll to' : 'Follow is off');
+  });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { ticking = false; labelSecBtn(); followScroll(); });
+  }, { passive: true });
+  /* Clicking a Contents item: the page scrolls as usual AND the audio jumps to that section. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('#_toc-sidebar a[href^="#"], #TOC a[href^="#"]');
+    const i = a && isMine() ? idxOf(idOf(a)) : -1;
+    if (i >= 0) cue(i, 0, true, true);
+  });
+
+  /* ── Heading buttons (beside the read check-mark) ── */
+  heads.forEach(h => {
+    const b = document.createElement('button');
+    b.className = '_aud-hrec'; b.dataset.id = h.id; b.textContent = '🎙';
+    b.addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); onHeadingButton(h.id); });
+    h.el.insertBefore(b, h.el.firstChild);
+  });
+  function markButtons() {
+    document.querySelectorAll('._aud-hrec').forEach(b => {
+      const id = b.dataset.id, live = rec && target === id;
+      b.classList.toggle('live', !!live);
+      b.classList.toggle('has', !live && hasClip(id));
+      b.textContent = live ? '⏹' : '🎙';
+      b.title = live ? 'Stop & save this recording'
+        : hasClip(id) ? 'Recorded — click to remove this recording' : 'Record my voice for this section';
+    });
+    tocAnchors().forEach(a => a.classList.toggle('_aud-has', hasClip(idOf(a))));
+    labelSecBtn();
+  }
+
+  /* ── Loading what exists ── */
+  async function probeAppAudio() {   /* the document's own audio, if it sits next to the HTML on a web server */
+    if (!/^https?:$/.test(location.protocol)) return null;
+    const raw = location.pathname.split('/'), file = raw.pop(), base = decodeURIComponent(file).replace(/\.html?$/i, '');
+    const dirs = [raw.join('/')];
+    if (decodeURIComponent(raw[raw.length - 1] || '') === 'HTML') dirs.push(raw.slice(0, -1).join('/'));
+    const cands = [];
+    dirs.forEach(d => ['m4a', 'mp3', 'wav', 'ogg', 'aac', 'flac', 'mp4', 'webm'].forEach(x =>
+      cands.push(d + '/' + encodeURIComponent(base) + '.' + x)));
+    const hits = await Promise.all(cands.map(u => fetch(u, { method: 'HEAD' }).then(r => {
+      const ct = r.headers.get('content-type') || '';
+      return r.ok && !/text\/html/i.test(ct) ? u : null;
+    }).catch(() => null)));
+    return hits.find(Boolean) || null;
+  }
+  let probed = false, ready = Promise.resolve();
+  /* Every action waits for the latest refresh, so nothing runs before we know whether the app is there. */
+  function refresh() { ready = doRefresh(); return ready; }
+  async function doRefresh() {
+    blobUrls.forEach(u => URL.revokeObjectURL(u)); blobUrls = [];
+    try {
+      const d = await apiInfo();
+      mode = 'api';
+      hasApp = !!d.has_audio; appUrl = d.url || null;
+      hasMine = !!d.my_voice; mineUrl = d.my_url || null;
+      const S = d.sections || {}, stamp = (mineUrl && mineUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      clips = Object.keys(S).map(id => ({ id: id, src: mineUrl + stamp, off: S[id].start,
+        dur: S[id].end - S[id].start, vStart: S[id].start })).sort((a, b) => a.off - b.off);
+      if (!hasMine) clips = [];
+    } catch (e) {
+      mode = 'local';
+      if (!probed) { probed = true; try { appUrl = await probeAppAudio(); } catch (er) { appUrl = null; } }
+      hasApp = !!appUrl;
+      let rows = [];
+      try { rows = await idb.all(docKey); } catch (er) { flash('Browser storage is not available here'); }
+      const byId = new Map(rows.map(r => [r.id, r]));
+      let v = 0; clips = [];
+      heads.forEach(h => {
+        const r = byId.get(h.id); if (!r) return;
+        const u = URL.createObjectURL(r.blob); blobUrls.push(u);
+        clips.push({ id: h.id, src: u, off: 0, dur: r.dur, vStart: v }); v += r.dur;
+      });
+      hasMine = clips.length > 0;
+    }
+    if ((pick === 'mine' && !hasMine) || (pick === 'app' && !hasApp)) pick = null;
+    source = pick || (hasMine ? 'mine' : 'app');   /* my own voice wins by default */
+    loadSource();
+  }
+  function loadSource() {
+    player.pause(); player.removeAttribute('src'); player.dataset.s = ''; curIdx = -1; cont = false;
+    const available = isMine() ? hasMine : hasApp;
+    if (!available) { bar.style.display = 'none'; document.body.style.paddingBottom = ''; }
+    else {
+      bar.style.display = 'flex'; document.body.style.paddingBottom = '64px';
+      if (!isMine()) { player.dataset.s = appUrl; player.src = appUrl + (appUrl.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+    }
+    srcBtn.style.display = hasApp && hasMine ? 'block' : 'none';
+    srcBtn.textContent = isMine() ? '🎙 My voice' : '🔈 App voice';
+    srcBtn.title = isMine() ? "Playing my own recordings. Click to play the app's audio instead"
+                            : "Playing the app's audio. Click to play my own recordings instead";
+    allBtn.title = isMine() ? 'Play all my recordings from the start' : 'Play the app audio from the start';
+    followBtn.style.display = isMine() ? '' : 'none';
+    updateSlider(); markButtons();
+  }
+  srcBtn.addEventListener('click', () => { pick = isMine() ? 'app' : 'mine'; source = pick; loadSource(); });
+  player.addEventListener('loadedmetadata', updateSlider);
+
+  /* ── Removing ── */
+  async function removeSection(id) {
+    await ready;
+    if (!confirm('Remove your recording for "' + titleOf(id) + '"?')) return;
+    let ok = true, err = '';
+    if (mode === 'api') {
+      try {
+        const d = await (await fetch('/api/library/delete-section', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html_url: docKey, section_id: id }) })).json();
+        ok = !!d.success; err = d.error || '';
+      } catch (e) { ok = false; err = 'Network error'; }
+    } else {
+      try { await idb.del(clipKey(id)); } catch (e) { ok = false; err = 'Browser storage error'; }
+    }
+    flash(ok ? 'Recording removed' : (err || 'Could not remove'));
+    refresh();
+  }
+
+  /* ── Recording ── */
+  let stream = null, rec = null, chunks = [], t0 = 0, acc = 0, timer = null, target = null;
+  const lbl = hud.querySelector('.lbl'), tm = hud.querySelector('.tm'), pauseBtn = hud.querySelector('[data-a=pause]');
+  function tick() {
+    const paused = rec && rec.state === 'paused';
+    tm.textContent = (paused ? 'Paused ' : '● Recording ') + fmt(acc + (rec && !paused ? Date.now() - t0 : 0));
+    tm.classList.toggle('live', !paused);
+  }
+  function release() {
+    clearInterval(timer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = rec = target = null; chunks = []; acc = 0;
+    hud.style.display = 'none'; recToggle.classList.remove('live'); recToggle.textContent = '🎙';
+    markButtons();
+  }
+  async function startRecording(id) {
+    if (rec) return;
+    await ready;
+    if (rec) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { flash('Recording is not supported here'); return; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false, noiseSuppression: false, autoGainControl: false, sampleRate: 48000 } });
+    } catch (e) { flash('Microphone blocked: ' + e.message); return; }
+    player.pause();
+    target = id;
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : undefined);
+    rec.addEventListener('dataavailable', e => { if (e.data && e.data.size) chunks.push(e.data); });
+    rec.start(); t0 = Date.now(); acc = 0;
+    lbl.textContent = (hasClip(id) ? 'Re-recording: ' : 'Recording: ') + titleOf(id);
+    pauseBtn.textContent = '⏸ Pause';
+    hud.style.display = 'block'; recToggle.classList.add('live'); recToggle.textContent = '⏹';
+    timer = setInterval(tick, 200); tick(); markButtons();
+  }
+  async function stopAndSave() {
+    if (!rec) return;
+    const id = target, ms = acc + (rec.state === 'recording' ? Date.now() - t0 : 0);
+    const stopped = new Promise(res => rec.addEventListener('stop', res, { once: true }));
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: (rec && rec.mimeType) || 'audio/webm' });
+    clearInterval(timer); tm.classList.remove('live'); tm.textContent = 'Saving…';
+    let ok = false, err = '';
+    if (mode === 'api') {
+      const fd = new FormData();
+      fd.append('html_url', docKey); fd.append('section_id', id); fd.append('file', blob, 'recording.webm');
+      try { const d = await (await fetch('/api/library/record-section', { method: 'POST', body: fd })).json();
+        ok = !!d.success; err = d.error || ''; }
+      catch (e) { err = 'Network error while saving'; }
+    } else {
+      try { await idb.put({ k: clipKey(id), doc: docKey, id: id, blob: blob, dur: ms / 1000, ts: Date.now() }); ok = true; }
+      catch (e) { err = 'Browser storage error: ' + (e && e.message || e); }
+    }
+    release();
+    flash(ok ? (mode === 'api' ? 'Saved ✔' : 'Saved in this browser ✔ — use 💾 to export a backup') : (err || 'Save failed'));
+    if (ok) pick = 'mine';
+    refresh();
+  }
+  function onHeadingButton(id) {
+    if (rec) { if (target === id) stopAndSave(); else flash('Finish the current recording first'); return; }
+    if (hasClip(id)) removeSection(id); else startRecording(id);
+  }
+  recToggle.addEventListener('click', () => { if (rec) stopAndSave(); else startRecording(activeId()); });
+  hud.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'save') stopAndSave();
+    else if (a === 'cancel') { if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (er) {} } release(); }
+    else if (a === 'pause' && rec) {
+      if (rec.state === 'recording') { rec.pause(); acc += Date.now() - t0; pauseBtn.textContent = '▶ Resume'; }
+      else if (rec.state === 'paused') { rec.resume(); t0 = Date.now(); pauseBtn.textContent = '⏸ Pause'; }
+      tick();
+    }
+  });
+
+  /* ── Export / import (a .voicebundle: "MYVOICE1", 4-byte header length, JSON header, then the clips) ── */
+  function menuText() {
+    menu.querySelector('#_aud-where').textContent = mode === 'api'
+      ? 'Recordings are saved in the app folder next to this document. Import brings in a backup exported from a browser.'
+      : 'No app here: recordings are kept in this browser only (like the ✓ marks) and are lost if its data is cleared. Export a backup file; open the document in the app and use Import to move it into your library.';
+    menu.querySelector('[data-a=export]').style.display = mode === 'local' && hasMine ? '' : 'none';
+  }
+  ioBtn.addEventListener('click', () => {
+    menuText(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+  async function exportBundle() {
+    let rows = [];
+    try { rows = await idb.all(docKey); } catch (e) {}
+    rows.sort((a, b) => headPos(a.id) - headPos(b.id));
+    if (!rows.length) { flash('Nothing to export'); return; }
+    const enc = new TextEncoder();
+    const head = enc.encode(JSON.stringify({ v: 1, doc: docKey, name: docName,
+      clips: rows.map(r => ({ id: r.id, dur: r.dur, size: r.blob.size, type: r.blob.type || 'audio/webm' })) }));
+    const len = new Uint8Array(4); new DataView(len.buffer).setUint32(0, head.length);
+    const out = new Blob([enc.encode('MYVOICE1'), len, head].concat(rows.map(r => r.blob)), { type: 'application/octet-stream' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(out); a.download = docName + '.voicebundle';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    flash('Exported ' + rows.length + ' recording' + (rows.length > 1 ? 's' : ''));
+  }
+  async function parseBundle(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (new TextDecoder().decode(u8.slice(0, 8)) !== 'MYVOICE1') throw new Error('Not a voice bundle');
+    const hl = new DataView(buf).getUint32(8), head = JSON.parse(new TextDecoder().decode(u8.slice(12, 12 + hl)));
+    let pos = 12 + hl;
+    head.clips.forEach(c => { c.blob = new Blob([u8.slice(pos, pos + c.size)], { type: c.type }); pos += c.size; });
+    return head;
+  }
+  fileIn.addEventListener('change', async () => {
+    const f = fileIn.files[0]; fileIn.value = '';
+    if (!f) return;
+    await ready;
+    try {
+      const b = await parseBundle(f);
+      if (b.name && b.name !== docName && !confirm('This backup is from "' + b.name + '", not this document. Import anyway?')) return;
+      if (mode === 'api') {
+        flash('Importing…');
+        const fd = new FormData(); fd.append('html_url', docKey); fd.append('file', f, f.name);
+        const d = await (await fetch('/api/library/import-voice', { method: 'POST', body: fd })).json();
+        if (!d.success) throw new Error(d.error || 'Import failed');
+        flash('Imported ' + d.imported + ' recording' + (d.imported === 1 ? '' : 's') + ' into the app');
+      } else {
+        for (const c of b.clips) await idb.put({ k: clipKey(c.id), doc: docKey, id: c.id, blob: c.blob, dur: c.dur, ts: Date.now() });
+        flash('Imported ' + b.clips.length + ' recording' + (b.clips.length === 1 ? '' : 's'));
+      }
+      pick = 'mine'; menu.style.display = 'none'; refresh();
+    } catch (e) { flash('Import failed: ' + (e && e.message || e)); }
+  });
+  menu.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a;
+    if (a === 'export') exportBundle(); else if (a === 'import') fileIn.click();
+  });
+
+  refresh();
+})();
+</script>
+<!-- /_doc-audio-panel -->
 </body>
 </html>
