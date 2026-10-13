@@ -91,11 +91,15 @@
           "icon": "fa-solid fa-pen",
           "images": [
             "content/005-english/02-writing/01. CELPIP Writing Task 1 Email.html",
-            "content/005-english/02-writing/02. CELPIP Writing Task 2 Survey Response.html"
+            "content/005-english/02-writing/02. CELPIP Writing Task 1 Email (Extra Vocabulary).html",
+            "content/005-english/02-writing/03. CELPIP Writing Task 2 Survey Response.html",
+            "content/005-english/02-writing/04. CELPIP Writing Task 2 Survey Response (Extra Vocabulary).html"
           ],
           "captions": [
             "CELPIP Writing Task 1: Email",
-            "CELPIP Writing Task 2: Survey Response"
+            "CELPIP Writing Task 1: Email (Extra Vocabulary)",
+            "CELPIP Writing Task 2: Survey Response",
+            "CELPIP Writing Task 2: Survey Response (Extra Vocabulary)"
           ]
         },
         {
