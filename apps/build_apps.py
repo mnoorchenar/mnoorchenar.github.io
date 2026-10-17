@@ -10,7 +10,7 @@ from pathlib import Path
 APPS_ROOT = Path(r"D:\Projects\1-Apps")
 PAGE = Path(__file__).with_name("index.html")
 GH_USER = "mnoorchenar"
-EXTRA = {Path("D:/Projects/2-Tools/PlaygroundOrganizer"): "Education", Path("D:/Projects/2-Tools/Scopus"): "Tools"}  # repos outside 1-Apps shown on the page
+EXTRA = {}  # repos outside 1-Apps shown on the page
 HIDDEN = {"llm-from-scratch"}  # repos kept off the page (e.g. not built yet)
 TITLES = {"research-rag-bench": "Research RAG Bench"}  # nicer names where the README title is just the repo name
 TOPICS = {
@@ -21,7 +21,7 @@ TOPICS = {
     "Statistics": "Statistics & Experimentation",
     "MLOps-Data": "MLOps & Data",
     "Education":  "Education & Visualization",
-    "Tools":      "Research Tools",
+    "Research-Tools": "Research Tools",
 }
 SKIP_BADGES = {"github", "status", "docker", "live demo", "source code", "use", "private", "star on github", "fork on github"}
 
