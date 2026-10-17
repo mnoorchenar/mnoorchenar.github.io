@@ -21,7 +21,6 @@ TOPICS = {
     "Statistics": "Statistics & Experimentation",
     "MLOps-Data": "MLOps & Data",
     "Education":  "Education & Visualization",
-    "Research-Tools": "Research Tools",
 }
 SKIP_BADGES = {"github", "status", "docker", "live demo", "source code", "use", "private", "star on github", "fork on github"}
 

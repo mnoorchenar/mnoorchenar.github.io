@@ -169,8 +169,7 @@ const APPS_DATA = {
   "Computer Vision",
   "Statistics & Experimentation",
   "MLOps & Data",
-  "Education & Visualization",
-  "Research Tools"
+  "Education & Visualization"
  ],
  "apps": [
   {
@@ -490,6 +489,22 @@ const APPS_DATA = {
    "code": "https://github.com/mnoorchenar/loss-functions"
   },
   {
+   "name": "scopus",
+   "title": "Reference Management System",
+   "emoji": "📚",
+   "topic": "Education & Visualization",
+   "description": "A simple web app to process and organize BibTeX references.",
+   "tags": [
+    "Python",
+    "Flask",
+    "Crossref",
+    "SQLite"
+   ],
+   "keywords": "of contents what it does how to use quick start options explained database notes example input troubleshooting learn more project structure author contributing disclaimer license scopus reference management system education & visualization - what it does - how to use - quick start - options explained - database - notes - example input - troubleshooting - learn more - project structure - author - contributing - disclaimer - license --- ## 📖 what it does input: paste your bibtex entries process: enrich metadata, abbreviate journals, protect acronyms output: view results and save to database no local files needed (main.tex, refs.bib). everything happens online. --- ## 📖 how to use 1. paste bibtex into the input box 2. choose options: - 🌐 enrich: fetch latest data from crossref api (~3-5 sec per reference) - 📖 abbreviate: shorten journal names (requires ltwa.txt) - 🛡️ protect: wrap acronyms in braces for latex ({rnn}, {lstm}) - 💾 save: store in database for later use 3. process and view results in table, bibtex, or json format 4. export as csv or .bib file --- ## 🚀 quick start ### local setup ### hugging face spaces already deployed at: huggingface.co/spaces/mnoorchenar/scopus --- ## ⚙️ options explained | option | what it does | notes | |--------|-------------|-------| | enrich with crossref | updates references from online database | slower but most accurate | | journal abbreviations | converts \"nature\" → \"nature\" using ltwa standard | needs ltwa.txt file | | protect acronyms | wraps multi-uppercase words in braces | prevents latex from lowercasing | | save to database | stores all versions locally | sqlite - portable & persistent | --- ## 🗄️ database all processed references saved to refs_management.db: - original bibtex - enriched metadata from crossref - abbreviated journal names - acronym-protected versions - import timestamp --- ## 📝 notes - no files to upload: paste content directly - crossref api: free but rate-limited (~3-5 sec per entry) - journal abbreviations: optional, but requires ltwa.txt with tab-separated format - database: sqlite - runs locally, no internet needed after processing - export: download as csv or bibtex anytime --- ## 💡 example input --- ## 🛠️ troubleshooting app won't start: check python app.py runs on port 7860 (hugging face spaces) \"ltwa.txt not found\": optional file - app works without it (abbreviation feature just won't activate) crossref slow: normal - api has rate limits. 10 references ≈ 30-50 seconds results not saving: ensure \"save to database\" checkbox is enabled --- ## 📚 learn more - crossref api: https://crossref.org - journal abbreviations: https://www.nlm.nih.gov/bsd/ltwa_mainpage.html --- ## 📁 project structure ---",
+   "demo": "https://huggingface.co/spaces/mnoorchenar/scopus",
+   "code": "https://github.com/mnoorchenar/scopus"
+  },
+  {
    "name": "transformer-edu-viz",
    "title": "Transformer From Scratch — Educational Visualizer",
    "emoji": "🤖",
@@ -517,22 +532,6 @@ const APPS_DATA = {
    "keywords": "live training dashboard latent space visualisation reconstruction comparison interactive generation containerized deployment of contents features architecture getting started docker deployment dashboard modules ml models project structure author contributing disclaimer license vae-playground vae · mnist playground education & visualization - features - architecture - getting started - docker deployment - dashboard modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features ⚡ live training dashboard configure hyperparameters (epochs, batch size, learning rate, hidden & latent dims) and launch training with a real-time animated progress bar and loss curve 🌐 latent space visualisation scatter-plot the 2-d encoded representations of 10 000 mnist samples, colour-coded by digit class, revealing the learned manifold structure 🔁 reconstruction comparison side-by-side view of original mnist digits and their vae reconstructions, updating on every click with a freshly sampled random batch ✨ interactive generation two latent-space sliders let you navigate the learned manifold in real time and decode novel digit-like images on the fly; a full 15×15 grid view is also available 🐳 containerized deployment docker-first architecture, cloud-ready and scalable --- ## 🏗️ architecture vae data flow: --- ## 🚀 getting started ### prerequisites - python 3.10+ - git ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard modules | module | description | status | |--------|-------------|--------| | ⚡ training dashboard | configure hyperparameters, launch training, watch real-time loss curve and progress bar | ✅ live | | 🏗️ architecture viewer | interactive diagram of the full vae topology with the elbo loss formula explained | ✅ live | | 🌐 latent space explorer | 2-d scatter plot of encoded mnist digits, colour-coded by class | ✅ live | | 🔁 reconstruction viewer | random-batch side-by-side comparison of originals vs vae reconstructions | ✅ live | | ✨ generation console | latent-vector sliders for real-time digit generation + 15×15 manifold grid | ✅ live | | 📦 model export | download trained weights as a .pt checkpoint | 🗓️ planned | --- ## 🧠 ml models configurable hyperparameters at runtime: | parameter | default | range | |-----------|---------|-------| | epochs | 30 | 1 – 200 | | batch size | 128 | 32 / 64 / 128 / 256 | | learning rate | 1e-3 | 1e-4 / 1e-3 / 1e-2 | | hidden dimension | 400 | 200 / 400 / 512 | | latent dimension | 2 | 2 / 5 / 10 / 20 | --- ## 📁 project structure ---",
    "demo": "https://huggingface.co/spaces/mnoorchenar/VAE-Playground",
    "code": "https://github.com/mnoorchenar/VAE-Playground"
-  },
-  {
-   "name": "scopus",
-   "title": "Reference Management System",
-   "emoji": "📚",
-   "topic": "Research Tools",
-   "description": "A simple web app to process and organize BibTeX references.",
-   "tags": [
-    "Python",
-    "Flask",
-    "Crossref",
-    "SQLite"
-   ],
-   "keywords": "of contents what it does how to use quick start options explained database notes example input troubleshooting learn more project structure author contributing disclaimer license scopus reference management system research tools - what it does - how to use - quick start - options explained - database - notes - example input - troubleshooting - learn more - project structure - author - contributing - disclaimer - license --- ## 📖 what it does input: paste your bibtex entries process: enrich metadata, abbreviate journals, protect acronyms output: view results and save to database no local files needed (main.tex, refs.bib). everything happens online. --- ## 📖 how to use 1. paste bibtex into the input box 2. choose options: - 🌐 enrich: fetch latest data from crossref api (~3-5 sec per reference) - 📖 abbreviate: shorten journal names (requires ltwa.txt) - 🛡️ protect: wrap acronyms in braces for latex ({rnn}, {lstm}) - 💾 save: store in database for later use 3. process and view results in table, bibtex, or json format 4. export as csv or .bib file --- ## 🚀 quick start ### local setup ### hugging face spaces already deployed at: huggingface.co/spaces/mnoorchenar/scopus --- ## ⚙️ options explained | option | what it does | notes | |--------|-------------|-------| | enrich with crossref | updates references from online database | slower but most accurate | | journal abbreviations | converts \"nature\" → \"nature\" using ltwa standard | needs ltwa.txt file | | protect acronyms | wraps multi-uppercase words in braces | prevents latex from lowercasing | | save to database | stores all versions locally | sqlite - portable & persistent | --- ## 🗄️ database all processed references saved to refs_management.db: - original bibtex - enriched metadata from crossref - abbreviated journal names - acronym-protected versions - import timestamp --- ## 📝 notes - no files to upload: paste content directly - crossref api: free but rate-limited (~3-5 sec per entry) - journal abbreviations: optional, but requires ltwa.txt with tab-separated format - database: sqlite - runs locally, no internet needed after processing - export: download as csv or bibtex anytime --- ## 💡 example input --- ## 🛠️ troubleshooting app won't start: check python app.py runs on port 7860 (hugging face spaces) \"ltwa.txt not found\": optional file - app works without it (abbreviation feature just won't activate) crossref slow: normal - api has rate limits. 10 references ≈ 30-50 seconds results not saving: ensure \"save to database\" checkbox is enabled --- ## 📚 learn more - crossref api: https://crossref.org - journal abbreviations: https://www.nlm.nih.gov/bsd/ltwa_mainpage.html --- ## 📁 project structure ---",
-   "demo": "https://huggingface.co/spaces/mnoorchenar/scopus",
-   "code": "https://github.com/mnoorchenar/scopus"
   }
  ]
 };
