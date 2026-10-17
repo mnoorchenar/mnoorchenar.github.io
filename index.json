@@ -1,5 +1,90 @@
 [
   {
+    "name": "Hands-On-AI",
+    "folder": "Hands-On-AI",
+    "files": [],
+    "subfolders": [
+      {
+        "name": "CNN",
+        "folder": "CNN",
+        "files": [
+          {
+            "name": "CNN Architecture — Layer Ordering & Dimension Problems",
+            "html": "Hands-On-AI/CNN/01. CNN Architecture — Layer Ordering & Dimension Problems.html"
+          },
+          {
+            "name": "CNN Parameter Counting — Section 1 Mastering Parameter Calculation Across 10 Architectures",
+            "html": "Hands-On-AI/CNN/02. CNN Parameter Counting — Section 1 Mastering Parameter Calculation Across 10 Architectures.html"
+          }
+        ]
+      },
+      {
+        "name": "GAN",
+        "folder": "GAN",
+        "files": [
+          {
+            "name": "Generative Adversarial Networks (GANs) — Section 1 Introduction & The Adversarial Game",
+            "html": "Hands-On-AI/GAN/01. Generative Adversarial Networks (GANs) — Section 1 Introduction & The Adversarial Game.html"
+          },
+          {
+            "name": "Generative Adversarial Networks (GANs) — Section 2 Architecture — Generator & Discriminator Design",
+            "html": "Hands-On-AI/GAN/02. Generative Adversarial Networks (GANs) — Section 2 Architecture — Generator & Discriminator Design.html"
+          },
+          {
+            "name": "Generative Adversarial Networks (GANs) — Section 3 Loss Functions & The Minimax Mathematics",
+            "html": "Hands-On-AI/GAN/03. Generative Adversarial Networks (GANs) — Section 3 Loss Functions & The Minimax Mathematics.html"
+          },
+          {
+            "name": "Generative Adversarial Networks (GANs) — Section 4 Training Process, Challenges & Solutions",
+            "html": "Hands-On-AI/GAN/04. Generative Adversarial Networks (GANs) — Section 4 Training Process, Challenges & Solutions.html"
+          },
+          {
+            "name": "Generative Adversarial Networks (GANs) — Section 5 GAN Variants & Practical Implementation",
+            "html": "Hands-On-AI/GAN/05. Generative Adversarial Networks (GANs) — Section 5 GAN Variants & Practical Implementation.html"
+          }
+        ]
+      },
+      {
+        "name": "RNN",
+        "folder": "RNN",
+        "files": [
+          {
+            "name": "Sequence Modeling — Section 1 Recurrent Neural Networks (RNN)",
+            "html": "Hands-On-AI/RNN/01. Sequence Modeling — Section 1 Recurrent Neural Networks (RNN).html"
+          }
+        ]
+      },
+      {
+        "name": "ViT",
+        "folder": "ViT",
+        "files": [
+          {
+            "name": "Parameter Count Calculations — Every Layer Explained",
+            "html": "Hands-On-AI/ViT/01. Parameter Count Calculations — Every Layer Explained.html"
+          }
+        ]
+      },
+      {
+        "name": "YOLO",
+        "folder": "YOLO",
+        "files": [
+          {
+            "name": "YOLO Object Detection Pipeline — Complete Walkthrough",
+            "html": "Hands-On-AI/YOLO/01. YOLO Object Detection Pipeline — Complete Walkthrough.html"
+          },
+          {
+            "name": "YOLO Metrics — Complete Explanation with Numerical Examples",
+            "html": "Hands-On-AI/YOLO/02. YOLO Metrics — Complete Explanation with Numerical Examples.html"
+          },
+          {
+            "name": "Label Studio Export Formats — Quick Overview",
+            "html": "Hands-On-AI/YOLO/03. Label Studio Export Formats — Quick Overview.html"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "cheat-sheets",
     "folder": "cheat-sheets",
     "files": [
