@@ -10,6 +10,7 @@ from pathlib import Path
 APPS_ROOT = Path(r"D:\Projects\1-Apps")
 PAGE = Path(__file__).with_name("index.html")
 GH_USER = "mnoorchenar"
+EXTRA = {Path("D:/Projects/2-Tools/PlaygroundOrganizer"): "Education"}  # repos outside 1-Apps shown on the page
 HIDDEN = {"llm-from-scratch"}  # repos kept off the page (e.g. not built yet)
 TITLES = {"research-rag-bench": "Research RAG Bench"}  # nicer names where the README title is just the repo name
 TOPICS = {
@@ -76,6 +77,8 @@ def main():
             if repo.name in HIDDEN:
                 continue
             apps.append(read_app(repo / "README.md", topic_dir.name))
+    for repo, topic in EXTRA.items():
+        apps.append(read_app(repo / "README.md", topic))
     apps.sort(key=lambda a: (list(TOPICS.values()).index(a["topic"]), a["title"].lower()))
     data = json.dumps({"topics": list(TOPICS.values()), "apps": apps}, ensure_ascii=False, indent=1)
     page = PAGE.read_text(encoding="utf-8")
