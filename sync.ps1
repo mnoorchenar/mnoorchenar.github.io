@@ -184,6 +184,7 @@ try {
     if ($LASTEXITCODE -ne 0) { Fail "Could not clone huggingface.co/$hfRepo`n$(Hide $out)" }
     git -C $cache remote set-url origin "https://huggingface.co/$hfRepo"
   }
+  git -C $cache config core.longpaths true
   $out = git -C $cache -c credential.helper= fetch -q $hfUrl main 2>&1
   if ($LASTEXITCODE -ne 0) { Fail "Could not fetch huggingface.co/$hfRepo`n$(Hide $out)" }
   git -C $cache reset -q --hard FETCH_HEAD
@@ -223,7 +224,15 @@ if (-not $copied) { Fail "Could not copy files for Hugging Face:`n$($out | Out-S
 if ($hfAttr) { [IO.File]::WriteAllBytes($attrPath, $hfAttr) }
 elseif (Test-Path -LiteralPath $attrPath) { Remove-Item -LiteralPath $attrPath }
 
-git -C $cache -c core.safecrlf=false -c core.longpaths=true add -A
+# Copy Git LFS files from this repo's folder, where they are real files (checked
+# above). Git can write a placeholder instead, e.g. when .gitattributes starts with
+# a byte-order mark; everything is committed at this point, so the folder matches HEAD.
+foreach ($p in @(git -c core.quotepath=off lfs ls-files -n | Where-Object { $_ })) {
+  try { [IO.File]::Copy((Join-Path $repoRoot $p), (Join-Path $cache $p), $true) }
+  catch { Fail "Could not copy $p for Hugging Face: $($_.Exception.Message)" }
+}
+
+git -C $cache -c core.safecrlf=false -c core.longpaths=true add -A --force
 
 # Hugging Face rejects binary files and files over 10 MB unless they are in its
 # large-file storage, so track any such file that its .gitattributes doesn't cover.
@@ -240,10 +249,16 @@ if ($needLfs.Count -gt 0) {
   Pop-Location
   [IO.File]::WriteAllText($listFile, ($needLfs -join "`n"), $Utf8NoBom)
   git -C $cache --literal-pathspecs rm -q -f --cached --pathspec-from-file="$listFile"
-  git -C $cache -c core.safecrlf=false -c core.longpaths=true add -A
+  git -C $cache -c core.safecrlf=false -c core.longpaths=true add -A --force
   Write-Host "[OK] $($needLfs.Count) binary/large file(s) put in Hugging Face large-file storage"
 }
 Remove-Item -LiteralPath $listFile -ErrorAction SilentlyContinue
+
+# Safety check: every file of this repo must be in the Hugging Face copy.
+$hfNow = [string[]]@((git -C $cache -c core.quotepath=off ls-files -z) -split "`0" | Where-Object { $_ })
+$hfSet = New-Object 'System.Collections.Generic.HashSet[string]' -ArgumentList (,$hfNow)
+$missing = @($srcFiles | Where-Object { -not $hfSet.Contains($_) })
+if ($missing.Count -gt 0) { Fail "$($missing.Count) file(s) would be missing on Hugging Face (first: $($missing[0])). Nothing was pushed." }
 
 git -C $cache diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
