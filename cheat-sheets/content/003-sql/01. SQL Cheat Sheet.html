@@ -2603,11 +2603,11 @@ every part has been reviewed.</p>
 
 <script>
 (function () {
-  /* ── Theme toggle (dark by default, light on request) ──── */
+  /* ── Theme toggle (light by default, dark on request) ──── */
   const root = document.documentElement;
   let theme = null;
   try { theme = localStorage.getItem('_doc_theme'); } catch (e) {}
-  root.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+  root.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
 
   const themeBtn = document.createElement('button');
   themeBtn.id = '_theme-toggle';

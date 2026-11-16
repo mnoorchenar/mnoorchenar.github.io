@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -502,7 +502,7 @@ function applyTheme(t) {
 }
 
 // Init from saved preference
-applyTheme(localStorage.getItem('ai-theme') || 'dark');
+applyTheme(localStorage.getItem('ai-theme') || 'light');
 
 themeBtn.addEventListener('click', () =>
   applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark')
