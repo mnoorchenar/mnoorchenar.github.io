@@ -120,6 +120,16 @@
 .app-btn-demo:hover { background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.55); }
 .app-btn-video { background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.35); color: #ef4444; }
 .app-btn-video:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.55); }
+.video-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(2,6,23,.82); backdrop-filter: blur(6px); }
+.video-modal.open { display: flex; }
+.video-box { position: relative; width: min(1100px, 100%); }
+.video-frame { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; color: #f1f5f9; font-weight: 700; }
+.video-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff;
+  font-size: 1.1em; cursor: pointer; flex-shrink: 0; }
+.video-close:hover { background: rgba(255,255,255,.18); }
 mark { background: rgba(245,158,11,.3); color: inherit; border-radius: 3px; padding: 0 1px; }
 
 .no-results { display: none; text-align: center; color: var(--muted); padding: 60px 20px; }
@@ -630,6 +640,43 @@ const APPS_DATA = {
   input.value = params.get('q') || '';
   if (APPS_DATA.topics.includes(params.get('topic'))) topic = params.get('topic');
   renderTopics(); render();
+})();
+</script>
+<div class="video-modal" id="videoModal" role="dialog" aria-modal="true" aria-label="App video">
+  <div class="video-box">
+    <div class="video-head"><span id="videoTitle"></span><button class="video-close" id="videoClose" aria-label="Close video"><i class="fas fa-times"></i></button></div>
+    <div class="video-frame"><iframe id="videoFrame" title="App video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+  </div>
+</div>
+<script>
+// play app videos in a pop-up on this page (ctrl/cmd-click still opens YouTube)
+(function () {
+  const modal = document.getElementById('videoModal'), frame = document.getElementById('videoFrame'), title = document.getElementById('videoTitle');
+  const ytId = url => (url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+  function open(url, name) {
+    const id = ytId(url);
+    if (!id) { window.open(url, '_blank', 'noopener'); return; }
+    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+    title.textContent = name || '';
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('videoClose').focus();
+  }
+  function close() {
+    modal.classList.remove('open');
+    frame.src = '';                      // stops the video
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.app-btn-video');
+    if (btn && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+      e.preventDefault();
+      open(btn.href, btn.closest('.app-card')?.querySelector('.app-title')?.textContent);
+    }
+  });
+  document.getElementById('videoClose').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
 })();
 </script>
 </body>
