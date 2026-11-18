@@ -271,7 +271,8 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
       <span><i class="fas fa-database"></i> UniProt · AlphaFold · PDB</span>
     </div>
     <div class="hero-actions">
-      <a href="#demo" class="btn btn-green"><i class="fas fa-play-circle"></i> Explore Demo</a>
+      <a href="#video" class="btn btn-green"><i class="fab fa-youtube"></i> Watch the 1-min Video</a>
+      <a href="#demo" class="btn btn-gray"><i class="fas fa-play-circle"></i> Explore Demo</a>
       <a href="https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="btn btn-gray"><i class="fas fa-external-link-alt"></i> Try on HuggingFace</a>
       <a href="https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery" target="_blank" class="btn btn-gray"><i class="fab fa-github"></i> View on GitHub</a>
       <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
@@ -293,6 +294,19 @@ h1 { font-size: clamp(1.7rem,3.5vw,2.7rem); font-weight: 900; line-height: 1.2; 
 <!-- ═══ MAIN LAYOUT ═══ -->
 <div class="main-layout">
 <div class="content-col">
+
+  <!-- VIDEO -->
+  <div class="card fade-up" id="video" style="scroll-margin-top:140px">
+    <div class="s-tag s-tag-green">Video</div>
+    <h2 class="card-title"><i class="fab fa-youtube"></i> The App in One Minute</h2>
+    <div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000">
+      <iframe src="https://www.youtube-nocookie.com/embed/wnB6oKDZVfA?rel=0" title="Protein Target Explorer: the one-minute tour"
+        style="position:absolute;inset:0;width:100%;height:100%;border:0" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <p class="narrative" style="margin-top:14px">Why AI-suggested protein IDs can't be trusted, how every suggestion is checked against UniProt, and the 3D AlphaFold explorer. <a href="https://www.youtube.com/watch?v=wnB6oKDZVfA" target="_blank" rel="noopener">Watch on YouTube</a>.</p>
+  </div>
 
   <!-- PIPELINE -->
   <div class="card fade-up">

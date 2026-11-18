@@ -112,12 +112,14 @@
 .app-actions { display: flex; gap: 8px; margin-top: 4px; }
 .app-btn {
   flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  padding: 9px 12px; border-radius: 10px; font-size: .82em; font-weight: 700; text-decoration: none; transition: .2s;
+  padding: 9px 8px; border-radius: 10px; font-size: .82em; font-weight: 700; text-decoration: none; transition: .2s; white-space: nowrap;
   border: 1px solid var(--glass-border); color: var(--text); background: rgba(148,163,184,.08);
 }
 .app-btn:hover { transform: translateY(-2px); border-color: rgba(148,163,184,.45); }
 .app-btn-demo { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35); color: var(--gold); }
 .app-btn-demo:hover { background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.55); }
+.app-btn-video { background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.35); color: #ef4444; }
+.app-btn-video:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.55); }
 mark { background: rgba(245,158,11,.3); color: inherit; border-radius: 3px; padding: 0 1px; }
 
 .no-results { display: none; text-align: center; color: var(--muted); padding: 60px 20px; }
@@ -262,7 +264,8 @@ const APPS_DATA = {
    ],
    "keywords": "ai target identification 3d structure visualization uniprot deep search protein q&a chat secure by design containerized deployment of contents features architecture getting started docker deployment dashboard modules ml models project structure author contributing disclaimer license protein-sequencing-ai-discovery biomedical protein target explorer healthcare & biotech - features - architecture - getting started - docker deployment - dashboard modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🤖 ai target identification uses large language models via huggingface inference api to extract 3–5 relevant human protein targets from free-text biomedical queries, with automatic multi-model fallback 🔬 3d structure visualization fetches and renders protein structures interactively from alphafold db and rcsb pdb; falls back to a generated demo helix when no structure is available 🔎 uniprot deep search directly queries the uniprot rest api for reviewed human proteins (organism id 9606), returning function, disease associations, sequence length, and accession data 💬 protein q&a chat context-aware biomedical chat endpoint that answers user questions about specific proteins or general drug discovery concepts using the same multi-model llm pipeline 🔒 secure by design huggingface token passed via environment variable; no user data stored; all external datasets are public apis 🐳 containerized deployment docker-first architecture targeting port 7860, fully compatible with huggingface spaces docker sdk --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - git - huggingface account (free) for llm inference ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard modules | module | description | status | |--------|-------------|--------| | 🤖 ai protein finder | submit a natural language research query; llm returns structured human protein targets with uniprot ids | ✅ live | | 🔬 structure viewer | interactive 3d molecular viewer powered by alphafold db and rcsb pdb lookups per uniprot accession | ✅ live | | 🔎 uniprot deep search | direct keyword search against the uniprot rest api filtered to reviewed human proteins (organism 9606) | ✅ live | | 💬 protein q&a chat | ask follow-up questions about any returned protein; context-aware biomedical responses from llm | ✅ live | | 📚 curated fallback db | disease-to-protein mapping loaded from disease_proteins.json; activates only when all llm models fail | 🔄 beta | | 🧪 drug association panel | surface known drugs per protein target from cross-referenced clinical and uniprot annotation data | 🗓️ planned | --- ## 🧠 ml models > note: all models are accessed through the huggingface inference api — no local gpu required. the app tries each model in sequence until a vali",
    "demo": "https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery",
-   "code": "https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery"
+   "code": "https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery",
+   "video": "https://www.youtube.com/watch?v=wnB6oKDZVfA"
   },
   {
    "name": "MoleSight-Pro",
@@ -568,6 +571,7 @@ const APPS_DATA = {
 
   function card(a, terms) {
     const demo = a.demo ? `<a class="app-btn app-btn-demo" href="${esc(a.demo)}" target="_blank" rel="noopener"><i class="fas fa-play"></i> Live Demo</a>` : '';
+    const video = a.video ? `<a class="app-btn app-btn-video" href="${esc(a.video)}" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Video</a>` : '';
     return `<article class="app-card">
       <div class="app-head">
         <div class="app-emoji" aria-hidden="true">${esc(a.emoji || '🧩')}</div>
@@ -575,7 +579,7 @@ const APPS_DATA = {
       </div>
       <div class="app-desc">${highlight(a.description, terms)}</div>
       <div class="app-tags">${a.tags.map(t => `<span class="app-tag">${highlight(t, terms)}</span>`).join('')}</div>
-      <div class="app-actions">${demo}
+      <div class="app-actions">${demo}${video}
         <a class="app-btn" href="${esc(a.code)}" target="_blank" rel="noopener"><i class="fab fa-github"></i> Code</a>
       </div>
     </article>`;

@@ -13,6 +13,7 @@ GH_USER = "mnoorchenar"
 EXTRA = {}  # repos outside 1-Apps shown on the page
 HIDDEN = {"llm-from-scratch"}  # repos kept off the page (e.g. not built yet)
 TITLES = {"research-rag-bench": "Research RAG Bench"}  # nicer names where the README title is just the repo name
+VIDEOS = {"Protein-Sequencing-AI-Discovery": "https://www.youtube.com/watch?v=wnB6oKDZVfA"}  # YouTube video per repo (adds a Video button)
 TOPICS = {
     "LLM-Agents": "LLMs, RAG & Agents",
     "Healthcare": "Healthcare & Biotech",
@@ -67,6 +68,7 @@ def read_app(readme, topic):
         "description": short(desc), "tags": tags[:6], "keywords": plain(keywords).lower(),
         "demo": f"https://huggingface.co/{hf}" if hf.startswith("spaces/") else None,
         "code": f"https://github.com/{GH_USER}/{name}",
+        "video": VIDEOS.get(name),
     }
 
 
