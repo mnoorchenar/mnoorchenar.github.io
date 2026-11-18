@@ -118,18 +118,15 @@
 .app-btn:hover { transform: translateY(-2px); border-color: rgba(148,163,184,.45); }
 .app-btn-demo { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35); color: var(--gold); }
 .app-btn-demo:hover { background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.55); }
-.app-btn-video { background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.35); color: #ef4444; }
-.app-btn-video:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.55); }
-.video-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
-  background: rgba(2,6,23,.82); backdrop-filter: blur(6px); }
-.video-modal.open { display: flex; }
-.video-box { position: relative; width: min(1100px, 100%); }
-.video-frame { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.video-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; color: #f1f5f9; font-weight: 700; }
-.video-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff;
-  font-size: 1.1em; cursor: pointer; flex-shrink: 0; }
-.video-close:hover { background: rgba(255,255,255,.18); }
+.app-video { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; cursor: pointer;
+  border: 1px solid var(--glass-border); }
+.app-video img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+.app-video:hover img { transform: scale(1.04); }
+.app-video .play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(transparent 55%, rgba(0,0,0,.55)); }
+.app-video .play i { font-size: 3.1em; color: #ff0033; filter: drop-shadow(0 4px 12px rgba(0,0,0,.5)); transition: transform .2s; }
+.app-video:hover .play i { transform: scale(1.12); }
+.app-video .vlabel { position: absolute; left: 10px; bottom: 8px; color: #fff; font-size: .76em; font-weight: 700; letter-spacing: .02em; }
+.app-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 mark { background: rgba(245,158,11,.3); color: inherit; border-radius: 3px; padding: 0 1px; }
 
 .no-results { display: none; text-align: center; color: var(--muted); padding: 60px 20px; }
@@ -581,15 +578,18 @@ const APPS_DATA = {
 
   function card(a, terms) {
     const demo = a.demo ? `<a class="app-btn app-btn-demo" href="${esc(a.demo)}" target="_blank" rel="noopener"><i class="fas fa-play"></i> Live Demo</a>` : '';
-    const video = a.video ? `<a class="app-btn app-btn-video" href="${esc(a.video)}" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Video</a>` : '';
-    return `<article class="app-card">
+    const vid = a.video && (a.video.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+    const video = vid ? `<div class="app-video" data-vid="${vid}" role="button" tabindex="0" aria-label="Play video: ${esc(a.title)}">
+        <img src="https://i.ytimg.com/vi/${vid}/hqdefault.jpg" alt="" loading="lazy">
+        <div class="play"><i class="fab fa-youtube"></i></div><span class="vlabel">▶ Watch the 1-min video</span></div>` : '';
+    return `<article class="app-card">${video}
       <div class="app-head">
         <div class="app-emoji" aria-hidden="true">${esc(a.emoji || '🧩')}</div>
         <div><div class="app-topic">${esc(a.topic)}</div><div class="app-title">${highlight(a.title, terms)}</div></div>
       </div>
       <div class="app-desc">${highlight(a.description, terms)}</div>
       <div class="app-tags">${a.tags.map(t => `<span class="app-tag">${highlight(t, terms)}</span>`).join('')}</div>
-      <div class="app-actions">${demo}${video}
+      <div class="app-actions">${demo}
         <a class="app-btn" href="${esc(a.code)}" target="_blank" rel="noopener"><i class="fab fa-github"></i> Code</a>
       </div>
     </article>`;
@@ -642,41 +642,18 @@ const APPS_DATA = {
   renderTopics(); render();
 })();
 </script>
-<div class="video-modal" id="videoModal" role="dialog" aria-modal="true" aria-label="App video">
-  <div class="video-box">
-    <div class="video-head"><span id="videoTitle"></span><button class="video-close" id="videoClose" aria-label="Close video"><i class="fas fa-times"></i></button></div>
-    <div class="video-frame"><iframe id="videoFrame" title="App video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
-  </div>
-</div>
 <script>
-// play app videos in a pop-up on this page (ctrl/cmd-click still opens YouTube)
+// app videos play inside their card (YouTube privacy-enhanced mode, loaded only on click)
 (function () {
-  const modal = document.getElementById('videoModal'), frame = document.getElementById('videoFrame'), title = document.getElementById('videoTitle');
-  const ytId = url => (url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
-  function open(url, name) {
-    const id = ytId(url);
-    if (!id) { window.open(url, '_blank', 'noopener'); return; }
-    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-    title.textContent = name || '';
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('videoClose').focus();
+  function play(box) {
+    if (box.querySelector('iframe')) return;
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${box.dataset.vid}?autoplay=1&rel=0" title="App video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    box.style.cursor = 'default';
   }
-  function close() {
-    modal.classList.remove('open');
-    frame.src = '';                      // stops the video
-    document.body.style.overflow = '';
-  }
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.app-btn-video');
-    if (btn && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
-      e.preventDefault();
-      open(btn.href, btn.closest('.app-card')?.querySelector('.app-title')?.textContent);
-    }
-  });
-  document.getElementById('videoClose').addEventListener('click', close);
-  modal.addEventListener('click', e => { if (e.target === modal) close(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+  document.addEventListener('click', e => { const box = e.target.closest('.app-video'); if (box) play(box); });
+  document.addEventListener('keydown', e => { const box = e.target.closest && e.target.closest('.app-video'); if (box && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); play(box); } });
 })();
 </script>
 </body>

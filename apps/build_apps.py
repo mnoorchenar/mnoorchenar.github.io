@@ -13,7 +13,7 @@ GH_USER = "mnoorchenar"
 EXTRA = {}  # repos outside 1-Apps shown on the page
 HIDDEN = {"llm-from-scratch"}  # repos kept off the page (e.g. not built yet)
 TITLES = {"research-rag-bench": "Research RAG Bench"}  # nicer names where the README title is just the repo name
-VIDEOS = {"Protein-Sequencing-AI-Discovery": "https://www.youtube.com/watch?v=wnB6oKDZVfA"}  # YouTube video per repo (adds a Video button)
+VIDEOS = {"Protein-Sequencing-AI-Discovery": "https://www.youtube.com/watch?v=wnB6oKDZVfA"}  # YouTube video per repo (shown as a player at the top of its card)
 TOPICS = {
     "LLM-Agents": "LLMs, RAG & Agents",
     "Healthcare": "Healthcare & Biotech",
