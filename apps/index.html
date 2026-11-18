@@ -118,15 +118,21 @@
 .app-btn:hover { transform: translateY(-2px); border-color: rgba(148,163,184,.45); }
 .app-btn-demo { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35); color: var(--gold); }
 .app-btn-demo:hover { background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.55); }
-.app-thumb { position: relative; flex-shrink: 0; margin-left: auto; width: 96px; height: 54px; border-radius: 8px; overflow: hidden; cursor: pointer;
-  border: 1px solid var(--glass-border); background: #0a111f; padding: 0; box-shadow: 0 4px 12px rgba(15,23,42,.15); }
-.app-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
-.app-thumb .tplay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.28); transition: background .2s; }
-.app-thumb .tplay i { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.92); color: #0f172a; font-size: .62em;
-  display: flex; align-items: center; justify-content: center; padding-left: 2px; }
-.app-thumb .tdur { position: absolute; right: 4px; bottom: 3px; font-size: .62em; font-weight: 700; color: #fff; background: rgba(0,0,0,.6); border-radius: 4px; padding: 0 4px; }
-.app-thumb:hover img { transform: scale(1.08); }
+.app-thumb { position: relative; display: block; align-self: center; width: min(280px, 82%); aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--glass-border); background: #0a111f; padding: 0; box-shadow: 0 8px 24px rgba(15,23,42,.22); transition: transform .25s, box-shadow .25s; }
+.app-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.app-thumb .tplay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.3); transition: background .2s; }
+.app-thumb .tplay i { position: relative; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.95); color: #0f172a; font-size: 1em;
+  display: flex; align-items: center; justify-content: center; padding-left: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.35); transition: transform .25s; }
+.app-thumb .tplay i::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(255,255,255,.85); animation: tpulse 1.8s ease-out infinite; }
+@keyframes tpulse { from { transform: scale(.9); opacity: .9; } to { transform: scale(1.5); opacity: 0; } }
+.app-thumb .tlabel { position: absolute; left: 8px; bottom: 7px; font-size: .72em; font-weight: 700; color: #fff; background: rgba(2,6,23,.7); border-radius: 6px; padding: 2px 8px; }
+.app-thumb .tdur { position: absolute; right: 8px; bottom: 7px; font-size: .72em; font-weight: 700; color: #fff; background: rgba(0,0,0,.7); border-radius: 6px; padding: 2px 6px; }
+.app-thumb:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15,23,42,.3); }
+.app-thumb:hover img { transform: scale(1.06); }
 .app-thumb:hover .tplay { background: rgba(2,6,23,.12); }
+.app-thumb:hover .tplay i { transform: scale(1.1); }
+@media (prefers-reduced-motion: reduce) { .app-thumb .tplay i::after { animation: none; } }
 .vmodal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
   background: rgba(2,6,23,.8); backdrop-filter: blur(5px); }
 .vmodal.open { display: flex; }
@@ -595,12 +601,13 @@ const APPS_DATA = {
     const demo = a.demo ? `<a class="app-btn app-btn-demo" href="${esc(a.demo)}" target="_blank" rel="noopener"><i class="fas fa-play"></i> Live Demo</a>` : '';
     const v = a.video;
     const video = v ? `<button class="app-thumb" type="button" data-src="${esc(v.src)}" data-poster="${esc(v.poster)}" data-yt="${esc(v.youtube || '')}" data-title="${esc(a.title)}" aria-label="Play video: ${esc(a.title)}" title="Watch the video">
-        <img src="${esc(v.poster)}" alt="" loading="lazy"><span class="tplay"><i class="fas fa-play"></i></span>${v.length ? `<span class="tdur">${esc(v.length)}</span>` : ''}</button>` : '';
+        <img src="${esc(v.poster)}" alt="" loading="lazy"><span class="tplay"><i class="fas fa-play"></i></span><span class="tlabel"><i class="fas fa-film"></i> See it in action</span>${v.length ? `<span class="tdur">${esc(v.length)}</span>` : ''}</button>` : '';
     return `<article class="app-card">
       <div class="app-head">
         <div class="app-emoji" aria-hidden="true">${esc(a.emoji || '🧩')}</div>
-        <div><div class="app-topic">${esc(a.topic)}</div><div class="app-title">${highlight(a.title, terms)}</div></div>${video}
+        <div><div class="app-topic">${esc(a.topic)}</div><div class="app-title">${highlight(a.title, terms)}</div></div>
       </div>
+      ${video}
       <div class="app-desc">${highlight(a.description, terms)}</div>
       <div class="app-tags">${a.tags.map(t => `<span class="app-tag">${highlight(t, terms)}</span>`).join('')}</div>
       <div class="app-actions">${demo}
