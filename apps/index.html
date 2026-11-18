@@ -198,6 +198,26 @@ const APPS_DATA = {
  ],
  "apps": [
   {
+   "name": "Protein-Sequencing-AI-Discovery",
+   "title": "Biomedical Protein Target Explorer",
+   "emoji": "🧬",
+   "topic": "Healthcare & Biotech",
+   "description": "An AI-powered web application that identifies relevant human protein targets for drug discovery from natural language research queries, enriches them with live UniProt metadata, and renders interactive 3D protein structures from…",
+   "tags": [
+    "Python",
+    "Flask"
+   ],
+   "keywords": "ai target identification 3d structure visualization uniprot deep search protein q&a chat secure by design containerized deployment of contents features architecture getting started docker deployment dashboard modules ml models project structure author contributing disclaimer license protein-sequencing-ai-discovery biomedical protein target explorer healthcare & biotech - features - architecture - getting started - docker deployment - dashboard modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🤖 ai target identification uses large language models via huggingface inference api to extract 3–5 relevant human protein targets from free-text biomedical queries, with automatic multi-model fallback 🔬 3d structure visualization fetches and renders protein structures interactively from alphafold db and rcsb pdb; falls back to a generated demo helix when no structure is available 🔎 uniprot deep search directly queries the uniprot rest api for reviewed human proteins (organism id 9606), returning function, disease associations, sequence length, and accession data 💬 protein q&a chat context-aware biomedical chat endpoint that answers user questions about specific proteins or general drug discovery concepts using the same multi-model llm pipeline 🔒 secure by design huggingface token passed via environment variable; no user data stored; all external datasets are public apis 🐳 containerized deployment docker-first architecture targeting port 7860, fully compatible with huggingface spaces docker sdk --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - git - huggingface account (free) for llm inference ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard modules | module | description | status | |--------|-------------|--------| | 🤖 ai protein finder | submit a natural language research query; llm returns structured human protein targets with uniprot ids | ✅ live | | 🔬 structure viewer | interactive 3d molecular viewer powered by alphafold db and rcsb pdb lookups per uniprot accession | ✅ live | | 🔎 uniprot deep search | direct keyword search against the uniprot rest api filtered to reviewed human proteins (organism 9606) | ✅ live | | 💬 protein q&a chat | ask follow-up questions about any returned protein; context-aware biomedical responses from llm | ✅ live | | 📚 curated fallback db | disease-to-protein mapping loaded from disease_proteins.json; activates only when all llm models fail | 🔄 beta | | 🧪 drug association panel | surface known drugs per protein target from cross-referenced clinical and uniprot annotation data | 🗓️ planned | --- ## 🧠 ml models > note: all models are accessed through the huggingface inference api — no local gpu required. the app tries each model in sequence until a vali",
+   "demo": "https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery",
+   "code": "https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery",
+   "video": {
+    "src": "/videos/protein-target-explorer.mp4",
+    "poster": "/videos/protein-target-explorer.jpg",
+    "length": "1:11",
+    "youtube": "https://www.youtube.com/watch?v=wnB6oKDZVfA"
+   }
+  },
+  {
    "name": "docmind",
    "title": "DocMind — Agentic Research Platform",
    "emoji": "🧠",
@@ -274,26 +294,6 @@ const APPS_DATA = {
    "keywords": "of contents features architecture getting started docker deployment endpoints menu stack setup project structure author contributing disclaimer license pizza-voice-ai pizzavoice llms, rag & agents - features - architecture - getting started - docker deployment - endpoints - menu - stack - setup - project structure - author - contributing - disclaimer - license --- ## ✨ features - voice & text ordering — uses the web speech api for speech-to-text (stt) and microsoft edge tts (neural) for natural text-to-speech - live order card — updates in real time as the conversation progresses, showing each item and a running price total - smart ai character — pino is a warm, witty italian waiter who asks one question at a time, handles dietary requests, makes recommendations, and suggests drink pairings - resilient llm backend — tries 6 open-source models in sequence (qwen 72b → llama 70b → mistral 24b → phi-4 → qwen coder 32b → gemma 27b) with automatic fallback - itemised receipt — final order confirmation with full pricing breakdown, tax, and a randomly selected italian quote --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - git - docker (optional) ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📡 endpoints | method | path | description | |--------|------|-------------| | get | / | main app ui | | post | /chat | send conversation history, get pino's reply + order state | | post | /tts | convert text to mp3 audio (edge tts → hf fallback) | | get | /prices | serve all price maps as json (consumed by the frontend) | | get | /stats | live token-usage counters and model-hit stats | --- ## 🍕 menu | category | options | |---|---| | sizes | personal 6\" · small 8\" · medium 12\" · large 14\" · xl 16\" | | crusts | thin · thick · hand tossed (free) · stuffed · cauliflower · gluten-free | | sauces | marinara · tomato · bbq · ranch · buffalo · garlic butter (free) · alfredo · pesto | | cheeses | mozzarella (free) · cheddar · parmesan · feta · gouda · ricotta · vegan · dairy-free · no cheese | | toppings | 26 options — meat, veg, and premium (truffle oil) | | drinks | soft drinks · juices · water · italian coffees · beer · wine · prosecco | | extras | extra cheese · extra sauce · well done · light sauce | tax rate: 13% --- ## 🧰 stack - backend: python 3.11 · flask 3.1 · huggingface hub · pydantic v2 - tts: edge tts (microsoft neural) · hf inference rest fallback · web speech api (browser) - stt: web speech api (browser-native, no server cost) - deployment: docker on huggingface spaces (port 7860) --- ## 🚀 setup each visitor enters their own hugging face token on the start screen (stored onl",
    "demo": "https://huggingface.co/spaces/mnoorchenar/pizza-voice-ai",
    "code": "https://github.com/mnoorchenar/pizza-voice-ai"
-  },
-  {
-   "name": "Protein-Sequencing-AI-Discovery",
-   "title": "Biomedical Protein Target Explorer",
-   "emoji": "🧬",
-   "topic": "Healthcare & Biotech",
-   "description": "An AI-powered web application that identifies relevant human protein targets for drug discovery from natural language research queries, enriches them with live UniProt metadata, and renders interactive 3D protein structures from…",
-   "tags": [
-    "Python",
-    "Flask"
-   ],
-   "keywords": "ai target identification 3d structure visualization uniprot deep search protein q&a chat secure by design containerized deployment of contents features architecture getting started docker deployment dashboard modules ml models project structure author contributing disclaimer license protein-sequencing-ai-discovery biomedical protein target explorer healthcare & biotech - features - architecture - getting started - docker deployment - dashboard modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🤖 ai target identification uses large language models via huggingface inference api to extract 3–5 relevant human protein targets from free-text biomedical queries, with automatic multi-model fallback 🔬 3d structure visualization fetches and renders protein structures interactively from alphafold db and rcsb pdb; falls back to a generated demo helix when no structure is available 🔎 uniprot deep search directly queries the uniprot rest api for reviewed human proteins (organism id 9606), returning function, disease associations, sequence length, and accession data 💬 protein q&a chat context-aware biomedical chat endpoint that answers user questions about specific proteins or general drug discovery concepts using the same multi-model llm pipeline 🔒 secure by design huggingface token passed via environment variable; no user data stored; all external datasets are public apis 🐳 containerized deployment docker-first architecture targeting port 7860, fully compatible with huggingface spaces docker sdk --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - git - huggingface account (free) for llm inference ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard modules | module | description | status | |--------|-------------|--------| | 🤖 ai protein finder | submit a natural language research query; llm returns structured human protein targets with uniprot ids | ✅ live | | 🔬 structure viewer | interactive 3d molecular viewer powered by alphafold db and rcsb pdb lookups per uniprot accession | ✅ live | | 🔎 uniprot deep search | direct keyword search against the uniprot rest api filtered to reviewed human proteins (organism 9606) | ✅ live | | 💬 protein q&a chat | ask follow-up questions about any returned protein; context-aware biomedical responses from llm | ✅ live | | 📚 curated fallback db | disease-to-protein mapping loaded from disease_proteins.json; activates only when all llm models fail | 🔄 beta | | 🧪 drug association panel | surface known drugs per protein target from cross-referenced clinical and uniprot annotation data | 🗓️ planned | --- ## 🧠 ml models > note: all models are accessed through the huggingface inference api — no local gpu required. the app tries each model in sequence until a vali",
-   "demo": "https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery",
-   "code": "https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery",
-   "video": {
-    "src": "/videos/protein-target-explorer.mp4",
-    "poster": "/videos/protein-target-explorer.jpg",
-    "length": "1:11",
-    "youtube": "https://www.youtube.com/watch?v=wnB6oKDZVfA"
-   }
   },
   {
    "name": "MoleSight-Pro",

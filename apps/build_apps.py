@@ -12,6 +12,7 @@ PAGE = Path(__file__).with_name("index.html")
 GH_USER = "mnoorchenar"
 EXTRA = {}  # repos outside 1-Apps shown on the page
 HIDDEN = {"llm-from-scratch"}  # repos kept off the page (e.g. not built yet)
+FIRST = ["Protein-Sequencing-AI-Discovery", "docmind", "research-rag-bench"]  # pinned to the top of the page, in this order
 LAST = {"Financial-RAG-Platform", "pizza-voice-ai"}  # shown after the other apps in their topic
 TITLES = {"research-rag-bench": "Research RAG Bench"}  # nicer names where the README title is just the repo name
 VIDEOS = {  # per repo: our own 1080p MP4 in /videos/ (+ poster), shown as a small thumbnail that opens a pop-up player
@@ -85,7 +86,7 @@ def main():
             apps.append(read_app(repo / "README.md", topic_dir.name))
     for repo, topic in EXTRA.items():
         apps.append(read_app(repo / "README.md", topic))
-    apps.sort(key=lambda a: (list(TOPICS.values()).index(a["topic"]), a["name"] in LAST, a["title"].lower()))
+    apps.sort(key=lambda a: (FIRST.index(a["name"]) if a["name"] in FIRST else len(FIRST), list(TOPICS.values()).index(a["topic"]), a["name"] in LAST, a["title"].lower()))
     data = json.dumps({"topics": list(TOPICS.values()), "apps": apps}, ensure_ascii=False, indent=1)
     page = PAGE.read_text(encoding="utf-8")
     page = re.sub(r"(/\* APPS-DATA:START \*/).*?(/\* APPS-DATA:END \*/)",
