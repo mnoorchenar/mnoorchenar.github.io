@@ -118,15 +118,25 @@
 .app-btn:hover { transform: translateY(-2px); border-color: rgba(148,163,184,.45); }
 .app-btn-demo { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35); color: var(--gold); }
 .app-btn-demo:hover { background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.55); }
-.app-video { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; cursor: pointer;
-  border: 1px solid var(--glass-border); }
-.app-video img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
-.app-video:hover img { transform: scale(1.04); }
-.app-video .play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(transparent 55%, rgba(0,0,0,.55)); }
-.app-video .play i { font-size: 3.1em; color: #ff0033; filter: drop-shadow(0 4px 12px rgba(0,0,0,.5)); transition: transform .2s; }
-.app-video:hover .play i { transform: scale(1.12); }
-.app-video .vlabel { position: absolute; left: 10px; bottom: 8px; color: #fff; font-size: .76em; font-weight: 700; letter-spacing: .02em; }
-.app-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.app-thumb { position: relative; flex-shrink: 0; margin-left: auto; width: 96px; height: 54px; border-radius: 8px; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--glass-border); background: #0a111f; padding: 0; box-shadow: 0 4px 12px rgba(15,23,42,.15); }
+.app-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+.app-thumb .tplay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.28); transition: background .2s; }
+.app-thumb .tplay i { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.92); color: #0f172a; font-size: .62em;
+  display: flex; align-items: center; justify-content: center; padding-left: 2px; }
+.app-thumb .tdur { position: absolute; right: 4px; bottom: 3px; font-size: .62em; font-weight: 700; color: #fff; background: rgba(0,0,0,.6); border-radius: 4px; padding: 0 4px; }
+.app-thumb:hover img { transform: scale(1.08); }
+.app-thumb:hover .tplay { background: rgba(2,6,23,.12); }
+.vmodal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(2,6,23,.8); backdrop-filter: blur(5px); }
+.vmodal.open { display: flex; }
+.vbox { width: min(1100px, 94vw, 150vh); }
+.vhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; color: #f1f5f9; font-weight: 700; }
+.vhead a { margin-left: auto; color: #cbd5e1; font-size: .85em; font-weight: 600; text-decoration: none; }
+.vhead a:hover { color: #fff; }
+.vclose { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.08); color: #fff; cursor: pointer; flex-shrink: 0; }
+.vclose:hover { background: rgba(255,255,255,.18); }
+.vbox video { width: 100%; aspect-ratio: 16/9; display: block; border-radius: 12px; background: #000; box-shadow: 0 30px 90px rgba(0,0,0,.6); }
 mark { background: rgba(245,158,11,.3); color: inherit; border-radius: 3px; padding: 0 1px; }
 
 .no-results { display: none; text-align: center; color: var(--muted); padding: 60px 20px; }
@@ -272,7 +282,12 @@ const APPS_DATA = {
    "keywords": "ai target identification 3d structure visualization uniprot deep search protein q&a chat secure by design containerized deployment of contents features architecture getting started docker deployment dashboard modules ml models project structure author contributing disclaimer license protein-sequencing-ai-discovery biomedical protein target explorer healthcare & biotech - features - architecture - getting started - docker deployment - dashboard modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🤖 ai target identification uses large language models via huggingface inference api to extract 3–5 relevant human protein targets from free-text biomedical queries, with automatic multi-model fallback 🔬 3d structure visualization fetches and renders protein structures interactively from alphafold db and rcsb pdb; falls back to a generated demo helix when no structure is available 🔎 uniprot deep search directly queries the uniprot rest api for reviewed human proteins (organism id 9606), returning function, disease associations, sequence length, and accession data 💬 protein q&a chat context-aware biomedical chat endpoint that answers user questions about specific proteins or general drug discovery concepts using the same multi-model llm pipeline 🔒 secure by design huggingface token passed via environment variable; no user data stored; all external datasets are public apis 🐳 containerized deployment docker-first architecture targeting port 7860, fully compatible with huggingface spaces docker sdk --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - git - huggingface account (free) for llm inference ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard modules | module | description | status | |--------|-------------|--------| | 🤖 ai protein finder | submit a natural language research query; llm returns structured human protein targets with uniprot ids | ✅ live | | 🔬 structure viewer | interactive 3d molecular viewer powered by alphafold db and rcsb pdb lookups per uniprot accession | ✅ live | | 🔎 uniprot deep search | direct keyword search against the uniprot rest api filtered to reviewed human proteins (organism 9606) | ✅ live | | 💬 protein q&a chat | ask follow-up questions about any returned protein; context-aware biomedical responses from llm | ✅ live | | 📚 curated fallback db | disease-to-protein mapping loaded from disease_proteins.json; activates only when all llm models fail | 🔄 beta | | 🧪 drug association panel | surface known drugs per protein target from cross-referenced clinical and uniprot annotation data | 🗓️ planned | --- ## 🧠 ml models > note: all models are accessed through the huggingface inference api — no local gpu required. the app tries each model in sequence until a vali",
    "demo": "https://huggingface.co/spaces/mnoorchenar/Protein-Sequencing-AI-Discovery",
    "code": "https://github.com/mnoorchenar/Protein-Sequencing-AI-Discovery",
-   "video": "https://www.youtube.com/watch?v=wnB6oKDZVfA"
+   "video": {
+    "src": "/videos/protein-target-explorer.mp4",
+    "poster": "/videos/protein-target-explorer.jpg",
+    "length": "1:11",
+    "youtube": "https://www.youtube.com/watch?v=wnB6oKDZVfA"
+   }
   },
   {
    "name": "MoleSight-Pro",
@@ -578,14 +593,13 @@ const APPS_DATA = {
 
   function card(a, terms) {
     const demo = a.demo ? `<a class="app-btn app-btn-demo" href="${esc(a.demo)}" target="_blank" rel="noopener"><i class="fas fa-play"></i> Live Demo</a>` : '';
-    const vid = a.video && (a.video.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
-    const video = vid ? `<div class="app-video" data-vid="${vid}" role="button" tabindex="0" aria-label="Play video: ${esc(a.title)}">
-        <img src="https://i.ytimg.com/vi/${vid}/hqdefault.jpg" alt="" loading="lazy">
-        <div class="play"><i class="fab fa-youtube"></i></div><span class="vlabel">▶ Watch the 1-min video</span></div>` : '';
-    return `<article class="app-card">${video}
+    const v = a.video;
+    const video = v ? `<button class="app-thumb" type="button" data-src="${esc(v.src)}" data-poster="${esc(v.poster)}" data-yt="${esc(v.youtube || '')}" data-title="${esc(a.title)}" aria-label="Play video: ${esc(a.title)}" title="Watch the video">
+        <img src="${esc(v.poster)}" alt="" loading="lazy"><span class="tplay"><i class="fas fa-play"></i></span>${v.length ? `<span class="tdur">${esc(v.length)}</span>` : ''}</button>` : '';
+    return `<article class="app-card">
       <div class="app-head">
         <div class="app-emoji" aria-hidden="true">${esc(a.emoji || '🧩')}</div>
-        <div><div class="app-topic">${esc(a.topic)}</div><div class="app-title">${highlight(a.title, terms)}</div></div>
+        <div><div class="app-topic">${esc(a.topic)}</div><div class="app-title">${highlight(a.title, terms)}</div></div>${video}
       </div>
       <div class="app-desc">${highlight(a.description, terms)}</div>
       <div class="app-tags">${a.tags.map(t => `<span class="app-tag">${highlight(t, terms)}</span>`).join('')}</div>
@@ -643,17 +657,28 @@ const APPS_DATA = {
 })();
 </script>
 <script>
-// app videos play inside their card (YouTube privacy-enhanced mode, loaded only on click)
+// app videos: small thumbnail in the card, plays our own 1080p MP4 in a pop-up on this page
 (function () {
-  function play(box) {
-    if (box.querySelector('iframe')) return;
-    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${box.dataset.vid}?autoplay=1&rel=0" title="App video"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
-    box.style.cursor = 'default';
+  document.body.insertAdjacentHTML('beforeend', `<div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-label="App video">
+    <div class="vbox"><div class="vhead"><span id="vtitle"></span><a id="vyt" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch on YouTube</a>
+      <button class="vclose" id="vclose" type="button" aria-label="Close video"><i class="fas fa-times"></i></button></div>
+      <video id="vplayer" controls playsinline preload="none"></video></div></div>`);
+  const modal = document.getElementById('vmodal'), player = document.getElementById('vplayer'), yt = document.getElementById('vyt');
+  function open(t) {
+    player.poster = t.dataset.poster; player.src = t.dataset.src;
+    document.getElementById('vtitle').textContent = t.dataset.title;
+    yt.style.display = t.dataset.yt ? '' : 'none'; yt.href = t.dataset.yt;
+    modal.classList.add('open'); document.body.style.overflow = 'hidden';
+    player.play().catch(() => {});
   }
-  document.addEventListener('click', e => { const box = e.target.closest('.app-video'); if (box) play(box); });
-  document.addEventListener('keydown', e => { const box = e.target.closest && e.target.closest('.app-video'); if (box && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); play(box); } });
+  function close() {
+    player.pause(); player.removeAttribute('src'); player.load();
+    modal.classList.remove('open'); document.body.style.overflow = '';
+  }
+  document.addEventListener('click', e => { const t = e.target.closest('.app-thumb'); if (t) open(t); });
+  document.getElementById('vclose').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
 })();
 </script>
 </body>
