@@ -251,7 +251,13 @@ const APPS_DATA = {
    ],
    "keywords": "hybrid retrieval live evaluation metrics arxiv integration unified ask & compare domain quick-start containerized deployment of contents features architecture getting started docker deployment dashboard tabs ml models project structure author contributing disclaimer license research-rag-bench research-rag-bench llms, rag & agents - features - architecture - getting started - docker deployment - dashboard tabs - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🔀 hybrid retrieval bm25 + dense faiss search fused with reciprocal rank fusion (k=60) — implemented from scratch, no black-box wrappers 📊 live evaluation metrics context relevance (embedding cosine), answer faithfulness (token overlap), and retrieval diversity computed on every query 📄 arxiv integration search and ingest real research papers in one click; choose from three chunking strategies (fixed, sentence-window, semantic) ⚖️ unified ask & compare every query automatically runs all three methods — answer, metrics, radar/bar charts, and 3-column passage comparison shown on one page 💡 domain quick-start pre-built topic chips (data science, marketing, medical) fill the search box in one click; contextual question chips in ask tab adapt to the loaded domain 🐳 containerized deployment docker-first architecture, cloud-ready and scalable --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ - docker & docker compose - git ### local installation open your browser at http://localhost:7860 🎉 --- ## 🐳 docker deployment --- ## 📊 dashboard tabs | tab | description | status | |-----|-------------|--------| | 📥 load | fetch arxiv papers by topic — domain chips (data science, marketing, medical) pre-fill the search box; configure chunking strategy and paper count | ✅ live | | 🔍 ask & compare | ask a question → get an ai-generated answer + metrics (relevance, faithfulness, diversity) + radar/bar charts + 3-column side-by-side passages (bm25 vs vector vs hybrid) — all in one page | ✅ live | | 🔌 rest api | programmatic endpoints: /api/fetch-arxiv, /api/query, /api/compare | ✅ live | | 🧠 fine-tune | domain-specific embedding fine-tuning on ingested corpus | 🗓️ planned | --- ## 🧠 ml models --- ## 📁 project structure ---",
    "demo": "https://huggingface.co/spaces/mnoorchenar/research-rag-bench",
-   "code": "https://github.com/mnoorchenar/research-rag-bench"
+   "code": "https://github.com/mnoorchenar/research-rag-bench",
+   "video": {
+    "src": "/videos/research-rag-bench.mp4",
+    "poster": "/videos/research-rag-bench.jpg",
+    "length": "1:28",
+    "youtube": "https://www.youtube.com/watch?v=ITNLcNKVZW4"
+   }
   },
   {
    "name": "langgraph-support-agent",

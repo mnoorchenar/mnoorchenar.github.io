@@ -18,6 +18,9 @@ a{text-decoration:none}
 code{font-family:'Cascadia Code','Fira Code',monospace;font-size:.88em;background:rgba(99,102,241,.1);padding:1px 5px;border-radius:4px}
 .s-tag{display:inline-block;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:6px;margin-bottom:10px}
 .s-tag-blue{background:rgba(99,102,241,.12);color:var(--accent);border:1px solid rgba(99,102,241,.2)}
+.s-tag-green{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.btn-green{background:rgba(34,197,94,.18);color:var(--green);border-color:rgba(34,197,94,.35)} .btn-green:hover{background:rgba(34,197,94,.3);transform:translateY(-2px)}
+[data-theme="light"] .btn-green { background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.3); color: #166534; }
 .s-tag-gold{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.2)}
 .s-tag-teal{background:rgba(16,185,129,.12);color:var(--teal);border:1px solid rgba(16,185,129,.2)}
 .grad-text{background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -167,7 +170,8 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
       <span><i class="fas fa-brain"></i> 2 ML models (MiniLM + Flan-T5)</span>
     </div>
     <div class="hero-actions">
-      <a href="#demo" class="btn btn-blue"><i class="fas fa-play-circle"></i> Explore Demo</a>
+      <a href="#video" class="btn btn-green"><i class="fab fa-youtube"></i> Watch the 1-min Video</a>
+      <a href="#demo" class="btn btn-gray"><i class="fas fa-play-circle"></i> Explore Demo</a>
       <a href="https://huggingface.co/spaces/mnoorchenar/research-rag-bench" target="_blank" class="btn btn-gold"><i class="fas fa-external-link-alt"></i> Try on HuggingFace</a>
       <a href="https://github.com/mnoorchenar/research-rag-bench" target="_blank" class="btn btn-gray"><i class="fab fa-github"></i> View on GitHub</a>
       <a href="/projects/index.html" class="btn btn-back"><i class="fas fa-arrow-left"></i> All Projects</a>
@@ -187,6 +191,17 @@ h1{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:900;line-height:1.2;margin-b
 
 <div class="main-layout">
 <div class="content-col">
+
+  <!-- VIDEO -->
+  <div class="card" id="video" style="scroll-margin-top:140px">
+    <div class="s-tag s-tag-green">Video</div>
+    <h2 class="card-title"><i class="fas fa-film"></i> The App in One Minute</h2>
+    <video controls playsinline preload="metadata" poster="/videos/research-rag-bench.jpg"
+      style="width:100%;aspect-ratio:16/9;display:block;border-radius:12px;background:#000">
+      <source src="/videos/research-rag-bench.mp4" type="video/mp4">
+    </video>
+    <p class="narrative" style="margin-top:14px">Why you shouldn't trust a single retriever, how BM25, vector and hybrid search answer the same question side by side over real arXiv papers, and the honest benchmark numbers. <a href="https://www.youtube.com/watch?v=ITNLcNKVZW4" target="_blank" rel="noopener">Watch on YouTube</a>.</p>
+  </div>
 
   <div class="card">
     <div class="s-tag s-tag-blue">Architecture Overview</div>

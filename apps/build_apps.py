@@ -20,6 +20,8 @@ VIDEOS = {  # per repo: our own 1080p MP4 in /videos/ (+ poster), shown as a sma
                                         "length": "1:11", "youtube": "https://www.youtube.com/watch?v=wnB6oKDZVfA"},
     "docmind": {"src": "/videos/docmind.mp4", "poster": "/videos/docmind.jpg",
                 "length": "1:14", "youtube": "https://www.youtube.com/watch?v=Fe5B0Se-dG0"},
+    "research-rag-bench": {"src": "/videos/research-rag-bench.mp4", "poster": "/videos/research-rag-bench.jpg",
+                           "length": "1:28", "youtube": "https://www.youtube.com/watch?v=ITNLcNKVZW4"},
 }
 TOPICS = {
     "LLM-Agents": "LLMs, RAG & Agents",
