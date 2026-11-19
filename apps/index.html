@@ -222,7 +222,7 @@ const APPS_DATA = {
    "title": "DocMind — Agentic Research Platform",
    "emoji": "🧠",
    "topic": "LLMs, RAG & Agents",
-   "description": "A clean, minimal agentic document research platform. Five specialized LangGraph agents plan, retrieve, grade, generate, and critique answers from uploaded PDFs and web pages using hybrid search and Qwen 2.5-7B — all running free…",
+   "description": "A clean, minimal agentic document research platform. Five specialized LangGraph agents plan, retrieve, grade, generate, and critique answers from uploaded PDFs and web pages using hybrid search and your choice of GPT-OSS 20B, GPT-OSS 120B or Qwen 3.8 27B — all running free.",
    "tags": [
     "Python",
     "LangGraph",
@@ -231,7 +231,13 @@ const APPS_DATA = {
    ],
    "keywords": "langgraph state machine hybrid rag (faiss + bm25) multi-agent orchestration score-based grading pdf &amp; url ingestion secure by design containerized deployment of contents features architecture getting started docker deployment app modules ml models project structure author contributing disclaimer license docmind docmind — agentic research platform llms, rag & agents - features - architecture - getting started - docker deployment - app modules - ml models - project structure - author - contributing - disclaimer - license --- ## ✨ features 🧠 langgraph state machinefive agents wired into a linear stategraph — planner → retriever → grader → generator → critic. 🔍 hybrid rag (faiss + bm25)semantic vector search combined with bm25 keyword search, fused via reciprocal rank fusion for precision retrieval. 🤖 multi-agent orchestrationplanner, retriever, grader, generator, and critic agents each with specialized roles — only 3 llm calls per query. ⚡ score-based gradinggrader uses hybrid search scores + keyword overlap — no llm call needed, instant and deterministic relevance scoring. 📄 pdf &amp; url ingestionupload pdf files up to 10 mb or paste any public url — both are chunked, embedded, and indexed automatically. 🔒 secure by designstateless rest backend, no user data persisted, hf token kept server-side only. 🐳 containerized deploymentdocker-first with gunicorn, embedding model pre-downloaded at build time for fast cold starts. --- ## 🏗️ architecture --- ## 🚀 getting started ### prerequisites - python 3.10+ · docker · git · free huggingface account ### local installation open http://localhost:7860 🎉 ### getting your free huggingface token 1. create a free account at huggingface.co 2. go to settings → access tokens → new token → role: read 3. copy the token and set it as hf_token in your .env file or space secrets --- ## 🐳 docker deployment --- ## 📊 app modules | module | description | status | |--------|-------------|--------| | 📤 upload & index | pdf / url ingest, chunk, embed (local baai model), faiss+bm25 index | ✅ live | | 🔍 research query | langgraph 5-agent pipeline with real-time trace log | ✅ live | --- ## 🧠 ml models --- ## 📁 project structure ---",
    "demo": "https://huggingface.co/spaces/mnoorchenar/docmind",
-   "code": "https://github.com/mnoorchenar/docmind"
+   "code": "https://github.com/mnoorchenar/docmind",
+   "video": {
+    "src": "/videos/docmind.mp4",
+    "poster": "/videos/docmind.jpg",
+    "length": "1:14",
+    "youtube": "https://www.youtube.com/watch?v=Fe5B0Se-dG0"
+   }
   },
   {
    "name": "research-rag-bench",
