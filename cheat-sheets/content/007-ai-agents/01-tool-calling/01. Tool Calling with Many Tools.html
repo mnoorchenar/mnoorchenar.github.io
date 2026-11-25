@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tool Calling with Many Tools</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'light')</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>An agent has many tools. How does it call the right one safely?</h1>
+    <p class="lead"><b>The model only suggests a call.</b> Your code checks it, runs it, and sends the result back.</p>
+  </header>
+
+  <section>
+    <h2>Five checks around every call</h2>
+    <p class="sub">Pick a case and see where the mistake gets caught.</p>
+    <div class="picks" id="cases"></div>
+    <div class="panel">
+      <div class="ask">
+        <span>User asks</span><q id="q"></q>
+        <span>Model suggests</span><code id="call"></code>
+      </div>
+      <ol class="gates" id="gates"></ol>
+      <p class="out" id="out" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Show fewer tools</h2>
+    <p class="sub">The shorter the list, the easier the choice. Load only what the request needs.</p>
+    <div class="picks" id="topics"></div>
+    <div class="panel">
+      <div class="tools" id="tools"></div>
+      <p class="count" id="count" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Make each tool hard to misuse</h2>
+    <p class="sub">A wrong tool with valid inputs can pass the checks, so prevent the mix-up here.</p>
+    <div class="two">
+      <div class="panel">
+        <h3>Clear names</h3>
+        <div class="names">
+          <div class="no"><i class="fas fa-xmark" aria-label="Avoid"></i><code>search</code> <code>find</code> <code>lookup</code></div>
+          <div class="yes"><i class="fas fa-check" aria-label="Prefer"></i><code>orders_search</code> <code>docs_search</code></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Strict inputs</h3>
+        <div class="names">
+          <div class="no"><i class="fas fa-xmark" aria-label="Avoid"></i><code>status: any text</code></div>
+          <div class="yes"><i class="fas fa-check" aria-label="Prefer"></i><code>status: "open" | "closed"</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where MCP fits</h2>
+    <p class="sub">MCP is one standard plug for many tools. It connects them, but it does not make them safe.</p>
+    <div class="panel mcp">
+      <div class="host">
+        <b>Your agent app (host)</b>
+        <div class="inner"><i class="fas fa-brain"></i>Model suggests a call</div>
+        <div class="inner"><i class="fas fa-shield-halved"></i>Your five checks</div>
+        <span><code>tools/list</code> finds tools, <code>tools/call</code> runs one</span>
+      </div>
+      <div class="server"><b>Orders server</b><code>search, get, cancel</code></div>
+      <div class="server"><b>Docs server</b><code>search, read</code></div>
+      <div class="server"><b>Calendar server</b><code>create, delete</code></div>
+    </div>
+    <div class="cards mt">
+      <div class="card"><i class="fas fa-handshake"></i><b>Choose servers</b><p>Connect only the ones you trust.</p></div>
+      <div class="card"><i class="fas fa-tags"></i><b>Add a prefix</b><p>Two servers can both have <code>search</code>. Use <code>docs_search</code>.</p></div>
+      <div class="card"><i class="fas fa-filter"></i><b>Show a few</b><p>Connecting a server does not mean showing all its tools.</p></div>
+      <div class="card"><i class="fas fa-circle-question"></i><b>Doubt the labels</b><p>A server can claim “read only”. Your code decides.</p></div>
+      <div class="card"><i class="fas fa-rotate"></i><b>Watch for changes</b><p>Tools can change later. List again and review new ones.</p></div>
+      <div class="card"><i class="fas fa-key"></i><b>Small keys</b><p>Each server gets its own key with little access.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Together, or one after another?</h2>
+    <p class="sub">Ask one thing: does this call need another call's result?</p>
+    <div class="two">
+      <div class="panel">
+        <h3>No: run together</h3>
+        <div class="bars">
+          <div class="bar"><span style="--c:1/4">get weather</span></div>
+          <div class="bar"><span style="--c:1/4">get calendar</span></div>
+          <div class="bar"><span style="--c:1/4">get traffic</span></div>
+        </div>
+        <div class="axis">time →</div>
+        <p class="why">No call waits for another, so it is faster.</p>
+      </div>
+      <div class="panel">
+        <h3>Yes: run in order</h3>
+        <div class="bars">
+          <div class="bar"><span style="--c:1/3">find order</span></div>
+          <div class="bar"><span style="--c:3/5">check rules</span></div>
+          <div class="bar"><span style="--c:5/7">refund</span></div>
+        </div>
+        <div class="axis">time →</div>
+        <p class="why">Each step needs the one before it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The bigger the damage, the stronger the gate</h2>
+    <p class="sub">Your code sets the level. The model cannot change it, and neither can an MCP server.</p>
+    <div class="steps">
+      <div class="step s1"><i class="fas fa-eye"></i><b>Read</b><p>Run automatically</p><code>orders_get</code></div>
+      <div class="step s2"><i class="fas fa-pen"></i><b>Change, can undo</b><p>Preview first, keep a log</p><code>calendar_create</code></div>
+      <div class="step s3"><i class="fas fa-hand"></i><b>Cannot undo</b><p>A person must approve: money, deleting, sending</p><code>refunds_create</code></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Before you ship</h2>
+    <p class="sub">These keep a wrong call from turning into a big mistake.</p>
+    <ul class="check panel">
+      <li><i class="fas fa-check"></i>Short tool list for each request</li>
+      <li><i class="fas fa-check"></i>One clear job per tool</li>
+      <li><i class="fas fa-check"></i>Inputs checked before running</li>
+      <li><i class="fas fa-check"></i>Lowest access each tool needs</li>
+      <li><i class="fas fa-check"></i>Approval for what cannot be undone</li>
+      <li><i class="fas fa-check"></i>Running twice does no extra harm</li>
+      <li><i class="fas fa-check"></i>Errors go back to the model in plain words</li>
+      <li><i class="fas fa-check"></i>Step limit, full log, and tests</li>
+    </ul>
+  </section>
+  <p class="next"><a href="../../../viewer.html?s=007-ai-agents&amp;sub=02-fixed-or-flexible" target="_top">Next: fixed tools or flexible code? →</a></p>
+</main>
+
+<script src="../shared.js"></script>
+<script>
+(function(){
+  const GATES = [['fa-list-check','On the list?'],['fa-spell-check','Inputs valid?'],['fa-shield-halved','Allowed?'],['fa-gears','Did it run?'],['fa-flag-checkered','Really done?']];
+  // at: the gate where the case ends (5 = passes all); kind: stop or wait
+  const CASES = [
+    {name:'Good call', q:'Where is order 1042?', call:'orders_get(order_id: 1042)', at:5, out:'All clear. The user gets a real answer.'},
+    {name:'Made-up tool', q:'Where is order 1042?', call:'order_finder(id: 1042)', at:0, kind:'stop', st:'No such tool', out:'Nothing runs. The model sees the real tool names and tries again.'},
+    {name:'Bad input', q:'Refund $50 on order 1042', call:'refunds_create(order_id: 1042, amount: "fifty")', at:1, kind:'stop', st:'Not a number', out:'Nothing runs. The model is told “amount must be a number” and fixes it.'},
+    {name:'Risky action', q:'Refund $480 on order 1042', call:'refunds_create(order_id: 1042, amount: 480)', at:2, kind:'wait', st:'Needs a person', out:'Paused. The money moves only if a person approves.'},
+    {name:'Tool fails', q:'Where is order 1042?', call:'orders_get(order_id: 1042)', at:3, kind:'stop', st:'Timed out', out:'Reading is safe to retry. If it fails again, the agent says so and does not guess.'},
+    {name:'False success', q:'Refund $20 on order 1042', call:'refunds_create(order_id: 1042, amount: 20)', at:4, kind:'stop', st:'Still pending', out:'A person approved it, but it is still pending. The agent says “pending”, not “refunded”.'}
+  ];
+
+  function showCase(i){
+    const c = CASES[i];
+    $('q').textContent = c.q;
+    $('call').textContent = c.call;
+    drawGates(GATES, GATES.map((_, n) => {
+      if (c.name === 'False success' && n === 2) return ['pass', 'Approved'];
+      return n < c.at ? ['pass', 'Yes'] : n === c.at ? [c.kind, c.st] : ['skip', 'Not reached'];
+    }));
+    drawOut(c.kind || 'pass', c.out);
+  }
+
+  const GROUPS = {
+    orders:['orders_get','orders_search','orders_cancel','orders_track'],
+    refunds:['refunds_create','refunds_status','refunds_rules'],
+    calendar:['calendar_create','calendar_search','calendar_delete'],
+    docs:['docs_search','docs_read','docs_share'],
+    mail:['mail_send','mail_search','mail_draft'],
+    crm:['crm_search','crm_update','crm_notes'],
+    files:['files_list','files_upload','files_delete'],
+    web:['web_search','web_fetch']
+  };
+  const ALL = Object.entries(GROUPS).flatMap(([g, list]) => list.map(t => [g, t]));
+  const TOPICS = [['“Where is my order?”',['orders']],['“I want a refund”',['orders','refunds']],['“Book a meeting”',['calendar']],['Show everything',null]];
+
+  $('tools').innerHTML = ALL.map(([g, t]) => `<code data-g="${g}">${t}</code>`).join('');
+  function showTopic(i){
+    const want = TOPICS[i][1];
+    let n = 0;
+    [...$('tools').children].forEach(el => {
+      const on = !!want && want.includes(el.dataset.g);
+      el.className = !want ? '' : on ? 'on' : 'off';
+      if (on) n++;
+    });
+    $('count').textContent = want ? `${n} tools to choose from, not ${ALL.length}` : `${ALL.length} tools to choose from. Easy to mix up.`;
+  }
+
+  buttons($('cases'), CASES.map(c => c.name), showCase);
+  buttons($('topics'), TOPICS.map(t => t[0]), showTopic);
+  $('cases').children[2].click();
+  $('topics').children[0].click();
+})();
+</script>
+</body>
+</html>

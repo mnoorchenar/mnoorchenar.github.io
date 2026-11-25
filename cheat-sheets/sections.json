@@ -129,6 +129,50 @@
           ]
         }
       ]
+    },
+    {
+      "id": "007-ai-agents",
+      "title": "AI Agents",
+      "description": "One question per card",
+      "icon": "fa-solid fa-robot",
+      "subsections": [
+        {
+          "id": "01-tool-calling",
+          "title": "Calling the Right Tool",
+          "description": "Many tools, MCP, and no big mistakes",
+          "icon": "fa-solid fa-screwdriver-wrench",
+          "images": [
+            "content/007-ai-agents/01-tool-calling/01. Tool Calling with Many Tools.html"
+          ],
+          "captions": [
+            "Tool Calling with Many Tools"
+          ]
+        },
+        {
+          "id": "02-fixed-or-flexible",
+          "title": "Fixed Tools or Flexible Code?",
+          "description": "When an agent may write new code",
+          "icon": "fa-solid fa-code-branch",
+          "images": [
+            "content/007-ai-agents/02-fixed-or-flexible/01. Fixed Tools or Flexible Code.html"
+          ],
+          "captions": [
+            "Fixed Tools or Flexible Code"
+          ]
+        },
+        {
+          "id": "03-guardrails",
+          "title": "Guardrails",
+          "description": "Where to put them to stay safe",
+          "icon": "fa-solid fa-shield-halved",
+          "images": [
+            "content/007-ai-agents/03-guardrails/01. Guardrails for Agents.html"
+          ],
+          "captions": [
+            "Guardrails for Agents"
+          ]
+        }
+      ]
     }
   ]
 }

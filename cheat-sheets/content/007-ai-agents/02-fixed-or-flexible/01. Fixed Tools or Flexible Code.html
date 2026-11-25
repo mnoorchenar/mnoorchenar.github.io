@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fixed Tools or Flexible Code?</title>
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('mn-theme') || 'light')</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="../shared.css">
+<style>
+/* comparison */
+.cmp{display:grid;grid-template-columns:1.3fr repeat(3,1fr)}
+.cmp>*{padding:12px 10px;border-top:1px solid var(--line)}
+.cmp .h{border-top:0;text-align:center;font-weight:700}
+.cmp .h i{display:block;color:var(--blue);font-size:1.4rem;margin-bottom:6px}
+.cmp .h small{display:block;font-weight:400;color:var(--muted)}
+.dots{display:flex;gap:6px;justify-content:center;align-items:center}
+.dots span{width:14px;height:14px;border-radius:50%;border:2px solid var(--blue)}
+.dots .f{background:var(--blue)}
+
+/* decision map */
+.map{display:grid;grid-template-columns:110px 1fr 1fr;gap:12px;align-items:stretch}
+.map .col{text-align:center;font-weight:600;color:var(--muted)}
+.map .row{font-weight:600;color:var(--muted);align-self:center}
+.cell{border:1px solid var(--line);border-radius:12px;padding:18px;opacity:.62;transition:opacity .25s}
+.cell i{font-size:1.4rem;display:block;margin-bottom:6px;color:var(--muted)}
+.cell b{display:block}
+.cell.on{opacity:1}
+.cell.on.pass{background:var(--ok-bg);border-color:var(--ok)} .cell.on.pass i,.cell.on.pass b{color:var(--ok)}
+.cell.on.wait{background:var(--warn-bg);border-color:var(--warn)} .cell.on.wait i,.cell.on.wait b{color:var(--warn)}
+.cell.on.stop{background:var(--bad-bg);border-color:var(--bad)} .cell.on.stop i,.cell.on.stop b{color:var(--bad)}
+
+/* sandbox */
+.box{display:grid;grid-template-columns:1fr auto 1.4fr auto 1fr;gap:14px;align-items:center;text-align:center}
+.box>i{color:var(--muted)}
+.io{border:1px solid var(--line);border-radius:12px;padding:16px 10px}
+.io b,.wall b{display:block}
+.wall{border:3px dashed var(--blue);border-radius:14px;padding:20px 14px}
+.wall>i{font-size:1.8rem;color:var(--blue);display:block;margin-bottom:8px}
+.io span,.wall span{color:var(--muted);font-size:.92rem}
+.blocked{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.blocked li{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px;text-align:center;font-weight:600;font-size:.92rem}
+.blocked i{margin-right:6px}
+.door{margin:10px 0 0;background:var(--ok-bg);color:var(--ok);border-radius:10px;padding:10px 14px;text-align:center;font-weight:600}
+
+/* path from code to tool */
+.path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.path li{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.path i{display:block;font-size:1.4rem;color:var(--blue);margin-bottom:8px}
+.path li:not(:last-child)::after{content:"";position:absolute;top:50%;right:-18px;width:8px;height:8px;border:solid var(--muted);border-width:2px 2px 0 0;transform:translateY(-50%) rotate(45deg)}
+.path b{display:block}
+.path span{color:var(--muted);font-size:.92rem}
+.path .person{background:var(--warn-bg);border-color:var(--warn)} .path .person i{color:var(--warn)}
+
+@media (max-width:760px){
+  .cmp{grid-template-columns:1fr 1fr 1fr}
+  .cmp .blank{display:none}
+  .cmp .k{grid-column:1/-1;padding-bottom:0;font-weight:600}
+  .cmp .k ~ .dots{border-top:0}
+  .cmp>*{padding:10px 4px}
+  .cmp .h small{font-size:.8rem}
+  .map{grid-template-columns:1fr 1fr;gap:8px}
+  .map .blank{display:none}
+  .map .row{grid-column:1/-1;margin-top:8px}
+  .map .col{font-size:.9rem}
+  .cell{padding:12px}
+  .box{grid-template-columns:1fr}
+  .box>i{transform:rotate(90deg)}
+  .blocked{grid-template-columns:1fr 1fr}
+  .path{grid-template-columns:1fr}
+  .path li:not(:last-child)::after{top:auto;bottom:-17px;right:calc(50% - 4px);transform:rotate(135deg)}
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Should tools stay fixed, or can the agent write new code?</h1>
+    <p class="lead"><b>Use both.</b> Fixed tools make the changes. New code only works things out, in a locked box.</p>
+  </header>
+
+  <section>
+    <h2>What you trade</h2>
+    <p class="sub">More freedom means more safety work.</p>
+    <div class="panel cmp" id="cmp">
+      <span class="h blank"></span>
+      <div class="h"><i class="fas fa-lock"></i>Fixed tool<small>one clear job</small></div>
+      <div class="h"><i class="fas fa-sliders"></i>General tool<small>like read-only queries</small></div>
+      <div class="h"><i class="fas fa-code"></i>New code<small>written per request</small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Which one for this request?</h2>
+    <p class="sub">Two questions decide it.</p>
+    <div class="picks" id="reqs"></div>
+    <div class="panel">
+      <div class="map">
+        <span class="blank"></span><div class="col">A tool exists</div><div class="col">No tool yet</div>
+        <div class="row">Only reads or calculates</div>
+        <div class="cell pass" data-c="0"><i class="fas fa-screwdriver-wrench"></i><b>Use the tool</b>Quick and tested</div>
+        <div class="cell pass" data-c="1"><i class="fas fa-cube"></i><b>Write code in the box</b>Nothing real can change</div>
+        <div class="row">Changes something real</div>
+        <div class="cell wait" data-c="2"><i class="fas fa-user-check"></i><b>Use the tool, with checks</b>Approval if it cannot be undone</div>
+        <div class="cell stop" data-c="3"><i class="fas fa-hand"></i><b>Stop and ask</b>A developer adds the tool</div>
+      </div>
+      <p class="out" id="out" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The locked box (sandbox)</h2>
+    <p class="sub">New code can be wrong, so limit what it can reach.</p>
+    <div class="panel">
+      <div class="box">
+        <div class="io"><b>In</b><span>a copy of only the data it needs</span></div>
+        <i class="fas fa-arrow-right"></i>
+        <div class="wall"><i class="fas fa-code"></i><b>New code runs here</b><span>thrown away afterwards</span></div>
+        <i class="fas fa-arrow-right"></i>
+        <div class="io"><b>Out</b><span>a result, checked before use</span></div>
+      </div>
+      <ul class="blocked">
+        <li><i class="fas fa-ban"></i>Passwords</li>
+        <li><i class="fas fa-ban"></i>Open internet</li>
+        <li><i class="fas fa-ban"></i>Your real files</li>
+        <li><i class="fas fa-ban"></i>Running forever</li>
+      </ul>
+      <p class="door"><i class="fas fa-door-open"></i> One door out: it may ask for a fixed tool, and that call gets every check</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Good code grows into a tool</h2>
+    <p class="sub">The agent never adds a tool by itself.</p>
+    <ol class="path">
+      <li><i class="fas fa-code"></i><b>New code</b><span>solves a new request</span></li>
+      <li><i class="fas fa-repeat"></i><b>Same need again</b><span>the log shows it</span></li>
+      <li class="person"><i class="fas fa-user-check"></i><b>A person reviews</b><span>and adds tests</span></li>
+      <li><i class="fas fa-lock"></i><b>Fixed tool</b><span>clear name, strict inputs</span></li>
+    </ol>
+  </section>
+
+  <p class="next"><a href="../../../viewer.html?s=007-ai-agents&amp;sub=03-guardrails" target="_top">Next: guardrails →</a></p>
+</main>
+
+<script src="../shared.js"></script>
+<script>
+(function(){
+  // Relative ratings out of 3, for comparison only
+  const ROWS = [['Predictable',3,2,1],['Easy to test',3,2,1],['Handles new requests',1,2,3],['Safety work needed',1,2,3]];
+  $('cmp').insertAdjacentHTML('beforeend', ROWS.map(([k, ...v]) =>
+    `<div class="k">${k}</div>` + v.map(n =>
+      `<div class="dots" role="img" aria-label="${['','low','medium','high'][n]}">${[1,2,3].map(x => `<span class="${x <= n ? 'f' : ''}"></span>`).join('')}</div>`).join('')
+  ).join(''));
+
+  const REQS = [
+    ['Where is order 1042?', 0, 'pass', 'There is already a tool: orders_get. No new code needed.'],
+    ['Chart refunds by month', 1, 'pass', 'No tool draws this chart. Code works on a copy of the data and returns a picture.'],
+    ['Refund $480', 2, 'wait', 'refunds_create does it, after a person approves.'],
+    ['Cancel every late order', 2, 'wait', 'Code may find the late orders. Each cancel still goes through orders_cancel and its checks.'],
+    ['Delete old accounts', 3, 'stop', 'No tool for this, so the agent does not improvise. It explains and asks for one.']
+  ];
+  buttons($('reqs'), REQS.map(r => r[0]), i => {
+    const [, cell, kind, text] = REQS[i];
+    document.querySelectorAll('.cell').forEach(el => el.classList.toggle('on', +el.dataset.c === cell));
+    drawOut(kind, text, kind === 'stop' ? 'fa-hand' : '');
+  });
+  $('reqs').children[1].click();
+})();
+</script>
+</body>
+</html>
